@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "projects": {
+    "auth": "libs/auth",
+    "database": "libs/database",
+    "guard": "libs/guard",
+    "shared": "libs/shared",
+    "trendsbooking": "apps/trendsbooking"
+  },
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json"
+}

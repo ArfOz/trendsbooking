@@ -1,0 +1,75 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  /// @HideField({output:true})
+  Id         Int      @id @default(autoincrement())
+  /// for ex: arif@test.com this have to be unique
+  Email      String   @unique
+  /// @HideField({output:true})
+  Password   String
+  /// for ex: arfoz
+  Username   String
+  /// for ex: Arif, Ozkan, Ahmet
+  FirstName  String?
+  /// for ex: lastname or surname
+  LastName   String?
+  /// for ex: Turkey
+  Country    String?
+  /// For ex:544672654964  !Important it is string
+  Phone      String?
+  /// for ex: Turkey
+  Gender     String?
+  /// for ex: Turkey
+  BirthDate  DateTime @default(now())
+  /// @HideField({ input: true, output: true })
+  PrivateKey String?
+  /// @HideField({ input: true, output: true })
+  PublicKey  String?
+
+  UserToken UserToken[]
+}
+
+model UserToken {
+  /// @HideField({match:'@Input'})
+  Id               Int                @id @default(autoincrement())
+  /// @HideField({input:true})
+  User             User               @relation(fields: [UserId], references: [Id])
+  /// @HideField({input:true})
+  UserId           Int
+  /// @HideField()
+  AccessToken      String
+  RefreshToken     String
+  ExpiresIn        DateTime
+  ExpiresInRefresh DateTime
+  ExpiredReason    ExpiredReasonType?
+  CreatedAt        DateTime           @default(now())
+}
+
+model ServiceUser {
+  Id       Int     @id @default(autoincrement())
+  /// for ex: arif@test.com this have to be unique
+  Email    String? @unique
+  /// @HideField({output:true})
+  Password String?
+  /// for ex : asdasdas
+  Username String?
+  /// For ex:544672654964  !Important it is string
+  Phone    String?
+  /// for ex: Turkey
+  Country  String?
+  /// for ex: Ankara İzmir
+  City     String?
+}
+
+enum ExpiredReasonType {
+  Expired
+  SignInFromDifferentLocation
+  TokenRefreshed
+}

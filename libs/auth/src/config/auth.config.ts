@@ -1,0 +1,12 @@
+import { registerAs } from '@nestjs/config';
+
+export default registerAs('auth', () => ({
+    // backendURL: process.env.BACKEND_URL,
+    codeValidationTime: process.env.CODE_VALIDATION_TIME,
+    emailConfirmURL: process.env.EMAIL_CONFIRMATION_URL,
+    forgotPasswordURL: process.env.FORGOT_PASSWORD_URL,
+    jwt_secret: process.env.JWT_SECRET,
+    jwt_secret_refresh: process.env.JWT_SECRET_REFRESH,
+    jwt_expired: process.env.JWT_EXPIRED_TIME,
+    jwt_refresh_expired: process.env.JWT_REFRESH_EXPIRED_TIME,
+}));
