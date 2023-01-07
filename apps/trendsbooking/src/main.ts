@@ -15,6 +15,7 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     const globalPrefix = 'api';
     app.setGlobalPrefix(globalPrefix);
+    app.enableCors()
 
     const config = new DocumentBuilder()
         .setTitle('TrendsBooking')
