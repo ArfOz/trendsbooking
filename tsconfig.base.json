@@ -25,8 +25,7 @@
       "@guard": ["libs/guard/src"],
       "@guard/*": ["libs/guard/src/*"],
       "@shared": ["libs/shared/src"],
-      "@shared/*": ["libs/shared/src/*"],
-      "@trendsbooking/auth": ["libs/auth/src/index.ts"]
+      "@shared/*": ["libs/shared/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

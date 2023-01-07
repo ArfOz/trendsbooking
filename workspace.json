@@ -2,10 +2,10 @@
   "version": 2,
   "projects": {
     "auth": "libs/auth",
+    "backend": "apps/backend",
     "database": "libs/database",
     "guard": "libs/guard",
-    "shared": "libs/shared",
-    "trendsbooking": "apps/trendsbooking"
+    "shared": "libs/shared"
   },
   "$schema": "./node_modules/nx/schemas/workspace-schema.json"
 }
