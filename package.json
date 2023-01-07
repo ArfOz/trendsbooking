@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve",
-    "build": "nx build",
-    "test": "nx test",
+    "start:backend": "nx run backend:serve",
+    "build:backend": "nx run backend:build",
     "migrate:database": "npx nx run database:migrate",
     "database:generate": "npx nx run database:generate",
     "generate": "npx prisma migrate dev --name init --schema \"./libs/database/src/prisma/schema.prisma\" ",

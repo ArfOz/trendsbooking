@@ -2,7 +2,7 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "npmScope": "trendsbooking",
   "affected": {
-    "defaultBase": "master"
+    "defaultBase": "main"
   },
   "tasksRunnerOptions": {
     "default": {
@@ -35,6 +35,5 @@
       "!{projectRoot}/.eslintrc.json"
     ],
     "sharedGlobals": []
-  },
-  "defaultProject": "backend"
+  }
 }
