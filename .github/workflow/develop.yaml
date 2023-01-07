@@ -1,19 +1,19 @@
-name: API Development Deploy
-on:
-  workflow_dispatch:
-  pull_request:
-    branches:
-      - main
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Get latest code
-      uses: actions/checkout@v2
+# name: API Development Deploy
+# on:
+#   workflow_dispatch:
+#   pull_request:
+#     branches:
+#       - main
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Get latest code
+#       uses: actions/checkout@v2
     
-    - name: Sync files
-      uses: SamKirkland/FTP-Deploy-Action@4.3.3
-      with:
-        server: ${{ secrets.server }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
+#     - name: Sync files
+#       uses: SamKirkland/FTP-Deploy-Action@4.3.3
+#       with:
+#         server: ${{ secrets.server }}
+#         username: ${{ secrets.FTP_USERNAME }}
+#         password: ${{ secrets.FTP_PASSWORD }}
