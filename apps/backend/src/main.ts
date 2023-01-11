@@ -15,7 +15,7 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     const globalPrefix = 'api';
     app.setGlobalPrefix(globalPrefix);
-    app.enableCors()
+    app.enableCors();
 
     const config = new DocumentBuilder()
         .setTitle('TrendsBooking')
@@ -34,6 +34,7 @@ async function bootstrap() {
     Logger.log(
         `🚀 Application is running on: http://localhost:${generalCfg.PORT}/${globalPrefix}`,
     );
+    Logger.log(` This is ${process.env.node_env} environment`);
 }
 
 bootstrap();
