@@ -15,7 +15,7 @@ import Vector from "../../../../assets/Vector.png";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { style } from "./style";
-import MenuNavbar from "../../navbar1/components/MenuNavbar";
+import MenuNavbar from "../../NavbarFirst/components/MenuNavbar";
 
 const Nbar600px = () => {
   return (

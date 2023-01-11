@@ -118,8 +118,10 @@ const LeftEnd = () => {
             <TableContainer>
               <Table size="small" aria-label="table">
                 <TableBody>
-                  {rows.map((row) => (
-                    <TableRow>
+                  {rows.map((row,index) => (
+                    <TableRow
+                      key={index}
+                    >
                       <TableCell
                         sx={{
                           fontFamily: "Roboto",

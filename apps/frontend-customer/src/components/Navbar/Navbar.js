@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
 import React, { useState,useEffect } from "react";
-import Navbar1 from "./Navbar1";
-import Navbar2 from "./Navbar2";
+import NavbarFirst from "./NavbarFirst";
+import NavbarSecond from "./NavbarSecond";
 
 function Navbar() {
-  const [show, setShow] = useState(<Navbar1/>);
+  const [show, setShow] = useState(<NavbarFirst/>);
   const listenScrollEvent = () => {
-    window.scrollY >= 695 ? setShow(<Navbar2/>) : setShow(<Navbar1/>);
+    window.scrollY >= 695 ? setShow(<NavbarSecond/>) : setShow(<NavbarFirst/>);
   };
   useEffect(() => {
     window.addEventListener("scroll", listenScrollEvent);

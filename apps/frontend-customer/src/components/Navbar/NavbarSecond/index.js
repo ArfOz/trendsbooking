@@ -9,7 +9,7 @@ import Row1End from "./components/Row1End";
 import Row2Tabs from "./components/Row2Tabs";
 import Nbar600px from "./components/Nbar600px";
 
-function Navbar2() {
+function NavbarSecond() {
   return (
     <>
       <Box sx={style.container}>
@@ -28,4 +28,4 @@ function Navbar2() {
   );
 }
 
-export default Navbar2;
+export default NavbarSecond;

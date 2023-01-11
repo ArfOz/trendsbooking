@@ -7,7 +7,7 @@ import MenuNavbar from "./components/MenuNavbar";
 import Navbar600px from "./components/Navbar600px";
 import { style } from "./style";
 
-const Navbar1 = () => {
+const NavbarFirst = () => {
   return (
     <>
      
@@ -47,4 +47,4 @@ const Navbar1 = () => {
   );
 };
 
-export default Navbar1;
+export default NavbarFirst;
