@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 import styled from 'styled-components';
 import NxWelcome from './nx-welcome';
 
@@ -23,6 +24,7 @@ if (import.meta.vitest) {
     });
     it('should render successfully', () => {
         const { baseElement } = render(
+            // eslint-disable-next-line no-undef
             <BrowserRouter>
                 <App />
             </BrowserRouter>,
@@ -31,6 +33,7 @@ if (import.meta.vitest) {
     });
     it('should have a greeting as the title', () => {
         const { getByText } = render(
+            // eslint-disable-next-line no-undef
             <BrowserRouter>
                 <App />
 
