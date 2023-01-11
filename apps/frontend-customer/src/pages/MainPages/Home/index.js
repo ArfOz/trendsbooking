@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-const StyledCardSwiper1 = styled.div`
+const StyledHome = styled.div`
     color: pink;
 `;
-export function CardSwiper1(props) {
+export function Home(props) {
     return (
-        <StyledCardSwiper1>
-            <h1>Welcome to CardSwiper1!</h1>
-        </StyledCardSwiper1>
+        <StyledHome>
+            <h1>Welcome to Home!</h1>
+        </StyledHome>
     );
 }
-export default CardSwiper1;
+export default Home;

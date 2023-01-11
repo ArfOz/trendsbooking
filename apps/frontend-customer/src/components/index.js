@@ -1,12 +1,7 @@
-import styled from 'styled-components';
-const StyledCardSwiper1 = styled.div`
-    color: pink;
-`;
-export function CardSwiper1(props) {
-    return (
-        <StyledCardSwiper1>
-            <h1>Welcome to CardSwiper1!</h1>
-        </StyledCardSwiper1>
-    );
+import LogoShort from './LogoShort'
+import LogoWordShort from './LogoWordShort'
+
+export {
+    LogoShort,
+    LogoWordShort,
 }
-export default CardSwiper1;
