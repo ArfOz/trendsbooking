@@ -1,12 +1,18 @@
-import styled from 'styled-components';
-const StyledCardSwiper1 = styled.div`
-    color: pink;
-`;
-export function CardSwiper1(props) {
-    return (
-        <StyledCardSwiper1>
-            <h1>Welcome to CardSwiper1!</h1>
-        </StyledCardSwiper1>
-    );
+import React from "react";
+import { Box } from "@mui/material";
+import Left from "./components/Left";
+import Right from "./components/Right";
+import { style } from "./style";
+
+function Oneclick() {
+  return (
+    <>
+      <Box sx={style.BoxContainer}>
+        <Left />
+        <Right />
+      </Box>
+    </>
+  );
 }
-export default CardSwiper1;
+
+export default Oneclick;

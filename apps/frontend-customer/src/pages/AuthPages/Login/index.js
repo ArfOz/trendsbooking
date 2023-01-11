@@ -82,7 +82,7 @@ const Login = () => {
   return (
     <AuthLayout>
       <Box sx={{ backgroundColor: "white" }}>
-        <Grid container component="main">
+        <Grid container component="">
           {/*##################  Form Section #################  */}
           <Grid item xs={12} sm={6} md={6} l={12}>
             <Grid item>

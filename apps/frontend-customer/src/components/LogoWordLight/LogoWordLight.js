@@ -1,12 +1,12 @@
-import styled from 'styled-components';
-const StyledCardSwiper1 = styled.div`
-    color: pink;
-`;
-export function CardSwiper1(props) {
-    return (
-        <StyledCardSwiper1>
-            <h1>Welcome to CardSwiper1!</h1>
-        </StyledCardSwiper1>
-    );
+import React from "react";
+import {LogoWordLight as logoWordLight} from "../../assets";
+
+function LogoWordLight() {
+  return (
+    <div>
+      <img src={logoWordLight} alt="logoWordLight"/>
+    </div>
+  );
 }
-export default CardSwiper1;
+
+export default LogoWordLight;

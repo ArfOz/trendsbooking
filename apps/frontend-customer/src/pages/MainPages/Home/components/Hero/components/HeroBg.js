@@ -1,12 +1,28 @@
-import styled from 'styled-components';
-const StyledCardSwiper1 = styled.div`
-    color: pink;
-`;
-export function CardSwiper1(props) {
-    return (
-        <StyledCardSwiper1>
-            <h1>Welcome to CardSwiper1!</h1>
-        </StyledCardSwiper1>
-    );
+import React from "react";
+import { Box, Button } from "@mui/material";
+import Herotypography from "./Herotypography";
+import HeroSearch from "./HeroSearch";
+import { style } from "./style";
+import hrbg from "../../../../../../assets/hrbg.png";
+
+function HeroBg() {
+  return (
+    <>
+      <Box sx={style.HeroBgContainer}>
+        <Box sx={style.flexColumn}>
+          <Herotypography />
+          <HeroSearch />
+          <Button 
+            sx={{
+              mt: 10,
+            }}
+          >
+            <img src={hrbg} alt="" width="40px" />
+          </Button>
+        </Box>
+      </Box>
+    </>
+  );
 }
-export default CardSwiper1;
+
+export default HeroBg;

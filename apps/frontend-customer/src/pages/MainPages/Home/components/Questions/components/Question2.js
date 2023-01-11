@@ -1,12 +1,60 @@
-import styled from 'styled-components';
-const StyledCardSwiper1 = styled.div`
-    color: pink;
-`;
-export function CardSwiper1(props) {
-    return (
-        <StyledCardSwiper1>
-            <h1>Welcome to CardSwiper1!</h1>
-        </StyledCardSwiper1>
-    );
+import React, { useState } from "react";
+import { style } from "./style";
+import { Box, Button, Divider, Typography } from "@mui/material";
+import circlearrowdown from "../../../../../../assets/circlearrowdown.svg";
+
+function Question2() {
+    const [opens2, setOpens2] = useState(false);
+    const handleOpens2 = () => {
+      setOpens2(!opens2);
+    };
+  return (
+    <>
+    <Box sx={style.Boxforbutton}>
+        <Button
+          variant="text"
+          onClick={handleOpens2}
+          sx={style.questionButton}
+        >
+          <Box sx={style.Boxinbutton}>
+            <Typography sx={style.TypographyinButton}>
+              Kuaförden Nasıl Emin Olabilirim
+            </Typography>
+            <img
+              src={circlearrowdown}
+              width="20px"
+              height="20px"
+              color="#F75936"
+              alt=""
+            />
+          </Box>
+        </Button>
+      </Box>
+      {opens2 ? (
+        <Box
+          sx={{
+            width: "70%",
+            margin: "auto",
+          }}
+        >
+          <h4>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias
+            veniam laborum nam totam consectetur at cumque ex quis quam,
+            distinctio corporis sed reiciendis reprehenderit voluptatum
+            voluptas. Ab nesciunt nihil deserunt laudantium assumenda quidem,
+            reprehenderit iure facilis omnis dolorem dolorum ut.
+          </h4>
+        </Box>
+      ) : null}
+      <Divider
+        sx={{
+          width: "60%",
+          margin: "auto",
+        }}
+      />
+
+    </>
+  )
 }
-export default CardSwiper1;
+
+export default Question2

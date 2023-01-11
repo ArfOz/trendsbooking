@@ -41,6 +41,7 @@
     "regenerator-runtime": "0.13.7",
     "rxjs": "^7.0.0",
     "styled-components": "5.3.6",
+    "swiper": "^8.4.5",
     "tslib": "^2.3.0",
     "tweetnacl": "^1.0.3",
     "uniqid": "^5.4.0"

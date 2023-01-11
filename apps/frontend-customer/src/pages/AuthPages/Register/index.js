@@ -128,7 +128,7 @@ const Register = () => {
   return (
     <AuthLayout>
       <Box sx={{ backgroundColor: "white" }}>
-        <Grid container component="main">
+        <Grid container component="">
           {/*##################  Form Section #################  */}
           <Grid item xs={6} sm={6} md={6} l={6} xl={6}>
             <Box sx={boxStyle.leftMain}>
