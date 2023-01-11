@@ -1,12 +1,25 @@
-import styled from 'styled-components';
-const StyledCardSwiper1 = styled.div`
-    color: pink;
-`;
-export function CardSwiper1(props) {
-    return (
-        <StyledCardSwiper1>
-            <h1>Welcome to CardSwiper1!</h1>
-        </StyledCardSwiper1>
-    );
+import { Box } from "@mui/material";
+import React, { useState,useEffect } from "react";
+import NavbarFirst from "./NavbarFirst";
+import NavbarSecond from "./NavbarSecond";
+
+function Navbar() {
+  const [show, setShow] = useState(<NavbarFirst/>);
+  const listenScrollEvent = () => {
+    window.scrollY >= 695 ? setShow(<NavbarSecond/>) : setShow(<NavbarFirst/>);
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", listenScrollEvent);
+    return () => {
+      window.removeEventListener("scroll", listenScrollEvent);
+    };
+  }, []);
+
+  return (
+    <>
+      <Box>{show}</Box>
+    </>
+  );
 }
-export default CardSwiper1;
+
+export default Navbar;

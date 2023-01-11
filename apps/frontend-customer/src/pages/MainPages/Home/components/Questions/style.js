@@ -1,12 +1,29 @@
-import styled from 'styled-components';
-const StyledCardSwiper1 = styled.div`
-    color: pink;
-`;
-export function CardSwiper1(props) {
-    return (
-        <StyledCardSwiper1>
-            <h1>Welcome to CardSwiper1!</h1>
-        </StyledCardSwiper1>
-    );
-}
-export default CardSwiper1;
+
+
+export const style = {
+    TypographyBox: {
+      mt: 15,
+      display: "flex",
+      flexDirection: "column",
+      mb:10
+    },
+    Typography1: {
+      fontWeight: "600",
+      fontSize: "60px",
+      lineHeight: "70px",
+      textAlign: "center",
+      color: "#07232C",
+      mb:3,
+    },
+    Typography2:{
+      fontWeight: "400",
+      fontSize: "20px",
+      lineHeight: "30px",
+      textAlign: "center",
+      color: "#9A9A9A",
+    },
+   
+  
+    }
+  
+  

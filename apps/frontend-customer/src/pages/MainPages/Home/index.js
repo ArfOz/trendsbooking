@@ -1,12 +1,39 @@
-import styled from 'styled-components';
-const StyledCardSwiper1 = styled.div`
-    color: pink;
-`;
-export function CardSwiper1(props) {
+import React from 'react';
+
+import { MainLayout } from '../../../layout';
+import Navbar from '../../../components/Navbar/Navbar';
+import {
+    Hero,
+    Tabs,
+    Highlights,
+    AveragePrices,
+    Happier,
+    Cards,
+    Software,
+    OneClick,
+    MobileApplication,
+    Questions,
+} from './components';
+
+const Home = () => {
     return (
-        <StyledCardSwiper1>
-            <h1>Welcome to CardSwiper1!</h1>
-        </StyledCardSwiper1>
+        <MainLayout>
+            <Navbar />
+
+            <Hero />
+            <Tabs />
+            <Highlights />
+            <AveragePrices />
+            <Happier />
+            <Cards />
+            <Software />
+            <OneClick />
+            <MobileApplication />
+            <Questions />
+
+            {/* <FooterMain/> */}
+        </MainLayout>
     );
-}
-export default CardSwiper1;
+};
+
+export default Home;

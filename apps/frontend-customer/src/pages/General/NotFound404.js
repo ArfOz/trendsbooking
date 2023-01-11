@@ -1,12 +1,9 @@
-import styled from 'styled-components';
-const StyledCardSwiper1 = styled.div`
-    color: pink;
-`;
-export function CardSwiper1(props) {
+import React from 'react'
+
+const NotFound404 = () => {
     return (
-        <StyledCardSwiper1>
-            <h1>Welcome to CardSwiper1!</h1>
-        </StyledCardSwiper1>
-    );
+        <div>NotFound404</div>
+    )
 }
-export default CardSwiper1;
+
+export default NotFound404

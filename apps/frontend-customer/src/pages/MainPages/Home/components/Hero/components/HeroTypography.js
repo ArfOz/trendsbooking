@@ -1,12 +1,31 @@
-import styled from 'styled-components';
-const StyledCardSwiper1 = styled.div`
-    color: pink;
-`;
-export function CardSwiper1(props) {
-    return (
-        <StyledCardSwiper1>
-            <h1>Welcome to CardSwiper1!</h1>
-        </StyledCardSwiper1>
-    );
+import React from "react";
+import { Box, Typography } from "@mui/material";
+
+import { style } from "./style";
+
+function HeroTypography() {
+  return (
+    <>
+      <Box sx={style.flexColumn}>
+        <Box
+          sx={{
+            mt: 19,
+          }}
+        >
+          <Typography sx={style.Bi}>Bi güzellik yapın!</Typography>
+        </Box>
+        <Box
+          sx={{
+            mt: 2,
+          }}
+        >
+          <Typography sx={style.Size}>
+            Size en uygun salonlardan online randevunuzu kolayca alın.
+          </Typography>
+        </Box>
+      </Box>
+    </>
+  );
 }
-export default CardSwiper1;
+
+export default HeroTypography;

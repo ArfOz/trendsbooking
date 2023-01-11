@@ -18,6 +18,10 @@
   },
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.4",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
@@ -32,10 +36,12 @@
     "react-dom": "18.2.0",
     "react-is": "18.2.0",
     "react-router-dom": "6.4.3",
+    "react-social-login-buttons": "^3.6.1",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",
     "rxjs": "^7.0.0",
     "styled-components": "5.3.6",
+    "swiper": "^8.4.5",
     "tslib": "^2.3.0",
     "tweetnacl": "^1.0.3",
     "uniqid": "^5.4.0"
