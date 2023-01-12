@@ -50,7 +50,7 @@ export class UsersService {
     // }
 
     async register(input: CreateUserJsonDto) {
-        if (!input.Email || !input.Password) {
+        if (!input.email || !input.password) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error('Email and password are required.'),
@@ -77,12 +77,13 @@ export class UsersService {
         // Check if the user already exists
 
         const user = await this.userService.findFirst({
-            where: { Email: input.Email },
+            where: { Email: input.email },
         });
 
         if (user) {
             throw new AlreadyExistsException(
                 AlreadyExistsExceptionType.USER_ALREADY_EXISTS,
+                new Error('Ooops... User already exists')
             );
         }
 
@@ -122,15 +123,15 @@ export class UsersService {
 
         // Create a new user
         const response = await this.userService.create({
-            Email: input.Email,
-            Phone: input.Phone,
-            Username: input.Username,
-            Password: await bcrypt.hash(input.Password, 10),
+            Email: input.email,
+            Phone: input.phone,
+            Username: input.username,
+            Password: await bcrypt.hash(input.password, 10),
             PrivateKey: privKey,
             PublicKey: pubKey,
-            Country: input.Country,
-            FirstName: input.FirstName || 'First Name',
-            LastName: input.LastName || 'Last Name',
+            Country: input.country,
+            FirstName: input.firstName || 'First Name',
+            LastName: input.lastName || 'Last Name',
         });
         return response;
     }
@@ -150,7 +151,6 @@ export class UsersService {
         //     throw new TrendsException('You need to verify your account', 400);
         // }
 
-        let expireTime, expiretimeRefresh;
         if (user && (await bcrypt.compare(cred.Password, user.Password))) {
             const {
                 AccessToken,
@@ -188,7 +188,7 @@ export class UsersService {
     }
 
     async userProfile(user: UserPayloadDto) {
-        return await this.userService.get({ Id: user.Id });
+        return await this.userService.get({ Id: user.id });
     }
 
     async refreshUserToken(refreshToken: string) {

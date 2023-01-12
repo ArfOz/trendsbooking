@@ -6,8 +6,8 @@ export class AlreadyExistsException extends TrendsException {
     constructor(
         // eslint-disable-next-line default-param-last
         type: AlreadyExistsExceptionType = AlreadyExistsExceptionType.ALREADY_EXISTS,
-        error?: Error,
+        details? :Error
     ) {
-        super(type, HttpStatus.BAD_REQUEST, error);
+        super(type, HttpStatus.BAD_REQUEST, details);
     }
 }

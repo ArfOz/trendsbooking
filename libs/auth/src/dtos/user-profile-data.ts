@@ -6,12 +6,12 @@ export class UserProfileData {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    Email: string;
+    email: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Username?: string;
+    username?: string;
 
     // Role: UserRole;
 
@@ -26,10 +26,10 @@ export class UserProfileData {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Country?: string;
+    country?: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    City?: string;
+    city?: string;
 }

@@ -1,3 +1,4 @@
+import { UserProfileData } from './dtos/user-profile-data';
 import { TrendsException } from './../../shared/src/exceptions/trends.exception';
 import { UserService } from './../../database/src/user/user.service';
 import { ExpiredReasonType } from '@prisma/client';
@@ -31,7 +32,7 @@ export class AuthService {
 
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
-                UserId: userPayload.Id,
+                UserId: userPayload.id,
                 RefreshToken: token,
             },
             include: {
@@ -53,7 +54,7 @@ export class AuthService {
         });
 
         const user = await this.userService.get({
-            Id: userPayload.Id,
+            Id: userPayload.id,
         });
 
         // const userLoginHistory = await this.prismaService.userLoginHistory.findFirst({
@@ -96,8 +97,8 @@ export class AuthService {
         ExpiresRefreshToken: Date;
     }> {
         const payload: UserPayloadDto = {
-            Id: user.Id,
-            Email: user.Email,
+            id: user.id,
+            email: user.email,
         };
 
         const expiresAccessToken = new Date(

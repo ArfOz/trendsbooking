@@ -5,22 +5,22 @@ export class CreateUserJsonDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    Email: string;
+    email: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Phone: string;
+    phone: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Username: string;
+    username: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    Password: string;
+    password: string;
 
     // @IsNotEmpty()
     // @IsString()
@@ -29,22 +29,22 @@ export class CreateUserJsonDto {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    FirstName?: string;
+    firstName?: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    LastName?: string;
+    lastName?: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Country?: string;
+    country?: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Lang?: string;
+    lang?: string;
 
     // @IsNotEmpty()
     // @IsBoolean()
