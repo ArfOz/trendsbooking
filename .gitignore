@@ -104,3 +104,4 @@ dist
 .tern-port
 
 apps/frontend*/src/assets
+package-lock.json

@@ -23,16 +23,18 @@ import { GoogleLoginButton } from "react-social-login-buttons";
 import LogoWordShort from "./components/LogoWordShort";
 import { Calculate } from "@mui/icons-material";
 import { buttons, modal, boxStyle } from "./style";
+import { postRegister } from "../../../function/function";
 
 const initialState = {
   firstName: "",
   lastName: "",
   email: "",
   password: "",
-  mobileNumber: "",
+  phone: "",
   birthDate: "",
   gender: "",
   cbFirst: false,
+  username: 'test username'
 };
 
 function Copyright(props) {
@@ -117,6 +119,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("registerForm", registerForm);
+    postRegister(registerForm)
     // const user = await register(email, password);
     // if (user) {
     //   navigate("/", {
@@ -278,12 +281,12 @@ const Register = () => {
                       </InputLabel>
                       <Input
                         required
-                        name="mobileNumber"
+                        name="phone"
                         type="tel"
-                        id="mobileNumber"
-                        autoComplete="current-mobileNumber"
+                        id="phone"
+                        autoComplete="current-phone"
                         variant="standard"
-                        value={registerForm.mobileNumber}
+                        value={registerForm.phone}
                         onChange={handleChange}
                         size="small"
                       />
