@@ -1,4 +1,5 @@
-import { ExpiredReasonType } from '@prisma/client';
+import { UserResponseDto } from './../../../../../libs/auth/src/dtos/user-response.dto';
+import { ExpiredReasonType, User } from '@prisma/client';
 import { UserPayloadDto, AuthService, CreateUserJsonDto } from '@auth';
 import authConfig from '@auth/config/auth.config';
 import { ConfigType } from '@nestjs/config';
@@ -49,11 +50,18 @@ export class UsersService {
     //     return createdUser;
     // }
 
-    async register(input: CreateUserJsonDto) {
-        if (!input.Email || !input.Password || !input.Phone || !input.Username || !input.Gender) {
+    async register(input: CreateUserJsonDto): Promise <UserResponseDto>{
+
+        if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error('Email and password are required.'),
+                new Error('Please check the box!!!'),
+            );
+        }
+        if (!input.Email || !input.Password || !input.Phone || !input.Username || !input.Gender || !input.FirstName || !input.LastName || !input.BirthDate || !input.Country) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error('Email, password, Phone, Username, Gender, firstName, LastName, Birthdate and Countryare required.'),
             );
         }
 
@@ -131,7 +139,7 @@ export class UsersService {
             Phone: input.Phone,
             Country: input.Country,
             Gender:input.Gender,
-            
+
             Password: await bcrypt.hash(input.Password, 10),
             PrivateKey: privKey,
             PublicKey: pubKey,
