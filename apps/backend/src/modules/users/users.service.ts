@@ -61,7 +61,7 @@ export class UsersService {
         if (!input.Email || !input.Password || !input.Phone || !input.Username || !input.Gender || !input.FirstName || !input.LastName || !input.BirthDate) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error('Email, password, Phone, Username, Gender, firstName, LastName, Birthdate and are required.'),
+                new Error('Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'),
             );
         }
 
