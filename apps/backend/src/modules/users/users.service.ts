@@ -58,10 +58,10 @@ export class UsersService {
                 new Error('Please check the box!!!'),
             );
         }
-        if (!input.Email || !input.Password || !input.Phone || !input.Username || !input.Gender || !input.FirstName || !input.LastName || !input.BirthDate || !input.Country) {
+        if (!input.Email || !input.Password || !input.Phone || !input.Username || !input.Gender || !input.FirstName || !input.LastName || !input.BirthDate) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error('Email, password, Phone, Username, Gender, firstName, LastName, Birthdate and Countryare required.'),
+                new Error('Email, password, Phone, Username, Gender, firstName, LastName, Birthdate and are required.'),
             );
         }
 
