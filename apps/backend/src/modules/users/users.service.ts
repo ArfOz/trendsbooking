@@ -137,6 +137,7 @@ export class UsersService {
             Username: input.Username,
             BirthDate: new Date(input.BirthDate),
             Phone: input.Phone,
+            CbFirst:input.CbFirst,
             Country: input.Country,
             Gender:input.Gender,
 
