@@ -1,3 +1,4 @@
+import { UserProfileData } from './../../../auth/src/dtos/user-profile-data';
 import { UserResponseDto } from './../../../auth/src/dtos/user-response.dto';
 import {
     BadRequestExceptionType,
@@ -16,19 +17,20 @@ export class UserService {
         private readonly keypairService: KeypairService,
     ) {}
 
-    async get(where: Prisma.UserWhereUniqueInput) {
+    async get(where: Prisma.UserWhereUniqueInput) :Promise<UserProfileData> {
+
         const user = await this.prisma.user.findUnique({
             where,
             select: {
-                BirthDate: true,
+                Id: true,
                 Email: true,
-                Phone: true,
-                Country: true,
                 FirstName: true,
                 LastName: true,
                 Username: true,
+                BirthDate: true,
+                Phone: true,
+                Country: true,
                 Gender: true,
-                Id: true,
             },
         });
 
@@ -122,7 +124,7 @@ export class UserService {
                 encryptedPhone = this.keypairService.encryptWithAppKeys(
                     data.Phone,
                 );
-                
+
             const createdUser = await this.prisma.user.create({
                 data: { ...data, Email: encryptedEmail, Phone: encryptedPhone },
                 select: {

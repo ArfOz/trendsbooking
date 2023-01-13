@@ -124,16 +124,17 @@ export class UsersService {
         // Create a new user
         const response = await this.userService.create({
             Email: input.Email,
-            Phone: input.Phone,
-            BirthDate: new Date(input.BirthDate),
+            FirstName: input.FirstName,
+            LastName: input.LastName ,
             Username: input.Username,
+            BirthDate: new Date(input.BirthDate),
+            Phone: input.Phone,
+            Country: input.Country,
+            Gender:input.Gender,
+            
             Password: await bcrypt.hash(input.Password, 10),
             PrivateKey: privKey,
             PublicKey: pubKey,
-            Gender:input.Gender,
-            Country: input.Country,
-            FirstName: input.FirstName || 'First Name',
-            LastName: input.LastName || 'Last Name',
         });
 
         return response;
