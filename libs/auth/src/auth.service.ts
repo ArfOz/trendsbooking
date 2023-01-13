@@ -32,7 +32,7 @@ export class AuthService {
 
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
-                UserId: userPayload.id,
+                UserId: userPayload.Id,
                 RefreshToken: token,
             },
             include: {
@@ -54,7 +54,7 @@ export class AuthService {
         });
 
         const user = await this.userService.get({
-            Id: userPayload.id,
+            Id: userPayload.Id,
         });
 
         // const userLoginHistory = await this.prismaService.userLoginHistory.findFirst({
@@ -97,8 +97,8 @@ export class AuthService {
         ExpiresRefreshToken: Date;
     }> {
         const payload: UserPayloadDto = {
-            id: user.id,
-            email: user.email,
+            Id: user.Id,
+            Email: user.Email,
         };
 
         const expiresAccessToken = new Date(

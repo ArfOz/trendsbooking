@@ -50,7 +50,7 @@ export class UsersService {
     // }
 
     async register(input: CreateUserJsonDto) {
-        if (!input.email || !input.password) {
+        if (!input.Email || !input.Password || !input.Phone || !input.Username || !input.Gender) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error('Email and password are required.'),
@@ -77,7 +77,7 @@ export class UsersService {
         // Check if the user already exists
 
         const user = await this.userService.findFirst({
-            where: { Email: input.email },
+            where: { Email: input.Email },
         });
 
         if (user) {
@@ -123,16 +123,19 @@ export class UsersService {
 
         // Create a new user
         const response = await this.userService.create({
-            Email: input.email,
-            Phone: input.phone,
-            Username: input.username,
-            Password: await bcrypt.hash(input.password, 10),
+            Email: input.Email,
+            Phone: input.Phone,
+            BirthDate: new Date(input.BirthDate),
+            Username: input.Username,
+            Password: await bcrypt.hash(input.Password, 10),
             PrivateKey: privKey,
             PublicKey: pubKey,
-            Country: input.country,
-            FirstName: input.firstName || 'First Name',
-            LastName: input.lastName || 'Last Name',
+            Gender:input.Gender,
+            Country: input.Country,
+            FirstName: input.FirstName || 'First Name',
+            LastName: input.LastName || 'Last Name',
         });
+
         return response;
     }
 
@@ -188,7 +191,7 @@ export class UsersService {
     }
 
     async userProfile(user: UserPayloadDto) {
-        return await this.userService.get({ Id: user.id });
+        return await this.userService.get({ Id: user.Id });
     }
 
     async refreshUserToken(refreshToken: string) {

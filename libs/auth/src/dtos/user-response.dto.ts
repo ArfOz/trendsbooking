@@ -1,8 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger/dist';
-import { IsOptional, IsString, IsNotEmpty } from 'class-validator';
+import { ApiProperty, } from '@nestjs/swagger/dist';
+import { IsOptional, IsString, IsNotEmpty, IsNumber } from 'class-validator';
 // import { UserRole } from '@prisma/client';
 
-export class UserProfileData {
+export class UserResponseDto {
+
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
@@ -12,6 +13,15 @@ export class UserProfileData {
     @IsOptional()
     @IsString()
     Username?: string;
+
+    // birthDate: true,
+    // email: true,
+    // phone: true,
+    // country: true,
+    // firstName: true,
+    // lastName: true,
+    // username: true,
+    // gender: true
 
     // Role: UserRole;
 
@@ -26,10 +36,10 @@ export class UserProfileData {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Country?: string;
+    country?: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    City?: string;
+    city?: string;
 }

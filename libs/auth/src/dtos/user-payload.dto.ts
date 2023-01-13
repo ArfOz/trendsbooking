@@ -6,17 +6,17 @@ export class UserPayloadDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    id: number;
+    Id: number;
 
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    email: string;
+    Email: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    username?: string;
+    Username?: string;
 
     // Role: UserRole;
 
@@ -31,10 +31,10 @@ export class UserPayloadDto {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    country?: string;
+    Country?: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    city?: string;
+    City?: string;
 }
