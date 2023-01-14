@@ -17,7 +17,7 @@ const options = {
 axios.request(options).then(function (response) {
   console.log(response);
 }).catch(function (error) {
-  console.error('error',error.response.data.details);
+  console.log('error', error)
   setError(error.response.data.details.toString())
 });
 }

@@ -24,6 +24,7 @@ import LogoWordShort from './components/LogoWordShort';
 import { Calculate } from '@mui/icons-material';
 import { buttons, modal, boxStyle } from './style';
 import { postRegister } from '../../../function/function';
+import ErrorModal from './components/ErrorModal';
 
 const initialState = {
     FirstName: '',
@@ -88,10 +89,16 @@ const Register = () => {
     //Slider
 
     //MODAL
-    const [open, setOpen] = React.useState(false);
     const [modalCheckbox, setModalCheckbox] = useState(false);
+    const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [openError, setOpenError] = React.useState(false);
+    const handleOpenError = () => setOpenError(true);
+    const handleCloseError = () => {
+        setOpenError(false);
+        setError(null)
+    }
 
     useEffect(() => {
         if (modalCheckbox) {
@@ -121,33 +128,35 @@ const Register = () => {
             });
         }
     };
+
     const [error, setError] = useState(null);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         registerForm['Username'] =
             registerForm.FirstName + ' ' + registerForm.LastName;
         console.log('registerForm', registerForm);
 
-        if (
-            registerForm.BirthDate &&
-            registerForm.CbFirst &&
-            registerForm.Email &&
-            registerForm.FirstName &&
-            registerForm.Gender &&
-            registerForm.LastName &&
-            registerForm.Password &&
-            registerForm.Phone &&
-            registerForm.Username
-        ) {
-            if (registerForm.Password === confirmPassword) {
-                postRegister(registerForm, setError);
-            } else {
-                alert('Password does not match.');
-            }
+        if (registerForm.Password !== confirmPassword) {
+            setError('Password does not match.');
         } else {
-            alert('Please fill required sections.');
+            await postRegister(registerForm, setError);
         }
-        error ?? alert(error)
+        // if (
+        //     registerForm.BirthDate &&
+        //     registerForm.CbFirst &&
+        //     registerForm.Email &&
+        //     registerForm.FirstName &&
+        //     registerForm.Gender &&
+        //     registerForm.LastName &&
+        //     registerForm.Password &&
+        //     registerForm.Phone &&
+        //     registerForm.Username
+        // ) {
+        // } else {
+        //     await alert('Please fill required sections.');
+        // }
+        // error ?? handleOpen(true)
         // const user = await register(Email, password);
         // if (user) {
         //   navigate("/", {
@@ -155,6 +164,12 @@ const Register = () => {
         //   });
         // }
     };
+
+    useEffect(() => {
+        if (error) {
+            handleOpenError(true);
+        }
+    }, [error]);
 
     return (
         <AuthLayout>
@@ -377,11 +392,7 @@ const Register = () => {
                                                 <MenuItem value={'Female'}>
                                                     Kadın
                                                 </MenuItem>
-                                                <MenuItem
-                                                    value={
-                                                        ''
-                                                    }
-                                                >
+                                                <MenuItem value={''}>
                                                     Belirtmek İstemiyorum
                                                 </MenuItem>
                                             </Select>
@@ -409,7 +420,7 @@ const Register = () => {
                                         </Button>
                                         <Modal
                                             open={open}
-                                            onClose={handleClose}
+                                            onError={handleClose}
                                             sx={{
                                                 backgroundColor: 'transparent',
                                             }}
@@ -539,6 +550,11 @@ const Register = () => {
                     </Grid>
                 </Grid>
             </Box>
+            <ErrorModal
+                open={openError}
+                handleClose={handleCloseError}
+                error={error}
+            />
         </AuthLayout>
     );
 };
