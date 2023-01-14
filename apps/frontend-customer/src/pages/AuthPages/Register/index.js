@@ -26,15 +26,15 @@ import { buttons, modal, boxStyle } from './style';
 import { postRegister } from '../../../function/function';
 
 const initialState = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    phone: '',
-    birthDate: '',
-    gender: '',
-    cbFirst: false,
-    username: '',
+    FirstName: '',
+    LastName: '',
+    Email: '',
+    Password: '',
+    Phone: '',
+    BirthDate: '',
+    Gender: '',
+    CbFirst: false,
+    Username: '',
 };
 
 function Copyright(props) {
@@ -95,10 +95,10 @@ const Register = () => {
 
     useEffect(() => {
         if (modalCheckbox) {
-            setRegisterForm({ ...registerForm, ['cbFirst']: true });
+            setRegisterForm({ ...registerForm, ['CbFirst']: true });
             setModalCheckbox(false);
         }
-    }, [modalCheckbox, registerForm.cbFirst]);
+    }, [modalCheckbox, registerForm.CbFirst]);
     //MODAL
 
     //CONFIRM PASSWORD
@@ -121,34 +121,34 @@ const Register = () => {
             });
         }
     };
-
+    const [error, setError] = useState(null);
     const handleSubmit = async (e) => {
         e.preventDefault();
-        registerForm['username'] =
-            registerForm.firstName + ' ' + registerForm.lastName;
+        registerForm['Username'] =
+            registerForm.FirstName + ' ' + registerForm.LastName;
         console.log('registerForm', registerForm);
 
         if (
-            registerForm.birthDate &&
-            registerForm.cbFirst &&
-            registerForm.email &&
-            registerForm.firstName &&
-            registerForm.gender &&
-            registerForm.lastName &&
-            registerForm.password &&
-            registerForm.phone &&
-            registerForm.username
+            registerForm.BirthDate &&
+            registerForm.CbFirst &&
+            registerForm.Email &&
+            registerForm.FirstName &&
+            registerForm.Gender &&
+            registerForm.LastName &&
+            registerForm.Password &&
+            registerForm.Phone &&
+            registerForm.Username
         ) {
-            if (registerForm.password === confirmPassword) {
-                postRegister(registerForm);
+            if (registerForm.Password === confirmPassword) {
+                postRegister(registerForm, setError);
             } else {
                 alert('Password does not match.');
             }
         } else {
             alert('Please fill required sections.');
         }
-
-        // const user = await register(email, password);
+        error ?? alert(error)
+        // const user = await register(Email, password);
         // if (user) {
         //   navigate("/", {
         //     replace: true,
@@ -242,12 +242,12 @@ const Register = () => {
                                             <TextField
                                                 margin="normal"
                                                 required
-                                                id="firstName"
+                                                id="FirstName"
                                                 label="Ad"
-                                                name="firstName"
-                                                autoComplete="firstName"
+                                                name="FirstName"
+                                                autoComplete="FirstName"
                                                 variant="standard"
-                                                value={registerForm.firstName}
+                                                value={registerForm.FirstName}
                                                 onChange={handleChange}
                                                 height="80px"
                                                 size="small"
@@ -257,12 +257,12 @@ const Register = () => {
                                                 sx={{ width: '48%' }}
                                                 margin="normal"
                                                 required
-                                                id="lastName"
+                                                id="LastName"
                                                 label="Soyad"
-                                                name="lastName"
-                                                autoComplete="lastName"
+                                                name="LastName"
+                                                autoComplete="LastName"
                                                 variant="standard"
-                                                value={registerForm.lastName}
+                                                value={registerForm.LastName}
                                                 onChange={handleChange}
                                                 width="343px"
                                                 height="80px"
@@ -272,13 +272,13 @@ const Register = () => {
                                         <TextField
                                             margin="normal"
                                             required
-                                            id="email"
+                                            id="Email"
                                             label="E-Posta Adresi"
-                                            name="email"
-                                            autoComplete="email"
+                                            name="Email"
+                                            autoComplete="Email"
                                             pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
                                             variant="standard"
-                                            value={registerForm.email}
+                                            value={registerForm.Email}
                                             onChange={handleChange}
                                             width="343px"
                                             height="80px"
@@ -288,13 +288,13 @@ const Register = () => {
                                         <TextField
                                             margin="normal"
                                             required
-                                            name="password"
+                                            name="Password"
                                             label="Şifre"
                                             type="password"
                                             id="password"
                                             autoComplete="current-password"
                                             variant="standard"
-                                            value={registerForm.password}
+                                            value={registerForm.Password}
                                             onChange={handleChange}
                                             size="small"
                                         />
@@ -310,11 +310,11 @@ const Register = () => {
                                             value={confirmPassword}
                                             error={
                                                 confirmPassword !==
-                                                registerForm.password
+                                                registerForm.Password
                                             }
                                             helperText={
                                                 confirmPassword !==
-                                                registerForm.password
+                                                registerForm.Password
                                                     ? 'Şifre Doğrulanamadı'
                                                     : ''
                                             }
@@ -338,12 +338,12 @@ const Register = () => {
                                             </InputLabel>
                                             <Input
                                                 required
-                                                name="phone"
+                                                name="Phone"
                                                 type="tel"
-                                                id="phone"
-                                                autoComplete="current-phone"
+                                                id="Phone"
+                                                autoComplete="current-Phone"
                                                 variant="standard"
-                                                value={registerForm.phone}
+                                                value={registerForm.Phone}
                                                 onChange={handleChange}
                                                 size="small"
                                             />
@@ -351,35 +351,35 @@ const Register = () => {
                                         <TextField
                                             margin="normal"
                                             required
-                                            name="birthDate"
+                                            name="BirthDate"
                                             type="date"
-                                            id="birthDate"
-                                            autoComplete="current-birthDate"
-                                            value={registerForm.birthDate}
+                                            id="BirthDate"
+                                            autoComplete="current-BirthDate"
+                                            value={registerForm.BirthDate}
                                             onChange={handleChange}
                                             size="small"
                                         />
                                         <FormControl fullWidth>
-                                            <InputLabel id="gender-label">
+                                            <InputLabel id="Gender-label">
                                                 Cinsiyet
                                             </InputLabel>
                                             <Select
-                                                labelId="gender-label"
-                                                id="gender"
-                                                name="gender"
-                                                value={registerForm.gender}
+                                                labelId="Gender-label"
+                                                id="Gender"
+                                                name="Gender"
+                                                value={registerForm.Gender}
                                                 label="Cinsiyet"
                                                 onChange={handleChange}
                                             >
-                                                <MenuItem value={'Erkek'}>
+                                                <MenuItem value={'Male'}>
                                                     Erkek
                                                 </MenuItem>
-                                                <MenuItem value={'Kadın'}>
+                                                <MenuItem value={'Female'}>
                                                     Kadın
                                                 </MenuItem>
                                                 <MenuItem
                                                     value={
-                                                        'Belirtmek İstemiyorum'
+                                                        ''
                                                     }
                                                 >
                                                     Belirtmek İstemiyorum
@@ -389,10 +389,10 @@ const Register = () => {
                                         <FormGroup>
                                             <FormControlLabel
                                                 control={<Checkbox />}
-                                                id="cbFirst"
-                                                name="cbFirst"
-                                                value={registerForm.cbFirst}
-                                                checked={registerForm.cbFirst}
+                                                id="CbFirst"
+                                                name="CbFirst"
+                                                value={registerForm.CbFirst}
+                                                checked={registerForm.CbFirst}
                                                 onChange={handleChange}
                                                 label="Sözleşmeyi okudum kabul ediyorum"
                                             />

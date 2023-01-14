@@ -5,7 +5,7 @@ export const denemeFunc = async(setDeneme)=>{
     setDeneme("deneme function.js")
 }
 
-export const postRegister = (data) => {
+export const postRegister = (data,setError) => {
 
 const options = {
   method: 'POST',
@@ -15,8 +15,9 @@ const options = {
 };
 
 axios.request(options).then(function (response) {
-  console.log(response.data);
+  console.log(response);
 }).catch(function (error) {
-  console.error('error',error);
+  console.error('error',error.response.data.details);
+  setError(error.response.data.details.toString())
 });
 }

@@ -105,7 +105,7 @@ dist
 
 
 # Frontend assets
-apps/frontend*/src/assets
+# apps/frontend*/src/assets
 
 # Package.lock json
 package-lock.json
