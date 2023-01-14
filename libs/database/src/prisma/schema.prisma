@@ -17,16 +17,18 @@ model User {
   /// for ex: arfoz
   Username   String
   /// for ex: Arif, Ozkan, Ahmet
-  FirstName  String?
+  FirstName  String
   /// for ex: lastname or surname
-  LastName   String?
+  LastName   String
   /// for ex: Turkey
   Country    String?
   /// For ex:544672654964  !Important it is string
-  Phone      String?
+  Phone      String
   /// for ex: Turkey
-  Gender     String?
-  /// for ex: Turkey
+  Gender     Gender
+  /// Checkbox Confirmation
+  CbFirst    Boolean  @default(false)
+  /// for ex: YYYY-MM-DD
   BirthDate  DateTime @default(now())
   /// @HideField({ input: true, output: true })
   PrivateKey String?
@@ -72,4 +74,9 @@ enum ExpiredReasonType {
   Expired
   SignInFromDifferentLocation
   TokenRefreshed
+}
+
+enum Gender {
+  Male
+  Female
 }

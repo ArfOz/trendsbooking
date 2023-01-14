@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsBoolean } from 'class-validator';
 
 export class CreateUserDto {
     // @IsString()
@@ -40,4 +40,8 @@ export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
     birthDate;
+
+    @IsBoolean()
+    @IsNotEmpty()
+    CbFirst;
 }

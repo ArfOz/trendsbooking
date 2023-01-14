@@ -4,6 +4,8 @@
     "auth": "libs/auth",
     "backend": "apps/backend",
     "database": "libs/database",
+    "frontend-company": "apps/frontend-company",
+    "frontend-customer": "apps/frontend-customer",
     "guard": "libs/guard",
     "shared": "libs/shared"
   },

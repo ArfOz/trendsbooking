@@ -6,8 +6,10 @@ export class BadRequestException extends TrendsException {
     constructor(
         // eslint-disable-next-line default-param-last
         type: BadRequestExceptionType = BadRequestExceptionType.BAD_REQUEST,
-        error?: Error,
+        // error?: Error,
+        details? :Error
     ) {
-        super(type, HttpStatus.BAD_REQUEST, error);
+        super(type, HttpStatus.BAD_REQUEST, details);
+        // console.log("error", error)
     }
 }

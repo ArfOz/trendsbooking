@@ -1,3 +1,5 @@
+import { UserProfileData } from './../../../auth/src/dtos/user-profile-data';
+import { UserResponseDto } from './../../../auth/src/dtos/user-response.dto';
 import {
     BadRequestExceptionType,
     BadRequestException,
@@ -15,19 +17,20 @@ export class UserService {
         private readonly keypairService: KeypairService,
     ) {}
 
-    async get(where: Prisma.UserWhereUniqueInput) {
+    async get(where: Prisma.UserWhereUniqueInput) :Promise<UserProfileData> {
+
         const user = await this.prisma.user.findUnique({
             where,
             select: {
-                BirthDate: true,
+                Id: true,
                 Email: true,
-                Phone: true,
-                Country: true,
                 FirstName: true,
                 LastName: true,
                 Username: true,
+                BirthDate: true,
+                Phone: true,
+                Country: true,
                 Gender: true,
-                Id: true,
             },
         });
 
@@ -108,7 +111,7 @@ export class UserService {
     //     return user;
     // }
 
-    async create(data: Prisma.UserCreateInput): Promise<User> {
+    async create(data: Prisma.UserCreateInput): Promise<UserResponseDto> {
         try {
             let encryptedEmail;
             let encryptedPhone;
@@ -124,6 +127,16 @@ export class UserService {
 
             const createdUser = await this.prisma.user.create({
                 data: { ...data, Email: encryptedEmail, Phone: encryptedPhone },
+                select: {
+                    BirthDate: true,
+                    Email: true,
+                    Phone: true,
+                    Country: true,
+                    FirstName: true,
+                    LastName: true,
+                    Username: true,
+                    Gender: true
+                }
             });
 
             if (data.Email) createdUser.Email = data.Email;
@@ -131,7 +144,9 @@ export class UserService {
 
             return createdUser;
         } catch (error) {
-            throw new BadRequestException(BadRequestExceptionType.BAD_REQUEST);
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(error));
         }
     }
 

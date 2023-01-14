@@ -4,14 +4,44 @@ import { IsOptional, IsString, IsNotEmpty } from 'class-validator';
 
 export class UserProfileData {
     @ApiProperty()
-    @IsString()
     @IsNotEmpty()
+    @IsString()
     Email: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    FirstName?: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    LastName?: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
     Username?: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    BirthDate: Date;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Phone: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Country?: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Gender?: string;
 
     // Role: UserRole;
 
@@ -23,13 +53,7 @@ export class UserProfileData {
 
     // Browser: string;
 
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    Country?: string;
+ 
 
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    City?: string;
+
 }

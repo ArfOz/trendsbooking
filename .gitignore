@@ -102,3 +102,10 @@ dist
 
 # TernJS port file
 .tern-port
+
+
+# Frontend assets
+# apps/frontend*/src/assets
+
+# Package.lock json
+package-lock.json

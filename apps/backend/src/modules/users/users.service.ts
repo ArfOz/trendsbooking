@@ -1,4 +1,5 @@
-import { ExpiredReasonType } from '@prisma/client';
+import { UserResponseDto } from './../../../../../libs/auth/src/dtos/user-response.dto';
+import { ExpiredReasonType, User } from '@prisma/client';
 import { UserPayloadDto, AuthService, CreateUserJsonDto } from '@auth';
 import authConfig from '@auth/config/auth.config';
 import { ConfigType } from '@nestjs/config';
@@ -49,11 +50,18 @@ export class UsersService {
     //     return createdUser;
     // }
 
-    async register(input: CreateUserJsonDto) {
-        if (!input.Email || !input.Password) {
+    async register(input: CreateUserJsonDto): Promise <UserResponseDto>{
+
+        if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error('Email and password are required.'),
+                new Error('Please check the box!!!'),
+            );
+        }
+        if (!input.Email || !input.Password || !input.Phone || !input.Username || !input.Gender || !input.FirstName || !input.LastName || !input.BirthDate) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error('Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'),
             );
         }
 
@@ -83,6 +91,7 @@ export class UsersService {
         if (user) {
             throw new AlreadyExistsException(
                 AlreadyExistsExceptionType.USER_ALREADY_EXISTS,
+                new Error('Ooops... User already exists')
             );
         }
 
@@ -123,15 +132,20 @@ export class UsersService {
         // Create a new user
         const response = await this.userService.create({
             Email: input.Email,
-            Phone: input.Phone,
+            FirstName: input.FirstName,
+            LastName: input.LastName ,
             Username: input.Username,
+            BirthDate: new Date(input.BirthDate),
+            Phone: input.Phone,
+            CbFirst:input.CbFirst,
+            Country: input.Country,
+            Gender:input.Gender,
+
             Password: await bcrypt.hash(input.Password, 10),
             PrivateKey: privKey,
             PublicKey: pubKey,
-            Country: input.Country,
-            FirstName: input.FirstName || 'First Name',
-            LastName: input.LastName || 'Last Name',
         });
+
         return response;
     }
 
@@ -150,7 +164,6 @@ export class UsersService {
         //     throw new TrendsException('You need to verify your account', 400);
         // }
 
-        let expireTime, expiretimeRefresh;
         if (user && (await bcrypt.compare(cred.Password, user.Password))) {
             const {
                 AccessToken,

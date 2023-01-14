@@ -1,3 +1,4 @@
+import { UserProfileData } from './dtos/user-profile-data';
 import { TrendsException } from './../../shared/src/exceptions/trends.exception';
 import { UserService } from './../../database/src/user/user.service';
 import { ExpiredReasonType } from '@prisma/client';

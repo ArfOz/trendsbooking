@@ -1,10 +1,16 @@
 // import { RegisterType } from '@prisma/client';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDateString, IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+
+
+export enum Genders {
+    Female = "Female",
+    Male = "Male"
+}
 export class CreateUserJsonDto {
     @ApiProperty()
     @IsNotEmpty()
-    @IsString()
+    @IsEmail()
     Email: string;
 
     @ApiProperty()
@@ -27,30 +33,38 @@ export class CreateUserJsonDto {
     // RegistrationMethod: RegisterType;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
-    FirstName?: string;
+    FirstName: string;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
-    LastName?: string;
+    LastName: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
     Country?: string;
 
+    @ApiProperty({example:[Genders.Male, Genders.Female],})
+    @IsNotEmpty()
+    @IsString()
+    Gender: Genders;
+
     @ApiProperty()
     @IsOptional()
     @IsString()
     Lang?: string;
 
-    // @IsNotEmpty()
-    // @IsBoolean()
-    // Agreement: boolean;
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsBoolean()
+    CbFirst: boolean;
 
-    // @IsOptional()
-    // @IsBoolean()
-    // Campaign?: boolean;
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsDateString()
+    BirthDate: Date;
 }
+
