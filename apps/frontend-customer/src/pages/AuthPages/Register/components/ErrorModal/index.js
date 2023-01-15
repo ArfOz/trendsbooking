@@ -31,7 +31,7 @@ export default function ErrorModal({ open, handleClose, error }) {
                         variant="h6"
                         component="h2"
                     >
-                        Error:
+                        Hata:
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         {error}

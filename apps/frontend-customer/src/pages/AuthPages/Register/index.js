@@ -12,19 +12,21 @@ import {
     Button,
     FormControl,
     FormGroup,
-    Input,
     InputLabel,
     MenuItem,
     Modal,
+    Input,
     Select,
+    FormHelperText,
 } from '@mui/material';
 import LogoShort from '../../../components';
 import { GoogleLoginButton } from 'react-social-login-buttons';
 import LogoWordShort from './components/LogoWordShort';
 import { Calculate } from '@mui/icons-material';
-import { buttons, modal, boxStyle } from './style';
+import { buttons, modal, boxStyle, input } from './style';
 import { postRegister } from '../../../function/function';
 import ErrorModal from './components/ErrorModal';
+import MuiPhoneNumber from 'mui-phone-number';
 
 const initialState = {
     FirstName: '',
@@ -97,8 +99,8 @@ const Register = () => {
     const handleOpenError = () => setOpenError(true);
     const handleCloseError = () => {
         setOpenError(false);
-        setError(null)
-    }
+        setError(null);
+    };
 
     useEffect(() => {
         if (modalCheckbox) {
@@ -129,40 +131,34 @@ const Register = () => {
         }
     };
 
+    const handleChangePhone = (e) => {
+        console.log(e.length);
+        registerForm['Phone'] = e;
+    };
+
     const [error, setError] = useState(null);
+    const [response, setResponse] = useState({});
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         registerForm['Username'] =
             registerForm.FirstName + ' ' + registerForm.LastName;
         console.log('registerForm', registerForm);
-
-        if (registerForm.Password !== confirmPassword) {
-            setError('Password does not match.');
+        if (
+            !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+                registerForm.Email,
+            )
+        ) {
+            setError('Lütfen geçerli bir email giriniz...');
+        } else if (registerForm.Password.length < 6) {
+            setError('Şifre en az 6 karakterden oluşmalıdır...');
+        } else if (registerForm.Password !== confirmPassword) {
+            setError('Şifre doğrulanamadı...');
+        } else if (registerForm.Phone.length !== 17) {
+            setError('Lütfen geçerli bir telefon numarası giriniz...');
         } else {
-            await postRegister(registerForm, setError);
+            await postRegister(registerForm, setError, setResponse);
         }
-        // if (
-        //     registerForm.BirthDate &&
-        //     registerForm.CbFirst &&
-        //     registerForm.Email &&
-        //     registerForm.FirstName &&
-        //     registerForm.Gender &&
-        //     registerForm.LastName &&
-        //     registerForm.Password &&
-        //     registerForm.Phone &&
-        //     registerForm.Username
-        // ) {
-        // } else {
-        //     await alert('Please fill required sections.');
-        // }
-        // error ?? handleOpen(true)
-        // const user = await register(Email, password);
-        // if (user) {
-        //   navigate("/", {
-        //     replace: true,
-        //   });
-        // }
     };
 
     useEffect(() => {
@@ -170,6 +166,12 @@ const Register = () => {
             handleOpenError(true);
         }
     }, [error]);
+
+    useEffect(() => {
+        if (response) {
+            localStorage.setItem('registerResponse', JSON.stringify(response));
+        }
+    }, [response]);
 
     return (
         <AuthLayout>
@@ -260,7 +262,7 @@ const Register = () => {
                                                 id="FirstName"
                                                 label="Ad"
                                                 name="FirstName"
-                                                autoComplete="FirstName"
+                                                autoComplete="text"
                                                 variant="standard"
                                                 value={registerForm.FirstName}
                                                 onChange={handleChange}
@@ -275,7 +277,7 @@ const Register = () => {
                                                 id="LastName"
                                                 label="Soyad"
                                                 name="LastName"
-                                                autoComplete="LastName"
+                                                autoComplete="text"
                                                 variant="standard"
                                                 value={registerForm.LastName}
                                                 onChange={handleChange}
@@ -290,7 +292,7 @@ const Register = () => {
                                             id="Email"
                                             label="E-Posta Adresi"
                                             name="Email"
-                                            autoComplete="Email"
+                                            autoComplete="email"
                                             pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
                                             variant="standard"
                                             value={registerForm.Email}
@@ -307,11 +309,12 @@ const Register = () => {
                                             label="Şifre"
                                             type="password"
                                             id="password"
-                                            autoComplete="current-password"
+                                            autoComplete="password"
                                             variant="standard"
                                             value={registerForm.Password}
                                             onChange={handleChange}
                                             size="small"
+                                            helperText="En az 6 karakterden oluşmalıdır."
                                         />
                                         <TextField
                                             margin="normal"
@@ -320,7 +323,7 @@ const Register = () => {
                                             label="Şifreni doğrula"
                                             type="password"
                                             id="confirmPassword"
-                                            autoComplete="current-password"
+                                            autoComplete="password"
                                             variant="standard"
                                             value={confirmPassword}
                                             error={
@@ -348,7 +351,7 @@ const Register = () => {
                                         }}
                                     >
                                         <FormControl variant="standard">
-                                            <InputLabel htmlFor="component-simple">
+                                            {/* <InputLabel htmlFor="component-simple">
                                                 Telefon Numarası
                                             </InputLabel>
                                             <Input
@@ -356,23 +359,42 @@ const Register = () => {
                                                 name="Phone"
                                                 type="tel"
                                                 id="Phone"
-                                                autoComplete="current-Phone"
+                                                autoComplete="tel"
                                                 variant="standard"
                                                 value={registerForm.Phone}
                                                 onChange={handleChange}
                                                 size="small"
+                                                inputProps={{
+                                                    pattern:
+                                                        '[0-9]{3}-[0-9]{3}-[0-9]{4}',
+                                                }}
+                                                // error={}
                                             />
+                                            <FormHelperText>
+                                                Örnek: 123 456 7890
+                                            </FormHelperText> */}
                                         </FormControl>
+                                        <InputLabel htmlFor="component-simple">
+                                            Telefon Numarası
+                                        </InputLabel>
+                                        <MuiPhoneNumber
+                                            defaultCountry={'tr'}
+                                            onChange={handleChangePhone}
+                                        />
+                                        <FormHelperText>
+                                            Örnek: +90 123 456 7890
+                                        </FormHelperText>
                                         <TextField
                                             margin="normal"
                                             required
                                             name="BirthDate"
                                             type="date"
                                             id="BirthDate"
-                                            autoComplete="current-BirthDate"
+                                            autoComplete="date"
                                             value={registerForm.BirthDate}
                                             onChange={handleChange}
                                             size="small"
+                                            inputProps={{ max: '2011-01-01' }}
                                         />
                                         <FormControl fullWidth>
                                             <InputLabel id="Gender-label">
@@ -392,7 +414,7 @@ const Register = () => {
                                                 <MenuItem value={'Female'}>
                                                     Kadın
                                                 </MenuItem>
-                                                <MenuItem value={''}>
+                                                <MenuItem value={'Not specify'}>
                                                     Belirtmek İstemiyorum
                                                 </MenuItem>
                                             </Select>
