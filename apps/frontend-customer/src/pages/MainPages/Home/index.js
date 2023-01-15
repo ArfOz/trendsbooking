@@ -19,7 +19,6 @@ const Home = () => {
     return (
         <MainLayout>
             <Navbar />
-
             <Hero />
             <Tabs />
             <Highlights />

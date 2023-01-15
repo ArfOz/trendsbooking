@@ -21,7 +21,7 @@ export const style = {
     buttons: {
       boxShadow: "none",
       "&:hover": {
-        backgroundColor: "primary",
+        backgroundColor: "primary.main",
       },
     },
     menucountainer: {
@@ -85,7 +85,7 @@ export const style = {
       boxShadow: "none",
       border: "1px solid black",
       "&:hover": {
-        backgroundColor: "success",
+        backgroundColor: "success.main",
       },
     },
     TB: {

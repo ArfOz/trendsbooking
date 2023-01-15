@@ -127,7 +127,7 @@ const SwipperList= [
   },
 ]
 
-const CardsSwiper1 = () => {
+const CardSwiper = () => {
   
   return (
     <>
@@ -247,4 +247,4 @@ const CardsSwiper1 = () => {
   );
 };
 
-export default CardsSwiper1;
+export default CardSwiper;

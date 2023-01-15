@@ -1,6 +1,6 @@
 export const style = {
     appbar: {
-      backgroundColor: "secondary",
+      backgroundColor: "secondary.main",
       boxShadow: "none",
       display: {
         xs: "none",
