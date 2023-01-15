@@ -28,6 +28,7 @@ import { postRegister } from '../../../function/function';
 import ErrorModal from './components/ErrorModal';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import Verification from './components/Verification';
 
 const initialState = {
     FirstName: '',
@@ -64,7 +65,7 @@ const Register = () => {
     const [registerForm, setRegisterForm] = useState(initialState);
     const navigate = useNavigate();
     const [activeElement, setActiveElement] = useState();
-    const maxSteps = 2;
+    const maxSteps = 3;
 
     //Slider
     const [activeStep, setActiveStep] = useState(0);
@@ -136,6 +137,19 @@ const Register = () => {
         registerForm['Phone'] = e;
     };
 
+    //VERIFICATION
+    const [verification, setVerification] = useState('');
+
+    const handleChangeVerification = (e) => {
+        setVerification(e);
+    };
+
+    const handleSubmitVerification = (e) => {
+        e.preventDefault();
+        console.log('verification', verification);
+    };
+    //VERIFICATION
+
     const [error, setError] = useState(null);
     const [response, setResponse] = useState({});
 
@@ -154,7 +168,10 @@ const Register = () => {
             setError('Şifre en az 6 karakterden oluşmalıdır...');
         } else if (registerForm.Password !== confirmPassword) {
             setError('Şifre doğrulanamadı...');
-        } else if (registerForm.Phone.length !== 12 || parseInt(registerForm.Phone.slice(0,2)) !== 90) {
+        } else if (
+            registerForm.Phone.length !== 12 ||
+            parseInt(registerForm.Phone.slice(0, 2)) !== 90
+        ) {
             setError('Lütfen geçerli bir telefon numarası giriniz...');
         } else {
             await postRegister(registerForm, setError, setResponse);
@@ -168,8 +185,9 @@ const Register = () => {
     }, [error]);
 
     useEffect(() => {
-        if (response) {
+        if (response.LastName) {
             localStorage.setItem('registerResponse', JSON.stringify(response));
+            setActiveStep(2);
         }
     }, [response]);
 
@@ -188,9 +206,17 @@ const Register = () => {
                                     <Typography
                                         component="h1"
                                         variant="h4"
-                                        sx={{ color: '#F75936', mb: 2 }}
+                                        sx={{
+                                            color: '#F75936',
+                                            mb: 2,
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                            padding: '0 6rem',
+                                        }}
                                     >
-                                        Hesap Oluşturun!
+                                        {activeStep === 2
+                                            ? 'Lütfen mailinize gelen doğrulama kodunu giriniz'
+                                            : 'Hesap Oluşturun!'}
                                     </Typography>
                                 </Box>
                             </Box>
@@ -441,6 +467,11 @@ const Register = () => {
                                             />
                                         </FormGroup>
                                     </Box>
+                                    <Verification
+                                        handleChangeVerification={
+                                            handleChangeVerification
+                                        }
+                                    />
                                 </Box>
                                 {activeStep === 1 && (
                                     <>
@@ -530,7 +561,7 @@ const Register = () => {
                                         </Modal>
                                     </>
                                 )}
-                                {activeStep !== maxSteps - 1 && (
+                                {activeStep < 1 && (
                                     <Button
                                         size="small"
                                         onClick={handleNext}
@@ -542,7 +573,7 @@ const Register = () => {
                                         İLERİ
                                     </Button>
                                 )}
-                                {activeStep > 0 && (
+                                {activeStep === 1 && (
                                     <Button
                                         size="small"
                                         onClick={handleBack}
@@ -554,7 +585,19 @@ const Register = () => {
                                         GERİ
                                     </Button>
                                 )}
-                                {activeStep === maxSteps - 1 && (
+                                {activeStep == 2 && (
+                                    <Button
+                                        size="small"
+                                        onClick={handleSubmitVerification}
+                                        fullWidth
+                                        variant="outlined"
+                                        sx={buttons.back}
+                                        disabled={activeStep <= 0}
+                                    >
+                                        DOĞRULA
+                                    </Button>
+                                )}
+                                {activeStep === maxSteps - 2 && (
                                     <Button
                                         type="submit"
                                         fullWidth
