@@ -10,7 +10,7 @@ import "swiper/css/scrollbar";
 
 
 
-import { Styles } from "./style";
+import { Styles } from "./Styles";
 
 const ShopsRight = () => {
   return (

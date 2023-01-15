@@ -1,0 +1,105 @@
+import shopImage from "../../../../../assets/shopImage.png";
+import na from "../../../../../assets/na.png";
+
+export const Styles = {
+  // ============ShopsRight =============
+  boxcontainer: {
+    // left: "924px",
+    // top: "172px",
+    // background: "#D9D9D9",
+    // borderRadius: "20px",
+    // width: "37%",
+    // height: "540px",
+    // position: "fixed",
+
+    left: {
+      xs: "none",
+      sm: "none",
+      md: "730px",
+      lg: "924px",
+    },
+    top: {
+      xs: "none",
+      sm: "none",
+      md: "172px",
+      lg: "172px",
+    },
+    background: {
+      xs: "#D9D9D9",
+      sm: "#D9D9D9",
+      md: "#D9D9D9",
+      lg: "#D9D9D9",
+    },
+    borderRadius: {
+      xs: "20px",
+      sm: "20px",
+      md: "20px",
+      lg: "20px",
+    },
+    width: {
+      xs: "100%",
+      sm: "95%",
+      md: "37%",
+      lg: "37%",
+    },
+    height: {
+      xs: "60vh",
+      sm: "60vh",
+      md: "100vh",
+      lg: "100vh",
+    },
+    position: {
+      xs: "relative",
+      sm: "relative",
+      md: "fixed",
+      lg: "fixed",
+    },
+  },
+  swiperbox: {
+    position: "relative",
+    background: `url(${shopImage})`,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    width: "100%",
+    height: "540px",
+    borderRadius: "20px",
+  },
+  swiperbox1: {
+    position: "relative",
+    background: `url(${na})`,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    width: "100%",
+    height: "540px",
+    borderRadius: "20px",
+  },
+  commentbox: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "99px",
+    height: "99px",
+    background: "#000000",
+    opacity: 0.5,
+    borderRadius: "0px 20px 0px 0px",
+    position: "absolute",
+    right: "0px",
+  },
+  typographycomment1: {
+    fontStyle: "normal",
+    fontWeight: "600",
+    fontSize: "40px",
+    lineHeight: "47px",
+    color: "#FFFFFF",
+  },
+  typographycomment2: {
+    fontStyle: "normal",
+    fontWeight: "400",
+    fontSize: "15px",
+    lineHeight: "18px",
+    color: "#FFFFFF",
+  },
+};
