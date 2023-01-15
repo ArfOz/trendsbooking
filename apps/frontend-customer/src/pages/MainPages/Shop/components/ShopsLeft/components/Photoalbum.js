@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
-import Rectangle104 from "../../../../../../assets/Rectangle 104.png";
-import Rectangle107 from "../../../../../../assets/Rectangle 107.png";
-import Rectangle108 from "../../../../../../assets/Rectangle 108.png";
+import Rectangle104 from "../../../../../../assets/Rectangle104.png";
+import Rectangle107 from "../../../../../../assets/Rectangle107.png";
+import Rectangle108 from "../../../../../../assets/Rectangle108.png";
 import { style } from "./style";
 const Photoalbum = () => {
   return (

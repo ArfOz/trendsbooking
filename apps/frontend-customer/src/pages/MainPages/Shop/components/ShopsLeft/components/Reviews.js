@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material'
-import Rectangle198 from "../../../../../../assets/Rectangle 198.png"
-import Rectangle199 from "../../../../../../assets/Rectangle 199.png"
-import Rectangle200 from "../../../../../../assets/Rectangle 200.png"
-import Rectangle201 from "../../../../../../assets/Rectangle 201.png"
-import Rectangle202 from "../../../../../../assets/Rectangle 202.png"
+import Rectangle198 from "../../../../../../assets/Rectangle198.png"
+import Rectangle199 from "../../../../../../assets/Rectangle199.png"
+import Rectangle200 from "../../../../../../assets/Rectangle200.png"
+import Rectangle201 from "../../../../../../assets/Rectangle201.png"
+import Rectangle202 from "../../../../../../assets/Rectangle202.png"
 import { style } from "./style";
 
 const Reviews = () => {
