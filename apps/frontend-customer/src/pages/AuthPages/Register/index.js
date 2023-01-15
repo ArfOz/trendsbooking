@@ -196,7 +196,7 @@ const Register = () => {
             <Box sx={{ backgroundColor: 'white' }}>
                 <Grid container component="">
                     {/*##################  Form Section #################  */}
-                    <Grid item xs={6} sm={6} md={6} l={6} xl={6}>
+                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                         <Box sx={boxStyle.leftMain}>
                             <Box sx={boxStyle.headerBox}>
                                 <Box sx={boxStyle.LogoWordShort}>
@@ -620,7 +620,7 @@ const Register = () => {
                             </Box>
                         </Box>
                     </Grid>
-                    <Grid item xs={6} sm={6} md={6} l={6} xl={6}>
+                    <Grid item xs={0} sm={0} md={6} lg={6} xl={6}>
                         <Box sx={boxStyle.rightside}></Box>
                     </Grid>
                 </Grid>
