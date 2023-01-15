@@ -14,7 +14,7 @@
     "database:generate": "npx nx run database:generate",
     "format": "npx nx format:write --all",
     "format:check": "npx nx format:check -all",
-    "update": "npm i && npm run migrate:database"
+    "update": "npm i && npm run database:generate"
   },
   "private": true,
   "dependencies": {
