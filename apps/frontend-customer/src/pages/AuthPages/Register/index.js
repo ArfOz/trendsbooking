@@ -26,7 +26,8 @@ import { Calculate } from '@mui/icons-material';
 import { buttons, modal, boxStyle, input } from './style';
 import { postRegister } from '../../../function/function';
 import ErrorModal from './components/ErrorModal';
-import MuiPhoneNumber from 'mui-phone-number';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 const initialState = {
     FirstName: '',
@@ -132,7 +133,6 @@ const Register = () => {
     };
 
     const handleChangePhone = (e) => {
-        console.log(e.length);
         registerForm['Phone'] = e;
     };
 
@@ -154,7 +154,7 @@ const Register = () => {
             setError('Şifre en az 6 karakterden oluşmalıdır...');
         } else if (registerForm.Password !== confirmPassword) {
             setError('Şifre doğrulanamadı...');
-        } else if (registerForm.Phone.length !== 17) {
+        } else if (registerForm.Phone.length !== 12 || parseInt(registerForm.Phone.slice(0,2)) !== 90) {
             setError('Lütfen geçerli bir telefon numarası giriniz...');
         } else {
             await postRegister(registerForm, setError, setResponse);
@@ -377,9 +377,19 @@ const Register = () => {
                                         <InputLabel htmlFor="component-simple">
                                             Telefon Numarası
                                         </InputLabel>
-                                        <MuiPhoneNumber
-                                            defaultCountry={'tr'}
+                                        <PhoneInput
+                                            country={'tr'}
+                                            value={registerForm.Phone}
                                             onChange={handleChangePhone}
+                                            onlyCountries={['tr']}
+                                            inputProps={{
+                                                name: 'Phone',
+                                                required: true,
+                                                autoFocus: true,
+                                                style: {
+                                                    width: '100%',
+                                                },
+                                            }}
                                         />
                                         <FormHelperText>
                                             Örnek: +90 123 456 7890
