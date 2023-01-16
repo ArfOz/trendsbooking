@@ -1,5 +1,5 @@
+import { ExpiredReasonType } from '@prisma/client';
 import { UserResponseDto } from './../../../../../libs/auth/src/dtos/user-response.dto';
-import { ExpiredReasonType, User } from '@prisma/client';
 import { UserPayloadDto, AuthService, CreateUserJsonDto } from '@auth';
 import authConfig from '@auth/config/auth.config';
 import { ConfigType } from '@nestjs/config';
@@ -56,12 +56,16 @@ export class UsersService {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error('Please check the box!!!'),
+
+                // Error code gönderilir
+                // ErrorCode.201(asdsad)
             );
         }
+
         if (!input.Email || !input.Password || !input.Phone || !input.Username || !input.Gender || !input.FirstName || !input.LastName || !input.BirthDate) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error('Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'),
+                new Error('Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate are required.'),
             );
         }
 
