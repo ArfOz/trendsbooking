@@ -1,5 +1,5 @@
-import { ExpiredReasonType } from '@prisma/client';
 import { UserResponseDto } from './../../../../../libs/auth/src/dtos/user-response.dto';
+import { ExpiredReasonType, User } from '@prisma/client';
 import { UserPayloadDto, AuthService, CreateUserJsonDto } from '@auth';
 import authConfig from '@auth/config/auth.config';
 import { ConfigType } from '@nestjs/config';
@@ -56,6 +56,7 @@ export class UsersService {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error('Please check the box!!!'),
+<<<<<<< HEAD
                 // error.code(5)
 
                 // Error code gönderilir
@@ -72,6 +73,16 @@ export class UsersService {
 
         //     );
         // }
+=======
+            );
+        }
+        if (!input.Email || !input.Password || !input.Phone || !input.Username || !input.Gender || !input.FirstName || !input.LastName || !input.BirthDate) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error('Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'),
+            );
+        }
+>>>>>>> 7961e14015611304e58d184400cb82d75aaec316
 
         // // Checking password validation
         // const validationPassword = this.validatePassword(input.Password);
@@ -148,6 +159,8 @@ export class UsersService {
             CbFirst:input.CbFirst,
             Country: input.Country,
             Gender:input.Gender,
+            CreatedAt: new Date(),
+            UpdatedAt: new Date(),
 
             Password: await bcrypt.hash(input.Password, 10),
             PrivateKey: privKey,
