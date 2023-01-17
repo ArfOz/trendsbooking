@@ -56,18 +56,22 @@ export class UsersService {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error('Please check the box!!!'),
+                // error.code(5)
 
                 // Error code gönderilir
                 // ErrorCode.201(asdsad)
             );
         }
 
-        if (!input.Email || !input.Password || !input.Phone || !input.Username || !input.Gender || !input.FirstName || !input.LastName || !input.BirthDate) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error('Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate are required.'),
-            );
-        }
+        // Password 6 karakter
+
+        // if (!input.Email || !input.Password || !input.Phone || !input.Username || !input.Gender || !input.FirstName || !input.LastName || !input.BirthDate) {
+        //     throw new BadRequestException(
+        //         BadRequestExceptionType.BAD_REQUEST,
+        //         new Error('Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate are required.'),
+
+        //     );
+        // }
 
         // // Checking password validation
         // const validationPassword = this.validatePassword(input.Password);
@@ -150,6 +154,8 @@ export class UsersService {
             PublicKey: pubKey,
         });
 
+        // Verification code
+        // Response varsa Success
         return response;
     }
 
@@ -190,6 +196,7 @@ export class UsersService {
             delete user.Password;
             delete user.Id;
 
+            // Response varsa Success
             return {
                 Token: {
                     AccessToken,

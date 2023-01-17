@@ -1,5 +1,5 @@
 // import { RegisterType } from '@prisma/client';
-import { IsBoolean, IsDateString, IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDateString, IsEmail, IsNotEmpty, IsOptional, IsString,} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 
@@ -14,7 +14,7 @@ export class CreateUserJsonDto {
     Email: string;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     Phone: string;
 
