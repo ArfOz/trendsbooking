@@ -1,11 +1,11 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { Styles } from "./style";
+import { style } from "./style";
 
 function FooterLeft() {
   return (
     <>
-      <Box sx={Styles.LeftBoxContainer}>
+      <Box sx={style.LeftBoxContainer}>
         <Box
           sx={{
             width:{
@@ -18,13 +18,13 @@ function FooterLeft() {
         
           }}
         >
-          <Typography sx={Styles.Typography1}>
+          <Typography sx={style.Typography1}>
             123 Market St. #22B Charlottesville, California 44635
           </Typography>
         </Box>
-        <Box sx={Styles.LeftBoxContainer}>
-          <Typography sx={Styles.Typography2}>(434) 546-4356</Typography>
-          <Typography sx={Styles.Typography2}>contact@lift.agency</Typography>
+        <Box sx={style.LeftBoxContainer}>
+          <Typography sx={style.Typography2}>(434) 546-4356</Typography>
+          <Typography sx={style.Typography2}>contact@lift.agency</Typography>
         </Box>
       </Box>
     </>

@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 
 import { ShopsLeft, ShopsRight } from './components';
 import NavbarSecond from '../../../components/Navbar/NavbarSecond'
+import Footer from '../../../components/Footer';
 
 function Shop() {
     return (
@@ -76,6 +77,7 @@ function Shop() {
             >
                 <ShopsLeft />
             </Box>
+            <Footer/>
         </>
     );
 }

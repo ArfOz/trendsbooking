@@ -2,6 +2,7 @@ import React from 'react';
 
 import { MainLayout } from '../../../layout';
 import Navbar from '../../../components/Navbar/Navbar';
+import Footer from '../../../components/Footer';
 import {
     Hero,
     Tabs,
@@ -30,7 +31,7 @@ const Home = () => {
             <MobileApplication />
             <Questions />
 
-            {/* <FooterMain/> */}
+            <Footer/>
         </MainLayout>
     );
 };
