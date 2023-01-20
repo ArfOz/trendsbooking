@@ -36,7 +36,7 @@ export const buttons = {
       },
     },
   };
-  
+
   export const modal = {
     position: "absolute",
     top: "50%",
@@ -45,7 +45,7 @@ export const buttons = {
     width: "50%",
     bgcolor: "#fff",
     p: 4,
-  
+
     button: {
       mt: 2,
       fontSize: "1rem",
@@ -89,7 +89,7 @@ export const buttons = {
       },
     },
   };
-  
+
   export const boxStyle = {
     leftMain: {
       display: "flex",
@@ -98,7 +98,7 @@ export const buttons = {
       justifyContent: "center",
       height: "100vh",
     },
-  
+
     headerBox: {
       display: "flex",
       justifyContent: "center",
@@ -107,7 +107,7 @@ export const buttons = {
       width: "100%",
       mt: 0,
     },
-    logoWordShort: {
+    logoWord: {
       width: "calc(100% - 50px)",
       mt: 4,
       ml: 3,
@@ -120,13 +120,13 @@ export const buttons = {
       mb: 2,
     },
     progressBarFull: {},
-  
+
     form: {
       display: "flex",
       flexDirection: "column",
       width: "50%",
     },
-  
+
     rightside: {
       backgroundImage: "url(https://source.unsplash.com/random)",
       backgroundRepeat: "no-repeat",
@@ -135,4 +135,3 @@ export const buttons = {
       height: "100vh",
     },
   };
-  
