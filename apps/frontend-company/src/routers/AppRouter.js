@@ -28,16 +28,16 @@ const AppRouter = () => {
         <Route path='/shop' element={<Shop />} />
 
         <Route path='/profile' element={<PublicRoute isAuth={user} redirectPath="/" />} >
-           <Route path='' element={<Home />} /> 
+           <Route path='' element={<Home />} />
         </Route>
 
-        {/* <Route path='/auth' element={<PrivateRoute isAuth={!user} redirectPath="/auth" />} >
+        <Route path='/auth' element={<PrivateRoute isAuth={!user} redirectPath="/auth" />} >
           <Route path='' element={<Login />} />
           <Route path='login' element={<Login />} />
           <Route path='login' element={<Login />} />
           <Route path='register' element={<Register />} />
           <Route path='reset-password' element={<ResetPassword />} />
-        </Route> */}
+        </Route>
 
         <Route path="*" element={<NotFound404 />} />
       </Routes>

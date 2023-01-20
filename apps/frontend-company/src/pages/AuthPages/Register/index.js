@@ -26,19 +26,6 @@ import LogoWord from './components/LogoWord';
 export default function Register() {
 
 
-    useEffect(() => {
-        if (error) {
-            handleOpenError(true);
-        }
-    }, [error]);
-
-    useEffect(() => {
-        if (response.LastName) {
-            localStorage.setItem('registerResponse', JSON.stringify(response));
-            setActiveStep(2);
-        }
-    }, [response]);
-
     return (
         <AuthLayout>
             <Box sx={{ backgroundColor: 'white' }}>
@@ -73,11 +60,7 @@ export default function Register() {
                     </Grid>
                 </Grid>
             </Box>
-            <ErrorModal
-                open={openError}
-                handleClose={handleCloseError}
-                error={error}
-            />
+
         </AuthLayout>
     );
 }
