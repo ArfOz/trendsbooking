@@ -12,18 +12,23 @@ import {
     Button,
     FormControl,
     FormGroup,
-    Input,
     InputLabel,
     MenuItem,
     Modal,
+    Input,
     Select,
+    FormHelperText,
 } from '@mui/material';
 import LogoShort from '../../../components';
 import { GoogleLoginButton } from 'react-social-login-buttons';
 import LogoWordShort from './components/LogoWordShort';
 import { Calculate } from '@mui/icons-material';
-import { buttons, modal, boxStyle } from './style';
+import { buttons, modal, boxStyle, input } from './style';
 import { postRegister } from '../../../function/function';
+import ErrorModal from './components/ErrorModal';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import Verification from './components/Verification';
 
 const initialState = {
     FirstName: '',
@@ -60,7 +65,7 @@ const Register = () => {
     const [registerForm, setRegisterForm] = useState(initialState);
     const navigate = useNavigate();
     const [activeElement, setActiveElement] = useState();
-    const maxSteps = 2;
+    const maxSteps = 3;
 
     //Slider
     const [activeStep, setActiveStep] = useState(0);
@@ -88,10 +93,16 @@ const Register = () => {
     //Slider
 
     //MODAL
-    const [open, setOpen] = React.useState(false);
     const [modalCheckbox, setModalCheckbox] = useState(false);
+    const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [openError, setOpenError] = React.useState(false);
+    const handleOpenError = () => setOpenError(true);
+    const handleCloseError = () => {
+        setOpenError(false);
+        setError(null);
+    };
 
     useEffect(() => {
         if (modalCheckbox) {
@@ -121,47 +132,71 @@ const Register = () => {
             });
         }
     };
+
+    const handleChangePhone = (e) => {
+        registerForm['Phone'] = e;
+    };
+
+    //VERIFICATION
+    const [verification, setVerification] = useState('');
+
+    const handleChangeVerification = (e) => {
+        setVerification(e);
+    };
+
+    const handleSubmitVerification = (e) => {
+        e.preventDefault();
+        console.log('verification', verification);
+    };
+    //VERIFICATION
+
     const [error, setError] = useState(null);
+    const [response, setResponse] = useState({});
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         registerForm['Username'] =
             registerForm.FirstName + ' ' + registerForm.LastName;
         console.log('registerForm', registerForm);
-
         if (
-            registerForm.BirthDate &&
-            registerForm.CbFirst &&
-            registerForm.Email &&
-            registerForm.FirstName &&
-            registerForm.Gender &&
-            registerForm.LastName &&
-            registerForm.Password &&
-            registerForm.Phone &&
-            registerForm.Username
+            !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+                registerForm.Email,
+            )
         ) {
-            if (registerForm.Password === confirmPassword) {
-                postRegister(registerForm, setError);
-            } else {
-                alert('Password does not match.');
-            }
+            setError('Lütfen geçerli bir email giriniz...');
+        } else if (registerForm.Password.length < 6) {
+            setError('Şifre en az 6 karakterden oluşmalıdır...');
+        } else if (registerForm.Password !== confirmPassword) {
+            setError('Şifre doğrulanamadı...');
+        } else if (
+            registerForm.Phone.length !== 12 ||
+            parseInt(registerForm.Phone.slice(0, 2)) !== 90
+        ) {
+            setError('Lütfen geçerli bir telefon numarası giriniz...');
         } else {
-            alert('Please fill required sections.');
+            await postRegister(registerForm, setError, setResponse);
         }
-        error ?? alert(error)
-        // const user = await register(Email, password);
-        // if (user) {
-        //   navigate("/", {
-        //     replace: true,
-        //   });
-        // }
     };
+
+    useEffect(() => {
+        if (error) {
+            handleOpenError(true);
+        }
+    }, [error]);
+
+    useEffect(() => {
+        if (response.LastName) {
+            localStorage.setItem('registerResponse', JSON.stringify(response));
+            setActiveStep(2);
+        }
+    }, [response]);
 
     return (
         <AuthLayout>
             <Box sx={{ backgroundColor: 'white' }}>
                 <Grid container component="">
                     {/*##################  Form Section #################  */}
-                    <Grid item xs={6} sm={6} md={6} l={6} xl={6}>
+                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                         <Box sx={boxStyle.leftMain}>
                             <Box sx={boxStyle.headerBox}>
                                 <Box sx={boxStyle.LogoWordShort}>
@@ -171,9 +206,17 @@ const Register = () => {
                                     <Typography
                                         component="h1"
                                         variant="h4"
-                                        sx={{ color: '#F75936', mb: 2 }}
+                                        sx={{
+                                            color: '#F75936',
+                                            mb: 2,
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                            padding: '0 6rem',
+                                        }}
                                     >
-                                        Hesap Oluşturun!
+                                        {activeStep === 2
+                                            ? 'Lütfen mailinize gelen doğrulama kodunu giriniz'
+                                            : 'Hesap Oluşturun!'}
                                     </Typography>
                                 </Box>
                             </Box>
@@ -245,7 +288,7 @@ const Register = () => {
                                                 id="FirstName"
                                                 label="Ad"
                                                 name="FirstName"
-                                                autoComplete="FirstName"
+                                                autoComplete="text"
                                                 variant="standard"
                                                 value={registerForm.FirstName}
                                                 onChange={handleChange}
@@ -260,7 +303,7 @@ const Register = () => {
                                                 id="LastName"
                                                 label="Soyad"
                                                 name="LastName"
-                                                autoComplete="LastName"
+                                                autoComplete="text"
                                                 variant="standard"
                                                 value={registerForm.LastName}
                                                 onChange={handleChange}
@@ -275,7 +318,7 @@ const Register = () => {
                                             id="Email"
                                             label="E-Posta Adresi"
                                             name="Email"
-                                            autoComplete="Email"
+                                            autoComplete="email"
                                             pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
                                             variant="standard"
                                             value={registerForm.Email}
@@ -292,11 +335,12 @@ const Register = () => {
                                             label="Şifre"
                                             type="password"
                                             id="password"
-                                            autoComplete="current-password"
+                                            autoComplete="password"
                                             variant="standard"
                                             value={registerForm.Password}
                                             onChange={handleChange}
                                             size="small"
+                                            helperText="En az 6 karakterden oluşmalıdır."
                                         />
                                         <TextField
                                             margin="normal"
@@ -305,7 +349,7 @@ const Register = () => {
                                             label="Şifreni doğrula"
                                             type="password"
                                             id="confirmPassword"
-                                            autoComplete="current-password"
+                                            autoComplete="password"
                                             variant="standard"
                                             value={confirmPassword}
                                             error={
@@ -333,7 +377,7 @@ const Register = () => {
                                         }}
                                     >
                                         <FormControl variant="standard">
-                                            <InputLabel htmlFor="component-simple">
+                                            {/* <InputLabel htmlFor="component-simple">
                                                 Telefon Numarası
                                             </InputLabel>
                                             <Input
@@ -341,23 +385,52 @@ const Register = () => {
                                                 name="Phone"
                                                 type="tel"
                                                 id="Phone"
-                                                autoComplete="current-Phone"
+                                                autoComplete="tel"
                                                 variant="standard"
                                                 value={registerForm.Phone}
                                                 onChange={handleChange}
                                                 size="small"
+                                                inputProps={{
+                                                    pattern:
+                                                        '[0-9]{3}-[0-9]{3}-[0-9]{4}',
+                                                }}
+                                                // error={}
                                             />
+                                            <FormHelperText>
+                                                Örnek: 123 456 7890
+                                            </FormHelperText> */}
                                         </FormControl>
+                                        <InputLabel htmlFor="component-simple">
+                                            Telefon Numarası
+                                        </InputLabel>
+                                        <PhoneInput
+                                            country={'tr'}
+                                            value={registerForm.Phone}
+                                            onChange={handleChangePhone}
+                                            onlyCountries={['tr']}
+                                            inputProps={{
+                                                name: 'Phone',
+                                                required: true,
+                                                autoFocus: true,
+                                                style: {
+                                                    width: '100%',
+                                                },
+                                            }}
+                                        />
+                                        <FormHelperText>
+                                            Örnek: +90 123 456 7890
+                                        </FormHelperText>
                                         <TextField
                                             margin="normal"
                                             required
                                             name="BirthDate"
                                             type="date"
                                             id="BirthDate"
-                                            autoComplete="current-BirthDate"
+                                            autoComplete="date"
                                             value={registerForm.BirthDate}
                                             onChange={handleChange}
                                             size="small"
+                                            inputProps={{ max: '2011-01-01' }}
                                         />
                                         <FormControl fullWidth>
                                             <InputLabel id="Gender-label">
@@ -377,11 +450,7 @@ const Register = () => {
                                                 <MenuItem value={'Female'}>
                                                     Kadın
                                                 </MenuItem>
-                                                <MenuItem
-                                                    value={
-                                                        ''
-                                                    }
-                                                >
+                                                <MenuItem value={'Not specify'}>
                                                     Belirtmek İstemiyorum
                                                 </MenuItem>
                                             </Select>
@@ -398,6 +467,11 @@ const Register = () => {
                                             />
                                         </FormGroup>
                                     </Box>
+                                    <Verification
+                                        handleChangeVerification={
+                                            handleChangeVerification
+                                        }
+                                    />
                                 </Box>
                                 {activeStep === 1 && (
                                     <>
@@ -409,7 +483,7 @@ const Register = () => {
                                         </Button>
                                         <Modal
                                             open={open}
-                                            onClose={handleClose}
+                                            onError={handleClose}
                                             sx={{
                                                 backgroundColor: 'transparent',
                                             }}
@@ -487,7 +561,7 @@ const Register = () => {
                                         </Modal>
                                     </>
                                 )}
-                                {activeStep !== maxSteps - 1 && (
+                                {activeStep < 1 && (
                                     <Button
                                         size="small"
                                         onClick={handleNext}
@@ -499,7 +573,7 @@ const Register = () => {
                                         İLERİ
                                     </Button>
                                 )}
-                                {activeStep > 0 && (
+                                {activeStep === 1 && (
                                     <Button
                                         size="small"
                                         onClick={handleBack}
@@ -511,7 +585,19 @@ const Register = () => {
                                         GERİ
                                     </Button>
                                 )}
-                                {activeStep === maxSteps - 1 && (
+                                {activeStep == 2 && (
+                                    <Button
+                                        size="small"
+                                        onClick={handleSubmitVerification}
+                                        fullWidth
+                                        variant="outlined"
+                                        sx={buttons.back}
+                                        disabled={activeStep <= 0}
+                                    >
+                                        DOĞRULA
+                                    </Button>
+                                )}
+                                {activeStep === maxSteps - 2 && (
                                     <Button
                                         type="submit"
                                         fullWidth
@@ -534,11 +620,16 @@ const Register = () => {
                             </Box>
                         </Box>
                     </Grid>
-                    <Grid item xs={6} sm={6} md={6} l={6} xl={6}>
+                    <Grid item xs={0} sm={0} md={6} lg={6} xl={6}>
                         <Box sx={boxStyle.rightside}></Box>
                     </Grid>
                 </Grid>
             </Box>
+            <ErrorModal
+                open={openError}
+                handleClose={handleCloseError}
+                error={error}
+            />
         </AuthLayout>
     );
 };

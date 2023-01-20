@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { MainLayout } from '../../../layout';
-import Navbar from '../../../components/Navbar/Navbar';
+import CompanyNavbar from '../../../components/Navbar/CompanyNavbar';
+import Footer from '../../../components/Footer';
 import {
     Hero,
     Tabs,
@@ -18,8 +19,7 @@ import {
 const Home = () => {
     return (
         <MainLayout>
-            <Navbar />
-
+           <CompanyNavbar/>
             <Hero />
             <Tabs />
             <Highlights />
@@ -31,7 +31,7 @@ const Home = () => {
             <MobileApplication />
             <Questions />
 
-            {/* <FooterMain/> */}
+            <Footer/>
         </MainLayout>
     );
 };
