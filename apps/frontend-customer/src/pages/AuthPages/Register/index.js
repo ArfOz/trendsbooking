@@ -24,11 +24,11 @@ import { GoogleLoginButton } from 'react-social-login-buttons';
 import LogoWordShort from './components/LogoWordShort';
 import { Calculate } from '@mui/icons-material';
 import { buttons, modal, boxStyle, input } from './style';
-import { postRegister } from '../../../function/function';
 import ErrorModal from './components/ErrorModal';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import Verification from './components/Verification';
+import { useAuth } from '../../../context/authContext';
 
 const initialState = {
     FirstName: '',
@@ -66,6 +66,8 @@ const Register = () => {
     const navigate = useNavigate();
     const [activeElement, setActiveElement] = useState();
     const maxSteps = 3;
+
+    const auth = useAuth();
 
     //Slider
     const [activeStep, setActiveStep] = useState(0);
@@ -174,10 +176,10 @@ const Register = () => {
         ) {
             setError('Lütfen geçerli bir telefon numarası giriniz...');
         } else {
-            await postRegister(registerForm, setError, setResponse);
+            await auth.postRegister(registerForm);
         }
     };
-
+    
     useEffect(() => {
         if (error) {
             handleOpenError(true);
