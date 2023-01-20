@@ -1,10 +1,10 @@
 import React from 'react';
-import { LogoWord as logoWord } from '../../../../../assets';
+import  logoWordUs  from '../../../../../assets/logoWordUs.png';
 
 function LogoWord() {
     return (
         <div>
-            <img src={logoWord} alt="logoWord" />
+            <img src={logoWordUs} alt="logoWord" />
         </div>
     );
 }

@@ -35,15 +35,15 @@ export const buttons = {
             color: '#F75936',
         },
     },
-};
+  };
 
-export const modal = {
-    position: 'absolute',
-    top: '50%',
-    left: '25%',
-    transform: 'translate(-50%, -50%)',
-    width: '50%',
-    bgcolor: '#fff',
+  export const modal = {
+    position: "absolute",
+    top: "50%",
+    left: "25%",
+    transform: "translate(-50%, -50%)",
+    width: "50%",
+    bgcolor: "#fff",
     p: 4,
 
     button: {
@@ -88,9 +88,9 @@ export const modal = {
             color: '#fff !important',
         },
     },
-};
+  };
 
-export const boxStyle = {
+  export const boxStyle = {
     leftMain: {
         display: 'flex',
         flexDirection: 'column',
@@ -107,10 +107,10 @@ export const boxStyle = {
         width: '100%',
         mt: 0,
     },
-    logoWordShort: {
-        width: 'calc(100% - 50px)',
-        mt: 4,
-        ml: 3,
+    logoWord: {
+      width: "calc(100% - 50px)",
+      mt: 4,
+      ml: 3,
     },
     progressBarEmpty: {
         width: '50%',
@@ -134,10 +134,4 @@ export const boxStyle = {
         backgroundPosition: 'center',
         height: '100vh',
     },
-};
-
-export const input = {
-    '&:invalid': {
-        border: 'red solid 2px',
-    },
-};
+  };
