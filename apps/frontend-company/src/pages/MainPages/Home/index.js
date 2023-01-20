@@ -6,7 +6,7 @@ import Footer from '../../../components/Footer';
 import {
     Hero,
     
-    Tabs,
+    
     Highlights,
     AveragePrices,
     Happier,
@@ -24,7 +24,7 @@ const Home = () => {
            <CompanyNavbar/>
             {/* <Hero /> */}
           <Chero/>
-            {/* <Tabs /> */}
+         
             {/* <Highlights /> */}
             {/* <AveragePrices /> */}
             {/* <Happier /> */}

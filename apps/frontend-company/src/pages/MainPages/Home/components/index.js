@@ -7,7 +7,7 @@ import MobileApplication from './MobileApplication'
 import OneClick from './OneClick'
 import Questions from './Questions'
 import Software from './Software'
-import Tabs from './Tabs'
+
 
 export {
     AveragePrices,
@@ -19,5 +19,5 @@ export {
     OneClick,
     Questions,
     Software,
-    Tabs
+    
 }
