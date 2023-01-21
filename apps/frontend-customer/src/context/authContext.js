@@ -18,6 +18,7 @@ function useProvideAuth() {
     const [registerErrors, setRegisterErrors] = useState();
     const [loginErrors, setLoginErrors] = useState();
     const [isLoading, setIsLoading] = useState(false);
+    
     function postLogin(data) {
         setIsLoading(true);
         const options = {
@@ -43,6 +44,7 @@ function useProvideAuth() {
             });
     };
     function postRegister(data) {
+        setRegisterErrors(null)
         setIsLoading(true);
         const options = {
             method: 'POST',
@@ -59,6 +61,7 @@ function useProvideAuth() {
             .then(function (response) {
                 console.log(response);
                 setRegisterUser(response.data);
+                setIsLoading(false)
             })
             .catch(function (error) {
                 console.log('error', error);

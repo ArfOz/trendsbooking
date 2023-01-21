@@ -86,6 +86,7 @@ const Register = () => {
             Array.from(activeElement).map((item, index) => {
                 if (index === activeStep) {
                     item.style.display = 'flex';
+                    item.style.justifyContent = 'center';
                 } else {
                     item.style.display = 'none';
                 }
@@ -113,13 +114,6 @@ const Register = () => {
         }
     }, [modalCheckbox, registerForm.CbFirst]);
     //MODAL
-
-    //CONFIRM PASSWORD
-    useEffect(() => {
-        // console.log('confirmPassword :>> ', confirmPassword);
-        // console.log('registerForm.password :>> ', registerForm.password);
-    }, [confirmPassword]);
-    //CONFIRM PASSWORD
 
     const handleChange = (e) => {
         if (e.target.type === 'checkbox') {
@@ -152,10 +146,11 @@ const Register = () => {
     };
     //VERIFICATION
 
-    const [error, setError] = useState(null);
-    const [response, setResponse] = useState({});
+    const [error, setError] = useState('');
+    const [registered, setRegistered] = useState(false);
 
     const handleSubmit = async (e) => {
+        setError('');
         e.preventDefault();
         registerForm['Username'] =
             registerForm.FirstName + ' ' + registerForm.LastName;
@@ -166,20 +161,98 @@ const Register = () => {
             )
         ) {
             setError('Lütfen geçerli bir email giriniz...');
+            setRegistered(false);
         } else if (registerForm.Password.length < 6) {
             setError('Şifre en az 6 karakterden oluşmalıdır...');
+            setRegistered(false);
         } else if (registerForm.Password !== confirmPassword) {
             setError('Şifre doğrulanamadı...');
+            setRegistered(false);
         } else if (
             registerForm.Phone.length !== 12 ||
             parseInt(registerForm.Phone.slice(0, 2)) !== 90
         ) {
             setError('Lütfen geçerli bir telefon numarası giriniz...');
+            setRegistered(false);
         } else {
             await auth.postRegister(registerForm);
+            setRegistered(true);
         }
     };
-    
+
+    useEffect(() => {
+        if (registered) {
+            if (
+                auth.registerErrors?.response.data.details.toString() ===
+                'Please check the box!!!'
+            ) {
+                console.log(
+                    'object :>> ',
+                    auth.registerErrors?.response.data.details.toString(),
+                );
+                setError('Lütfen sözleşmeyi okuyup kabul ediniz!!!');
+            } else if (
+                auth.registerErrors?.response.data.details.toString() ===
+                'Ooops... User already exists'
+            ) {
+                setError(
+                    'Lütfen daha önce kayıt olmamış bir email ile giriş yapınız!!!',
+                );
+            } else if (
+                auth.registerErrors?.response.data.details.toString() ===
+                'Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'
+            ) {
+                let initialValues = {
+                    FirstName: 'Ad',
+                    LastName: 'Soyad',
+                    BirthDate: 'Doğum Tarihi',
+                    Gender: 'Cinsiyet',
+                };
+                let emptyValues = [];
+                for (const key in registerForm) {
+                    if (Object.hasOwnProperty.call(registerForm, key)) {
+                        const element = registerForm[key];
+                        if (!element) {
+                            emptyValues.push(initialValues[key]);
+                        }
+                    }
+                }
+                emptyValues.length > 1 && emptyValues.splice(-1, 0, 've');
+                let newError = replaceChar(
+                    replaceChar(
+                        emptyValues.join(', '),
+                        '',
+                        emptyValues.join(', ').lastIndexOf(','),
+                    ),
+                    '',
+                    replaceChar(
+                        emptyValues.join(', '),
+                        '',
+                        emptyValues.join(', ').lastIndexOf(','),
+                    ).lastIndexOf(','),
+                );
+                console.log(newError);
+
+                emptyValues.length > 0 &&
+                    setError(
+                        `${
+                            emptyValues.length > 1 ? newError : emptyValues
+                        } boş bırakılamaz!!!`,
+                    );
+            } else {
+                setError('');
+            }
+        }
+    }, [auth.registerErrors]);
+
+    function replaceChar(origString, replaceChar, index) {
+        let firstPart = origString.substr(0, index);
+        let lastPart = origString.substr(index + 1);
+
+        let newString = firstPart + replaceChar + lastPart;
+        return newString;
+    }
+
     useEffect(() => {
         if (error) {
             handleOpenError(true);
@@ -187,11 +260,14 @@ const Register = () => {
     }, [error]);
 
     useEffect(() => {
-        if (response.LastName) {
-            localStorage.setItem('registerResponse', JSON.stringify(response));
+        if (auth.registerUser) {
+            // localStorage.setItem(
+            //     'registerResponse',
+            //     JSON.stringify(auth.registerUser),
+            // );
             setActiveStep(2);
         }
-    }, [response]);
+    }, [auth.registerUser]);
 
     return (
         <AuthLayout>
@@ -469,11 +545,11 @@ const Register = () => {
                                             />
                                         </FormGroup>
                                     </Box>
-                                    <Verification
-                                        handleChangeVerification={
-                                            handleChangeVerification
-                                        }
-                                    />
+                                        <Verification
+                                            handleChangeVerification={
+                                                handleChangeVerification
+                                            }
+                                        />
                                 </Box>
                                 {activeStep === 1 && (
                                     <>
