@@ -20,6 +20,7 @@ function useProvideAuth() {
     const [isLoading, setIsLoading] = useState(false);
     
     function postLogin(data) {
+        setLoginErrors(null)
         setIsLoading(true);
         const options = {
             method: 'POST',
@@ -39,6 +40,7 @@ function useProvideAuth() {
                 setLoginUser(response.data);
             })
             .catch(function (error) {
+                setIsLoading(false);
                 console.error(error);
                 setLoginErrors(error);
             });
@@ -64,6 +66,7 @@ function useProvideAuth() {
                 setIsLoading(false)
             })
             .catch(function (error) {
+                setIsLoading(false)
                 console.log('error', error);
                 setRegisterErrors(error);
             });

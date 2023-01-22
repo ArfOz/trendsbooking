@@ -18,11 +18,13 @@ import { Link as RouterLink } from 'react-router-dom';
 import { GoogleLoginButton } from 'react-social-login-buttons';
 import { boxStyle } from './style';
 import { useAuth } from '../../../context/authContext';
+import ErrorModal from './components/ErrorModal';
+import Verification from './components/Verification';
 
 const initialState = {
     Email: JSON.parse(localStorage.getItem('loginForm'))?.Email,
     Password: JSON.parse(localStorage.getItem('loginForm'))?.Password,
-    Remember: localStorage.getItem('remember'),
+    // Remember: localStorage.getItem('remember'),
 };
 
 //Ayrı  component  yazılabilir
@@ -53,11 +55,21 @@ const Login = ({ setUser }) => {
 
     const auth = useAuth();
 
+    // Error Modal
+    const [error, setError] = useState(null);
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen(false);
+        setError(null);
+    };
+    // Error Modal
+
     const handleChange = (e) => {
         setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
     };
     const handleRemember = (e) => {
-        setLoginForm({ ...loginForm, ['Remember']: e.target.checked });
+        // setLoginForm({ ...loginForm, ['Remember']: e.target.checked });
         setRemember(e.target.checked);
     };
 
@@ -73,8 +85,41 @@ const Login = ({ setUser }) => {
         await auth.postLogin(loginForm);
     };
     useEffect(() => {
-        localStorage.setItem("loginUser",JSON.stringify(auth.loginUser))
+        localStorage.setItem('loginUser', JSON.stringify(auth.loginUser));
+        // if (auth.loginUser) {
+        //     navigate("/")
+        // }
     }, [auth.loginUser]);
+
+    useEffect(() => {
+        if (
+            auth.loginErrors?.response.data.message ===
+            'Password or Email is not correct'
+        ) {
+            setError('E-posta adresi veya şifre yanlış!!!');
+        } else {
+            setError('');
+        }
+    }, [auth.loginErrors]);
+
+    useEffect(() => {
+        if (error) {
+            handleOpen(true);
+        }
+    }, [error]);
+
+    //VERIFICATION
+    const [verification, setVerification] = useState('');
+
+    const handleChangeVerification = (e) => {
+        setVerification(e);
+    };
+
+    const handleSubmitVerification = (e) => {
+        e.preventDefault();
+        console.log('verification', verification);
+    };
+    //VERIFICATION
 
     return (
         <AuthLayout>
@@ -102,7 +147,14 @@ const Login = ({ setUser }) => {
                                 <CircularProgress />
                             </Box>
                         ) : (
-                            <Box sx={boxStyle.leftside}>
+                            <Box
+                                sx={
+                                    // burası email verification ile değişecek
+                                    !auth.loginUser?.Token.User
+                                        ? boxStyle.leftside
+                                        : { display: 'none' }
+                                }
+                            >
                                 <Typography
                                     component="h2"
                                     variant="h4"
@@ -184,7 +236,11 @@ const Login = ({ setUser }) => {
                                             mb: '10px',
                                             backgroundColor: '#F75936',
                                             border: '1px solid green',
-                                            color: 'white',
+                                            color: '#fff',
+                                            '&:hover': {
+                                                backgroundColor: '#fff',
+                                                color: '#F75936',
+                                            },
                                         }}
                                     >
                                         Giriş Yap
@@ -211,6 +267,14 @@ const Login = ({ setUser }) => {
                                 </Box>
                             </Box>
                         )}
+                        <Verification
+                            handleChangeVerification={handleChangeVerification}
+                            handleSubmitVerification={handleSubmitVerification}
+                            display={
+                                // burası email verification ile değişecek
+                                auth.loginUser?.Token.User ? 'flex' : 'none'
+                            }
+                        />
                     </Grid>
                     <Grid item xs={12} sm={6} md={6} l={6}>
                         <Box
@@ -226,6 +290,7 @@ const Login = ({ setUser }) => {
                     </Grid>
                 </Grid>
             </Box>
+            <ErrorModal open={open} handleClose={handleClose} error={error} />
         </AuthLayout>
     );
 };

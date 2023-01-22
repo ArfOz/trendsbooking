@@ -18,6 +18,7 @@ import {
     Input,
     Select,
     FormHelperText,
+    CircularProgress,
 } from '@mui/material';
 import LogoShort from '../../../components';
 import { GoogleLoginButton } from 'react-social-login-buttons';
@@ -545,11 +546,11 @@ const Register = () => {
                                             />
                                         </FormGroup>
                                     </Box>
-                                        <Verification
-                                            handleChangeVerification={
-                                                handleChangeVerification
-                                            }
-                                        />
+                                    <Verification
+                                        handleChangeVerification={
+                                            handleChangeVerification
+                                        }
+                                    />
                                 </Box>
                                 {activeStep === 1 && (
                                     <>
@@ -682,7 +683,11 @@ const Register = () => {
                                         variant="outlined"
                                         sx={buttons.submit}
                                     >
-                                        HESAP OLUŞTUR
+                                        {auth.isLoading ? (
+                                            <CircularProgress />
+                                        ) : (
+                                            'HESAP OLUŞTUR'
+                                        )}
                                     </Button>
                                 )}
                                 {activeStep == 0 && (
