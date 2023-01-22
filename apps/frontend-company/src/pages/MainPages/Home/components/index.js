@@ -1,7 +1,7 @@
 import AveragePrices from './AveragePrices'
 import Cards from './Cards'
 import Happier from './Happier'
-import Hero from './Hero'
+
 import Highlights from './Highlights'
 import MobileApplication from './MobileApplication'
 import OneClick from './OneClick'
@@ -13,7 +13,7 @@ export {
     AveragePrices,
     Cards,
     Happier,
-    Hero,
+   
     Highlights,
     MobileApplication,
     OneClick,
