@@ -4,6 +4,8 @@ import { MainLayout } from '../../../layout';
 import CompanyNavbar from '../../../components/Navbar/CompanyNavbar';
 import Footer from '../../../components/Footer';
 import {
+    Chero,
+    Gallery,
    
     Highlights,
     AveragePrices,
@@ -15,7 +17,6 @@ import {
     Questions,
    
 } from './components';
-import Chero from './components/Chero';
 
 const Home = () => {
     return (
@@ -23,12 +24,14 @@ const Home = () => {
            <CompanyNavbar/>
           
           <Chero/>
+          <Software />
+          <Gallery/>
          
             {/* <Highlights /> */}
             {/* <AveragePrices /> */}
             {/* <Happier /> */}
             {/* <Cards /> */}
-            <Software />
+           
             <OneClick />
             <MobileApplication />
             <Questions />

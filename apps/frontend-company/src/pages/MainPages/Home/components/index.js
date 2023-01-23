@@ -1,3 +1,5 @@
+import Chero from './Chero'
+import Gallery from './Gallery'
 import AveragePrices from './AveragePrices'
 import Cards from './Cards'
 import Happier from './Happier'
@@ -10,6 +12,8 @@ import Software from './Software'
 
 
 export {
+    Chero,
+    Gallery,
     AveragePrices,
     Cards,
     Happier,

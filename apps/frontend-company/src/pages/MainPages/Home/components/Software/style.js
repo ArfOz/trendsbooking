@@ -9,10 +9,10 @@ export const style = {
         },
         justifyContent: 'space-between',
         alignItems: '',
-        width: '70%',
+        width: '80%',
         m: 'auto',
-        mt: 5,
-        mb:5,
+        mt: 10,
+      
 
         position: 'relative',
     },
