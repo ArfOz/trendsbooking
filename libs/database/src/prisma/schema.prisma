@@ -25,7 +25,7 @@ model User {
   /// For ex:544672654964  !Important it is string
   Phone      String
   /// for ex: Turkey
-  Gender     Gender
+  Gender     Gender @default(NottoSay)
   /// Checkbox Confirmation
   CbFirst    Boolean   @default(false)
   /// for ex: YYYY-MM-DD

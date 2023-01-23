@@ -1,3 +1,4 @@
+import { SendCodeDTO } from './../../../../../libs/auth/src/dtos/user-send-code.dto';
 import { OtpCodeNotFoundException } from './../../../../../libs/shared/src/exceptions/otpcode-not-found.exception';
 import { IsEmail } from 'class-validator';
 import { VerifyCodeExceptionType } from './../../../../../libs/shared/src/enums/exception.type';
@@ -363,7 +364,7 @@ export class UsersService {
             if (typeof payload === 'object' && 'email' in payload && data.Code) {
                 let user = await this.userService.get({
                     Id: payload.Id,
-                    
+
                 });
 
                 if (!user) {
@@ -437,10 +438,10 @@ export class UsersService {
         }
     }
 
-    async sendEmailCode(email:string){
+    async sendEmailCode(data:SendCodeDTO){
 
         const user = await this.userService.findFirst({
-            where: { Email: email },
+            where: { Email:data.Email },
         });
 
         if(!user){
@@ -481,7 +482,7 @@ export class UsersService {
         });
 
         const options: SendEmailDto = {
-            to: email,
+            to: data.Email,
             html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
             subject: "Trendsbooking'e hoşheldiniz",
         };
@@ -492,7 +493,7 @@ export class UsersService {
 
         const payload = {
             mode: MailModeType.VerifyEmail,
-            email: email,
+            email: data.Email,
             Id: user.Id,
         };
 

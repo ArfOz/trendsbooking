@@ -1,3 +1,4 @@
+import { SendCodeDTO } from './../../../../../libs/auth/src/dtos/user-send-code.dto';
 import { IsEmail } from 'class-validator';
 import { VerifyCodeDTO } from './../../../../../libs/auth/src/dtos/user-verify-email.dto';
 import { UserParam } from '@shared';
@@ -42,16 +43,13 @@ export class UsersController {
 
     @AllowUnauthorizedRequest()
     @Post('verifyCode')
-    verifyCode(
-        @Body() verifyCode: VerifyCodeDTO,
-        ) {
+    verifyCode(@Body() verifyCode: VerifyCodeDTO) {
         return this.UsersService.verifyCode(verifyCode);
     }
 
     @AllowUnauthorizedRequest()
     @Post('sendCode')
-    sendEmailCode(
-        @Body('Email') email: string ) {
-        return this.UsersService.sendEmailCode( email );
+    sendEmailCode(@Body() sendCode: SendCodeDTO) {
+        return this.UsersService.sendEmailCode(sendCode);
     }
 }
