@@ -101,7 +101,7 @@ export const boxStyle = {
         width: '100%',
         mt: 2,
         ml:2,
-        border: '1px solid green',
+        
     },
     logoWord: {
         width: 'calc(100% - 350px)',

@@ -24,15 +24,16 @@ import LogoWord from './components/LogoWord';
 import Paper from '@mui/material/Paper';
 
 const initialState = {
-    FirstName: '',
-    LastName: '',
+    FirstSecondName: '',
+    TCId: '',
     Email: '',
     Password: '',
     Phone: '',
-    BirthDate: '',
-    Gender: '',
-    CbFirst: false,
-    Username: '',
+    TaxNu: '',
+    CusGender: '',
+    TaxOff: false,
+    HallType: '',
+    Iban:'',
 };
 
 export default function Register() {
@@ -429,7 +430,7 @@ export default function Register() {
                                                 </Button>
                                             </Box>
                                         </Modal>
-                                
+
                             </Box>
                         </Box>
                     </Grid>
