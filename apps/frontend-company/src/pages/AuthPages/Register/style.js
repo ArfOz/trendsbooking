@@ -35,15 +35,15 @@ export const buttons = {
             color: '#F75936',
         },
     },
-  };
+};
 
-  export const modal = {
-    position: "absolute",
-    top: "50%",
-    left: "25%",
-    transform: "translate(-50%, -50%)",
-    width: "50%",
-    bgcolor: "#fff",
+export const modal = {
+    position: 'absolute',
+    top: '50%',
+    left: '25%',
+    transform: 'translate(-50%, -50%)',
+    width: '50%',
+    bgcolor: '#fff',
     p: 4,
 
     button: {
@@ -88,44 +88,37 @@ export const buttons = {
             color: '#fff !important',
         },
     },
-  };
+};
 
-  export const boxStyle = {
+export const boxStyle = {
     leftMain: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
         height: '100vh',
     },
 
     headerBox: {
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        alignItems: 'center',
         width: '100%',
-        mt: 0,
+        mt: 2,
+        ml:2,
+        border: '1px solid green',
     },
     logoWord: {
-      width: "calc(100% - 50px)",
-      mt: 4,
-      ml: 3,
+        width: 'calc(100% - 350px)',
+        mt: 4,
+        ml: 3
+
     },
     progressBarEmpty: {
-        width: '50%',
+        width: '100%',
         height: '10px',
         background: '#F2F8FF',
         borderRadius: '15px',
         mb: 2,
+        mt:2
     },
     progressBarFull: {},
 
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        width: '50%',
-    },
 
     rightside: {
         backgroundImage: 'url(https://source.unsplash.com/random)',
@@ -134,4 +127,4 @@ export const buttons = {
         backgroundPosition: 'center',
         height: '100vh',
     },
-  };
+};
