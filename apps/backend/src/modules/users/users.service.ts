@@ -1,20 +1,15 @@
-import { SendCodeDTO } from './../../../../../libs/auth/src/dtos/user-send-code.dto';
-import { OtpCodeNotFoundException } from './../../../../../libs/shared/src/exceptions/otpcode-not-found.exception';
-import { IsEmail } from 'class-validator';
-import { VerifyCodeExceptionType } from './../../../../../libs/shared/src/enums/exception.type';
-
-import { ForbiddenException } from './../../../../../libs/shared/src/exceptions/forbidden.exception';
-import { NotFoundException } from './../../../../../libs/shared/src/exceptions/not-found.exception';
-import { VerifyCodeDTO } from './../../../../../libs/auth/src/dtos/user-verify-email.dto';
-import * as jwt from 'jsonwebtoken';
-import { MailUtilsService } from './../../../../../libs/mail-utils/src/mail-utils.service';
-import { MailModeType } from './../../../../../libs/auth/src/enums/mailmode.enum';
-import { UserResponseDto } from './../../../../../libs/auth/src/dtos/user-response.dto';
-import { ExpiredReasonType, OTPType, User } from '@prisma/client';
-import { UserPayloadDto, AuthService, CreateUserJsonDto } from '@auth';
-import authConfig from '@auth/config/auth.config';
-import { generate } from 'generate-password';
+// Npm packages
+import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { generate } from 'generate-password';
+import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
+
+// Import modules
+import { MailUtilsService, SendEmailDto } from '@mail-utils';
+import { MailModeType, SendCodeDTO, VerifyCodeDTO, UserPayloadDto, AuthService, CreateUserJsonDto  } from '@auth';
+import { ExpiredReasonType, OTPType } from '@prisma/client';
+import authConfig from '@auth/config/auth.config';
 import generalConfig from '@shared/config/general.config';
 import {
     BadRequestException,
@@ -24,12 +19,10 @@ import {
     KeypairService,
     TrendsException,
     TokenExceptionType,
+    OtpCodeNotFoundException, VerifyCodeExceptionType, NotFoundException 
 } from '@shared';
-import { UserService, PrismaService, LoginUserDto } from '@database';
-import { Injectable, Inject, HttpException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import { UserOtpCodeService } from '@database/user-otp-code/user-otp-code.service';
-import { SendEmailDto } from 'libs/mail-utils/src/dtos';
+import { UserService, PrismaService, LoginUserDto, UserOtpCodeService } from '@database';
+
 
 @Injectable()
 export class UsersService {
@@ -67,7 +60,7 @@ export class UsersService {
     //     return createdUser;
     // }
 
-    async register(input: CreateUserJsonDto): Promise<Object> {
+    async register(input: CreateUserJsonDto){
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -193,8 +186,6 @@ export class UsersService {
             length: 4,
         }));
 
-        console.log('özkan', code);
-
         await this.userOtpCodeService.create({
             User: {
                 connect: {
@@ -214,8 +205,6 @@ export class UsersService {
             html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
             subject: "Trendsbooking'e hoşheldiniz",
         };
-
-        console.log('options', options);
 
         await this.mailUtilsService.sendEmail(options);
 
@@ -242,6 +231,7 @@ export class UsersService {
         const user = await this.userService.findFirst({
             where: {
                 Email: cred.Email,
+                IsEmailVerified:true
             },
         });
 
@@ -397,7 +387,6 @@ export class UsersService {
                         new Error('Your trial count is over'),
                     );
                 }
-                console.log("userotp", otpCode)
 
                 user = await this.userService.update({
                     where: {
@@ -465,8 +454,6 @@ export class UsersService {
             length: 4,
         }));
 
-        console.log('özkan', code);
-
         await this.userOtpCodeService.create({
             User: {
                 connect: {
@@ -486,8 +473,6 @@ export class UsersService {
             html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
             subject: "Trendsbooking'e hoşheldiniz",
         };
-
-        console.log('options', options);
 
         await this.mailUtilsService.sendEmail(options);
 

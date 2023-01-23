@@ -5,7 +5,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export enum Genders {
     Female = "Female",
-    Male = "Male"
+    Male = "Male",
+    NottoSay="NottoSay"
 }
 export class CreateUserJsonDto {
     @ApiProperty()
@@ -47,7 +48,7 @@ export class CreateUserJsonDto {
     @IsString()
     Country?: string;
 
-    @ApiProperty({example:[Genders.Male, Genders.Female],})
+    @ApiProperty({example:[Genders.Male, Genders.Female, Genders.NottoSay],})
     @IsNotEmpty()
     @IsString()
     Gender: Genders;

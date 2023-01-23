@@ -8,7 +8,6 @@ export class MailUtilsService {
 
     async sendEmail(options: SendEmailDto): Promise<any> {
         const result = await this.mailerService.sendMail(options);
-        console.log("result" ,result)
 
         return result;
     }

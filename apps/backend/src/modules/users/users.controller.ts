@@ -1,6 +1,4 @@
-import { SendCodeDTO } from './../../../../../libs/auth/src/dtos/user-send-code.dto';
-import { IsEmail } from 'class-validator';
-import { VerifyCodeDTO } from './../../../../../libs/auth/src/dtos/user-verify-email.dto';
+import { VerifyCodeDTO, SendCodeDTO} from '@auth';
 import { UserParam } from '@shared';
 import { CreateUserJsonDto, UserPayloadDto } from '@auth';
 import { LoginUserDto } from '@database';
