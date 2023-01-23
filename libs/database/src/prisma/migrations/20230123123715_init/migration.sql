@@ -2,7 +2,7 @@
 CREATE TYPE "ExpiredReasonType" AS ENUM ('Expired', 'SignInFromDifferentLocation', 'TokenRefreshed');
 
 -- CreateEnum
-CREATE TYPE "Gender" AS ENUM ('Male', 'Female');
+CREATE TYPE "Gender" AS ENUM ('Male', 'Female', 'NottoSay');
 
 -- CreateEnum
 CREATE TYPE "OTPType" AS ENUM ('VerifyPhone', 'VerifyEmail');
@@ -46,7 +46,7 @@ CREATE TABLE "UserToken" (
 -- CreateTable
 CREATE TABLE "UserOTPCode" (
     "Id" SERIAL NOT NULL,
-    "Code" TEXT NOT NULL,
+    "Code" INTEGER NOT NULL,
     "Attempts" INTEGER NOT NULL DEFAULT 0,
     "IsDeleted" BOOLEAN NOT NULL DEFAULT false,
     "Type" "OTPType" NOT NULL,
