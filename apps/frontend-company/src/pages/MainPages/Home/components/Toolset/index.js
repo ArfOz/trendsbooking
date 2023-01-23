@@ -27,7 +27,7 @@ function Toolset() {
         display: "flex",
         justifyContent:"space-between",
         width:"80%",
-        height:"12vh",
+        height:"15vh",
         m:"auto",
         mt:5,
     }}>

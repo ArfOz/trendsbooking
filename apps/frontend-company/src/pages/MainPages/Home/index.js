@@ -8,39 +8,24 @@ import {
     Gallery,
     TrendBiz,
     Toolset,
-   
-    Highlights,
-    AveragePrices,
-    Happier,
-    Cards,
     Software,
-    OneClick,
     MobileApplication,
     Questions,
-   
 } from './components';
 
 const Home = () => {
     return (
         <MainLayout>
-           <CompanyNavbar/>
-          
-          <Chero/>
-          <Software />
-          <Gallery/>
-          <TrendBiz/>
-          <Toolset/>
-         
-            {/* <Highlights /> */}
-            {/* <AveragePrices /> */}
-            {/* <Happier /> */}
-            {/* <Cards /> */}
-           
-            <OneClick />
+            <CompanyNavbar />
+
+            <Chero />
+            <Software />
+            <Gallery />
+            <TrendBiz />
+            <Toolset />
             <MobileApplication />
             <Questions />
-
-            <Footer/>
+            <Footer />
         </MainLayout>
     );
 };
