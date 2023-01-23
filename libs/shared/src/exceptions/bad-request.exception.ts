@@ -10,6 +10,5 @@ export class BadRequestException extends TrendsException {
         details? :Error
     ) {
         super(type, HttpStatus.BAD_REQUEST, details);
-        // console.log("error", error)
     }
 }

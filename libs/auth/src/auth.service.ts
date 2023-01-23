@@ -220,8 +220,6 @@ export class AuthService {
                 break;
         }
         const html = await this.mailTemplateReplacer(MailModeType ,url, user);
-        console.log("subject", subject, html )
-
         const optionsSendEmail: SendEmailDto = {
             subject,
             to: user.Email,
@@ -230,7 +228,6 @@ export class AuthService {
 
         const response = await this.mailUtilsService.sendEmail(optionsSendEmail);
 
-        console.log("responseeeeeeeeee", response)
         return user;
     }
 
@@ -262,13 +259,11 @@ export class AuthService {
         ];
 
         let html :string = " ";
-        console.log("replace", replaceText)
+
         replaceText.forEach((replace) => {
             // eslint-disable-next-line no-param-reassign
             html = html.replaceAll(replace.key, replace.value);
         });
-
-        console.log("asdasd", html)
 
         return `<b>Hello, <strong>{{asd}}</strong>, Your password is:\n<b>{{ password }}</b></p>`;
     }

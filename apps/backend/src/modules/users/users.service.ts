@@ -186,8 +186,6 @@ export class UsersService {
             length: 4,
         }));
 
-        console.log('özkan', code);
-
         await this.userOtpCodeService.create({
             User: {
                 connect: {
@@ -207,8 +205,6 @@ export class UsersService {
             html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
             subject: "Trendsbooking'e hoşheldiniz",
         };
-
-        console.log('options', options);
 
         await this.mailUtilsService.sendEmail(options);
 
@@ -391,7 +387,6 @@ export class UsersService {
                         new Error('Your trial count is over'),
                     );
                 }
-                console.log("userotp", otpCode)
 
                 user = await this.userService.update({
                     where: {
@@ -459,8 +454,6 @@ export class UsersService {
             length: 4,
         }));
 
-        console.log('özkan', code);
-
         await this.userOtpCodeService.create({
             User: {
                 connect: {
@@ -480,8 +473,6 @@ export class UsersService {
             html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
             subject: "Trendsbooking'e hoşheldiniz",
         };
-
-        console.log('options', options);
 
         await this.mailUtilsService.sendEmail(options);
 
