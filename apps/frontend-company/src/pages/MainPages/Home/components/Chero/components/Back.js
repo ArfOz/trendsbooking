@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
 
 import React from 'react';
-import herobg from '../../../../../../assets/herobg.png';
+import trendBizHeroBg from '../../../../../../assets/trendBizHeroBg.png';
 import herophone from '../../../../../../assets/herophone.png';
 
 
@@ -15,7 +15,7 @@ function Back() {
                     height: '557px',
                     background: 'rgba(0, 0, 0, 0.4)',
                     borderRadius: '30px',
-                    background: `url(${herobg})`,
+                    background: `url(${trendBizHeroBg})`,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',

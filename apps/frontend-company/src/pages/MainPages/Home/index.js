@@ -6,6 +6,8 @@ import Footer from '../../../components/Footer';
 import {
     Chero,
     Gallery,
+    TrendBiz,
+    Toolset,
    
     Highlights,
     AveragePrices,
@@ -26,6 +28,8 @@ const Home = () => {
           <Chero/>
           <Software />
           <Gallery/>
+          <TrendBiz/>
+          <Toolset/>
          
             {/* <Highlights /> */}
             {/* <AveragePrices /> */}

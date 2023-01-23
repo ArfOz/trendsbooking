@@ -1,5 +1,7 @@
 import Chero from './Chero'
 import Gallery from './Gallery'
+import TrendBiz from './TrendBiz'
+import Toolset from './Toolset'
 import AveragePrices from './AveragePrices'
 import Cards from './Cards'
 import Happier from './Happier'
@@ -14,6 +16,8 @@ import Software from './Software'
 export {
     Chero,
     Gallery,
+    TrendBiz,
+    Toolset,
     AveragePrices,
     Cards,
     Happier,

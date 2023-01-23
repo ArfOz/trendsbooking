@@ -6,13 +6,17 @@ import Company300 from '../../../../../../assets/Company300.png';
 function Right1() {
   return (
     <>
-                {/*Right  */}
-                <Box
-            sx={{
-                border: '5px solid red',
+             <Box sx={{
+                border:"2px solid green",
                 display: 'flex',
-                width: '60%',
-            }}>
+                justifyContent: 'space-between',
+                height:"33%",
+            
+                width:'100%',
+
+             }}>
+               
+                
             {/* box 1 */}
             <Box
                     sx={{
@@ -20,8 +24,8 @@ function Right1() {
                         flexDirection: 'column',
                         justifyContent: 'flex-start',
                         alignItems: 'center',
-                        height: '260px',
-                        width: '260px',
+                        height: '100%',
+                        width: '49%',
                         background: ' #F2F8FF',
                         borderRadius: '12px',
                         border:"5px solid blue",
@@ -86,8 +90,8 @@ function Right1() {
             {/* box 2 */}
             <Box
                     sx={{
-                        height: '260px',
-                        width: '260px',
+                        height: '100%',
+                        width: '49%',
                         background: '#D9D9D9',
                         borderRadius: '12px',
                         background: `url(${Company300})`,
@@ -96,9 +100,12 @@ function Right1() {
                         backgroundSize: 'cover',
                         position: 'relative',
                     }}
-                ></Box>
+                >
+
                 </Box>
+              
             {/* box 2 */}
+            </Box> 
             </>
   )
 }
