@@ -91,17 +91,22 @@ model UserOTPCode {
 model ServiceUser {
   Id       Int     @id @default(autoincrement())
   /// for ex: arif@test.com this have to be unique
-  Email    String? @unique
+  Email    String  @unique
   /// @HideField({output:true})
-  Password String?
+  Password String
   /// for ex : asdasdas
-  Username String?
+  Username String
   /// For ex:544672654964  !Important it is string
-  Phone    String?
+  Phone    String
   /// for ex: Turkey
-  Country  String?
+  Country  String
   /// for ex: Ankara İzmir
-  City     String?
+  City     String
+  /// for ex: 11111111110
+  Tckn    String
+  /// for ex: YYYY-MM-DD
+  CreatedAt DateTime  @default(now())
+  UpdatedAt DateTime? @updatedAt
 }
 
 enum ExpiredReasonType {
