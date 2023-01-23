@@ -1,26 +1,25 @@
 import { UserOtpCodeService } from '@database/user-otp-code/user-otp-code.service';
 import authConfig from '@auth/config/auth.config';
 import { AuthModule, AuthService } from '@auth';
-import { DatabaseModule, PrismaService, UserService } from '@database';
-import { UsersService } from './users.service';
+import { PrismaService } from '@database';
 import { KeypairModule } from '@shared';
 import generalConfig from '@shared/config/general.config';
 import { ConfigModule } from '@nestjs/config';
-import { forwardRef, Module } from '@nestjs/common';
-import { UsersController } from './users.controller';
+import { Module } from '@nestjs/common';
 import { MailUtilsModule } from '@mail-utils';
+import { ServiceUsersController } from './serviceUsers.controller';
+import { ServiceUsersService } from './serviceUsers.service';
 
 @Module({
     imports: [
         KeypairModule,
         ConfigModule.forFeature(generalConfig),
         ConfigModule.forFeature(authConfig),
-        forwardRef(() => AuthModule),
-        MailUtilsModule,
-        forwardRef(() => DatabaseModule)
+        AuthModule,
+        MailUtilsModule
     ],
-    providers: [UserService, PrismaService, UsersService, AuthService, UserOtpCodeService],
-    controllers: [UsersController],
-    exports: [UsersService],
+    controllers: [ServiceUsersController],
+    providers: [PrismaService, ServiceUsersService, AuthService, UserOtpCodeService],
+    exports: [ServiceUsersService],
 })
-export class UsersModule {}
+export class ServiceUsersModule {}

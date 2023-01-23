@@ -1,3 +1,4 @@
+import { VerifyCodeDTO, SendCodeDTO} from '@auth';
 import { UserParam } from '@shared';
 import { CreateUserJsonDto, UserPayloadDto } from '@auth';
 import { LoginUserDto } from '@database';
@@ -36,5 +37,17 @@ export class UsersController {
     @Post('refreshusertoken')
     refreshUserToken(@Body('RefreshToken') refreshToken: string) {
         return this.UsersService.refreshUserToken(refreshToken);
+    }
+
+    @AllowUnauthorizedRequest()
+    @Post('verifyCode')
+    verifyCode(@Body() verifyCode: VerifyCodeDTO) {
+        return this.UsersService.verifyCode(verifyCode);
+    }
+
+    @AllowUnauthorizedRequest()
+    @Post('sendCode')
+    sendEmailCode(@Body() sendCode: SendCodeDTO) {
+        return this.UsersService.sendEmailCode(sendCode);
     }
 }

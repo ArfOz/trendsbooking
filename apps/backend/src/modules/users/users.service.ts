@@ -1,8 +1,15 @@
-import { UserResponseDto } from './../../../../../libs/auth/src/dtos/user-response.dto';
-import { ExpiredReasonType, User } from '@prisma/client';
-import { UserPayloadDto, AuthService, CreateUserJsonDto } from '@auth';
-import authConfig from '@auth/config/auth.config';
+// Npm packages
+import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { generate } from 'generate-password';
+import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
+
+// Import modules
+import { MailUtilsService, SendEmailDto } from '@mail-utils';
+import { MailModeType, SendCodeDTO, VerifyCodeDTO, UserPayloadDto, AuthService, CreateUserJsonDto  } from '@auth';
+import { ExpiredReasonType, OTPType } from '@prisma/client';
+import authConfig from '@auth/config/auth.config';
 import generalConfig from '@shared/config/general.config';
 import {
     BadRequestException,
@@ -11,10 +18,11 @@ import {
     AlreadyExistsException,
     KeypairService,
     TrendsException,
+    TokenExceptionType,
+    OtpCodeNotFoundException, VerifyCodeExceptionType, NotFoundException 
 } from '@shared';
-import { UserService, PrismaService, LoginUserDto } from '@database';
-import { Injectable, Inject, HttpException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import { UserService, PrismaService, LoginUserDto, UserOtpCodeService } from '@database';
+
 
 @Injectable()
 export class UsersService {
@@ -27,6 +35,8 @@ export class UsersService {
         private readonly userService: UserService,
         private readonly keypairService: KeypairService,
         private readonly authService: AuthService,
+        private readonly userOtpCodeService: UserOtpCodeService,
+        private readonly mailUtilsService: MailUtilsService,
     ) {}
 
     // async getUser(Email: string): Promise<User> {
@@ -50,18 +60,28 @@ export class UsersService {
     //     return createdUser;
     // }
 
-    async register(input: CreateUserJsonDto): Promise <UserResponseDto>{
-
+    async register(input: CreateUserJsonDto){
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error('Please check the box!!!'),
             );
         }
-        if (!input.Email || !input.Password || !input.Phone || !input.Username || !input.Gender || !input.FirstName || !input.LastName || !input.BirthDate) {
+        if (
+            !input.Email ||
+            !input.Password ||
+            !input.Phone ||
+            !input.Username ||
+            !input.Gender ||
+            !input.FirstName ||
+            !input.LastName ||
+            !input.BirthDate
+        ) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error('Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'),
+                new Error(
+                    'Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.',
+                ),
             );
         }
 
@@ -89,10 +109,20 @@ export class UsersService {
         });
 
         if (user) {
-            throw new AlreadyExistsException(
-                AlreadyExistsExceptionType.USER_ALREADY_EXISTS,
-                new Error('Ooops... User already exists')
-            );
+            if(!user.IsEmailVerified){
+                throw new AlreadyExistsException(
+                    VerifyCodeExceptionType.NOT_VERIFIED,
+                    new Error('Please verify your email account...'),
+                ); 
+            }
+            else{
+                throw new AlreadyExistsException(
+                    AlreadyExistsExceptionType.USER_ALREADY_EXISTS,
+                    new Error('Ooops... User already exists'),
+                );
+
+            }
+            
         }
 
         // Generate a username
@@ -130,39 +160,98 @@ export class UsersService {
         // delete response.Password;
 
         // Create a new user
-        const response = await this.userService.create({
+        const newUser = await this.userService.create({
             Email: input.Email,
             FirstName: input.FirstName,
-            LastName: input.LastName ,
+            LastName: input.LastName,
             Username: input.Username,
             BirthDate: new Date(input.BirthDate),
             Phone: input.Phone,
-            CbFirst:input.CbFirst,
+            CbFirst: input.CbFirst,
             Country: input.Country,
-            Gender:input.Gender,
-
+            Gender: input.Gender,
+            CreatedAt: new Date(),
+            UpdatedAt: new Date(),
             Password: await bcrypt.hash(input.Password, 10),
             PrivateKey: privKey,
             PublicKey: pubKey,
         });
 
-        return response;
+        // Verification code
+        const code = parseInt(generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 4,
+        }));
+
+        await this.userOtpCodeService.create({
+            User: {
+                connect: {
+                    Id: newUser.Id,
+                },
+            },
+            Code: code,
+            ExpiredAt: new Date(
+                Date.now() +
+                    parseInt(this.authCfg.codeValidationTime, 10) * 60 * 1000,
+            ),
+            Type: OTPType.VerifyEmail,
+        });
+
+        const options: SendEmailDto = {
+            to: input.Email,
+            html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
+            subject: "Trendsbooking'e hoşheldiniz",
+        };
+
+        await this.mailUtilsService.sendEmail(options);
+
+        const payload = {
+            mode: MailModeType.VerifyEmail,
+            email: input.Email,
+            Id: newUser.Id,
+        };
+
+        const token = jwt.sign(payload, this.authCfg.jwt_secret, {
+            expiresIn: `${this.authCfg.codeValidationTime}m`,
+        });
+
+        return {
+            Email: newUser.Email,
+            Data: 'Waiting email verification',
+            Token: token,
+        };
+        // // Response varsa Success
+        // return response;
     }
 
     async loginUser(cred: LoginUserDto) {
         const user = await this.userService.findFirst({
             where: {
                 Email: cred.Email,
+                IsEmailVerified:true
             },
         });
 
         if (!user) {
-            throw new HttpException('Invalid credentials', 401);
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(
+                    'Wrong Password or Email',
+                ),
+            );
         }
 
-        // if (!user.IsEmailVerified) {
-        //     throw new TrendsException('You need to verify your account', 400);
-        // }
+        if (!user.IsEmailVerified) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(
+                    'Please Verify Your Account',
+                ),
+            );
+        }
 
         if (user && (await bcrypt.compare(cred.Password, user.Password))) {
             const {
@@ -186,6 +275,7 @@ export class UsersService {
             delete user.Password;
             delete user.Id;
 
+            // Response varsa Success
             return {
                 Token: {
                     AccessToken,
@@ -197,7 +287,12 @@ export class UsersService {
             };
         }
 
-        throw new TrendsException('Password or Email is not correct', 400);
+        throw new BadRequestException(
+            BadRequestExceptionType.BAD_REQUEST,
+            new Error(
+                'Wrong Password or Email',
+            ),
+        );
     }
 
     async userProfile(user: UserPayloadDto) {
@@ -250,6 +345,151 @@ export class UsersService {
                 ExpireTimeRefresh: expiretimeRefresh,
                 User,
             },
+        };
+    }
+
+    async verifyCode(data: VerifyCodeDTO) {
+        try {
+            const payload = jwt.verify(data.Token, this.authCfg.jwt_secret);
+            if (typeof payload === 'object' && 'email' in payload && data.Code) {
+                let user = await this.userService.get({
+                    Id: payload.Id,
+
+                });
+
+                if (!user) {
+                    throw new NotFoundException(new Error('User not found'));
+                }
+
+                const otpCode = await this.userOtpCodeService.find({
+                    where: {
+                        UserId: payload.Id,
+                        Type: OTPType.VerifyEmail,
+                        Code: data.Code,
+                        IsDeleted: false,
+                        ExpiredAt: {
+                            gte: new Date(),
+                        },
+                    },
+                    orderBy: {
+                        CreatedAt: 'desc',
+                    },
+                    take: 1,
+                });
+
+                if (!otpCode || !otpCode.length) {
+                    throw new OtpCodeNotFoundException(new Error('Geçersiz Kod'));
+                }
+        
+                if (otpCode[0].Attempts >= 5) {
+                    throw new BadRequestException(
+                        BadRequestExceptionType.BAD_REQUEST,
+                        new Error('Your trial count is over'),
+                    );
+                }
+
+                user = await this.userService.update({
+                    where: {
+                        Id: payload.Id,
+                    },
+                    data: {
+                        IsEmailVerified: true,
+                    },
+                });
+                await this.userOtpCodeService.update({
+                    where:{
+                        Id: otpCode[0].Id, 
+                    },
+                   data:{
+                    IsDeleted: true,
+                   }
+                });
+
+                return {
+                    Email: user.Email,
+                    Data: 'Your email is verificated'
+                };
+            }
+        } catch (error) {
+            if (error?.name === 'TokenExpiredError') {
+                throw new TrendsException(
+                    TokenExceptionType.EXPIRED_TOKEN,
+                    400,
+                    new Error('Email confirmation token expired'),
+                );
+            }
+
+            throw new TrendsException(
+                TokenExceptionType.EXPIRED_TOKEN,
+                400,
+                new Error(error),
+            );
+        }
+    }
+
+    async sendEmailCode(data:SendCodeDTO){
+
+        const user = await this.userService.findFirst({
+            where: { Email:data.Email },
+        });
+
+        if(!user){
+            throw new AlreadyExistsException(
+                AlreadyExistsExceptionType.NOT_EXIST,
+                new Error('No Email... Please Register.'),
+            );
+        }
+        if(user.IsEmailVerified){
+            throw new AlreadyExistsException(
+                VerifyCodeExceptionType.VERIFIED,
+                new Error('You Account Is Verified'),
+            ); 
+        }
+        // Verification code
+        const code = parseInt(generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 4,
+        }));
+
+        await this.userOtpCodeService.create({
+            User: {
+                connect: {
+                    Id: user.Id,
+                },
+            },
+            Code: code,
+            ExpiredAt: new Date(
+                Date.now() +
+                    parseInt(this.authCfg.codeValidationTime, 10) * 60 * 1000,
+            ),
+            Type: OTPType.VerifyEmail,
+        });
+
+        const options: SendEmailDto = {
+            to: data.Email,
+            html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
+            subject: "Trendsbooking'e hoşheldiniz",
+        };
+
+        await this.mailUtilsService.sendEmail(options);
+
+        const payload = {
+            mode: MailModeType.VerifyEmail,
+            email: data.Email,
+            Id: user.Id,
+        };
+
+        const token = jwt.sign(payload, this.authCfg.jwt_secret, {
+            expiresIn: `${this.authCfg.codeValidationTime}m`,
+        });
+
+        return {
+            Email: user.Email,
+            Data: 'Waiting email verification',
+            Token: token,
         };
     }
 }
