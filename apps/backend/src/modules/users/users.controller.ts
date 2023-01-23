@@ -1,3 +1,5 @@
+import { IsEmail } from 'class-validator';
+import { VerifyCodeDTO } from './../../../../../libs/auth/src/dtos/user-verify-email.dto';
 import { UserParam } from '@shared';
 import { CreateUserJsonDto, UserPayloadDto } from '@auth';
 import { LoginUserDto } from '@database';
@@ -36,5 +38,20 @@ export class UsersController {
     @Post('refreshusertoken')
     refreshUserToken(@Body('RefreshToken') refreshToken: string) {
         return this.UsersService.refreshUserToken(refreshToken);
+    }
+
+    @AllowUnauthorizedRequest()
+    @Post('verifyCode')
+    verifyCode(
+        @Body() verifyCode: VerifyCodeDTO,
+        ) {
+        return this.UsersService.verifyCode(verifyCode);
+    }
+
+    @AllowUnauthorizedRequest()
+    @Post('sendCode')
+    sendEmailCode(
+        @Body('Email') email: string ) {
+        return this.UsersService.sendEmailCode( email );
     }
 }

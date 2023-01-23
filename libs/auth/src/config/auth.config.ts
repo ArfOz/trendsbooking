@@ -5,8 +5,10 @@ export default registerAs('auth', () => ({
     codeValidationTime: process.env.CODE_VALIDATION_TIME,
     emailConfirmURL: process.env.EMAIL_CONFIRMATION_URL,
     forgotPasswordURL: process.env.FORGOT_PASSWORD_URL,
-    jwt_secret: process.env.JWT_SECRET,
+    jwt_secret: process.env.JWT_SECRET as string,
     jwt_secret_refresh: process.env.JWT_SECRET_REFRESH,
     jwt_expired: process.env.JWT_EXPIRED_TIME,
     jwt_refresh_expired: process.env.JWT_REFRESH_EXPIRED_TIME,
+    differentIpTemplateName: process.env.DIFFERENT_IP_TEMPLATE_NAME,
+    // baseTemplateUrl: process.env.BASE_TEMPLATE_URL
 }));

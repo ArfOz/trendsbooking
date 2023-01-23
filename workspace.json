@@ -7,6 +7,7 @@
     "frontend-company": "apps/frontend-company",
     "frontend-customer": "apps/frontend-customer",
     "guard": "libs/guard",
+    "mail-utils": "libs/mail-utils",
     "shared": "libs/shared"
   },
   "$schema": "./node_modules/nx/schemas/workspace-schema.json"
