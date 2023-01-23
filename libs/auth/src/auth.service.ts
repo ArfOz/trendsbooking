@@ -1,24 +1,18 @@
-import { OtpCodeNotFoundException } from './../../shared/src/exceptions/otpcode-not-found.exception';
-import { BadRequestExceptionType } from './../../shared/src/enums/exception.type';
-import { BadRequestException } from './../../shared/src/exceptions/bad-request.exception';
-import { UserOtpCodeService } from './../../database/src/user-otp-code/user-otp-code.service';
-import { MailUtilsService } from '@mail-utils';
-
-import { NotFoundException } from './../../shared/src/exceptions/not-found.exception';
-import { MailModeType } from './enums/mailmode.enum';
-import { UserProfileData } from './dtos/user-profile-data';
-import { TrendsException } from './../../shared/src/exceptions/trends.exception';
-import { UserService } from './../../database/src/user/user.service';
-import { ExpiredReasonType, OTPType } from '@prisma/client';
-import { PrismaService } from './../../database/src/prisma/prisma.service';
-import { User } from '@prisma/client';
-import { UserPayloadDto } from '@auth';
-import { ConfigType } from '@nestjs/config';
-import generalConfig from '@shared/config/general.config';
 import { Injectable, Inject } from '@nestjs/common';
-import authConfig from './config/auth.config';
+import { ConfigType } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
-import { SendEmailDto } from 'libs/mail-utils/src/dtos';
+import { User } from '@prisma/client';
+import { ExpiredReasonType, OTPType } from '@prisma/client';
+
+// Modules export
+import { OtpCodeNotFoundException, BadRequestExceptionType, BadRequestException, NotFoundException, TrendsException   } from '@shared';
+import { UserOtpCodeService, UserService, PrismaService  } from '@database';
+import { UserPayloadDto } from '@auth';
+import { SendEmailDto,  MailUtilsService  } from '@mail-utils';
+import { MailModeType } from './enums/mailmode.enum';
+// Config settings
+import generalConfig from '@shared/config/general.config';
+import authConfig from './config/auth.config';
 
 @Injectable()
 export class AuthService {

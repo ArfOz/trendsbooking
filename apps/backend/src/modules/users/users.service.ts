@@ -1,3 +1,4 @@
+import { NotVerifiedException } from './../../../../../libs/shared/src/exceptions/not-verified.exception';
 // Npm packages
 import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
@@ -7,7 +8,14 @@ import * as bcrypt from 'bcrypt';
 
 // Import modules
 import { MailUtilsService, SendEmailDto } from '@mail-utils';
-import { MailModeType, SendCodeDTO, VerifyCodeDTO, UserPayloadDto, AuthService, CreateUserJsonDto  } from '@auth';
+import {
+    MailModeType,
+    SendCodeDTO,
+    VerifyCodeDTO,
+    UserPayloadDto,
+    AuthService,
+    CreateUserJsonDto,
+} from '@auth';
 import { ExpiredReasonType, OTPType } from '@prisma/client';
 import authConfig from '@auth/config/auth.config';
 import generalConfig from '@shared/config/general.config';
@@ -19,10 +27,16 @@ import {
     KeypairService,
     TrendsException,
     TokenExceptionType,
-    OtpCodeNotFoundException, VerifyCodeExceptionType, NotFoundException 
+    OtpCodeNotFoundException,
+    VerifyCodeExceptionType,
+    NotFoundException,
 } from '@shared';
-import { UserService, PrismaService, LoginUserDto, UserOtpCodeService } from '@database';
-
+import {
+    UserService,
+    PrismaService,
+    LoginUserDto,
+    UserOtpCodeService,
+} from '@database';
 
 @Injectable()
 export class UsersService {
@@ -60,7 +74,7 @@ export class UsersService {
     //     return createdUser;
     // }
 
-    async register(input: CreateUserJsonDto){
+    async register(input: CreateUserJsonDto) {
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -109,20 +123,17 @@ export class UsersService {
         });
 
         if (user) {
-            if(!user.IsEmailVerified){
+            if (!user.IsEmailVerified) {
                 throw new AlreadyExistsException(
                     VerifyCodeExceptionType.NOT_VERIFIED,
                     new Error('Please verify your email account...'),
-                ); 
-            }
-            else{
+                );
+            } else {
                 throw new AlreadyExistsException(
                     AlreadyExistsExceptionType.USER_ALREADY_EXISTS,
                     new Error('Ooops... User already exists'),
                 );
-
             }
-            
         }
 
         // Generate a username
@@ -178,13 +189,15 @@ export class UsersService {
         });
 
         // Verification code
-        const code = parseInt(generate({
-            numbers: true,
-            symbols: false,
-            uppercase: false,
-            lowercase: false,
-            length: 4,
-        }));
+        const code = parseInt(
+            generate({
+                numbers: true,
+                symbols: false,
+                uppercase: false,
+                lowercase: false,
+                length: 4,
+            }),
+        );
 
         await this.userOtpCodeService.create({
             User: {
@@ -222,6 +235,7 @@ export class UsersService {
             Email: newUser.Email,
             Data: 'Waiting email verification',
             Token: token,
+            Success: true,
         };
         // // Response varsa Success
         // return response;
@@ -231,25 +245,26 @@ export class UsersService {
         const user = await this.userService.findFirst({
             where: {
                 Email: cred.Email,
-                IsEmailVerified:true
             },
         });
 
         if (!user) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error(
-                    'Wrong Password or Email',
-                ),
+                new Error('Wrong Password or Email'),
+            );
+        }
+        if (!user.IsEmailVerified) {
+            throw new NotVerifiedException(
+                VerifyCodeExceptionType.NOT_VERIFIED,
+                new Error('Please veridy your account'),
             );
         }
 
         if (!user.IsEmailVerified) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error(
-                    'Please Verify Your Account',
-                ),
+                new Error('Please Verify Your Account'),
             );
         }
 
@@ -277,21 +292,18 @@ export class UsersService {
 
             // Response varsa Success
             return {
-                Token: {
-                    AccessToken,
-                    RefreshToken,
-                    ExpireTime: ExpiresAccessToken,
-                    ExpireTimeRefresh: ExpiresRefreshToken,
-                    User: user,
-                },
+                AccessToken,
+                RefreshToken,
+                ExpireTime: ExpiresAccessToken,
+                ExpireTimeRefresh: ExpiresRefreshToken,
+                User: user,
+                Success: true,
             };
         }
 
         throw new BadRequestException(
             BadRequestExceptionType.BAD_REQUEST,
-            new Error(
-                'Wrong Password or Email',
-            ),
+            new Error('Wrong Password or Email'),
         );
     }
 
@@ -338,23 +350,25 @@ export class UsersService {
         delete User.Id;
 
         return {
-            Token: {
-                AccessToken,
-                RefreshToken,
-                ExpireTime: expireTime,
-                ExpireTimeRefresh: expiretimeRefresh,
-                User,
-            },
+            AccessToken,
+            RefreshToken,
+            ExpireTime: expireTime,
+            ExpireTimeRefresh: expiretimeRefresh,
+            User,
+            Success: true,
         };
     }
 
     async verifyCode(data: VerifyCodeDTO) {
         try {
             const payload = jwt.verify(data.Token, this.authCfg.jwt_secret);
-            if (typeof payload === 'object' && 'email' in payload && data.Code) {
+            if (
+                typeof payload === 'object' &&
+                'email' in payload &&
+                data.Code
+            ) {
                 let user = await this.userService.get({
                     Id: payload.Id,
-
                 });
 
                 if (!user) {
@@ -378,9 +392,11 @@ export class UsersService {
                 });
 
                 if (!otpCode || !otpCode.length) {
-                    throw new OtpCodeNotFoundException(new Error('Geçersiz Kod'));
+                    throw new OtpCodeNotFoundException(
+                        new Error('Geçersiz Kod'),
+                    );
                 }
-        
+
                 if (otpCode[0].Attempts >= 5) {
                     throw new BadRequestException(
                         BadRequestExceptionType.BAD_REQUEST,
@@ -397,17 +413,18 @@ export class UsersService {
                     },
                 });
                 await this.userOtpCodeService.update({
-                    where:{
-                        Id: otpCode[0].Id, 
+                    where: {
+                        Id: otpCode[0].Id,
                     },
-                   data:{
-                    IsDeleted: true,
-                   }
+                    data: {
+                        IsDeleted: true,
+                    },
                 });
 
                 return {
                     Email: user.Email,
-                    Data: 'Your email is verificated'
+                    Data: 'Your email is verificated',
+                    Success: true,
                 };
             }
         } catch (error) {
@@ -427,32 +444,33 @@ export class UsersService {
         }
     }
 
-    async sendEmailCode(data:SendCodeDTO){
-
+    async sendEmailCode(data: SendCodeDTO) {
         const user = await this.userService.findFirst({
-            where: { Email:data.Email },
+            where: { Email: data.Email },
         });
 
-        if(!user){
+        if (!user) {
             throw new AlreadyExistsException(
                 AlreadyExistsExceptionType.NOT_EXIST,
                 new Error('No Email... Please Register.'),
             );
         }
-        if(user.IsEmailVerified){
+        if (user.IsEmailVerified) {
             throw new AlreadyExistsException(
                 VerifyCodeExceptionType.VERIFIED,
                 new Error('You Account Is Verified'),
-            ); 
+            );
         }
         // Verification code
-        const code = parseInt(generate({
-            numbers: true,
-            symbols: false,
-            uppercase: false,
-            lowercase: false,
-            length: 4,
-        }));
+        const code = parseInt(
+            generate({
+                numbers: true,
+                symbols: false,
+                uppercase: false,
+                lowercase: false,
+                length: 4,
+            }),
+        );
 
         await this.userOtpCodeService.create({
             User: {
@@ -490,6 +508,7 @@ export class UsersService {
             Email: user.Email,
             Data: 'Waiting email verification',
             Token: token,
+            Success: true,
         };
     }
 }

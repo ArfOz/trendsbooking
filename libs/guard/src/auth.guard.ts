@@ -1,6 +1,5 @@
 // noinspection JSMethodCanBeStatic
 import {
-    CACHE_MANAGER,
     CanActivate,
     ExecutionContext,
     Inject,

@@ -1,5 +1,5 @@
-import { UserProfileData } from './../../../auth/src/dtos/user-profile-data';
-import { UserResponseDto } from './../../../auth/src/dtos/user-response.dto';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { UserProfileData } from '@auth';
 import {
     BadRequestExceptionType,
     BadRequestException,
@@ -43,7 +43,7 @@ export class UserService {
         }
 
         delete user.Id;
-
+        user["Success"]=true
         return user;
     }
 
