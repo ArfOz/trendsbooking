@@ -111,7 +111,7 @@ export class UserService {
     //     return user;
     // }
 
-    async create(data: Prisma.UserCreateInput): Promise<UserResponseDto> {
+    async create(data: Prisma.UserCreateInput) {
         try {
             let encryptedEmail;
             let encryptedPhone;
@@ -135,7 +135,8 @@ export class UserService {
                     FirstName: true,
                     LastName: true,
                     Username: true,
-                    Gender: true
+                    Gender: true,
+                    Id:true
                 }
             });
 
@@ -240,6 +241,7 @@ export class UserService {
                 Username: true,
                 Password: true,
                 Id: true,
+                IsEmailVerified:true
             },
         });
 

@@ -24,6 +24,7 @@
       "@database/*": ["libs/database/src/*"],
       "@guard": ["libs/guard/src"],
       "@guard/*": ["libs/guard/src/*"],
+      "@mail-utils": ["libs/mail-utils/src/index.ts"],
       "@shared": ["libs/shared/src"],
       "@shared/*": ["libs/shared/src/*"]
     }
