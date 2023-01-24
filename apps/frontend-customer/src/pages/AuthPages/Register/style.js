@@ -125,6 +125,7 @@ export const boxStyle = {
         display: 'flex',
         flexDirection: 'column',
         width: '50%',
+        border: '1px solid green',
     },
 
     rightside: {

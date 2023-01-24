@@ -101,7 +101,7 @@ export const boxStyle = {
         width: '100%',
         mt: 2,
         ml:2,
-        
+
     },
     logoWord: {
         width: 'calc(100% - 350px)',
@@ -117,6 +117,12 @@ export const boxStyle = {
         mb: 2,
         mt:2
     },
+
+    form: {
+      
+      width: '100%',
+      border:"2px solid green",
+  },
     progressBarFull: {},
 
 
