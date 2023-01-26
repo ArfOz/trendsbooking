@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { AuthLayout } from '../../../layout';
-import { modal, boxStyle } from './style';
+import { buttons, modal, boxStyle } from './style';
 import { styled } from '@mui/material/styles';
+import ErrorModal from './components/ErrorModal';
 import {
     Grid,
     Typography,
@@ -19,9 +20,12 @@ import {
     Input,
     Select,
     FormHelperText,
+    CircularProgress
 } from '@mui/material';
 import LogoWord from './components/LogoWord';
 import Paper from '@mui/material/Paper';
+import { useAuth } from '../../../context/authContext';
+import Verification from './components/Verification';
 
 const initialState = {
     FirstSecondName: '',
@@ -43,7 +47,7 @@ export default function Register() {
     const [activeElement, setActiveElement] = useState();
     const maxSteps = 3;
 
-    //const auth = useAuth();
+    const auth = useAuth();
 
     //Slider
     const [activeStep, setActiveStep] = useState(0);
@@ -58,17 +62,17 @@ export default function Register() {
     };
 
     useEffect(() => {
-        if (activeElement) {
-            Array.from(activeElement).map((item, index) => {
-                if (index === activeStep) {
-                    item.style.display = 'flex';
-                    item.style.justifyContent = 'center';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-    }, [activeStep]);
+      if (activeElement) {
+          Array.from(activeElement).map((item, index) => {
+              if (index === activeStep) {
+                  item.style.display = 'flex';
+                  item.style.justifyContent = 'center';
+              } else {
+                  item.style.display = 'none';
+              }
+          });
+      }
+  }, [activeStep]);
     //Slider
     //MODAL
     const [modalCheckbox, setModalCheckbox] = useState(false);
@@ -106,6 +110,19 @@ export default function Register() {
     const handleChangePhone = (e) => {
         registerForm['Phone'] = e;
     };
+
+    //VERIFICATION
+    const [verification, setVerification] = useState('');
+
+    const handleChangeVerification = (e) => {
+        setVerification(e);
+    };
+
+    const handleSubmitVerification = (e) => {
+        e.preventDefault();
+        console.log('verification', verification);
+    };
+    //VERIFICATION
     const [error, setError] = useState('');
     const [registered, setRegistered] = useState(false);
 
@@ -139,6 +156,96 @@ export default function Register() {
             setRegistered(true);
         }
     };
+
+    useEffect(() => {
+      if (registered) {
+          if (
+              auth.registerErrors?.response.data.details.toString() ===
+              'Please check the box!!!'
+          ) {
+              console.log(
+                  'object :>> ',
+                  auth.registerErrors?.response.data.details.toString(),
+              );
+              setError('Lütfen sözleşmeyi okuyup kabul ediniz!!!');
+          } else if (
+              auth.registerErrors?.response.data.details.toString() ===
+              'Ooops... User already exists'
+          ) {
+              setError(
+                  'Lütfen daha önce kayıt olmamış bir email ile giriş yapınız!!!',
+              );
+          } else if (
+              auth.registerErrors?.response.data.details.toString() ===
+              'Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'
+          ) {
+              let initialValues = {
+                  FirstName: 'Ad',
+                  LastName: 'Soyad',
+                  BirthDate: 'Doğum Tarihi',
+                  Gender: 'Cinsiyet',
+              };
+              let emptyValues = [];
+              for (const key in registerForm) {
+                  if (Object.hasOwnProperty.call(registerForm, key)) {
+                      const element = registerForm[key];
+                      if (!element) {
+                          emptyValues.push(initialValues[key]);
+                      }
+                  }
+              }
+              emptyValues.length > 1 && emptyValues.splice(-1, 0, 've');
+              let newError = replaceChar(
+                  replaceChar(
+                      emptyValues.join(', '),
+                      '',
+                      emptyValues.join(', ').lastIndexOf(','),
+                  ),
+                  '',
+                  replaceChar(
+                      emptyValues.join(', '),
+                      '',
+                      emptyValues.join(', ').lastIndexOf(','),
+                  ).lastIndexOf(','),
+              );
+              console.log(newError);
+
+              emptyValues.length > 0 &&
+                  setError(
+                      `${
+                          emptyValues.length > 1 ? newError : emptyValues
+                      } boş bırakılamaz!!!`,
+                  );
+          } else {
+              setError('');
+          }
+      }
+  }, [auth.registerErrors]);
+
+  function replaceChar(origString, replaceChar, index) {
+      let firstPart = origString.substr(0, index);
+      let lastPart = origString.substr(index + 1);
+
+      let newString = firstPart + replaceChar + lastPart;
+      return newString;
+  }
+
+  useEffect(() => {
+      if (error) {
+          handleOpenError(true);
+      }
+  }, [error]);
+
+  useEffect(() => {
+      if (auth.registerUser) {
+          // localStorage.setItem(
+          //     'registerResponse',
+          //     JSON.stringify(auth.registerUser),
+          // );
+          setActiveStep(2);
+      }
+  }, [auth.registerUser]);
+
     return (
         <AuthLayout>
             <Box sx={{ backgroundColor: 'white' }}>
@@ -184,6 +291,7 @@ export default function Register() {
                                             flexDirection: 'column',
                                         }}
                                     >
+                                        {/*##################  Page  1 #################  */}
                                         <Box
                                             sx={{
                                                 display: 'flex',
@@ -336,6 +444,7 @@ export default function Register() {
                                                 />
                                             </Box>
                                         </Box>
+                                        {/*##################  Page 2 #################  */}
                                         <Box
                                             sx={{
                                                 display: 'none',
@@ -439,8 +548,7 @@ export default function Register() {
                                                     sx={{
                                                         display: 'flex',
                                                         flexDirection: 'row',
-                                                        justifyContent:
-                                                            'left',
+                                                        justifyContent: 'left',
                                                         p: 1,
                                                         m: 1,
                                                     }}
@@ -463,85 +571,261 @@ export default function Register() {
                                                 </Box>
                                             </Box>
                                         </Box>
+                                        {/*##################  Page 3 #################  */}
+                                        <Box  sx={{
+                                                display: 'none',
+                                                flexDirection: 'column',
+                                            }}>
+                                            <Grid container compenent="">
+                                                <Grid item md={6} lg={6} xl={6}>
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            flexDirection:
+                                                                'column',
+                                                        }}
+                                                    >
+                                                        <TextField
+                                                            margin="normal"
+                                                            required
+                                                            id="City"
+                                                            label="Şehir"
+                                                            name="City"
+                                                            autoComplete="text"
+                                                            variant="outlined"
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            height="80px"
+                                                            size="small"
+                                                            sx={{
+                                                                width: '40%',
+                                                            }}
+                                                        />
+                                                        <TextField
+                                                            margin="normal"
+                                                            required
+                                                            id="District"
+                                                            label="İlçe"
+                                                            name="District"
+                                                            autoComplete="text"
+                                                            variant="outlined"
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            height="80px"
+                                                            size="small"
+                                                            sx={{
+                                                                width: '40%',
+                                                            }}
+                                                        />
+                                                        <TextField
+                                                            margin="normal"
+                                                            required
+                                                            id="Street"
+                                                            label="Sokak"
+                                                            name="Street"
+                                                            autoComplete="text"
+                                                            variant="outlined"
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            height="80px"
+                                                            size="small"
+                                                            sx={{
+                                                                width: '40%',
+                                                            }}
+                                                        />
+                                                    </Box>
+                                                </Grid>
+                                                <Grid item md={6} lg={6} xl={6}>
+                                                    <Box
+                                                        sx={{
+                                                            backgroundColor:
+                                                                'rgba(217,217,217)',
+                                                            width: '400px',
+                                                            height: '400px',
+                                                            borderRadius:
+                                                                '16px',
+                                                        }}
+                                                    ></Box>
+                                                </Grid>
+                                            </Grid>
+                                        </Box>
                                     </Box>
                                 </Box>
+                                {activeStep === 2 && (
+                                    <>
+                                        <Button
+                                            onClick={handleOpen}
+                                            sx={modal.button}
+                                        >
+                                            Sözleşme
+                                        </Button>
+                                        <Modal
+                                            open={open}
+                                            onError={handleClose}
+                                            sx={{
+                                                backgroundColor: 'transparent',
+                                            }}
+                                        >
+                                            <Box sx={modal}>
+                                                <Typography
+                                                    id="modal-modal-title"
+                                                    variant="h4"
+                                                    component="h2"
+                                                    align="center"
+                                                    sx={{
+                                                        color: '#F75936',
+                                                        width: '50%',
+                                                        margin: 'auto',
+                                                    }}
+                                                >
+                                                    Sözleşme
+                                                </Typography>
+                                                <Box sx={modal.scrollBar}>
+                                                    <Typography sx={{ mt: 2 }}>
+                                                        Hello and welcome to the
+                                                        [company name] website.
+                                                        We are excited to have
+                                                        you as a customer!
+                                                    </Typography>
+                                                    <Typography sx={{ mt: 2 }}>
+                                                        We hope that you will
+                                                        find our products and
+                                                        services useful, and we
+                                                        want to make sure you
+                                                        know how much we
+                                                        appreciate your
+                                                        business. That's why
+                                                        we've created this
+                                                        contract, which outlines
+                                                        the terms of our
+                                                        relationship. Let's jump
+                                                        right in!
+                                                    </Typography>
+                                                    <Typography sx={{ mt: 2 }}>
+                                                        This contract is between
+                                                        [name], hereinafter
+                                                        referred to as "you" or
+                                                        "the customer", and
+                                                        [company name],
+                                                        hereinafter referred to
+                                                        as "we". It establishes
+                                                        the terms under which we
+                                                        agree to provide goods
+                                                        or services to you. If
+                                                        you have any questions
+                                                        about these terms,
+                                                        please contact us at
+                                                        [phone number].
+                                                    </Typography>
+                                                    <Typography sx={{ mt: 2 }}>
+                                                        This agreement is
+                                                        effective from the date
+                                                        on which we send you an
+                                                        invoice for the first
+                                                        time (the "Effective
+                                                        Date"). The term of
+                                                    </Typography>
+                                                </Box>
+                                                <Button
+                                                    sx={modal.checkbox}
+                                                    onClick={() => {
+                                                        handleClose();
+                                                        setModalCheckbox(true);
+                                                    }}
+                                                >
+                                                    Okudum Kabul Ediyorum
+                                                </Button>
+                                            </Box>
+                                        </Modal>
+                                    </>
+                                )}
+                                {activeStep < 1 && (
+                                    <Button
+                                        size="small"
+                                        onClick={handleNext}
+                                        fullWidth
+                                        variant="outlined"
+                                        sx={buttons.next}
+                                        // disabled={activeStep === maxSteps - 1}
+                                    >
+                                        İLERİ
+                                    </Button>
+                                )}
+                                {activeStep === 1 && (
+                                  <>
+                                    <Button
+                                        size="small"
+                                        onClick={handleBack}
+                                        fullWidth
+                                        variant="outlined"
+                                        sx={buttons.back}
+                                        disabled={activeStep <= 0}
+                                    >
+                                        GERİ
+                                    </Button>
+                                    <Button
+                                        size="small"
+                                        onClick={handleNext}
+                                        fullWidth
+                                        variant="outlined"
+                                        sx={buttons.next}
+                                        // disabled={activeStep === maxSteps - 1}
+                                    >
+                                        İLERİ
+                                    </Button>
+                                    </>
+                                )}
+                                {activeStep == 2 && (
+                                    <Button
+                                        size="small"
+                                        onClick={handleSubmitVerification}
+                                        fullWidth
+                                        variant="outlined"
+                                        sx={buttons.back}
+                                        disabled={activeStep <= 0}
+                                    >
+                                        DOĞRULA
+                                    </Button>
+                                )}
+                                {activeStep === maxSteps - 2 && (
+                                    <Button
+                                        type="submit"
+                                        fullWidth
+                                        variant="outlined"
+                                        sx={buttons.submit}
+                                    >
+                                        {auth.isLoading ? (
+                                            <CircularProgress />
+                                        ) : (
+                                            'HESAP OLUŞTUR'
+                                        )}
+                                    </Button>
+                                )}
+                                {activeStep == 0 && (
+                                    <Grid container>
+                                        <Grid item>
+                                            <Link href="#" variant="body1">
+                                                {'Zaten Hesabın var mı!'}
+                                            </Link>
+                                        </Grid>
+                                    </Grid>
+                                )}
                             </Box>
                         </Box>
-
-                        <Button onClick={handleOpen} sx={modal.button}>
-                            Sözleşme
-                        </Button>
-                        <Modal
-                            open={open}
-                            onError={handleClose}
-                            sx={{
-                                backgroundColor: 'transparent',
-                            }}
-                        >
-                            <Box sx={modal}>
-                                <Typography
-                                    id="modal-modal-title"
-                                    variant="h4"
-                                    component="h2"
-                                    align="center"
-                                    sx={{
-                                        color: '#F75936',
-                                        width: '50%',
-                                        margin: 'auto',
-                                    }}
-                                >
-                                    Sözleşme
-                                </Typography>
-                                <Box sx={modal.scrollBar}>
-                                    <Typography sx={{ mt: 2 }}>
-                                        Hello and welcome to the [company name]
-                                        website. We are excited to have you as a
-                                        customer!
-                                    </Typography>
-                                    <Typography sx={{ mt: 2 }}>
-                                        We hope that you will find our products
-                                        and services useful, and we want to make
-                                        sure you know how much we appreciate
-                                        your business. That's why we've created
-                                        this contract, which outlines the terms
-                                        of our relationship. Let's jump right
-                                        in!
-                                    </Typography>
-                                    <Typography sx={{ mt: 2 }}>
-                                        This contract is between [name],
-                                        hereinafter referred to as "you" or "the
-                                        customer", and [company name],
-                                        hereinafter referred to as "we". It
-                                        establishes the terms under which we
-                                        agree to provide goods or services to
-                                        you. If you have any questions about
-                                        these terms, please contact us at [phone
-                                        number].
-                                    </Typography>
-                                    <Typography sx={{ mt: 2 }}>
-                                        This agreement is effective from the
-                                        date on which we send you an invoice for
-                                        the first time (the "Effective Date").
-                                        The term of
-                                    </Typography>
-                                </Box>
-                                <Button
-                                    sx={modal.checkbox}
-                                    onClick={() => {
-                                        handleClose();
-                                        setModalCheckbox(true);
-                                    }}
-                                >
-                                    Okudum Kabul Ediyorum
-                                </Button>
-                            </Box>
-                        </Modal>
                     </Grid>
                     <Grid item xs={false} sm={false} md={4} lg={4} xl={4}>
                         <Box sx={boxStyle.rightside}></Box>
                     </Grid>
                 </Grid>
             </Box>
+            <ErrorModal
+                open={openError}
+                handleClose={handleCloseError}
+                error={error}
+            />
         </AuthLayout>
     );
 }

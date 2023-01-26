@@ -119,7 +119,7 @@ export const boxStyle = {
     },
 
     form: {
-      
+
       width: '100%',
       border:"2px solid green",
   },
