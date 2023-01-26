@@ -40,14 +40,19 @@ export class UsersController {
     }
 
     @AllowUnauthorizedRequest()
-    @Post('verifyCode')
+    @Post('verifycode')
     verifyCode(@Body() verifyCode: VerifyCodeDTO) {
         return this.UsersService.verifyCode(verifyCode);
     }
 
     @AllowUnauthorizedRequest()
-    @Post('sendCode')
+    @Post('sendcode')
     sendEmailCode(@Body() sendCode: SendCodeDTO) {
         return this.UsersService.sendEmailCode(sendCode);
+    }
+
+    @Get('logout')
+    logout(@UserParam() user: UserPayloadDto) {
+        return this.UsersService.logout(user);
     }
 }

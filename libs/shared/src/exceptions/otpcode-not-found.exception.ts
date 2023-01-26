@@ -1,8 +1,11 @@
+import { ForbiddenExceptionType, VerifyCodeExceptionType } from './../enums/exception.type';
 import { NotFoundException } from './not-found.exception';
 
-
 export class OtpCodeNotFoundException extends NotFoundException {
-    constructor(error?: Error) {
-        super(error);
+    constructor(
+        type: VerifyCodeExceptionType,
+        error?: Error,
+    ) {
+        super(type, error);
     }
 }

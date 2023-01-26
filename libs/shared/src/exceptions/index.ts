@@ -3,6 +3,7 @@ export * from './bad-request.exception';
 export * from './forbidden.exception';
 export * from './internal-server.exception';
 export * from './not-found.exception';
+export * from './not-verified.exception';
 export * from './otpcode-not-found.exception';
 export * from './trends.exception';
 export * from './unauthorized.exception';

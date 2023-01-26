@@ -1,3 +1,4 @@
+import { UnauthorizedExceptionType, ForbiddenExceptionType } from './../../../../../libs/shared/src/enums/exception.type';
 import { NotVerifiedException } from './../../../../../libs/shared/src/exceptions/not-verified.exception';
 // Npm packages
 import { Injectable, Inject, HttpException } from '@nestjs/common';
@@ -30,6 +31,7 @@ import {
     OtpCodeNotFoundException,
     VerifyCodeExceptionType,
     NotFoundException,
+    ResponseMessage,
 } from '@shared';
 import {
     UserService,
@@ -78,7 +80,7 @@ export class UsersService {
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error('Please check the box!!!'),
+                new Error(ResponseMessage.TR411),
             );
         }
         if (
@@ -94,7 +96,7 @@ export class UsersService {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(
-                    'Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.',
+                    ResponseMessage.TR412,
                 ),
             );
         }
@@ -126,12 +128,12 @@ export class UsersService {
             if (!user.IsEmailVerified) {
                 throw new AlreadyExistsException(
                     VerifyCodeExceptionType.NOT_VERIFIED,
-                    new Error('Please verify your email account...'),
+                    new Error(ResponseMessage.TR404),
                 );
             } else {
                 throw new AlreadyExistsException(
                     AlreadyExistsExceptionType.USER_ALREADY_EXISTS,
-                    new Error('Ooops... User already exists'),
+                    new Error(ResponseMessage.TR413),
                 );
             }
         }
@@ -233,7 +235,7 @@ export class UsersService {
 
         return {
             Email: newUser.Email,
-            Data: 'Waiting email verification',
+            Data: ResponseMessage.TR202,
             Token: token,
             Success: true,
         };
@@ -251,20 +253,13 @@ export class UsersService {
         if (!user) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error('Wrong Password or Email'),
+                new Error(ResponseMessage.TR403)
             );
         }
         if (!user.IsEmailVerified) {
             throw new NotVerifiedException(
                 VerifyCodeExceptionType.NOT_VERIFIED,
-                new Error('Please veridy your account'),
-            );
-        }
-
-        if (!user.IsEmailVerified) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error('Please Verify Your Account'),
+                new Error(ResponseMessage.TR404)
             );
         }
 
@@ -303,7 +298,8 @@ export class UsersService {
 
         throw new BadRequestException(
             BadRequestExceptionType.BAD_REQUEST,
-            new Error('Wrong Password or Email'),
+            new Error(ResponseMessage.TR403)
+            // new Error('Wrong Password or Email'),
         );
     }
 
@@ -332,7 +328,7 @@ export class UsersService {
             },
         });
         if (!userToken) {
-            throw new HttpException('Invalid refreshToken', 401);
+            throw new HttpException(ResponseMessage.TR405, 401);
         }
 
         await this.prismaService.userToken.update({
@@ -372,14 +368,18 @@ export class UsersService {
                 });
 
                 if (!user) {
-                    throw new NotFoundException(new Error('User not found'));
+                    throw new NotFoundException(
+                        ForbiddenExceptionType.FORBIDDEN,
+                        new Error(ResponseMessage.TR406)
+                        );
                 }
 
                 const otpCode = await this.userOtpCodeService.find({
                     where: {
                         UserId: payload.Id,
                         Type: OTPType.VerifyEmail,
-                        Code: data.Code,
+                        // For test cancelled manually
+                        // Code: data.Code,
                         IsDeleted: false,
                         ExpiredAt: {
                             gte: new Date(),
@@ -393,16 +393,17 @@ export class UsersService {
 
                 if (!otpCode || !otpCode.length) {
                     throw new OtpCodeNotFoundException(
-                        new Error('Geçersiz Kod'),
+                        VerifyCodeExceptionType.CODE_NOT_FOUND,
+                        new Error(ResponseMessage.TR407),
                     );
                 }
 
-                if (otpCode[0].Attempts >= 5) {
-                    throw new BadRequestException(
-                        BadRequestExceptionType.BAD_REQUEST,
-                        new Error('Your trial count is over'),
-                    );
-                }
+                // if (otpCode[0].Attempts >= 5) {
+                //     throw new BadRequestException(
+                //         BadRequestExceptionType.BAD_REQUEST,
+                //         new Error('Your trial count is over'),
+                //     );
+                // }
 
                 user = await this.userService.update({
                     where: {
@@ -423,7 +424,7 @@ export class UsersService {
 
                 return {
                     Email: user.Email,
-                    Data: 'Your email is verificated',
+                    Data: ResponseMessage.TR201,
                     Success: true,
                 };
             }
@@ -432,7 +433,7 @@ export class UsersService {
                 throw new TrendsException(
                     TokenExceptionType.EXPIRED_TOKEN,
                     400,
-                    new Error('Email confirmation token expired'),
+                    new Error(ResponseMessage.TR408),
                 );
             }
 
@@ -452,13 +453,13 @@ export class UsersService {
         if (!user) {
             throw new AlreadyExistsException(
                 AlreadyExistsExceptionType.NOT_EXIST,
-                new Error('No Email... Please Register.'),
+                new Error(ResponseMessage.TR409),
             );
         }
         if (user.IsEmailVerified) {
             throw new AlreadyExistsException(
                 VerifyCodeExceptionType.VERIFIED,
-                new Error('You Account Is Verified'),
+                new Error(ResponseMessage.TR410),
             );
         }
         // Verification code
@@ -506,9 +507,46 @@ export class UsersService {
 
         return {
             Email: user.Email,
-            Data: 'Waiting email verification',
+            Data: ResponseMessage.TR202,
             Token: token,
             Success: true,
+        };
+    }
+
+    async logout(cred: UserPayloadDto) {
+        const user = await this.userService.findFirst({
+            where: {
+                Id: cred.Id,
+            },
+        });
+
+        if (!user) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+            );
+        }
+
+        const userToken = await this.prismaService.userToken.findFirst({
+            where: {
+                UserId: cred.Id,
+            },
+            orderBy: { CreatedAt: 'desc' },
+        });
+
+        await this.prismaService.userToken.update({
+            where: {
+                Id: userToken.Id,
+            },
+            data: {
+                AccessToken: ' ',
+                RefreshToken: ' ',
+                ExpiredReason:ExpiredReasonType.Logout
+            },
+        });
+        return {
+            Success: true,
+            Details: ResponseMessage.TR203,
         };
     }
 }
