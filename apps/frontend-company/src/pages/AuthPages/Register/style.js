@@ -1,39 +1,36 @@
 export const buttons = {
     submit: {
-        fontSize: '1rem',
-        p: '10px',
-        mt: '30px',
-        mb: '10px',
-        backgroundColor: '#F75936',
-        border: '1px solid green',
-        color: 'white',
-        '&:hover': {
-            color: '#F75936',
-        },
+      width: '294px',
+      height: '40px',
+      fontSize: '1rem',
+      ml: '250px',
+      backgroundColor: '#F75936',
+      color: 'white',
+      '&:hover': {
+          color: '#F75936',
+      },
     },
     next: {
-        mt: '30px',
-        mb: '10px',
+        width: '294px',
+        height: '40px',
         fontSize: '1rem',
-        p: '10px',
+        ml: '410px',
         backgroundColor: '#F75936',
-        border: '1px solid green',
         color: 'white',
         '&:hover': {
             color: '#F75936',
         },
     },
     back: {
-        mt: '30px',
-        // mb: "10px",
-        fontSize: '1rem',
-        p: '10px',
-        backgroundColor: '#F75936',
-        border: '1px solid green',
-        color: 'white',
-        '&:hover': {
-            color: '#F75936',
-        },
+      width: '294px',
+      height: '40px',
+      fontSize: '1rem',
+      ml: '50px',
+      backgroundColor: '#F75936',
+      color: 'white',
+      '&:hover': {
+          color: '#F75936',
+      },
     },
 };
 
@@ -95,13 +92,14 @@ export const boxStyle = {
         display: 'flex',
         flexDirection: 'column',
         height: '100vh',
+        alignItems: 'center',
     },
 
     headerBox: {
         width: '100%',
         mt: 2,
         ml:2,
-        
+
     },
     logoWord: {
         width: 'calc(100% - 350px)',
@@ -110,7 +108,7 @@ export const boxStyle = {
 
     },
     progressBarEmpty: {
-        width: '100%',
+        width: '50%',
         height: '10px',
         background: '#F2F8FF',
         borderRadius: '15px',
@@ -119,6 +117,14 @@ export const boxStyle = {
     },
     progressBarFull: {},
 
+    form: {
+      display:"flex",
+      flexDirection: 'column',
+      width: '100%',
+      border:"2px solid green",
+  },
+
+
 
     rightside: {
         backgroundImage: 'url(https://source.unsplash.com/random)',
@@ -126,5 +132,13 @@ export const boxStyle = {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         height: '100vh',
+    },
+
+
+};
+
+export const input = {
+    '&:invalid': {
+        border: 'red solid 2px',
     },
 };

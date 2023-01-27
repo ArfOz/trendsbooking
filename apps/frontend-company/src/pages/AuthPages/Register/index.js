@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { AuthLayout } from '../../../layout';
-import { modal,boxStyle } from './style';
+import { buttons, modal, boxStyle } from './style';
 import { styled } from '@mui/material/styles';
+import ErrorModal from './components/ErrorModal';
 import {
     Grid,
     Typography,
@@ -19,9 +20,12 @@ import {
     Input,
     Select,
     FormHelperText,
+    CircularProgress
 } from '@mui/material';
 import LogoWord from './components/LogoWord';
 import Paper from '@mui/material/Paper';
+import { useAuth } from '../../../context/authContext';
+import Verification from './components/Verification';
 
 const initialState = {
     FirstSecondName: '',
@@ -33,7 +37,7 @@ const initialState = {
     CusGender: '',
     TaxOff: false,
     HallType: '',
-    Iban:'',
+    Iban: '',
 };
 
 export default function Register() {
@@ -43,7 +47,7 @@ export default function Register() {
     const [activeElement, setActiveElement] = useState();
     const maxSteps = 3;
 
-    //const auth = useAuth();
+    const auth = useAuth();
 
     //Slider
     const [activeStep, setActiveStep] = useState(0);
@@ -58,17 +62,17 @@ export default function Register() {
     };
 
     useEffect(() => {
-        if (activeElement) {
-            Array.from(activeElement).map((item, index) => {
-                if (index === activeStep) {
-                    item.style.display = 'flex';
-                    item.style.justifyContent = 'center';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-    }, [activeStep]);
+      if (activeElement) {
+          Array.from(activeElement).map((item, index) => {
+              if (index === activeStep) {
+                  item.style.display = 'flex';
+                  item.style.justifyContent = 'center';
+              } else {
+                  item.style.display = 'none';
+              }
+          });
+      }
+  }, [activeStep]);
     //Slider
     //MODAL
     const [modalCheckbox, setModalCheckbox] = useState(false);
@@ -106,6 +110,19 @@ export default function Register() {
     const handleChangePhone = (e) => {
         registerForm['Phone'] = e;
     };
+
+    //VERIFICATION
+    const [verification, setVerification] = useState('');
+
+    const handleChangeVerification = (e) => {
+        setVerification(e);
+    };
+
+    const handleSubmitVerification = (e) => {
+        e.preventDefault();
+        console.log('verification', verification);
+    };
+    //VERIFICATION
     const [error, setError] = useState('');
     const [registered, setRegistered] = useState(false);
 
@@ -139,6 +156,96 @@ export default function Register() {
             setRegistered(true);
         }
     };
+
+    useEffect(() => {
+      if (registered) {
+          if (
+              auth.registerErrors?.response.data.details.toString() ===
+              'Please check the box!!!'
+          ) {
+              console.log(
+                  'object :>> ',
+                  auth.registerErrors?.response.data.details.toString(),
+              );
+              setError('Lütfen sözleşmeyi okuyup kabul ediniz!!!');
+          } else if (
+              auth.registerErrors?.response.data.details.toString() ===
+              'Ooops... User already exists'
+          ) {
+              setError(
+                  'Lütfen daha önce kayıt olmamış bir email ile giriş yapınız!!!',
+              );
+          } else if (
+              auth.registerErrors?.response.data.details.toString() ===
+              'Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'
+          ) {
+              let initialValues = {
+                  FirstName: 'Ad',
+                  LastName: 'Soyad',
+                  BirthDate: 'Doğum Tarihi',
+                  Gender: 'Cinsiyet',
+              };
+              let emptyValues = [];
+              for (const key in registerForm) {
+                  if (Object.hasOwnProperty.call(registerForm, key)) {
+                      const element = registerForm[key];
+                      if (!element) {
+                          emptyValues.push(initialValues[key]);
+                      }
+                  }
+              }
+              emptyValues.length > 1 && emptyValues.splice(-1, 0, 've');
+              let newError = replaceChar(
+                  replaceChar(
+                      emptyValues.join(', '),
+                      '',
+                      emptyValues.join(', ').lastIndexOf(','),
+                  ),
+                  '',
+                  replaceChar(
+                      emptyValues.join(', '),
+                      '',
+                      emptyValues.join(', ').lastIndexOf(','),
+                  ).lastIndexOf(','),
+              );
+              console.log(newError);
+
+              emptyValues.length > 0 &&
+                  setError(
+                      `${
+                          emptyValues.length > 1 ? newError : emptyValues
+                      } boş bırakılamaz!!!`,
+                  );
+          } else {
+              setError('');
+          }
+      }
+  }, [auth.registerErrors]);
+
+  function replaceChar(origString, replaceChar, index) {
+      let firstPart = origString.substr(0, index);
+      let lastPart = origString.substr(index + 1);
+
+      let newString = firstPart + replaceChar + lastPart;
+      return newString;
+  }
+
+  useEffect(() => {
+      if (error) {
+          handleOpenError(true);
+      }
+  }, [error]);
+
+  useEffect(() => {
+      if (auth.registerUser) {
+          // localStorage.setItem(
+          //     'registerResponse',
+          //     JSON.stringify(auth.registerUser),
+          // );
+          setActiveStep(2);
+      }
+  }, [auth.registerUser]);
+
     return (
         <AuthLayout>
             <Box sx={{ backgroundColor: 'white' }}>
@@ -170,182 +277,385 @@ export default function Register() {
                                         }%`,
                                     }}
                                 ></Box>
-                                <Box
-                                    component="form"
-                                    noValidate
-                                    onSubmit={handleSubmit}
-                                    sx={boxStyle.form}
-                                >
+                            </Box>
+                            <Box
+                                component="form"
+                                noValidate
+                                onSubmit={handleSubmit}
+                                sx={boxStyle.form}
+                            >
+                                <Box>
                                     <Box
                                         sx={{
-                                            border: '1px solid red',
-                                            width: '100%',
+                                            display: 'flex',
+                                            flexDirection: 'column',
                                         }}
                                     >
+                                        {/*##################  Page  1 #################  */}
                                         <Box
                                             sx={{
                                                 display: 'flex',
                                                 flexDirection: 'column',
+                                                border: '1px solid red',
+                                                m: 3,
                                             }}
                                         >
                                             <Box
                                                 sx={{
                                                     display: 'flex',
                                                     flexDirection: 'row',
+                                                    justifyContent:
+                                                        'space-around',
+                                                    p: 1,
+                                                    m: 1,
                                                 }}
                                             >
-                                                <Grid item>
-                                                    <Box>
-                                                        <Grid
-                                                            container
-                                                            rowSpacing={1}
-                                                            columnSpacing={{
-                                                                xs: 1,
-                                                                sm: 2,
-                                                                md: 3,
-                                                            }}
-                                                        >
-                                                            <Grid item xs={6}>
-                                                                <TextField
-                                                                    margin="normal"
-                                                                    required
-                                                                    id="FirstSecondName"
-                                                                    label="Adınız Soyadınız"
-                                                                    name="FirstSecondName"
-                                                                    autoComplete="text"
-                                                                    variant="outlined"
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    height="80px"
-                                                                    size="small"
-                                                                    sx={{
-                                                                        width: '50%',
-                                                                    }}
-                                                                />
-                                                            </Grid>
-                                                            <Grid item xs={6}>
-                                                                <TextField
-                                                                    margin="normal"
-                                                                    required
-                                                                    id="TCId"
-                                                                    label="TC Kimlik Numaranız"
-                                                                    name="TCId"
-                                                                    autoComplete="text"
-                                                                    variant="outlined"
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    height="80px"
-                                                                    size="small"
-                                                                    sx={{
-                                                                        width: '50%',
-                                                                    }}
-                                                                />
-                                                            </Grid>
-                                                            <Grid item xs={6}>
-                                                                <TextField
-                                                                    margin="normal"
-                                                                    required
-                                                                    id="Email"
-                                                                    label="E-Posta Adresiniz"
-                                                                    name="Email"
-                                                                    autoComplete="email"
-                                                                    pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
-                                                                    variant="outlined"
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    height="80px"
-                                                                    size="small"
-                                                                    sx={{
-                                                                        width: '50%',
-                                                                    }}
-                                                                />
-                                                            </Grid>
-                                                            <Grid item xs={6}>
-                                                                <TextField
-                                                                    margin="normal"
-                                                                    required
-                                                                    id="Password"
-                                                                    label="Şifreniz"
-                                                                    name="Password"
-                                                                    autoComplete="password"
-                                                                    variant="outlined"
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    height="80px"
-                                                                    size="small"
-                                                                    sx={{
-                                                                        width: '50%',
-                                                                    }}
-                                                                    helperText="En az 6 karakterden oluşmalıdır."
-                                                                />
-                                                            </Grid>
-                                                            <Grid item xs={6}>
-                                                                <TextField
-                                                                    margin="normal"
-                                                                    required
-                                                                    id="Phone"
-                                                                    label="Telefon Numaranız"
-                                                                    name="Phone"
-                                                                    autoComplete="text"
-                                                                    variant="outlined"
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    height="80px"
-                                                                    size="small"
-                                                                    sx={{
-                                                                        width: '50%',
-                                                                    }}
-                                                                />
-                                                            </Grid>
-                                                            <Grid item xs={6}>
-                                                                <TextField
-                                                                    margin="normal"
-                                                                    required
-                                                                    name="confirmPassword"
-                                                                    label="Şifreni doğrula"
-                                                                    type="password"
-                                                                    id="confirmPassword"
-                                                                    autoComplete="password"
-                                                                    variant="outlined"
-                                                                    value={
-                                                                        confirmPassword
-                                                                    }
-                                                                    error={
-                                                                        confirmPassword !==
-                                                                        registerForm.Password
-                                                                    }
-                                                                    helperText={
-                                                                        confirmPassword !==
-                                                                        registerForm.Password
-                                                                            ? 'Şifre Doğrulanamadı'
-                                                                            : ''
-                                                                    }
-                                                                    onChange={(
-                                                                        e,
-                                                                    ) =>
-                                                                        setConfirmPassword(
-                                                                            e
-                                                                                .target
-                                                                                .value,
-                                                                        )
-                                                                    }
-                                                                    size="small"
-                                                                />
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Box>
-                                                    <Box></Box>
-                                                </Grid>
+                                                <TextField
+                                                    margin="normal"
+                                                    required
+                                                    id="FirstSecondName"
+                                                    label="Adınız Soyadınız"
+                                                    name="FirstSecondName"
+                                                    autoComplete="text"
+                                                    variant="outlined"
+                                                    onChange={handleChange}
+                                                    height="80px"
+                                                    size="small"
+                                                    sx={{
+                                                        width: '40%',
+                                                    }}
+                                                />
+
+                                                <TextField
+                                                    margin="normal"
+                                                    required
+                                                    id="TCId"
+                                                    label="TC Kimlik Numaranız"
+                                                    name="TCId"
+                                                    autoComplete="text"
+                                                    variant="outlined"
+                                                    onChange={handleChange}
+                                                    height="80px"
+                                                    size="small"
+                                                    sx={{
+                                                        width: '40%',
+                                                    }}
+                                                />
                                             </Box>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    justifyContent:
+                                                        'space-around',
+                                                    p: 1,
+                                                    m: 1,
+                                                }}
+                                            >
+                                                <TextField
+                                                    margin="normal"
+                                                    required
+                                                    id="Email"
+                                                    label="E-Posta Adresiniz"
+                                                    name="Email"
+                                                    autoComplete="email"
+                                                    pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+                                                    variant="outlined"
+                                                    onChange={handleChange}
+                                                    height="80px"
+                                                    size="small"
+                                                    sx={{
+                                                        width: '40%',
+                                                    }}
+                                                />
+
+                                                <TextField
+                                                    margin="normal"
+                                                    required
+                                                    id="Password"
+                                                    label="Şifreniz"
+                                                    name="Password"
+                                                    autoComplete="password"
+                                                    variant="outlined"
+                                                    onChange={handleChange}
+                                                    height="80px"
+                                                    size="small"
+                                                    sx={{
+                                                        width: '40%',
+                                                    }}
+                                                    helperText="En az 6 karakterden oluşmalıdır."
+                                                />
+                                            </Box>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    justifyContent:
+                                                        'space-around',
+                                                    p: 1,
+                                                    m: 1,
+                                                }}
+                                            >
+                                                <TextField
+                                                    margin="normal"
+                                                    required
+                                                    id="Phone"
+                                                    label="Telefon Numaranız"
+                                                    name="Phone"
+                                                    autoComplete="text"
+                                                    variant="outlined"
+                                                    onChange={handleChange}
+                                                    height="80px"
+                                                    size="small"
+                                                    sx={{
+                                                        width: '40%',
+                                                    }}
+                                                />
+
+                                                <TextField
+                                                    margin="normal"
+                                                    required
+                                                    name="confirmPassword"
+                                                    label="Şifreni doğrula"
+                                                    type="password"
+                                                    id="confirmPassword"
+                                                    autoComplete="password"
+                                                    variant="outlined"
+                                                    value={confirmPassword}
+                                                    error={
+                                                        confirmPassword !==
+                                                        registerForm.Password
+                                                    }
+                                                    helperText={
+                                                        confirmPassword !==
+                                                        registerForm.Password
+                                                            ? 'Şifre Doğrulanamadı'
+                                                            : ''
+                                                    }
+                                                    onChange={(e) =>
+                                                        setConfirmPassword(
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    size="small"
+                                                    sx={{
+                                                        width: '40%',
+                                                    }}
+                                                />
+                                            </Box>
+                                        </Box>
+                                        {/*##################  Page 2 #################  */}
+                                        <Box
+                                            sx={{
+                                                display: 'none',
+                                                flexDirection: 'column',
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    border: '1px solid red',
+                                                    m: 3,
+                                                }}
+                                            >
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        justifyContent:
+                                                            'space-around',
+                                                        p: 1,
+                                                        m: 1,
+                                                    }}
+                                                >
+                                                    <TextField
+                                                        margin="normal"
+                                                        required
+                                                        id="TaxNu"
+                                                        label="Vergi Numaranız"
+                                                        name="TaxNu"
+                                                        autoComplete="text"
+                                                        variant="outlined"
+                                                        onChange={handleChange}
+                                                        height="80px"
+                                                        size="small"
+                                                        sx={{
+                                                            width: '40%',
+                                                        }}
+                                                    />
+
+                                                    <TextField
+                                                        margin="normal"
+                                                        required
+                                                        id="CusGender"
+                                                        label="Hizmet Verilen Müşteri cinsiyeti"
+                                                        name="CusGender"
+                                                        autoComplete="text"
+                                                        variant="outlined"
+                                                        onChange={handleChange}
+                                                        height="80px"
+                                                        size="small"
+                                                        sx={{
+                                                            width: '40%',
+                                                        }}
+                                                    />
+                                                </Box>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        justifyContent:
+                                                            'space-around',
+                                                        p: 1,
+                                                        m: 1,
+                                                    }}
+                                                >
+                                                    <TextField
+                                                        margin="normal"
+                                                        required
+                                                        id="TaxOff"
+                                                        label="Vergi Dairesi"
+                                                        name="TaxOff"
+                                                        autoComplete="text"
+                                                        variant="outlined"
+                                                        onChange={handleChange}
+                                                        height="80px"
+                                                        size="small"
+                                                        sx={{
+                                                            width: '40%',
+                                                        }}
+                                                    />
+
+                                                    <TextField
+                                                        margin="normal"
+                                                        required
+                                                        id="HallType"
+                                                        label="Salon Türü"
+                                                        name="Password"
+                                                        autoComplete="password"
+                                                        variant="outlined"
+                                                        onChange={handleChange}
+                                                        height="80px"
+                                                        size="small"
+                                                        sx={{
+                                                            width: '40%',
+                                                        }}
+                                                        helperText="En az 6 karakterden oluşmalıdır."
+                                                    />
+                                                </Box>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'left',
+                                                        p: 1,
+                                                        m: 1,
+                                                    }}
+                                                >
+                                                    <TextField
+                                                        margin="normal"
+                                                        required
+                                                        id="Iban"
+                                                        label="IBAN Numaranız"
+                                                        name="Iban"
+                                                        autoComplete="text"
+                                                        variant="outlined"
+                                                        onChange={handleChange}
+                                                        height="80px"
+                                                        size="small"
+                                                        sx={{
+                                                            width: '40%',
+                                                        }}
+                                                    />
+                                                </Box>
+                                            </Box>
+                                        </Box>
+                                        {/*##################  Page 3 #################  */}
+                                        <Box  sx={{
+                                                display: 'none',
+                                                flexDirection: 'column',
+                                            }}>
+                                            <Grid container compenent="">
+                                                <Grid item md={6} lg={6} xl={6}>
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            flexDirection:
+                                                                'column',
+                                                        }}
+                                                    >
+                                                        <TextField
+                                                            margin="normal"
+                                                            required
+                                                            id="City"
+                                                            label="Şehir"
+                                                            name="City"
+                                                            autoComplete="text"
+                                                            variant="outlined"
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            height="80px"
+                                                            size="small"
+                                                            sx={{
+                                                                width: '40%',
+                                                            }}
+                                                        />
+                                                        <TextField
+                                                            margin="normal"
+                                                            required
+                                                            id="District"
+                                                            label="İlçe"
+                                                            name="District"
+                                                            autoComplete="text"
+                                                            variant="outlined"
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            height="80px"
+                                                            size="small"
+                                                            sx={{
+                                                                width: '40%',
+                                                            }}
+                                                        />
+                                                        <TextField
+                                                            margin="normal"
+                                                            required
+                                                            id="Street"
+                                                            label="Sokak"
+                                                            name="Street"
+                                                            autoComplete="text"
+                                                            variant="outlined"
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            height="80px"
+                                                            size="small"
+                                                            sx={{
+                                                                width: '40%',
+                                                            }}
+                                                        />
+                                                    </Box>
+                                                </Grid>
+                                                <Grid item md={6} lg={6} xl={6}>
+                                                    <Box
+                                                        sx={{
+                                                            backgroundColor:
+                                                                'rgba(217,217,217)',
+                                                            width: '400px',
+                                                            height: '400px',
+                                                            borderRadius:
+                                                                '16px',
+                                                        }}
+                                                    ></Box>
+                                                </Grid>
+                                            </Grid>
                                         </Box>
                                     </Box>
                                 </Box>
-
+                                {activeStep === 2 && (
+                                    <>
                                         <Button
                                             onClick={handleOpen}
                                             sx={modal.button}
@@ -430,7 +740,74 @@ export default function Register() {
                                                 </Button>
                                             </Box>
                                         </Modal>
+                                    </>
+                                )}
+                                {activeStep < 1 && (
+                                    <Button
 
+                                        onClick={handleNext}
+                                        variant="outlined"
+                                        sx={buttons.next}
+                                        // disabled={activeStep === maxSteps - 1}
+                                    >
+                                        İLERİ
+                                    </Button>
+                                )}
+                                {activeStep === 1 && (
+                                  <>
+                                    <Button
+                                        size="small"
+                                        onClick={handleBack}
+                                        variant="outlined"
+                                        sx={buttons.back}
+                                        disabled={activeStep <= 0}
+                                    >
+                                        GERİ
+                                    </Button>
+                                    <Button
+                                        size="small"
+                                        onClick={handleNext}
+                                        variant="outlined"
+                                        sx={buttons.next}
+                                        // disabled={activeStep === maxSteps - 1}
+                                    >
+                                        İLERİ
+                                    </Button>
+                                    </>
+                                )}
+                                {activeStep == 2 && (
+                                    <Button
+                                        size="small"
+                                        onClick={handleSubmitVerification}
+                                        variant="outlined"
+                                        sx={buttons.back}
+                                        disabled={activeStep <= 0}
+                                    >
+                                        DOĞRULA
+                                    </Button>
+                                )}
+                                {activeStep === maxSteps - 2 && (
+                                    <Button
+                                        type="submit"
+                                        variant="outlined"
+                                        sx={buttons.submit}
+                                    >
+                                        {auth.isLoading ? (
+                                            <CircularProgress />
+                                        ) : (
+                                            'HESAP OLUŞTUR'
+                                        )}
+                                    </Button>
+                                )}
+                                {activeStep == 0 && (
+                                    <Grid container>
+                                        <Grid item>
+                                            <Link href="#" variant="body1">
+                                                {'Zaten Hesabın var mı!'}
+                                            </Link>
+                                        </Grid>
+                                    </Grid>
+                                )}
                             </Box>
                         </Box>
                     </Grid>
@@ -439,6 +816,11 @@ export default function Register() {
                     </Grid>
                 </Grid>
             </Box>
+            <ErrorModal
+                open={openError}
+                handleClose={handleCloseError}
+                error={error}
+            />
         </AuthLayout>
     );
 }
