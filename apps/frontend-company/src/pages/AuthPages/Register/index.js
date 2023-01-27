@@ -744,9 +744,8 @@ export default function Register() {
                                 )}
                                 {activeStep < 1 && (
                                     <Button
-                                        size="small"
+
                                         onClick={handleNext}
-                                        fullWidth
                                         variant="outlined"
                                         sx={buttons.next}
                                         // disabled={activeStep === maxSteps - 1}
@@ -759,7 +758,6 @@ export default function Register() {
                                     <Button
                                         size="small"
                                         onClick={handleBack}
-                                        fullWidth
                                         variant="outlined"
                                         sx={buttons.back}
                                         disabled={activeStep <= 0}
@@ -769,7 +767,6 @@ export default function Register() {
                                     <Button
                                         size="small"
                                         onClick={handleNext}
-                                        fullWidth
                                         variant="outlined"
                                         sx={buttons.next}
                                         // disabled={activeStep === maxSteps - 1}
@@ -782,7 +779,6 @@ export default function Register() {
                                     <Button
                                         size="small"
                                         onClick={handleSubmitVerification}
-                                        fullWidth
                                         variant="outlined"
                                         sx={buttons.back}
                                         disabled={activeStep <= 0}
@@ -793,7 +789,6 @@ export default function Register() {
                                 {activeStep === maxSteps - 2 && (
                                     <Button
                                         type="submit"
-                                        fullWidth
                                         variant="outlined"
                                         sx={buttons.submit}
                                     >
