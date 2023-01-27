@@ -5,7 +5,7 @@ import { BadRequestExceptionType } from '../enums/exception.type';
 export class BadRequestException extends TrendsException {
     constructor(
         // eslint-disable-next-line default-param-last
-        type: BadRequestExceptionType = BadRequestExceptionType.BAD_REQUEST,
+        type: keyof typeof BadRequestExceptionType,
         // error?: Error,
         details? :Error
     ) {

@@ -18,16 +18,6 @@ export class UserPayloadDto {
     @IsString()
     Username?: string;
 
-    // Role: UserRole;
-
-    // IsVerified: boolean;
-
-    // IpAddress: string;
-
-    // Device: string;
-
-    // Browser: string;
-
     @ApiProperty()
     @IsOptional()
     @IsString()

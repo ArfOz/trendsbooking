@@ -1,6 +1,5 @@
 // noinspection JSMethodCanBeStatic
 import {
-    CACHE_MANAGER,
     CanActivate,
     ExecutionContext,
     Inject,
@@ -52,6 +51,7 @@ export class AuthGuard implements CanActivate {
                 req = ctx.getRequest();
                 break;
             default:
+                console.log("asdasdsa")
                 throw new ForbiddenException(ForbiddenExceptionType.FORBIDDEN);
         }
 
@@ -92,6 +92,7 @@ export class AuthGuard implements CanActivate {
 
         let userPayload;
         try {
+
             userPayload = jwt.verify(
                 token,
                 process.env.JWT_SECRET,
@@ -103,12 +104,17 @@ export class AuthGuard implements CanActivate {
                 new Error('Can not verify token!'),
             );
         }
+        console.log("vburada")
         const exist = await this.prisma.userToken.findFirst({
             where: { UserId: userPayload.Id, AccessToken: token },
         });
 
         if (!exist) {
-            return false;
+            throw new TrendsException(
+                'Token is not valid',
+                401,
+                new Error('Token is not valid'),
+            );;
         }
 
         if (exist.ExpiresIn < new Date()) {

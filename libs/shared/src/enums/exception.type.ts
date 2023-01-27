@@ -28,5 +28,11 @@ export enum TokenExceptionType {
 
 export enum VerifyCodeExceptionType{
     NOT_VERIFIED = "ACCOUNT_NOT_VERIFIED",
-    VERIFIED = "ACCOUNT_ALREADY_VERIFIED"
+    VERIFIED = "ACCOUNT_ALREADY_VERIFIED",
+    CODE_NOT_FOUND ="OTP_CODE_NOT_FOUND"
+    
+}
+
+export enum NotFoundExceptionType {
+    NOT_FOUND = "NOT_FOUND"
 }

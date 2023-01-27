@@ -1,24 +1,20 @@
-import { OtpCodeNotFoundException } from './../../shared/src/exceptions/otpcode-not-found.exception';
-import { BadRequestExceptionType } from './../../shared/src/enums/exception.type';
-import { BadRequestException } from './../../shared/src/exceptions/bad-request.exception';
-import { UserOtpCodeService } from './../../database/src/user-otp-code/user-otp-code.service';
-import { MailUtilsService } from '@mail-utils';
-
-import { NotFoundException } from './../../shared/src/exceptions/not-found.exception';
-import { MailModeType } from './enums/mailmode.enum';
-import { UserProfileData } from './dtos/user-profile-data';
-import { TrendsException } from './../../shared/src/exceptions/trends.exception';
-import { UserService } from './../../database/src/user/user.service';
-import { ExpiredReasonType, OTPType } from '@prisma/client';
-import { PrismaService } from './../../database/src/prisma/prisma.service';
-import { User } from '@prisma/client';
-import { UserPayloadDto } from '@auth';
-import { ConfigType } from '@nestjs/config';
-import generalConfig from '@shared/config/general.config';
+import { NotFoundExceptionType, ForbiddenExceptionType, VerifyCodeExceptionType } from './../../shared/src/enums/exception.type';
+import { ResponseMessage } from './../../shared/src/enums/response-message.enum';
 import { Injectable, Inject } from '@nestjs/common';
-import authConfig from './config/auth.config';
+import { ConfigType } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
-import { SendEmailDto } from 'libs/mail-utils/src/dtos';
+import { User } from '@prisma/client';
+import { ExpiredReasonType, OTPType } from '@prisma/client';
+
+// Modules export
+import { OtpCodeNotFoundException, BadRequestExceptionType, BadRequestException, NotFoundException, TrendsException   } from '@shared';
+import { UserOtpCodeService, UserService, PrismaService  } from '@database';
+import { UserPayloadDto } from '@auth';
+import { SendEmailDto,  MailUtilsService  } from '@mail-utils';
+import { MailModeType } from './enums/mailmode.enum';
+// Config settings
+import generalConfig from '@shared/config/general.config';
+import authConfig from './config/auth.config';
 
 @Injectable()
 export class AuthService {
@@ -52,7 +48,7 @@ export class AuthService {
         });
 
         if (!userToken) {
-            throw new TrendsException('Refresh Token ', 400);
+            throw new TrendsException(ResponseMessage.TR406, 400);
         }
         await this.prismaService.userToken.update({
             where: {
@@ -166,9 +162,9 @@ export class AuthService {
         //     );
         // }
 
-        if (mode === MailModeType.EmailChange && !newEmail) {
-            throw new TrendsException('New Email field required', 400);
-        }
+        // if (mode === MailModeType.EmailChange && !newEmail) {
+        //     throw new TrendsException('New Email field required', 400);
+        // }
 
         const user = await this.userService.findFirst({
             where: {
@@ -177,7 +173,10 @@ export class AuthService {
         });
 
         if (!user) {
-            throw new NotFoundException(new Error('User not found'));
+            throw new NotFoundException(
+                NotFoundExceptionType.NOT_FOUND,
+                new Error(ResponseMessage.TR203)
+                );
         }
 
         // if (mode === MailModeType.VerifyEmail && user.IsEmailVerified) {
@@ -226,7 +225,7 @@ export class AuthService {
             html,
         };
 
-        const response = await this.mailUtilsService.sendEmail(optionsSendEmail);
+        await this.mailUtilsService.sendEmail(optionsSendEmail);
 
         return user;
     }
@@ -268,46 +267,48 @@ export class AuthService {
         return `<b>Hello, <strong>{{asd}}</strong>, Your password is:\n<b>{{ password }}</b></p>`;
     }
 
-    
-    async verifyEmail(user: User, code: number): Promise<User> {
-        const otpCode = await this.userOtpCodeService.find({
-            where: {
-                UserId: user.Id,
-                Type: OTPType.VerifyEmail,
-                Code: code,
-                IsDeleted: false,
-                ExpiredAt: {
-                    gte: new Date(),
-                },
-            },
-            orderBy: {
-                CreatedAt: 'desc',
-            },
-            take: 1,
-        });
+    // Burası daha sonra etkinleştirilecek burası etkinleştirilince serviceden kaldırılacak.
+    // async verifyEmail(user: User, code: number): Promise<User> {
+    //     const otpCode = await this.userOtpCodeService.find({
+    //         where: {
+    //             UserId: user.Id,
+    //             Type: OTPType.VerifyEmail,
+    //             Code: code,
+    //             IsDeleted: false,
+    //             ExpiredAt: {
+    //                 gte: new Date(),
+    //             },
+    //         },
+    //         orderBy: {
+    //             CreatedAt: 'desc',
+    //         },
+    //         take: 1,
+    //     });
 
-        if (!otpCode || !otpCode.length) {
-            throw new OtpCodeNotFoundException(new Error('OTP code not found'));
-        }
+    //     if (!otpCode || !otpCode.length) {
+    //         throw new OtpCodeNotFoundException(
+    //             VerifyCodeExceptionType.CODE_NOT_FOUND,
+    //             new Error('OTP code not found'));
+    //     }
 
-        if (otpCode[0].Attempts >= 5) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error('Your trial count is over'),
-            );
-        }
+    //     if (otpCode[0].Attempts >= 5) {
+    //         throw new BadRequestException(
+    //             BadRequestExceptionType.BAD_REQUEST,
+    //             new Error('Your trial count is over'),
+    //         );
+    //     }
 
-        const updatedUser = await this.userService.update({
-            where: {
-                Id: user.Id,
-            },
-            data: {
-                IsEmailVerified: true,
-            },
-        });
+    //     const updatedUser = await this.userService.update({
+    //         where: {
+    //             Id: user.Id,
+    //         },
+    //         data: {
+    //             IsEmailVerified: true,
+    //         },
+    //     });
 
-        return updatedUser;
-    }
+    //     return updatedUser;
+    // }
 
 
     async mailTemplateGenerator(

@@ -1,14 +1,15 @@
-import { UserOtpCodeService } from '@database/user-otp-code/user-otp-code.service';
-import authConfig from '@auth/config/auth.config';
-import { AuthModule, AuthService } from '@auth';
-import { DatabaseModule, PrismaService, UserService } from '@database';
-import { UsersService } from './users.service';
-import { KeypairModule } from '@shared';
-import generalConfig from '@shared/config/general.config';
 import { ConfigModule } from '@nestjs/config';
 import { forwardRef, Module } from '@nestjs/common';
+
+import { AuthModule, AuthService } from '@auth';
+import { DatabaseModule, PrismaService, UserService, UserOtpCodeService } from '@database';
+import { UsersService } from './users.service';
+import { KeypairModule } from '@shared';
 import { UsersController } from './users.controller';
 import { MailUtilsModule } from '@mail-utils';
+// Config settings
+import generalConfig from '@shared/config/general.config';
+import authConfig from '@auth/config/auth.config';
 
 @Module({
     imports: [

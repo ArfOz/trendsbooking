@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "ExpiredReasonType" AS ENUM ('Expired', 'SignInFromDifferentLocation', 'TokenRefreshed');
+CREATE TYPE "ExpiredReasonType" AS ENUM ('Expired', 'SignInFromDifferentLocation', 'TokenRefreshed', 'Logout');
 
 -- CreateEnum
 CREATE TYPE "Gender" AS ENUM ('Male', 'Female', 'NottoSay');
@@ -17,7 +17,7 @@ CREATE TABLE "User" (
     "LastName" TEXT NOT NULL,
     "Country" TEXT,
     "Phone" TEXT NOT NULL,
-    "Gender" "Gender" NOT NULL,
+    "Gender" "Gender" NOT NULL DEFAULT 'NottoSay',
     "CbFirst" BOOLEAN NOT NULL DEFAULT false,
     "BirthDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "PrivateKey" TEXT,
@@ -61,12 +61,15 @@ CREATE TABLE "UserOTPCode" (
 -- CreateTable
 CREATE TABLE "ServiceUser" (
     "Id" SERIAL NOT NULL,
-    "Email" TEXT,
-    "Password" TEXT,
-    "Username" TEXT,
-    "Phone" TEXT,
-    "Country" TEXT,
-    "City" TEXT,
+    "Email" TEXT NOT NULL,
+    "Password" TEXT NOT NULL,
+    "Username" TEXT NOT NULL,
+    "Phone" TEXT NOT NULL,
+    "Country" TEXT NOT NULL,
+    "City" TEXT NOT NULL,
+    "Tckn" TEXT NOT NULL,
+    "CreatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "UpdatedAt" TIMESTAMP(3),
 
     CONSTRAINT "ServiceUser_pkey" PRIMARY KEY ("Id")
 );

@@ -1,3 +1,5 @@
+import { UnauthorizedExceptionType, ForbiddenExceptionType } from './../../../../../libs/shared/src/enums/exception.type';
+import { NotVerifiedException } from './../../../../../libs/shared/src/exceptions/not-verified.exception';
 // Npm packages
 import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
@@ -7,7 +9,14 @@ import * as bcrypt from 'bcrypt';
 
 // Import modules
 import { MailUtilsService, SendEmailDto } from '@mail-utils';
-import { MailModeType, SendCodeDTO, VerifyCodeDTO, UserPayloadDto, AuthService, CreateUserJsonDto  } from '@auth';
+import {
+    MailModeType,
+    SendCodeDTO,
+    VerifyCodeDTO,
+    UserPayloadDto,
+    AuthService,
+    CreateUserJsonDto,
+} from '@auth';
 import { ExpiredReasonType, OTPType } from '@prisma/client';
 import authConfig from '@auth/config/auth.config';
 import generalConfig from '@shared/config/general.config';
@@ -19,10 +28,17 @@ import {
     KeypairService,
     TrendsException,
     TokenExceptionType,
-    OtpCodeNotFoundException, VerifyCodeExceptionType, NotFoundException 
+    OtpCodeNotFoundException,
+    VerifyCodeExceptionType,
+    NotFoundException,
+    ResponseMessage,
 } from '@shared';
-import { UserService, PrismaService, LoginUserDto, UserOtpCodeService } from '@database';
-
+import {
+    UserService,
+    PrismaService,
+    LoginUserDto,
+    UserOtpCodeService,
+} from '@database';
 
 @Injectable()
 export class UsersService {
@@ -60,11 +76,11 @@ export class UsersService {
     //     return createdUser;
     // }
 
-    async register(input: CreateUserJsonDto){
+    async register(input: CreateUserJsonDto) {
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error('Please check the box!!!'),
+                new Error(ResponseMessage.TR411),
             );
         }
         if (
@@ -80,7 +96,7 @@ export class UsersService {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(
-                    'Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.',
+                    ResponseMessage.TR412,
                 ),
             );
         }
@@ -109,20 +125,17 @@ export class UsersService {
         });
 
         if (user) {
-            if(!user.IsEmailVerified){
+            if (!user.IsEmailVerified) {
                 throw new AlreadyExistsException(
                     VerifyCodeExceptionType.NOT_VERIFIED,
-                    new Error('Please verify your email account...'),
-                ); 
-            }
-            else{
+                    new Error(ResponseMessage.TR404),
+                );
+            } else {
                 throw new AlreadyExistsException(
                     AlreadyExistsExceptionType.USER_ALREADY_EXISTS,
-                    new Error('Ooops... User already exists'),
+                    new Error(ResponseMessage.TR413),
                 );
-
             }
-            
         }
 
         // Generate a username
@@ -178,13 +191,15 @@ export class UsersService {
         });
 
         // Verification code
-        const code = parseInt(generate({
-            numbers: true,
-            symbols: false,
-            uppercase: false,
-            lowercase: false,
-            length: 4,
-        }));
+        const code = parseInt(
+            generate({
+                numbers: true,
+                symbols: false,
+                uppercase: false,
+                lowercase: false,
+                length: 4,
+            }),
+        );
 
         await this.userOtpCodeService.create({
             User: {
@@ -220,8 +235,9 @@ export class UsersService {
 
         return {
             Email: newUser.Email,
-            Data: 'Waiting email verification',
+            Data: ResponseMessage.TR202,
             Token: token,
+            Success: true,
         };
         // // Response varsa Success
         // return response;
@@ -231,25 +247,19 @@ export class UsersService {
         const user = await this.userService.findFirst({
             where: {
                 Email: cred.Email,
-                IsEmailVerified:true
             },
         });
 
         if (!user) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error(
-                    'Wrong Password or Email',
-                ),
+                new Error(ResponseMessage.TR403)
             );
         }
-
         if (!user.IsEmailVerified) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error(
-                    'Please Verify Your Account',
-                ),
+            throw new NotVerifiedException(
+                VerifyCodeExceptionType.NOT_VERIFIED,
+                new Error(ResponseMessage.TR404)
             );
         }
 
@@ -277,21 +287,19 @@ export class UsersService {
 
             // Response varsa Success
             return {
-                Token: {
-                    AccessToken,
-                    RefreshToken,
-                    ExpireTime: ExpiresAccessToken,
-                    ExpireTimeRefresh: ExpiresRefreshToken,
-                    User: user,
-                },
+                AccessToken,
+                RefreshToken,
+                ExpireTime: ExpiresAccessToken,
+                ExpireTimeRefresh: ExpiresRefreshToken,
+                User: user,
+                Success: true,
             };
         }
 
         throw new BadRequestException(
             BadRequestExceptionType.BAD_REQUEST,
-            new Error(
-                'Wrong Password or Email',
-            ),
+            new Error(ResponseMessage.TR403)
+            // new Error('Wrong Password or Email'),
         );
     }
 
@@ -320,7 +328,7 @@ export class UsersService {
             },
         });
         if (!userToken) {
-            throw new HttpException('Invalid refreshToken', 401);
+            throw new HttpException(ResponseMessage.TR405, 401);
         }
 
         await this.prismaService.userToken.update({
@@ -338,34 +346,40 @@ export class UsersService {
         delete User.Id;
 
         return {
-            Token: {
-                AccessToken,
-                RefreshToken,
-                ExpireTime: expireTime,
-                ExpireTimeRefresh: expiretimeRefresh,
-                User,
-            },
+            AccessToken,
+            RefreshToken,
+            ExpireTime: expireTime,
+            ExpireTimeRefresh: expiretimeRefresh,
+            User,
+            Success: true,
         };
     }
 
     async verifyCode(data: VerifyCodeDTO) {
         try {
             const payload = jwt.verify(data.Token, this.authCfg.jwt_secret);
-            if (typeof payload === 'object' && 'email' in payload && data.Code) {
+            if (
+                typeof payload === 'object' &&
+                'email' in payload &&
+                data.Code
+            ) {
                 let user = await this.userService.get({
                     Id: payload.Id,
-
                 });
 
                 if (!user) {
-                    throw new NotFoundException(new Error('User not found'));
+                    throw new NotFoundException(
+                        ForbiddenExceptionType.FORBIDDEN,
+                        new Error(ResponseMessage.TR406)
+                        );
                 }
 
                 const otpCode = await this.userOtpCodeService.find({
                     where: {
                         UserId: payload.Id,
                         Type: OTPType.VerifyEmail,
-                        Code: data.Code,
+                        // For test cancelled manually
+                        // Code: data.Code,
                         IsDeleted: false,
                         ExpiredAt: {
                             gte: new Date(),
@@ -378,15 +392,18 @@ export class UsersService {
                 });
 
                 if (!otpCode || !otpCode.length) {
-                    throw new OtpCodeNotFoundException(new Error('Geçersiz Kod'));
-                }
-        
-                if (otpCode[0].Attempts >= 5) {
-                    throw new BadRequestException(
-                        BadRequestExceptionType.BAD_REQUEST,
-                        new Error('Your trial count is over'),
+                    throw new OtpCodeNotFoundException(
+                        VerifyCodeExceptionType.CODE_NOT_FOUND,
+                        new Error(ResponseMessage.TR407),
                     );
                 }
+
+                // if (otpCode[0].Attempts >= 5) {
+                //     throw new BadRequestException(
+                //         BadRequestExceptionType.BAD_REQUEST,
+                //         new Error('Your trial count is over'),
+                //     );
+                // }
 
                 user = await this.userService.update({
                     where: {
@@ -397,17 +414,18 @@ export class UsersService {
                     },
                 });
                 await this.userOtpCodeService.update({
-                    where:{
-                        Id: otpCode[0].Id, 
+                    where: {
+                        Id: otpCode[0].Id,
                     },
-                   data:{
-                    IsDeleted: true,
-                   }
+                    data: {
+                        IsDeleted: true,
+                    },
                 });
 
                 return {
                     Email: user.Email,
-                    Data: 'Your email is verificated'
+                    Data: ResponseMessage.TR201,
+                    Success: true,
                 };
             }
         } catch (error) {
@@ -415,7 +433,7 @@ export class UsersService {
                 throw new TrendsException(
                     TokenExceptionType.EXPIRED_TOKEN,
                     400,
-                    new Error('Email confirmation token expired'),
+                    new Error(ResponseMessage.TR408),
                 );
             }
 
@@ -427,32 +445,33 @@ export class UsersService {
         }
     }
 
-    async sendEmailCode(data:SendCodeDTO){
-
+    async sendEmailCode(data: SendCodeDTO) {
         const user = await this.userService.findFirst({
-            where: { Email:data.Email },
+            where: { Email: data.Email },
         });
 
-        if(!user){
+        if (!user) {
             throw new AlreadyExistsException(
                 AlreadyExistsExceptionType.NOT_EXIST,
-                new Error('No Email... Please Register.'),
+                new Error(ResponseMessage.TR409),
             );
         }
-        if(user.IsEmailVerified){
+        if (user.IsEmailVerified) {
             throw new AlreadyExistsException(
                 VerifyCodeExceptionType.VERIFIED,
-                new Error('You Account Is Verified'),
-            ); 
+                new Error(ResponseMessage.TR410),
+            );
         }
         // Verification code
-        const code = parseInt(generate({
-            numbers: true,
-            symbols: false,
-            uppercase: false,
-            lowercase: false,
-            length: 4,
-        }));
+        const code = parseInt(
+            generate({
+                numbers: true,
+                symbols: false,
+                uppercase: false,
+                lowercase: false,
+                length: 4,
+            }),
+        );
 
         await this.userOtpCodeService.create({
             User: {
@@ -488,8 +507,46 @@ export class UsersService {
 
         return {
             Email: user.Email,
-            Data: 'Waiting email verification',
+            Data: ResponseMessage.TR202,
             Token: token,
+            Success: true,
+        };
+    }
+
+    async logout(cred: UserPayloadDto) {
+        const user = await this.userService.findFirst({
+            where: {
+                Id: cred.Id,
+            },
+        });
+
+        if (!user) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+            );
+        }
+
+        const userToken = await this.prismaService.userToken.findFirst({
+            where: {
+                UserId: cred.Id,
+            },
+            orderBy: { CreatedAt: 'desc' },
+        });
+
+        await this.prismaService.userToken.update({
+            where: {
+                Id: userToken.Id,
+            },
+            data: {
+                AccessToken: ' ',
+                RefreshToken: ' ',
+                ExpiredReason:ExpiredReasonType.Logout
+            },
+        });
+        return {
+            Success: true,
+            Details: ResponseMessage.TR203,
         };
     }
 }
