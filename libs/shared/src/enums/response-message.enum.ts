@@ -9,7 +9,7 @@ export enum ResponseMessage {
     TR403 = 'Parola veya Email adresi yanlış.',
     TR404 = 'Lütfen hesabınızı etkinleştiriniz.',
     TR405 = 'Geçersiz Refresh Token Gönderdiniz.',
-    TR406 = 'Kullanıcı Bulunamadı.',
+    TR406 = 'Kullanıcı Bulunamadı. Lütfen kayıt olunuz.',
     TR407 = 'Yanlış Onay Kodu...',
     TR408 = 'Email onaylama süreniz dolmuştur. Yeni kod isteyiniz.',
     TR409 = 'Yanlış email adresi.',

@@ -51,7 +51,6 @@ export class AuthGuard implements CanActivate {
                 req = ctx.getRequest();
                 break;
             default:
-                console.log("asdasdsa")
                 throw new ForbiddenException(ForbiddenExceptionType.FORBIDDEN);
         }
 
@@ -104,7 +103,6 @@ export class AuthGuard implements CanActivate {
                 new Error('Can not verify token!'),
             );
         }
-        console.log("vburada")
         const exist = await this.prisma.userToken.findFirst({
             where: { UserId: userPayload.Id, AccessToken: token },
         });

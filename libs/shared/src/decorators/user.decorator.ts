@@ -14,7 +14,6 @@ export const UserParam = createParamDecorator(
                 req = ctx.getRequest();
                 break;
             default:
-                console.log("asdasdsa")
                 throw new ForbiddenException(ForbiddenExceptionType.FORBIDDEN);
         }
         const { user } = req;

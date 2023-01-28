@@ -1,45 +1,64 @@
-import { ApiProperty, } from '@nestjs/swagger/dist';
-import { IsOptional, IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { UserPayloadDto } from './user-payload.dto';
+import { ApiProperty } from '@nestjs/swagger/dist';
+import {
+    IsOptional,
+    IsString,
+    IsNotEmpty,
+    IsObject,
+} from 'class-validator';
 // import { UserRole } from '@prisma/client';
 
-export class UserResponseDto {
+export class ResponseLoginUserDTO {
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    AccessToken: string;
 
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    RefreshToken: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ExpireTime?: Date;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ExpireTimeRefresh: Date;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    User: UserPayloadDto;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    Success: true;
+}
+
+
+export class ResponseRegisterUserDTO {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
     Email: string;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
-    Username?: string;
+    Data: string;
 
-    // birthDate: true,
-    // email: true,
-    // phone: true,
-    // country: true,
-    // firstName: true,
-    // lastName: true,
-    // username: true,
-    // gender: true
-
-    // Role: UserRole;
-
-    // IsVerified: boolean;
-
-    // IpAddress: string;
-
-    // Device: string;
-
-    // Browser: string;
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Token?: string;
 
     @ApiProperty()
     @IsOptional()
-    @IsString()
-    country?: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    city?: string;
+    @IsObject()
+    Success: true;
 }

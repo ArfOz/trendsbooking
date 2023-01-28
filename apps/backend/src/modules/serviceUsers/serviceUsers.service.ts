@@ -183,8 +183,6 @@ export class ServiceUsersService {
             length: 4,
         }));
 
-        console.log('özkan', code);
-
         await this.userOtpCodeService.create({
             User: {
                 connect: {
@@ -205,8 +203,6 @@ export class ServiceUsersService {
             subject: "Trendsbooking'e hoşheldiniz",
         };
 
-        console.log('options', options);
-
         await this.mailUtilsService.sendEmail(options);
 
         const payload = {
@@ -224,8 +220,6 @@ export class ServiceUsersService {
             Data: 'Waiting email verification',
             Token: token,
         };
-        // // Response varsa Success
-        // return response;
     }
 
 

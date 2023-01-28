@@ -1,3 +1,4 @@
+import { ResponseLoginUserDTO, ResponseRegisterUserDTO } from './../../../../../libs/auth/src/dtos/user-response.dto';
 import { UnauthorizedExceptionType, ForbiddenExceptionType } from './../../../../../libs/shared/src/enums/exception.type';
 import { NotVerifiedException } from './../../../../../libs/shared/src/exceptions/not-verified.exception';
 // Npm packages
@@ -76,7 +77,7 @@ export class UsersService {
     //     return createdUser;
     // }
 
-    async register(input: CreateUserJsonDto) {
+    async register(input: CreateUserJsonDto):Promise <ResponseRegisterUserDTO> {
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -243,7 +244,7 @@ export class UsersService {
         // return response;
     }
 
-    async loginUser(cred: LoginUserDto) {
+    async loginUser(cred: LoginUserDto):Promise <ResponseLoginUserDTO> {
         const user = await this.userService.findFirst({
             where: {
                 Email: cred.Email,
@@ -253,7 +254,7 @@ export class UsersService {
         if (!user) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR403)
+                new Error(ResponseMessage.TR406)
             );
         }
         if (!user.IsEmailVerified) {
