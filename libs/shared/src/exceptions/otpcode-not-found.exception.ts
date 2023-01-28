@@ -5,7 +5,8 @@ export class OtpCodeNotFoundException extends NotFoundException {
     constructor(
         type: VerifyCodeExceptionType,
         error?: Error,
+        status?:number
     ) {
-        super(type, error);
+        super(type, error, status);
     }
 }

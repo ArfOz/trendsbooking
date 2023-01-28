@@ -99,6 +99,7 @@ export class UsersService {
                 new Error(
                     ResponseMessage.TR412,
                 ),
+                412
             );
         }
 
@@ -254,7 +255,8 @@ export class UsersService {
         if (!user) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR406)
+                new Error(ResponseMessage.TR406),
+                406
             );
         }
         if (!user.IsEmailVerified) {
@@ -433,15 +435,15 @@ export class UsersService {
             if (error?.name === 'TokenExpiredError') {
                 throw new TrendsException(
                     TokenExceptionType.EXPIRED_TOKEN,
-                    400,
                     new Error(ResponseMessage.TR408),
+                    400,
                 );
             }
 
             throw new TrendsException(
                 TokenExceptionType.EXPIRED_TOKEN,
-                400,
                 new Error(error),
+                400,
             );
         }
     }

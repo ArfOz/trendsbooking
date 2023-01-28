@@ -7,7 +7,8 @@ export class UnauthorizedException extends TrendsException {
         // eslint-disable-next-line default-param-last
         type: UnauthorizedExceptionType = UnauthorizedExceptionType.UNAUTHORIZED_ACCESS,
         error?: Error,
+        status?:number
     ) {
-        super(type, HttpStatus.UNAUTHORIZED, error);
+        super(type, error, status);
     }
 }

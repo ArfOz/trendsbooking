@@ -99,8 +99,8 @@ export class AuthGuard implements CanActivate {
         } catch (err) {
             throw new TrendsException(
                 'Can not verify token!',
-                403,
                 new Error('Can not verify token!'),
+                403,
             );
         }
         const exist = await this.prisma.userToken.findFirst({
@@ -110,8 +110,8 @@ export class AuthGuard implements CanActivate {
         if (!exist) {
             throw new TrendsException(
                 'Token is not valid',
-                401,
                 new Error('Token is not valid'),
+                401,
             );;
         }
 
@@ -132,14 +132,14 @@ export class AuthGuard implements CanActivate {
             ) {
                 throw new TrendsException(
                     'Logged in from different device!',
-                    401,
                     new Error('Token is expired!'),
+                    401,
                 );
             }
             throw new TrendsException(
                 'Token is expired!',
-                401,
                 new Error('Token is expired!'),
+                401,
             );
         }
 

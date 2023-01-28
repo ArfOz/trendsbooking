@@ -7,7 +7,8 @@ export class NotVerifiedException extends TrendsException {
         // eslint-disable-next-line default-param-last
         type?: string,
         error?: Error,
+        status?:number
     ) {
-        super(type, HttpStatus.UNAUTHORIZED, error);
+        super(type, error, status);
     }
 }
