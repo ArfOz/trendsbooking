@@ -8,6 +8,7 @@ import {
     Gallery,
     TrendBiz,
     Toolset,
+    Foundations,
     Software,
     MobileApplication,
     Questions,
@@ -23,6 +24,7 @@ const Home = () => {
             <Gallery />
             <TrendBiz />
             <Toolset />
+            <Foundations/>
             <MobileApplication />
             <Questions />
             <Footer />

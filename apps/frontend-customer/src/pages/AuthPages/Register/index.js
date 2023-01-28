@@ -142,10 +142,24 @@ const Register = () => {
         setVerification(e);
     };
 
-    const handleSubmitVerification = (e) => {
+    const handleSubmitVerification = async(e) => {
         e.preventDefault();
         console.log('verification', verification);
+        if (auth.registerUser.Token) {
+            await auth.verifyCode({
+                Code: parseInt(verification),
+                Token: auth.registerUser.Token,
+            });
+        }
     };
+
+    useEffect(() => {
+        console.log('auth.verifyCodeData', auth.verifyCodeData);
+        if (auth.verifyCodeData?.Success) {
+            navigate('/');
+        }
+    }, [auth.verifyCodeData]);
+
     //VERIFICATION
 
     const [error, setError] = useState('');
@@ -185,23 +199,23 @@ const Register = () => {
     useEffect(() => {
         if (registered) {
             if (
-                auth.registerErrors?.response.data.details.toString() ===
+                auth.registerErrors?.response.data.details?.toString() ===
                 'Please check the box!!!'
             ) {
                 console.log(
                     'object :>> ',
-                    auth.registerErrors?.response.data.details.toString(),
+                    auth.registerErrors?.response.data.details?.toString(),
                 );
                 setError('Lütfen sözleşmeyi okuyup kabul ediniz!!!');
             } else if (
-                auth.registerErrors?.response.data.details.toString() ===
+                auth.registerErrors?.response.data.details?.toString() ===
                 'Ooops... User already exists'
             ) {
                 setError(
                     'Lütfen daha önce kayıt olmamış bir email ile giriş yapınız!!!',
                 );
             } else if (
-                auth.registerErrors?.response.data.details.toString() ===
+                auth.registerErrors?.response.data.details?.toString() ===
                 'Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'
             ) {
                 let initialValues = {
@@ -262,13 +276,13 @@ const Register = () => {
     }, [error]);
 
     useEffect(() => {
-        if (auth.registerUser) {
-            // localStorage.setItem(
-            //     'registerResponse',
-            //     JSON.stringify(auth.registerUser),
-            // );
+        if (auth.registerUser?.Data === 'Email onayı bekleniyor') {
+            auth.sendCode({
+                Email: auth.registerUser.Email,
+            });
             setActiveStep(2);
         }
+        console.log(auth.registerUser);
     }, [auth.registerUser]);
 
     return (
@@ -530,7 +544,7 @@ const Register = () => {
                                                 <MenuItem value={'Female'}>
                                                     Kadın
                                                 </MenuItem>
-                                                <MenuItem value={'Not specify'}>
+                                                <MenuItem value={'NottoSay'}>
                                                     Belirtmek İstemiyorum
                                                 </MenuItem>
                                             </Select>
