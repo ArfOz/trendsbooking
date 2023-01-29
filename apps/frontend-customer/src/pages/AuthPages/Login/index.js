@@ -20,9 +20,6 @@ import { boxStyle } from './style';
 import { useAuth } from '../../../context/authContext';
 import ErrorModal from './components/ErrorModal';
 import Verification from './components/Verification';
-
-import { ResponseMessage } from '@shared';
-
 const initialState = {
     Email: JSON.parse(localStorage.getItem('loginForm'))?.Email,
     Password: JSON.parse(localStorage.getItem('loginForm'))?.Password,
@@ -65,7 +62,6 @@ const Login = ({ setUser }) => {
         setOpen(false);
         setError(null);
     };
-    console.log("arif", ResponseMessage.TR100)
     // Error Modal
 
     const handleChange = (e) => {
