@@ -20,6 +20,7 @@ import { boxStyle } from './style';
 import { useAuth } from '../../../context/authContext';
 import ErrorModal from './components/ErrorModal';
 import Verification from './components/Verification';
+
 const initialState = {
     Email: JSON.parse(localStorage.getItem('loginForm'))?.Email,
     Password: JSON.parse(localStorage.getItem('loginForm'))?.Password,
