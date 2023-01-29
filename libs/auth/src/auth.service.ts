@@ -1,21 +1,23 @@
-import { NotFoundExceptionType, ForbiddenExceptionType, VerifyCodeExceptionType } from './../../shared/src/enums/exception.type';
-import { ResponseMessage } from './../../shared/src/enums/response-message.enum';
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
-import { User } from '@prisma/client';
-import { ExpiredReasonType, OTPType } from '@prisma/client';
+import { ExpiredReasonType} from '@prisma/client';
 
 // Modules export
-import { OtpCodeNotFoundException, BadRequestExceptionType, BadRequestException, NotFoundException, TrendsException   } from '@shared';
-import { UserOtpCodeService, UserService, PrismaService  } from '@database';
+import {
+    NotFoundException,
+    TrendsException,
+    NotFoundExceptionType,
+} from '@shared';
+import { UserOtpCodeService, UserService, PrismaService } from '@database';
 import { UserPayloadDto } from '@auth';
-import { SendEmailDto,  MailUtilsService  } from '@mail-utils';
+import { SendEmailDto, MailUtilsService } from '@mail-utils';
 import { MailModeType } from './enums/mailmode.enum';
 // Config settings
 import generalConfig from '@shared/config/general.config';
 import authConfig from './config/auth.config';
 
+import ResponseMessage  from '@shared/enums/response-message.json';
 @Injectable()
 export class AuthService {
     constructor(
@@ -25,8 +27,8 @@ export class AuthService {
         private readonly authCfg: ConfigType<typeof authConfig>,
         private readonly prismaService: PrismaService,
         private readonly userService: UserService,
-        private readonly mailUtilsService:MailUtilsService,
-        private readonly userOtpCodeService: UserOtpCodeService
+        private readonly mailUtilsService: MailUtilsService,
+        private readonly userOtpCodeService: UserOtpCodeService,
     ) {}
 
     async refreshToken(
@@ -48,7 +50,11 @@ export class AuthService {
         });
 
         if (!userToken) {
-            throw new TrendsException(ResponseMessage.TR406, 400);
+            throw new TrendsException(
+                NotFoundExceptionType.NOT_FOUND,
+                new Error(ResponseMessage.TR406),
+                400,
+            );
         }
         await this.prismaService.userToken.update({
             where: {
@@ -145,7 +151,6 @@ export class AuthService {
         email: string,
         newEmail?: string,
     ) {
-
         // Burası hazırlanacak daha sonra email bypass edilecek ki daha hızlı giriş yapalım
         // const config = await this.prismaService.config.findUnique({
         //     where: {
@@ -175,8 +180,9 @@ export class AuthService {
         if (!user) {
             throw new NotFoundException(
                 NotFoundExceptionType.NOT_FOUND,
-                new Error(ResponseMessage.TR203)
-                );
+                new Error(ResponseMessage.TR203),
+                203,
+            );
         }
 
         // if (mode === MailModeType.VerifyEmail && user.IsEmailVerified) {
@@ -204,7 +210,7 @@ export class AuthService {
 
         const template = await this.mailTemplateGenerator(mode);
 
-        let subject:string= "";
+        let subject = '';
         switch (mode) {
             case MailModeType.VerifyEmail:
                 subject = "TrendsBooking'e Hoşgeldiniz!";
@@ -213,12 +219,13 @@ export class AuthService {
                 subject = 'Şifre Güncelleme Talebiniz';
                 break;
             case MailModeType.EmailChange:
-                subject = 'TrendsBooking için kullandığınız giriş e-postasını değiştirin';
+                subject =
+                    'TrendsBooking için kullandığınız giriş e-postasını değiştirin';
                 break;
             default:
                 break;
         }
-        const html = await this.mailTemplateReplacer(MailModeType ,url, user);
+        const html = await this.mailTemplateReplacer(MailModeType, url, user);
         const optionsSendEmail: SendEmailDto = {
             subject,
             to: user.Email,
@@ -234,8 +241,7 @@ export class AuthService {
         MailModeType: any,
         url: string,
         user: any,
-    ){
- 
+    ) {
         const emptyFirstName = 'Sayın';
         const emptyLastName = 'TrendsBooking Kullanıcısı';
 
@@ -257,7 +263,7 @@ export class AuthService {
             },
         ];
 
-        let html :string = " ";
+        let html = ' ';
 
         replaceText.forEach((replace) => {
             // eslint-disable-next-line no-param-reassign
@@ -310,14 +316,7 @@ export class AuthService {
     //     return updatedUser;
     // }
 
-
-    async mailTemplateGenerator(
-        mode: MailModeType,
-    ){
-
-        // const template = 
-
+    async mailTemplateGenerator(mode: MailModeType) {
+        // const template =
     }
-
-
 }

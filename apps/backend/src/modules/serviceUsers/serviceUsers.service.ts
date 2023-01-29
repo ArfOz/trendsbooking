@@ -1,9 +1,7 @@
-import { VerifyCodeExceptionType } from './../../../../../libs/shared/src/enums/exception.type';
 import * as jwt from 'jsonwebtoken';
-import { MailUtilsService } from './../../../../../libs/mail-utils/src/mail-utils.service';
-import { MailModeType } from './../../../../../libs/auth/src/enums/mailmode.enum';
+import { MailUtilsService, SendEmailDto} from '@mail-utils';
 import { OTPType } from '@prisma/client';
-import { AuthService, CreateUserJsonDto } from '@auth';
+import { AuthService, CreateUserJsonDto, MailModeType} from '@auth';
 import authConfig from '@auth/config/auth.config';
 import { generate } from 'generate-password';
 import { ConfigType } from '@nestjs/config';
@@ -14,12 +12,12 @@ import {
     AlreadyExistsExceptionType,
     AlreadyExistsException,
     KeypairService,
+    VerifyCodeExceptionType 
 } from '@shared';
-import { UserService, PrismaService, } from '@database';
+import { UserService, PrismaService, UserOtpCodeService } from '@database';
 import { Injectable, Inject } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { UserOtpCodeService } from '@database/user-otp-code/user-otp-code.service';
-import { SendEmailDto } from 'libs/mail-utils/src/dtos';
+import ResponseMessage  from '@shared/enums/response-message.json';
 
 @Injectable()
 export class ServiceUsersService {
@@ -57,11 +55,12 @@ export class ServiceUsersService {
     //     return createdUser;
     // }
 
-    async register(input: CreateUserJsonDto): Promise<Object> {
+    async register(input: CreateUserJsonDto): Promise<object | Error> {
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error('Please check the box!!!'),
+                new Error(ResponseMessage.TR414),
+                414,
             );
         }
         if (
@@ -76,9 +75,8 @@ export class ServiceUsersService {
         ) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error(
-                    'Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.',
-                ),
+                new Error(ResponseMessage.TR412),
+                412,
             );
         }
 
@@ -106,20 +104,19 @@ export class ServiceUsersService {
         });
 
         if (user) {
-            if(!user.IsEmailVerified){
+            if (!user.IsEmailVerified) {
                 throw new AlreadyExistsException(
                     VerifyCodeExceptionType.NOT_VERIFIED,
-                    new Error('Please verify your email account...'),
-                ); 
-            }
-            else{
+                    new Error(ResponseMessage.TR404),
+                    404,
+                );
+            } else {
                 throw new AlreadyExistsException(
                     AlreadyExistsExceptionType.USER_ALREADY_EXISTS,
-                    new Error('Ooops... User already exists'),
+                    new Error(ResponseMessage.TR413),
+                    413,
                 );
-
             }
-            
         }
 
         // Generate a username
@@ -175,15 +172,15 @@ export class ServiceUsersService {
         });
 
         // Verification code
-        const code = parseInt(generate({
-            numbers: true,
-            symbols: false,
-            uppercase: false,
-            lowercase: false,
-            length: 4,
-        }));
-
-        console.log('özkan', code);
+        const code = parseInt(
+            generate({
+                numbers: true,
+                symbols: false,
+                uppercase: false,
+                lowercase: false,
+                length: 4,
+            }),
+        );
 
         await this.userOtpCodeService.create({
             User: {
@@ -205,8 +202,6 @@ export class ServiceUsersService {
             subject: "Trendsbooking'e hoşheldiniz",
         };
 
-        console.log('options', options);
-
         await this.mailUtilsService.sendEmail(options);
 
         const payload = {
@@ -224,9 +219,5 @@ export class ServiceUsersService {
             Data: 'Waiting email verification',
             Token: token,
         };
-        // // Response varsa Success
-        // return response;
     }
-
-
 }

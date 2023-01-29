@@ -9,7 +9,7 @@ import { MailUtilsService } from './mail-utils.service';
                 host: process.env.EMAIL_HOST,
                 port: Number(process.env.EMAIL_PORT),
                 // ignoreTLS: true,
-                secure: true,
+                secure: false,
                 auth: {
                     user: process.env.EMAIL_HOST_USER,
                     pass: process.env.EMAIL_HOST_PASSWORD,

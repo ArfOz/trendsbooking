@@ -5,9 +5,10 @@ import { TrendsException } from './trends.exception';
 export class NotVerifiedException extends TrendsException {
     constructor(
         // eslint-disable-next-line default-param-last
-        type?: string,
-        error?: Error,
+        type: string,
+        error: Error,
+        status:number
     ) {
-        super(type, HttpStatus.UNAUTHORIZED, error);
+        super(type, error, status);
     }
 }

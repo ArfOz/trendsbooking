@@ -14,8 +14,11 @@ export const UserParam = createParamDecorator(
                 req = ctx.getRequest();
                 break;
             default:
-                console.log("asdasdsa")
-                throw new ForbiddenException(ForbiddenExceptionType.FORBIDDEN);
+                throw new ForbiddenException(
+                    ForbiddenExceptionType.FORBIDDEN,
+                    new Error('Token hatası'),
+                    500,
+                );
         }
         const { user } = req;
         if (!user || typeof user === 'string') {

@@ -5,6 +5,7 @@ export class InternalServerException extends TrendsException {
     constructor(error?: Error) {
         super(
             error.message ?? 'Something went wrong with the server.',
+            error,
             HttpStatus.INTERNAL_SERVER_ERROR
         );
     }

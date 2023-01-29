@@ -17,8 +17,7 @@ export class UserService {
         private readonly keypairService: KeypairService,
     ) {}
 
-    async get(where: Prisma.UserWhereUniqueInput) :Promise<UserProfileData> {
-
+    async get(where: Prisma.UserWhereUniqueInput): Promise<UserProfileData> {
         const user = await this.prisma.user.findUnique({
             where,
             select: {
@@ -43,7 +42,7 @@ export class UserService {
         }
 
         delete user.Id;
-        user["Success"]=true
+        user['Success'] = true;
         return user;
     }
 
@@ -136,8 +135,8 @@ export class UserService {
                     LastName: true,
                     Username: true,
                     Gender: true,
-                    Id:true
-                }
+                    Id: true,
+                },
             });
 
             if (data.Email) createdUser.Email = data.Email;
@@ -147,7 +146,9 @@ export class UserService {
         } catch (error) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error(error));
+                new Error(error),
+                400,
+            );
         }
     }
 
@@ -241,7 +242,9 @@ export class UserService {
                 Username: true,
                 Password: true,
                 Id: true,
-                IsEmailVerified:true
+                IsEmailVerified: true,
+                LastName: true,
+                Phone: true,
             },
         });
 

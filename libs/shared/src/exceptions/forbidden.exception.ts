@@ -6,8 +6,9 @@ export class ForbiddenException extends TrendsException {
     constructor(
         // eslint-disable-next-line default-param-last
         type: ForbiddenExceptionType = ForbiddenExceptionType.FORBIDDEN,
-        error?: Error,
+        error: Error,
+        status:number
     ) {
-        super(type, HttpStatus.FORBIDDEN, error);
+        super(type, error, status);
     }
 }
