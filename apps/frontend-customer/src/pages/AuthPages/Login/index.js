@@ -94,21 +94,18 @@ const Login = ({ setUser }) => {
 
     useEffect(() => {
         if (
-            auth.loginErrors?.response.data.details ===
-            'Parola veya Email adresi yanlış.'
+            auth.loginErrors?.response.status == 403
         ) {
             setError('E-posta adresi veya şifre yanlış!!!');
         } else if (
-            auth.loginErrors?.response.data.details ===
-            'Kullanıcı Bulunamadı. Lütfen kayıt olunuz.'
+            auth.loginErrors?.response.status == 406
         ) {
             setError('Kullanıcı Bulunamadı. Lütfen kayıt olunuz!!!');
         } else {
             setError('');
         }
         if (
-            auth.loginErrors?.response.data.details.toString() ===
-            'Lütfen hesabınızı etkinleştiriniz.'
+            auth.loginErrors?.response.status == 404
         ) {
             auth.sendCode({
                 Email: loginForm.Email,

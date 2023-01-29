@@ -204,13 +204,8 @@ const Register = () => {
     useEffect(() => {
         if (registered) {
             if (
-                auth.registerErrors?.response.data.details?.toString() ===
-                "Lütfen Sözleşmeyi onaylayınız."
+                auth.registerErrors?.response.status == 411
             ) {
-                console.log(
-                    'object :>> ',
-                    auth.registerErrors?.response.data.details?.toString(),
-                );
                 setError('Lütfen sözleşmeyi okuyup kabul ediniz!!!');
             } else if (
                 auth.registerErrors?.response.data.details?.toString() ===
@@ -220,8 +215,7 @@ const Register = () => {
                     'Lütfen daha önce kayıt olmamış bir email ile giriş yapınız!!!',
                 );
             } else if (
-                auth.registerErrors?.response.data.details?.toString() ===
-                "Email adresi, şifre, Telefon numarası, Kullanıcı adı, Cinsiyet, Ad Soyad ve Doğum Tarihi zorunludur. "
+                auth.registerErrors?.response.status == 412
             ) {
                 let initialValues = {
                     FirstName: 'Ad',
@@ -262,7 +256,7 @@ const Register = () => {
                     );
             } else {
                 setError('');
-                setActiveStep(2);
+                // setActiveStep(2);
             }
         }
     }, [auth.registerErrors]);
