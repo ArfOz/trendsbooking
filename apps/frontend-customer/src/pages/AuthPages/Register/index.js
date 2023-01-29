@@ -30,8 +30,6 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import Verification from './components/Verification';
 import { useAuth } from '../../../context/authContext';
-import { ResponseMessage } from '@shared';
-
 const initialState = {
     FirstName: '',
     LastName: '',
