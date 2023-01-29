@@ -1,6 +1,3 @@
-import { ResponseLoginUserDTO, ResponseRegisterUserDTO } from './../../../../../libs/auth/src/dtos/user-response.dto';
-import { UnauthorizedExceptionType, ForbiddenExceptionType } from './../../../../../libs/shared/src/enums/exception.type';
-import { NotVerifiedException } from './../../../../../libs/shared/src/exceptions/not-verified.exception';
 // Npm packages
 import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
@@ -17,6 +14,7 @@ import {
     UserPayloadDto,
     AuthService,
     CreateUserJsonDto,
+    ResponseLoginUserDTO, ResponseRegisterUserDTO
 } from '@auth';
 import { ExpiredReasonType, OTPType } from '@prisma/client';
 import authConfig from '@auth/config/auth.config';
@@ -32,7 +30,7 @@ import {
     OtpCodeNotFoundException,
     VerifyCodeExceptionType,
     NotFoundException,
-    ResponseMessage,
+    ForbiddenExceptionType, NotVerifiedException 
 } from '@shared';
 import {
     UserService,
@@ -40,6 +38,7 @@ import {
     LoginUserDto,
     UserOtpCodeService,
 } from '@database';
+import ResponseMessage  from '@shared/enums/response-message.json';
 
 @Injectable()
 export class UsersService {
@@ -82,6 +81,7 @@ export class UsersService {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR411),
+                411
             );
         }
         if (
@@ -131,11 +131,13 @@ export class UsersService {
                 throw new AlreadyExistsException(
                     VerifyCodeExceptionType.NOT_VERIFIED,
                     new Error(ResponseMessage.TR404),
+                    404
                 );
             } else {
                 throw new AlreadyExistsException(
                     AlreadyExistsExceptionType.USER_ALREADY_EXISTS,
                     new Error(ResponseMessage.TR413),
+                    413
                 );
             }
         }
@@ -262,7 +264,8 @@ export class UsersService {
         if (!user.IsEmailVerified) {
             throw new NotVerifiedException(
                 VerifyCodeExceptionType.NOT_VERIFIED,
-                new Error(ResponseMessage.TR404)
+                new Error(ResponseMessage.TR404),
+                404
             );
         }
 
@@ -301,7 +304,8 @@ export class UsersService {
 
         throw new BadRequestException(
             BadRequestExceptionType.BAD_REQUEST,
-            new Error(ResponseMessage.TR403)
+            new Error(ResponseMessage.TR403),
+            403
             // new Error('Wrong Password or Email'),
         );
     }
@@ -373,7 +377,8 @@ export class UsersService {
                 if (!user) {
                     throw new NotFoundException(
                         ForbiddenExceptionType.FORBIDDEN,
-                        new Error(ResponseMessage.TR406)
+                        new Error(ResponseMessage.TR406),
+                        406
                         );
                 }
 
@@ -398,6 +403,7 @@ export class UsersService {
                     throw new OtpCodeNotFoundException(
                         VerifyCodeExceptionType.CODE_NOT_FOUND,
                         new Error(ResponseMessage.TR407),
+                        407
                     );
                 }
 
@@ -457,12 +463,14 @@ export class UsersService {
             throw new AlreadyExistsException(
                 AlreadyExistsExceptionType.NOT_EXIST,
                 new Error(ResponseMessage.TR409),
+                409
             );
         }
         if (user.IsEmailVerified) {
             throw new AlreadyExistsException(
                 VerifyCodeExceptionType.VERIFIED,
                 new Error(ResponseMessage.TR410),
+                410
             );
         }
         // Verification code
@@ -527,6 +535,7 @@ export class UsersService {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR406),
+                406
             );
         }
 

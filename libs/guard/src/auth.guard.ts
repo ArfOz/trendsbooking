@@ -25,6 +25,7 @@ import jwt from 'jsonwebtoken';
 import { PrismaService, UserService } from '@database';
 import { UserPayloadDto } from '@auth';
 import { ExpiredReasonType } from '@prisma/client';
+import ResponseMessage  from '@shared/enums/response-message.json';
 
 export interface req extends Request {
     user: string; // or any other type
@@ -51,7 +52,11 @@ export class AuthGuard implements CanActivate {
                 req = ctx.getRequest();
                 break;
             default:
-                throw new ForbiddenException(ForbiddenExceptionType.FORBIDDEN);
+                throw new ForbiddenException(
+                    ForbiddenExceptionType.FORBIDDEN,
+                    new Error('Yetkisiz Giriş'),
+                    500,
+                );
         }
 
         const allowUnauthorizedRequest = this.reflector.get<boolean>(
@@ -91,7 +96,6 @@ export class AuthGuard implements CanActivate {
 
         let userPayload;
         try {
-
             userPayload = jwt.verify(
                 token,
                 process.env.JWT_SECRET,
@@ -99,8 +103,8 @@ export class AuthGuard implements CanActivate {
         } catch (err) {
             throw new TrendsException(
                 'Can not verify token!',
-                new Error('Can not verify token!'),
-                403,
+                new Error(ResponseMessage.TR417),
+                417,
             );
         }
         const exist = await this.prisma.userToken.findFirst({
@@ -110,9 +114,9 @@ export class AuthGuard implements CanActivate {
         if (!exist) {
             throw new TrendsException(
                 'Token is not valid',
-                new Error('Token is not valid'),
-                401,
-            );;
+                new Error(ResponseMessage.TR418),
+                418,
+            );
         }
 
         if (exist.ExpiresIn < new Date()) {
@@ -126,20 +130,20 @@ export class AuthGuard implements CanActivate {
                 },
             });
 
-            if (
-                exist.ExpiredReason ===
-                ExpiredReasonType.SignInFromDifferentLocation
-            ) {
-                throw new TrendsException(
-                    'Logged in from different device!',
-                    new Error('Token is expired!'),
-                    401,
-                );
-            }
+            // if (
+            //     exist.ExpiredReason ===
+            //     ExpiredReasonType.SignInFromDifferentLocation
+            // ) {
+            //     throw new TrendsException(
+            //         'Logged in from different device!',
+            //         new Error('Token is expired!'),
+            //         401,
+            //     );
+            // }
             throw new TrendsException(
                 'Token is expired!',
-                new Error('Token is expired!'),
-                401,
+                new Error(ResponseMessage.TR416),
+                416,
             );
         }
 
@@ -148,7 +152,11 @@ export class AuthGuard implements CanActivate {
         });
 
         if (!user) {
-            throw new UserNotExistException();
+            throw new UserNotExistException(
+                UnauthorizedExceptionType.USER_NOT_REGISTERED,
+                new Error(ResponseMessage.TR415),
+                415,
+            );
         }
 
         // if (
@@ -230,6 +238,8 @@ export class AuthGuard implements CanActivate {
         if (this.isNotExistsBearerToken(headers)) {
             throw new UnauthorizedException(
                 UnauthorizedExceptionType.NO_AUTHORIZATION_TOKEN,
+                new Error('Token yok!'),
+                500,
             );
         }
         const auth =

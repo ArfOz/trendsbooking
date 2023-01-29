@@ -7,9 +7,9 @@ export class UserNotExistException extends TrendsException {
  
             // eslint-disable-next-line default-param-last
             type: UnauthorizedExceptionType = UnauthorizedExceptionType.UNAUTHORIZED_ACCESS,
-            error?: Error,
-            status?:number
+            error: Error,
+            status:number
     ) {
-        super('User does not exist!', error, 400);
+        super('User does not exist!', error, status);
     }
 }

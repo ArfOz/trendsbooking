@@ -1,22 +1,13 @@
-import {
-    NotFoundExceptionType,
-    ForbiddenExceptionType,
-    VerifyCodeExceptionType,
-} from './../../shared/src/enums/exception.type';
-import { ResponseMessage } from '@shared';
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
-import { User } from '@prisma/client';
-import { ExpiredReasonType, OTPType } from '@prisma/client';
+import { ExpiredReasonType} from '@prisma/client';
 
 // Modules export
 import {
-    OtpCodeNotFoundException,
-    BadRequestExceptionType,
-    BadRequestException,
     NotFoundException,
     TrendsException,
+    NotFoundExceptionType,
 } from '@shared';
 import { UserOtpCodeService, UserService, PrismaService } from '@database';
 import { UserPayloadDto } from '@auth';
@@ -26,6 +17,7 @@ import { MailModeType } from './enums/mailmode.enum';
 import generalConfig from '@shared/config/general.config';
 import authConfig from './config/auth.config';
 
+import ResponseMessage  from '@shared/enums/response-message.json';
 @Injectable()
 export class AuthService {
     constructor(
@@ -218,7 +210,7 @@ export class AuthService {
 
         const template = await this.mailTemplateGenerator(mode);
 
-        let subject: string = '';
+        let subject = '';
         switch (mode) {
             case MailModeType.VerifyEmail:
                 subject = "TrendsBooking'e Hoşgeldiniz!";
@@ -271,7 +263,7 @@ export class AuthService {
             },
         ];
 
-        let html: string = ' ';
+        let html = ' ';
 
         replaceText.forEach((replace) => {
             // eslint-disable-next-line no-param-reassign

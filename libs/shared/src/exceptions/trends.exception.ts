@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 
 export class TrendsException extends HttpException {
-    error?: Error;
+    error: Error;
     details:Error;
     statusCode:number;  
 
