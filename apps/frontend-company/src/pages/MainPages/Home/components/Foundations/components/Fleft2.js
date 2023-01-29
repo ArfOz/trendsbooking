@@ -1,16 +1,14 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded';
+import { style } from './style';
+
+
 function Fleft2() {
     return (
         <>
             <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    border: '3px solid green',
-                    width: '40%',
-                }}
+                sx={style.rowContainer}
             >
                 <Box sx={{
                         background: '#F2F8FF',
@@ -23,24 +21,10 @@ function Fleft2() {
                 </Box>
 
                 <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '80%',
-                        border: '2px solid red',
-                    }}
+                    sx={style.typographyContainer}
                 >
                     <Typography
-                        sx={{
-                            fontFamily: 'Roboto',
-                            fontStyle: 'normal',
-                            fontWeight: '500',
-                            fontSize: '16px',
-                            lineHeight: '19px',
-                            color: '#9A9A9A',
-                        }}
+                        sx={style.typography}
                     >
                         Business management
                     </Typography>

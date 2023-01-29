@@ -11,6 +11,18 @@ export const buttons = {
             color: '#F75936',
         },
     },
+    loading: {
+        fontSize: '1rem',
+        p: '10px',
+        mt: '30px',
+        mb: '10px',
+        backgroundColor: '#fff',
+        border: '1px solid green',
+        color: '#F75936',
+        '&:hover': {
+            color: '#F75936',
+        },
+    },
     next: {
         mt: '30px',
         mb: '10px',

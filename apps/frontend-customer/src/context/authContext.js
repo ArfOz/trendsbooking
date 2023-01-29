@@ -112,7 +112,7 @@ function useProvideAuth() {
         axios
             .request(options)
             .then(function (response) {
-                console.log(response.data);
+                console.log("authContext",response.data);
                 setSendCodeData(response.data);
                 setIsLoading(false);
             })

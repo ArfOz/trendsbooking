@@ -1,12 +1,12 @@
-import React from 'react'
-import Trendbiz from './components/Trendbiz'
+import React from 'react';
+import Trendbiz from './components/Trendbiz';
 
 function TrendBiz() {
-  return (
-    <>
-    <Trendbiz/>
-    </>
-  )
+    return (
+        <>
+            <Trendbiz />
+        </>
+    );
 }
 
-export default TrendBiz
+export default TrendBiz;

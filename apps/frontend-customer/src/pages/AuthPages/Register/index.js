@@ -66,6 +66,7 @@ const Register = () => {
     const [registerForm, setRegisterForm] = useState(initialState);
     const navigate = useNavigate();
     const [activeElement, setActiveElement] = useState();
+    const [successMessage, setSuccessMessage] = useState('');
     const maxSteps = 3;
 
     const auth = useAuth();
@@ -141,7 +142,7 @@ const Register = () => {
         setVerification(e);
     };
 
-    const handleSubmitVerification = async(e) => {
+    const handleSubmitVerification = async (e) => {
         e.preventDefault();
         console.log('verification', verification);
         if (auth.registerUser.Token) {
@@ -153,11 +154,16 @@ const Register = () => {
     };
 
     useEffect(() => {
-        console.log('auth.verifyCodeData', auth.verifyCodeData);
         if (auth.verifyCodeData?.Success) {
-            navigate('/');
+            setError('Kaydınız başarılı bir şekilde gerçekleşmiştir.');
+            setSuccessMessage('Başarılı:');
         }
     }, [auth.verifyCodeData]);
+
+    const handleSuccess = () => {
+        setOpen(false);
+        navigate('/');
+    };
 
     //VERIFICATION
 
@@ -199,7 +205,7 @@ const Register = () => {
         if (registered) {
             if (
                 auth.registerErrors?.response.data.details?.toString() ===
-                'Please check the box!!!'
+                "Lütfen Sözleşmeyi onaylayınız."
             ) {
                 console.log(
                     'object :>> ',
@@ -215,7 +221,7 @@ const Register = () => {
                 );
             } else if (
                 auth.registerErrors?.response.data.details?.toString() ===
-                'Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'
+                "Email adresi, şifre, Telefon numarası, Kullanıcı adı, Cinsiyet, Ad Soyad ve Doğum Tarihi zorunludur. "
             ) {
                 let initialValues = {
                     FirstName: 'Ad',
@@ -256,6 +262,7 @@ const Register = () => {
                     );
             } else {
                 setError('');
+                setActiveStep(2);
             }
         }
     }, [auth.registerErrors]);
@@ -276,12 +283,8 @@ const Register = () => {
 
     useEffect(() => {
         if (auth.registerUser?.Data === 'Email onayı bekleniyor') {
-            auth.sendCode({
-                Email: auth.registerUser.Email,
-            });
             setActiveStep(2);
         }
-        console.log(auth.registerUser);
     }, [auth.registerUser]);
 
     return (
@@ -695,7 +698,12 @@ const Register = () => {
                                         type="submit"
                                         fullWidth
                                         variant="outlined"
-                                        sx={buttons.submit}
+                                        sx={
+                                            auth.isLoading
+                                                ? buttons.loading
+                                                : buttons.submit
+                                        }
+                                        disabled={auth.isLoading}
                                     >
                                         {auth.isLoading ? (
                                             <CircularProgress />
@@ -707,7 +715,7 @@ const Register = () => {
                                 {activeStep == 0 && (
                                     <Grid container>
                                         <Grid item>
-                                            <Link href="#" variant="body1">
+                                            <Link href="/auth" variant="body1">
                                                 {'Zaten Hesabın var mı!'}
                                             </Link>
                                         </Grid>
@@ -726,6 +734,8 @@ const Register = () => {
                 open={openError}
                 handleClose={handleCloseError}
                 error={error}
+                successMessage={successMessage}
+                handleSuccess={handleSuccess}
             />
         </AuthLayout>
     );

@@ -1,16 +1,14 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import DateRangeRoundedIcon from '@mui/icons-material/DateRangeRounded';
+import { style } from './style';
+
+
 function Fleft1() {
     return (
         <>
             <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    border: '3px solid green',
-                    width: '40%',
-                }}
+                sx={style.rowContainer}
             >
                 <Box
                     sx={{
@@ -23,24 +21,10 @@ function Fleft1() {
                 </Box>
 
                 <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '80%',
-                        border: '2px solid red',
-                    }}
+                    sx={style.typographyContainer}
                 >
                     <Typography
-                        sx={{
-                            fontFamily: 'Roboto',
-                            fontStyle: 'normal',
-                            fontWeight: '900',
-                            fontSize: '20px',
-                            lineHeight: '19px',
-                            color: '#07232C',
-                        }}
+                        sx={style.calendar}
                     >
                         Calendar and visits
                     </Typography>

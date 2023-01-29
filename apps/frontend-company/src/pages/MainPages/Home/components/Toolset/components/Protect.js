@@ -1,57 +1,27 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import Protect1 from '../../../../../../assets/Protect1.png';
-
+import { style } from './style';
 
 function Protect() {
     return (
         <>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    border: '3px solid green',
-                    width: '40%',
-                    height: '100%',
-                }}
-            >
-                <Box>
-                <img src={Protect1} alt="" width="50px" height="50px" />
-                </Box>
+            <Box sx={style.provider}>
                 <Box
                     sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                        width: '92%',
-                        border: '2px solid red',
+                        mr: 3,
                     }}
                 >
+                    <img src={Protect1} alt="" width="100%" height="50%" />
+                </Box>
+                <Box sx={style.typographyContainer}>
                     <Box>
-                        <Typography
-                            sx={{
-                                fontFamily: 'Roboto',
-                                fontStyle: 'normal',
-                                fontWeight: '800',
-                                fontSize: '20px',
-                                lineHeight: '23px',
-                                color: '#07232C',
-                            }}
-                        >
+                        <Typography sx={style.title}>
                             Don't waste precious time. Protect your profits.
                         </Typography>
                     </Box>
                     <Box>
-                        <Typography
-                            sx={{
-                                fontFamily: 'Roboto',
-                                fontStyle: 'normal',
-                                fontWeight: '400',
-                                fontSize: '16px',
-                                lineHeight: '19px',
-                                color: '#9A9A9A',
-                            }}
-                        >
+                        <Typography sx={style.subtitle}>
                             You love your job, so you spend a lot of time doing
                             it, but you want others to respect that. We want it
                             too. We will do everything so that not a single

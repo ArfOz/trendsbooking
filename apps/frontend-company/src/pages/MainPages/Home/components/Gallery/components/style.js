@@ -1,0 +1,130 @@
+import Company295 from '../../../../../../assets/Company295.png';
+import Company300 from '../../../../../../assets/Company300.png';
+import Company301 from '../../../../../../assets/Company301.png';
+
+export const style = {
+    // === LEFT ===
+    leftContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        width: '40%',
+    },
+    left1Box: {
+        height: '70vh',
+        width: '100%',
+        background: '#D9D9D9',
+        borderRadius: '12px',
+        background: `url(${Company295})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        position: 'relative',
+    },
+    left2Box: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '35vh',
+        width: '100%',
+        background: '#F75936',
+        borderRadius: '12px',
+    },
+    left2Typography: {
+        fontFamily: 'Roboto',
+        fontStyle: 'normal',
+        fontWeight: '700',
+        fontSize: '48px',
+        lineHeight: '56px',
+        color: '#F2F8FF',
+    },
+    // === RİGHT ===
+    rightContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        width: '59%',
+       
+    },
+    rowBox: {
+     
+        display: 'flex',
+        justifyContent: 'space-between',
+        height: '33%',
+        width: '100%',
+    },
+    rowBox3: {
+        border: '1px solid #07232C',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '33%',
+        width: '100%',
+    },
+    row1Box1Container: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        height: '100%',
+        width: '49%',
+        background: ' #F2F8FF',
+        borderRadius: '12px',
+    },
+    typographyContainer: {
+      
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        height: '45%',
+        mt: 2,
+    },
+    title: {
+        fontFamily: 'Roboto',
+        fontStyle: 'normal',
+        fontWeight: '700',
+        fontSize: '16px',
+        lineHeight: '150%',
+        color: '#F75936',
+    },
+    subtitle: {
+        fontFamily: 'Roboto',
+        fontStyle: 'normal',
+        fontWeight: '500',
+        fontSize: '20px',
+        lineHeight: '150%',
+        color: '#07232C',
+    },
+    row1Box2Container: {
+        height: '100%',
+        width: '49%',
+        background: '#D9D9D9',
+        borderRadius: '12px',
+        background: `url(${Company300})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        position: 'relative',
+    },
+    row2Box1Container: {
+        height: '100%',
+        width: '49%',
+        background: '#D9D9D9',
+        borderRadius: '12px',
+        background: `url(${Company301})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        position: 'relative',
+    },
+    row3Typography: {
+        fontFamily: 'Roboto',
+        fontStyle: 'normal',
+        fontWeight: '800',
+        fontSize: '64px',
+        lineHeight: '150%',
+        color: '#07232C',
+    },
+};
