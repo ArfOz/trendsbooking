@@ -1,4 +1,5 @@
 export const style = {
+    
     BoxContainer: {
         display: {
             xs: 'column',
@@ -12,8 +13,6 @@ export const style = {
         width: '80%',
         m: 'auto',
         mt: 10,
-      
-
         position: 'relative',
     },
 

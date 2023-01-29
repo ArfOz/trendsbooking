@@ -1,30 +1,17 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
 import Left from './components/Left';
 import Right from './components/Right';
+import { style } from './style';
 
 function Gallery() {
     return (
         <>
-           
-                <Box
-                    sx={{
-                        border: '5px solid blue',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        width: '80%',
-                        height: '108vh',
-                        m:'auto',
-                        mt:5
-                       
-                        
-                    }}
-                >
-                    <Left />
-                    <Right/>
-                </Box>
-        
+            <Box sx={style.componentsContainer}>
+                <Left />
+                <Right />
+            </Box>
         </>
     );
 }

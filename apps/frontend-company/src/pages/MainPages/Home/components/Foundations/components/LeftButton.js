@@ -1,31 +1,21 @@
 import React from 'react';
 
-import { Box,Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import { style } from './style';
 
 function LeftButton() {
     return (
         <>
-        <Box>
-            <Button
-                variant="contained"
-                color="info"
-                size="large"
-                sx={{
-                   
-                    textTransform: 'capitalize',
-                    fontSize: '16px',
-                    textAlign: 'center',
-                    color: '#FFFFFF',
-                    width:"50%",
-                    ml:20,
-                  
-                   
-                }}
-            >
-                Hemen Ücretsiz Dene
-            </Button>
-        </Box>
-            
+            <Box>
+                <Button
+                    variant="contained"
+                    color="info"
+                    size="large"
+                    sx={style.leftButton}
+                >
+                    Hemen Ücretsiz Dene
+                </Button>
+            </Box>
         </>
     );
 }

@@ -1,17 +1,12 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import LocalConvenienceStoreRoundedIcon from '@mui/icons-material/LocalConvenienceStoreRounded';
+import { style } from './style';
+
 function Fleft4() {
     return (
         <>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    border: '3px solid green',
-                    width: '40%',
-                }}
-            >
+            <Box sx={style.rowContainer}>
                 <Box
                     sx={{
                         background: '#F2F8FF',
@@ -21,27 +16,9 @@ function Fleft4() {
                     <LocalConvenienceStoreRoundedIcon fontSize="large" />
                 </Box>
 
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '80%',
-                        border: '2px solid red',
-                    }}
-                >
-                    <Typography
-                        sx={{
-                            fontFamily: 'Roboto',
-                            fontStyle: 'normal',
-                            fontWeight: '500',
-                            fontSize: '16px',
-                            lineHeight: '19px',
-                            color: '#9A9A9A',
-                        }}
-                    >
-                      Marketing tools
+                <Box sx={style.typographyContainer}>
+                    <Typography sx={style.typography}>
+                    Marketing tools
                     </Typography>
                 </Box>
             </Box>

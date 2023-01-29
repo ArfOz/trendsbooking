@@ -1,0 +1,37 @@
+export const style = {
+    trendbizContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '50%',
+        height: '25vh',
+        m: 'auto',
+        mt: 5,
+    },
+    title: {
+        fontFamily: 'Roboto',
+        fontStyle: 'normal',
+        fontWeight: '800',
+        fontSize: '16px',
+        lineHeight: '110%',
+        color: '#F75936',
+    },
+    platform: {
+        fontFamily: 'Roboto',
+        fontStyle: 'normal',
+        fontWeight: '800',
+        fontSize: '40px',
+        lineHeight: '110%',
+        color: '#07232C',
+    },
+    subtitle: {
+        fontFamily: 'Roboto',
+        fontStyle: 'normal',
+        fontWeight: '400',
+        fontSize: '20px',
+        lineHeight: '23px',
+        color: '#9A9A9A',
+        textAlign: 'center',
+    },
+};

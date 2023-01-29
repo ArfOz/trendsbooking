@@ -84,6 +84,7 @@ const Login = ({ setUser }) => {
         }
         await auth.postLogin(loginForm);
     };
+
     useEffect(() => {
         localStorage.setItem('loginUser', JSON.stringify(auth.loginUser));
         // if (auth.loginUser) {
@@ -93,12 +94,22 @@ const Login = ({ setUser }) => {
 
     useEffect(() => {
         if (
-            auth.loginErrors?.response.data.message ===
-            'Password or Email is not correct'
+            auth.loginErrors?.response.status == 403
         ) {
             setError('E-posta adresi veya şifre yanlış!!!');
+        } else if (
+            auth.loginErrors?.response.status == 406
+        ) {
+            setError('Kullanıcı Bulunamadı. Lütfen kayıt olunuz!!!');
         } else {
             setError('');
+        }
+        if (
+            auth.loginErrors?.response.status == 404
+        ) {
+            auth.sendCode({
+                Email: loginForm.Email,
+            });
         }
     }, [auth.loginErrors]);
 
@@ -115,11 +126,24 @@ const Login = ({ setUser }) => {
         setVerification(e);
     };
 
-    const handleSubmitVerification = (e) => {
+    const handleSubmitVerification = async (e) => {
         e.preventDefault();
         console.log('verification', verification);
+        await auth.verifyCode({
+            Code: parseInt(verification),
+            Token: auth.sendCodeData?.Token,
+        });
     };
     //VERIFICATION
+
+    useEffect(() => {
+        if (auth.loginUser?.AccessToken) {
+            navigate('/');
+        }
+        if (auth.verifyCodeData?.Success) {
+            window.location.reload(true);
+        }
+    }, [auth.verifyCodeData, auth.loginUser]);
 
     return (
         <AuthLayout>
@@ -150,7 +174,10 @@ const Login = ({ setUser }) => {
                             <Box
                                 sx={
                                     // burası email verification ile değişecek
-                                    !auth.loginUser?.Token.User
+                                    !(
+                                        auth.loginErrors?.response.data.details.toString() ===
+                                        'Lütfen hesabınızı etkinleştiriniz.'
+                                    )
                                         ? boxStyle.leftside
                                         : { display: 'none' }
                                 }
@@ -272,7 +299,11 @@ const Login = ({ setUser }) => {
                             handleSubmitVerification={handleSubmitVerification}
                             display={
                                 // burası email verification ile değişecek
-                                auth.loginUser?.Token.User ? 'flex' : 'none'
+                                // auth.loginUser?.Success ? 'flex' : 'none'
+                                auth.loginErrors?.response.data.details.toString() ===
+                                'Lütfen hesabınızı etkinleştiriniz.'
+                                    ? 'flex'
+                                    : 'none'
                             }
                         />
                     </Grid>
