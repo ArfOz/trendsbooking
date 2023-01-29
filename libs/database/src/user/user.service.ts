@@ -42,7 +42,6 @@ export class UserService {
         }
 
         delete user.Id;
-        user['Success'] = true;
         return user;
     }
 

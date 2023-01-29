@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger/dist';
-import { IsOptional, IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsOptional, IsString, IsNotEmpty, IsNumber, IsBoolean } from 'class-validator';
 // import { UserRole } from '@prisma/client';
 
 export class UserPayloadDto {
@@ -16,15 +16,46 @@ export class UserPayloadDto {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Username?: string;
+    Username: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Country?: string;
+    Country: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    City?: string;
+    BirthDate: Date
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    FirstName: string
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Gender: string
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Password: string
+    
+    @ApiProperty() 
+    @IsOptional()
+    @IsBoolean()
+    IsEmailVerified: boolean
+
+    @ApiProperty() 
+    @IsOptional()
+    @IsString()
+    LastName: string
+
+    @ApiProperty() 
+    @IsOptional()
+    @IsString()
+    Phone: string
+
 }

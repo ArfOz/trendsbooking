@@ -5,6 +5,7 @@ import {
     IsString,
     IsNotEmpty,
     IsObject,
+    IsDateString,
 } from 'class-validator';
 // import { UserRole } from '@prisma/client';
 
@@ -61,4 +62,52 @@ export class ResponseRegisterUserDTO {
     @IsOptional()
     @IsObject()
     Success: true;
+}
+
+export class ResponseUserProfileUserDTO{
+  
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Email: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    FirstName: string
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    LastName: string
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Username: string
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    BirthDate: Date
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Phone: string
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Country: string
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Gender: string
+
+    // @ApiProperty()
+    // @IsOptional()
+    // @IsObject()
+    // Success: true;
 }

@@ -109,7 +109,7 @@ export class AuthService {
         ExpiresAccessToken: Date;
         ExpiresRefreshToken: Date;
     }> {
-        const payload: UserPayloadDto = {
+        const payload= {
             Id: user.Id,
             Email: user.Email,
         };
