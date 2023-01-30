@@ -20,7 +20,7 @@ import {
     Input,
     Select,
     FormHelperText,
-    CircularProgress
+    CircularProgress,
 } from '@mui/material';
 import LogoWord from './components/LogoWord';
 import Paper from '@mui/material/Paper';
@@ -53,7 +53,9 @@ export default function Register() {
     const [activeStep, setActiveStep] = useState(0);
 
     const handleNext = (e) => {
-        setActiveElement(e.target.parentNode.childNodes[0].childNodes);
+        setActiveElement(
+            e.target.parentNode.childNodes[0].childNodes[0].childNodes,
+        );
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
@@ -62,17 +64,17 @@ export default function Register() {
     };
 
     useEffect(() => {
-      if (activeElement) {
-          Array.from(activeElement).map((item, index) => {
-              if (index === activeStep) {
-                  item.style.display = 'flex';
-                  item.style.justifyContent = 'center';
-              } else {
-                  item.style.display = 'none';
-              }
-          });
-      }
-  }, [activeStep]);
+        if (activeElement) {
+            Array.from(activeElement).map((item, index) => {
+                if (index === activeStep) {
+                    item.style.display = 'flex';
+                    item.style.justifyContent = 'center';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    }, [activeStep]);
     //Slider
     //MODAL
     const [modalCheckbox, setModalCheckbox] = useState(false);
@@ -158,93 +160,93 @@ export default function Register() {
     };
 
     useEffect(() => {
-      if (registered) {
-          if (
-              auth.registerErrors?.response.data.details.toString() ===
-              'Please check the box!!!'
-          ) {
-              console.log(
-                  'object :>> ',
-                  auth.registerErrors?.response.data.details.toString(),
-              );
-              setError('Lütfen sözleşmeyi okuyup kabul ediniz!!!');
-          } else if (
-              auth.registerErrors?.response.data.details.toString() ===
-              'Ooops... User already exists'
-          ) {
-              setError(
-                  'Lütfen daha önce kayıt olmamış bir email ile giriş yapınız!!!',
-              );
-          } else if (
-              auth.registerErrors?.response.data.details.toString() ===
-              'Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'
-          ) {
-              let initialValues = {
-                  FirstName: 'Ad',
-                  LastName: 'Soyad',
-                  BirthDate: 'Doğum Tarihi',
-                  Gender: 'Cinsiyet',
-              };
-              let emptyValues = [];
-              for (const key in registerForm) {
-                  if (Object.hasOwnProperty.call(registerForm, key)) {
-                      const element = registerForm[key];
-                      if (!element) {
-                          emptyValues.push(initialValues[key]);
-                      }
-                  }
-              }
-              emptyValues.length > 1 && emptyValues.splice(-1, 0, 've');
-              let newError = replaceChar(
-                  replaceChar(
-                      emptyValues.join(', '),
-                      '',
-                      emptyValues.join(', ').lastIndexOf(','),
-                  ),
-                  '',
-                  replaceChar(
-                      emptyValues.join(', '),
-                      '',
-                      emptyValues.join(', ').lastIndexOf(','),
-                  ).lastIndexOf(','),
-              );
-              console.log(newError);
+        if (registered) {
+            if (
+                auth.registerErrors?.response.data.details.toString() ===
+                'Please check the box!!!'
+            ) {
+                console.log(
+                    'object :>> ',
+                    auth.registerErrors?.response.data.details.toString(),
+                );
+                setError('Lütfen sözleşmeyi okuyup kabul ediniz!!!');
+            } else if (
+                auth.registerErrors?.response.data.details.toString() ===
+                'Ooops... User already exists'
+            ) {
+                setError(
+                    'Lütfen daha önce kayıt olmamış bir email ile giriş yapınız!!!',
+                );
+            } else if (
+                auth.registerErrors?.response.data.details.toString() ===
+                'Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'
+            ) {
+                let initialValues = {
+                    FirstName: 'Ad',
+                    LastName: 'Soyad',
+                    BirthDate: 'Doğum Tarihi',
+                    Gender: 'Cinsiyet',
+                };
+                let emptyValues = [];
+                for (const key in registerForm) {
+                    if (Object.hasOwnProperty.call(registerForm, key)) {
+                        const element = registerForm[key];
+                        if (!element) {
+                            emptyValues.push(initialValues[key]);
+                        }
+                    }
+                }
+                emptyValues.length > 1 && emptyValues.splice(-1, 0, 've');
+                let newError = replaceChar(
+                    replaceChar(
+                        emptyValues.join(', '),
+                        '',
+                        emptyValues.join(', ').lastIndexOf(','),
+                    ),
+                    '',
+                    replaceChar(
+                        emptyValues.join(', '),
+                        '',
+                        emptyValues.join(', ').lastIndexOf(','),
+                    ).lastIndexOf(','),
+                );
+                console.log(newError);
 
-              emptyValues.length > 0 &&
-                  setError(
-                      `${
-                          emptyValues.length > 1 ? newError : emptyValues
-                      } boş bırakılamaz!!!`,
-                  );
-          } else {
-              setError('');
-          }
-      }
-  }, [auth.registerErrors]);
+                emptyValues.length > 0 &&
+                    setError(
+                        `${
+                            emptyValues.length > 1 ? newError : emptyValues
+                        } boş bırakılamaz!!!`,
+                    );
+            } else {
+                setError('');
+            }
+        }
+    }, [auth.registerErrors]);
 
-  function replaceChar(origString, replaceChar, index) {
-      let firstPart = origString.substr(0, index);
-      let lastPart = origString.substr(index + 1);
+    function replaceChar(origString, replaceChar, index) {
+        let firstPart = origString.substr(0, index);
+        let lastPart = origString.substr(index + 1);
 
-      let newString = firstPart + replaceChar + lastPart;
-      return newString;
-  }
+        let newString = firstPart + replaceChar + lastPart;
+        return newString;
+    }
 
-  useEffect(() => {
-      if (error) {
-          handleOpenError(true);
-      }
-  }, [error]);
+    useEffect(() => {
+        if (error) {
+            handleOpenError(true);
+        }
+    }, [error]);
 
-  useEffect(() => {
-      if (auth.registerUser) {
-          // localStorage.setItem(
-          //     'registerResponse',
-          //     JSON.stringify(auth.registerUser),
-          // );
-          setActiveStep(2);
-      }
-  }, [auth.registerUser]);
+    useEffect(() => {
+        if (auth.registerUser) {
+            // localStorage.setItem(
+            //     'registerResponse',
+            //     JSON.stringify(auth.registerUser),
+            // );
+            setActiveStep(2);
+        }
+    }, [auth.registerUser]);
 
     return (
         <AuthLayout>
@@ -572,10 +574,12 @@ export default function Register() {
                                             </Box>
                                         </Box>
                                         {/*##################  Page 3 #################  */}
-                                        <Box  sx={{
+                                        <Box
+                                            sx={{
                                                 display: 'none',
                                                 flexDirection: 'column',
-                                            }}>
+                                            }}
+                                        >
                                             <Grid container compenent="">
                                                 <Grid item md={6} lg={6} xl={6}>
                                                     <Box
@@ -599,7 +603,7 @@ export default function Register() {
                                                             height="80px"
                                                             size="small"
                                                             sx={{
-                                                                width: '40%',
+                                                                width: '80%',
                                                             }}
                                                         />
                                                         <TextField
@@ -616,7 +620,7 @@ export default function Register() {
                                                             height="80px"
                                                             size="small"
                                                             sx={{
-                                                                width: '40%',
+                                                                width: '80%',
                                                             }}
                                                         />
                                                         <TextField
@@ -633,7 +637,7 @@ export default function Register() {
                                                             height="80px"
                                                             size="small"
                                                             sx={{
-                                                                width: '40%',
+                                                                width: '80%',
                                                             }}
                                                         />
                                                     </Box>
@@ -643,8 +647,8 @@ export default function Register() {
                                                         sx={{
                                                             backgroundColor:
                                                                 'rgba(217,217,217)',
-                                                            width: '400px',
-                                                            height: '400px',
+                                                            width: '380px',
+                                                            height: '380px',
                                                             borderRadius:
                                                                 '16px',
                                                         }}
@@ -744,7 +748,6 @@ export default function Register() {
                                 )}
                                 {activeStep < 1 && (
                                     <Button
-
                                         onClick={handleNext}
                                         variant="outlined"
                                         sx={buttons.next}
@@ -754,25 +757,25 @@ export default function Register() {
                                     </Button>
                                 )}
                                 {activeStep === 1 && (
-                                  <>
-                                    <Button
-                                        size="small"
-                                        onClick={handleBack}
-                                        variant="outlined"
-                                        sx={buttons.back}
-                                        disabled={activeStep <= 0}
-                                    >
-                                        GERİ
-                                    </Button>
-                                    <Button
-                                        size="small"
-                                        onClick={handleNext}
-                                        variant="outlined"
-                                        sx={buttons.next}
-                                        // disabled={activeStep === maxSteps - 1}
-                                    >
-                                        İLERİ
-                                    </Button>
+                                    <>
+                                        <Button
+                                            size="small"
+                                            onClick={handleBack}
+                                            variant="outlined"
+                                            sx={buttons.back}
+                                            disabled={activeStep <= 0}
+                                        >
+                                            GERİ
+                                        </Button>
+                                        <Button
+                                            size="small"
+                                            onClick={handleNext}
+                                            variant="outlined"
+                                            sx={buttons.next}
+                                            // disabled={activeStep === maxSteps - 1}
+                                        >
+                                            İLERİ
+                                        </Button>
                                     </>
                                 )}
                                 {activeStep == 2 && (
@@ -786,7 +789,7 @@ export default function Register() {
                                         DOĞRULA
                                     </Button>
                                 )}
-                                {activeStep === maxSteps - 2 && (
+                                {activeStep === maxSteps - 1 && (
                                     <Button
                                         type="submit"
                                         variant="outlined"
