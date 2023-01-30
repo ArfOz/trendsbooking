@@ -4,18 +4,16 @@ import {
     IsString,
     IsNotEmpty,
     IsObject,
-    IsDateString,
     IsEmail,
     IsNumber,
     IsBoolean,
 } from 'class-validator';
 // import { UserRole } from '@prisma/client';
 
-
 export enum Genders {
-    Female = "Female",
-    Male = "Male",
-    NottoSay="NottoSay"
+    Female = 'Female',
+    Male = 'Male',
+    NottoSay = 'NottoSay',
 }
 
 export class UserParamsDto {
@@ -42,38 +40,37 @@ export class UserParamsDto {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    BirthDate: Date
+    BirthDate: Date;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    FirstName: string
+    FirstName: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Gender: string
+    Gender: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Password: string
-    
-    @ApiProperty() 
+    Password: string;
+
+    @ApiProperty()
     @IsOptional()
     @IsBoolean()
-    IsEmailVerified: boolean
+    IsEmailVerified: boolean;
 
-    @ApiProperty() 
+    @ApiProperty()
     @IsOptional()
     @IsString()
-    LastName: string
+    LastName: string;
 
-    @ApiProperty() 
+    @ApiProperty()
     @IsOptional()
     @IsString()
-    Phone: string
-
+    Phone: string;
 }
 export class ResponseLoginUserDTO {
     @ApiProperty()
@@ -129,8 +126,7 @@ export class ResponseRegisterUserDTO {
     Success: true;
 }
 
-export class ResponseUserProfileUserDTO{
-  
+export class ResponseUserProfileUserDTO {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
@@ -139,37 +135,37 @@ export class ResponseUserProfileUserDTO{
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    FirstName: string
+    FirstName: string;
 
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    LastName: string
+    LastName: string;
 
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    Username: string
+    Username: string;
 
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    BirthDate: Date
+    BirthDate: Date;
 
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    Phone: string
+    Phone: string;
 
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    Country: string
+    Country: string;
 
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    Gender: string
+    Gender: string;
 
     // @ApiProperty()
     // @IsOptional()
@@ -178,7 +174,6 @@ export class ResponseUserProfileUserDTO{
 }
 
 export class SendCodeDTO {
-
     @ApiProperty()
     @IsEmail()
     @IsNotEmpty()
@@ -186,7 +181,6 @@ export class SendCodeDTO {
 }
 
 export class VerifyCodeDTO {
-
     @ApiProperty()
     @IsNumber()
     @IsNotEmpty()
@@ -196,9 +190,7 @@ export class VerifyCodeDTO {
     @IsString()
     @IsNotEmpty()
     Token?: string;
-
 }
-
 
 export class CreateServiceUserJsonDto {
     @ApiProperty()
@@ -252,7 +244,6 @@ export class CreateServiceUserJsonDto {
     CbFirst: boolean;
 }
 
-
 export class RegisterUserJsonDto {
     @ApiProperty()
     @IsNotEmpty()
@@ -293,7 +284,7 @@ export class RegisterUserJsonDto {
     @IsString()
     Country?: string;
 
-    @ApiProperty({example:[Genders.Male, Genders.Female, Genders.NottoSay],})
+    @ApiProperty({ example: [Genders.Male, Genders.Female, Genders.NottoSay] })
     @IsNotEmpty()
     @IsString()
     Gender: Genders;
@@ -313,8 +304,6 @@ export class RegisterUserJsonDto {
     @IsString()
     BirthDate: Date;
 }
-
-
 
 export class LoginUserDto {
     @ApiProperty()

@@ -1,4 +1,13 @@
-import { RegisterUserJsonDto, LoginUserDto, VerifyCodeDTO, SendCodeDTO,  ResponseRegisterUserDTO, ResponseLoginUserDTO, ResponseUserProfileUserDTO, UserParamsDto } from './dtos';
+import {
+    RegisterUserJsonDto,
+    LoginUserDto,
+    VerifyCodeDTO,
+    SendCodeDTO,
+    ResponseRegisterUserDTO,
+    ResponseLoginUserDTO,
+    ResponseUserProfileUserDTO,
+    UserParamsDto,
+} from './dtos';
 // Npm packages
 
 import { Injectable, Inject, HttpException } from '@nestjs/common';
@@ -7,13 +16,9 @@ import { generate } from 'generate-password';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 
-
 // Import modules
 import { MailUtilsService, SendEmailDto } from '@mail-utils';
-import {
-    MailModeType,
-    AuthService,
-} from '@auth';
+import { MailModeType, AuthService } from '@auth';
 import { ExpiredReasonType, OTPType } from '@prisma/client';
 import authConfig from '@auth/config/auth.config';
 import generalConfig from '@shared/config/general.config';
@@ -31,11 +36,7 @@ import {
     ForbiddenExceptionType,
     NotVerifiedException,
 } from '@shared';
-import {
-    UserService,
-    PrismaService,
-    UserOtpCodeService,
-} from '@database';
+import { UserService, PrismaService, UserOtpCodeService } from '@database';
 import ResponseMessage from '@shared/enums/response-message.json';
 
 @Injectable()
@@ -74,7 +75,9 @@ export class UsersService {
     //     return createdUser;
     // }
 
-    async register(input: RegisterUserJsonDto): Promise<ResponseRegisterUserDTO> {
+    async register(
+        input: RegisterUserJsonDto,
+    ): Promise<ResponseRegisterUserDTO> {
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -293,7 +296,7 @@ export class UsersService {
                 RefreshToken,
                 ExpireTime: ExpiresAccessToken,
                 ExpireTimeRefresh: ExpiresRefreshToken,
-                User:  user,
+                User: user,
                 Success: true,
             };
         }

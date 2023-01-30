@@ -1,4 +1,3 @@
-import { UserProfileData } from './dto/user-profile-data';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {
     BadRequestExceptionType,
@@ -17,32 +16,39 @@ export class UserService {
         private readonly keypairService: KeypairService,
     ) {}
 
-    async get(where: Prisma.UserWhereUniqueInput): Promise<UserProfileData> {
-        const user = await this.prisma.user.findUnique({
-            where,
-            select: {
-                Id: true,
-                Email: true,
-                FirstName: true,
-                LastName: true,
-                Username: true,
-                BirthDate: true,
-                Phone: true,
-                Country: true,
-                Gender: true,
-            },
-        });
+    async get(where: Prisma.UserWhereUniqueInput){
 
-        if (user && user.Email) {
-            user.Email = this.keypairService.decryptWithAppKeys(user.Email);
+        try {
+            const user = await this.prisma.user.findUnique({
+                where,
+                select: {
+                    Id: true,
+                    Email: true,
+                    FirstName: true,
+                    LastName: true,
+                    Username: true,
+                    BirthDate: true,
+                    Phone: true,
+                    Country: true,
+                    Gender: true,
+                },
+            });
+    
+            if (user && user.Email) {
+                user.Email = this.keypairService.decryptWithAppKeys(user.Email);
+            }
+    
+            if (user && user.Phone) {
+                user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
+            }
+    
+            delete user.Id;
+            return user;
+            
+        } catch (error) {
+            console.log(error)
         }
 
-        if (user && user.Phone) {
-            user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
-        }
-
-        delete user.Id;
-        return user;
     }
 
     // async find(params: {

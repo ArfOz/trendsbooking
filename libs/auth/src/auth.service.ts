@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
-import { ExpiredReasonType} from '@prisma/client';
+import { ExpiredReasonType } from '@prisma/client';
 
 // Modules export
 import {
@@ -16,8 +16,9 @@ import { MailModeType } from './enums/mailmode.enum';
 import generalConfig from '@shared/config/general.config';
 import authConfig from './config/auth.config';
 
-import ResponseMessage  from '@shared/enums/response-message.json';
+import ResponseMessage from '@shared/enums/response-message.json';
 import { UserPayloadDto } from './dtos';
+import { UserResponseDto } from '@auth';
 @Injectable()
 export class AuthService {
     constructor(
@@ -33,12 +34,17 @@ export class AuthService {
 
     async refreshToken(
         token: string,
-    ): Promise<{ AccessToken: string; RefreshToken: string; User: any }> {
+    ): Promise<{
+        AccessToken: string;
+        RefreshToken: string;
+        User: any
+    }> {
         const userPayload = jwt.verify(
             token,
             this.authCfg.jwt_secret_refresh!,
         ) as UserPayloadDto;
 
+        
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
                 UserId: userPayload.Id,
@@ -109,7 +115,7 @@ export class AuthService {
         ExpiresAccessToken: Date;
         ExpiresRefreshToken: Date;
     }> {
-        const payload= {
+        const payload = {
             Id: user.Id,
             Email: user.Email,
         };
