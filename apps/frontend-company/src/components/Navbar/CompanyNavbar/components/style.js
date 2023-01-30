@@ -34,5 +34,7 @@ export const style = {
       color: "#F75936",
       boxShadow: "none",
       textTransform: "capitalize",
+      width: "100%",
+      height: "100%",
     },
 };

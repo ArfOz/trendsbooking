@@ -12,7 +12,9 @@ function Right() {
                     justifyContent: 'space-between',
                     alignItems: 'flex-end',
                     width: '15%',
+                    height:'7vh',
                     mr: 0,
+                  
                 }}
             >
                 <Button
