@@ -7,8 +7,8 @@ import generalConfig from '@shared/config/general.config';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { MailUtilsModule } from '@mail-utils';
-import { ServiceUsersController } from './serviceUsers.controller';
-import { ServiceUsersService } from './serviceUsers.service';
+import { CompanyUsersController } from './companyUsers.controller';
+import { CompanyUsersService } from './companyUsers.service';
 
 @Module({
     imports: [
@@ -18,8 +18,8 @@ import { ServiceUsersService } from './serviceUsers.service';
         AuthModule,
         MailUtilsModule
     ],
-    controllers: [ServiceUsersController],
-    providers: [PrismaService, ServiceUsersService, AuthService, UserOtpCodeService],
-    exports: [ServiceUsersService],
+    controllers: [CompanyUsersController],
+    providers: [PrismaService, CompanyUsersService, AuthService, UserOtpCodeService],
+    exports: [CompanyUsersService],
 })
-export class ServiceUsersModule {}
+export class CompanyUsersModule {}
