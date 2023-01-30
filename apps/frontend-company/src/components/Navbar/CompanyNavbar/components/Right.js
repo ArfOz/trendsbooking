@@ -19,7 +19,7 @@ function Right() {
                     variant="outlined"
                     sx={style.navbarbuttons}
                     onClick={() => {
-                        alert('işletme hesabı sayfasına yönlenecek');
+                        alert('giriş yap sayfasına yönlenecek');
                     }}
                 >
                     Giriş Yap
@@ -28,7 +28,7 @@ function Right() {
                 <Button
                     sx={style.navbarbuttons}
                     onClick={() => {
-                        alert('giriş yap sayfasına yönlenecek');
+                        alert('Üye ol sayfasına yönlenecek');
                     }}
                 >
                     Üye Ol
