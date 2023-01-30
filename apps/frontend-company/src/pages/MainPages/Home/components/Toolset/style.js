@@ -5,6 +5,6 @@ export const style = {
         width: '80%',
         height: '15vh',
         m: 'auto',
-        mt: 5,
+        mt: 10,
     },
 };

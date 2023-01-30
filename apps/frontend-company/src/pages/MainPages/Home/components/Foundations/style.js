@@ -5,7 +5,7 @@ export const style={
         width:"90%",
         height:"95vh",
         m:"auto",
-        mt:5,
-        mb:10,
+        mt:15,
+        mb:15,
     }
 }
