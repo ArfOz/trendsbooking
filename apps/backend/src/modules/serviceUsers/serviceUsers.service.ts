@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { MailUtilsService, SendEmailDto} from '@mail-utils';
 import { OTPType } from '@prisma/client';
-import { AuthService, CreateUserJsonDto, MailModeType} from '@auth';
+import { AuthService, RegisterUserJsonDto, MailModeType} from '@auth';
 import authConfig from '@auth/config/auth.config';
 import { generate } from 'generate-password';
 import { ConfigType } from '@nestjs/config';
@@ -55,7 +55,7 @@ export class ServiceUsersService {
     //     return createdUser;
     // }
 
-    async register(input: CreateUserJsonDto): Promise<object | Error> {
+    async register(input: RegisterUserJsonDto): Promise<object | Error> {
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,

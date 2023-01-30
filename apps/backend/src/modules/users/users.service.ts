@@ -1,3 +1,7 @@
+
+
+
+
 // Npm packages
 import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
@@ -9,14 +13,7 @@ import * as bcrypt from 'bcrypt';
 import { MailUtilsService, SendEmailDto } from '@mail-utils';
 import {
     MailModeType,
-    SendCodeDTO,
-    VerifyCodeDTO,
-    UserPayloadDto,
     AuthService,
-    CreateUserJsonDto,
-    ResponseLoginUserDTO,
-    ResponseRegisterUserDTO,
-    ResponseUserProfileUserDTO,
 } from '@auth';
 import { ExpiredReasonType, OTPType } from '@prisma/client';
 import authConfig from '@auth/config/auth.config';
@@ -42,7 +39,7 @@ import {
     UserOtpCodeService,
 } from '@database';
 import ResponseMessage from '@shared/enums/response-message.json';
-
+import { RegisterUserJsonDto, VerifyCodeDTO, SendCodeDTO, UserPayloadDto,  ResponseRegisterUserDTO, ResponseLoginUserDTO, ResponseUserProfileUserDTO } from './dtos';
 @Injectable()
 export class UsersService {
     constructor(
@@ -79,7 +76,7 @@ export class UsersService {
     //     return createdUser;
     // }
 
-    async register(input: CreateUserJsonDto): Promise<ResponseRegisterUserDTO> {
+    async register(input: RegisterUserJsonDto): Promise<ResponseRegisterUserDTO> {
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,

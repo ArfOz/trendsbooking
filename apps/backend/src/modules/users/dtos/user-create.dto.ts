@@ -8,7 +8,7 @@ export enum Genders {
     Male = "Male",
     NottoSay="NottoSay"
 }
-export class CreateUserJsonDto {
+export class RegisterUserJsonDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()

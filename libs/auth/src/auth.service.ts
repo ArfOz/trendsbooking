@@ -10,7 +10,7 @@ import {
     NotFoundExceptionType,
 } from '@shared';
 import { UserOtpCodeService, UserService, PrismaService } from '@database';
-import { UserPayloadDto } from '@auth';
+// import { UserPayloadDto } from '@auth';
 import { SendEmailDto, MailUtilsService } from '@mail-utils';
 import { MailModeType } from './enums/mailmode.enum';
 // Config settings
@@ -18,6 +18,7 @@ import generalConfig from '@shared/config/general.config';
 import authConfig from './config/auth.config';
 
 import ResponseMessage  from '@shared/enums/response-message.json';
+import { UserPayloadDto } from 'apps/backend/src/modules/users/dtos/user-payload.dto';
 @Injectable()
 export class AuthService {
     constructor(

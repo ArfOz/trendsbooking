@@ -1,10 +1,12 @@
-import { VerifyCodeDTO, SendCodeDTO} from '@auth';
+
 import { UserParam } from '@shared';
-import { CreateUserJsonDto, UserPayloadDto } from '@auth';
+
 import { LoginUserDto } from '@database';
 import { UsersService } from './users.service';
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AllowUnauthorizedRequest } from '@shared/decorators';
+import { RegisterUserJsonDto, VerifyCodeDTO, SendCodeDTO, UserPayloadDto} from './dtos';
+
 
 @Controller('users')
 export class UsersController {
@@ -18,7 +20,7 @@ export class UsersController {
 
     @AllowUnauthorizedRequest()
     @Post('register')
-    async registerWithEmail(@Body() input: CreateUserJsonDto) {
+    async registerWithEmail(@Body() input: RegisterUserJsonDto) {
         return this.UsersService.register(input);
     }
 

@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger/dist';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, IsNotEmpty, IsNumber, IsBoolean } from 'class-validator';
 // import { UserRole } from '@prisma/client';
 
