@@ -1,13 +1,12 @@
-
-
-
-
+import { RegisterUserJsonDto, LoginUserDto, VerifyCodeDTO, SendCodeDTO,  ResponseRegisterUserDTO, ResponseLoginUserDTO, ResponseUserProfileUserDTO, UserParamsDto } from './dtos';
 // Npm packages
+
 import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { generate } from 'generate-password';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
+
 
 // Import modules
 import { MailUtilsService, SendEmailDto } from '@mail-utils';
@@ -35,11 +34,10 @@ import {
 import {
     UserService,
     PrismaService,
-    LoginUserDto,
     UserOtpCodeService,
 } from '@database';
 import ResponseMessage from '@shared/enums/response-message.json';
-import { RegisterUserJsonDto, VerifyCodeDTO, SendCodeDTO, UserPayloadDto,  ResponseRegisterUserDTO, ResponseLoginUserDTO, ResponseUserProfileUserDTO } from './dtos';
+
 @Injectable()
 export class UsersService {
     constructor(
@@ -309,7 +307,7 @@ export class UsersService {
     }
 
     async userProfile(
-        user: UserPayloadDto,
+        user: UserParamsDto,
     ): Promise<ResponseUserProfileUserDTO> {
         return await this.userService.get({ Id: user.Id });
     }
@@ -524,7 +522,7 @@ export class UsersService {
         };
     }
 
-    async logout(cred: UserPayloadDto) {
+    async logout(cred: UserParamsDto) {
         const user = await this.userService.findFirst({
             where: {
                 Id: cred.Id,

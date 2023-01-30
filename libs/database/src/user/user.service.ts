@@ -1,5 +1,5 @@
+import { UserProfileData } from './dto/user-profile-data';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { UserProfileData } from '@auth';
 import {
     BadRequestExceptionType,
     BadRequestException,
@@ -233,16 +233,16 @@ export class UserService {
             cursor,
             where: searchWhere,
             select: {
+                Id: true,
                 BirthDate: true,
                 Country: true,
                 Email: true,
                 FirstName: true,
+                IsEmailVerified: true,
                 Gender: true,
+                LastName: true,
                 Username: true,
                 Password: true,
-                Id: true,
-                IsEmailVerified: true,
-                LastName: true,
                 Phone: true,
             },
         });

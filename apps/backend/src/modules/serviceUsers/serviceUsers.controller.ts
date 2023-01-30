@@ -1,6 +1,6 @@
-import { CreateServiceUserJsonDto } from '@auth';
 import { Controller, Post, Body } from '@nestjs/common';
 import { AllowUnauthorizedRequest } from '@shared/decorators';
+import { CreateServiceUserJsonDto } from '../users/dtos';
 
 @Controller('serviceUsers')
 export class ServiceUsersController {

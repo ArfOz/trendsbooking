@@ -1,11 +1,9 @@
-
+import { RegisterUserJsonDto, VerifyCodeDTO, SendCodeDTO, UserParamsDto, LoginUserDto} from './dtos';
 import { UserParam } from '@shared';
 
-import { LoginUserDto } from '@database';
 import { UsersService } from './users.service';
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AllowUnauthorizedRequest } from '@shared/decorators';
-import { RegisterUserJsonDto, VerifyCodeDTO, SendCodeDTO, UserPayloadDto} from './dtos';
 
 
 @Controller('users')
@@ -31,7 +29,7 @@ export class UsersController {
     }
 
     @Get('userprofile')
-    userProfile(@UserParam() user: UserPayloadDto) {
+    userProfile(@UserParam() user: UserParamsDto) {
         return this.UsersService.userProfile(user);
     }
 
@@ -54,7 +52,7 @@ export class UsersController {
     }
 
     @Get('logout')
-    logout(@UserParam() user: UserPayloadDto) {
+    logout(@UserParam() user: UserParamsDto) {
         return this.UsersService.logout(user);
     }
 }

@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { MailUtilsService, SendEmailDto} from '@mail-utils';
 import { OTPType } from '@prisma/client';
-import { AuthService, RegisterUserJsonDto, MailModeType} from '@auth';
+import { AuthService, MailModeType} from '@auth';
 import authConfig from '@auth/config/auth.config';
 import { generate } from 'generate-password';
 import { ConfigType } from '@nestjs/config';
@@ -18,6 +18,7 @@ import { UserService, PrismaService, UserOtpCodeService } from '@database';
 import { Injectable, Inject } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import ResponseMessage  from '@shared/enums/response-message.json';
+import { RegisterUserJsonDto } from '../users/dtos';
 
 @Injectable()
 export class ServiceUsersService {

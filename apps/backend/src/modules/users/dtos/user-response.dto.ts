@@ -1,4 +1,3 @@
-import { UserPayloadDto } from './user-payload.dto';
 import { ApiProperty } from '@nestjs/swagger/dist';
 import {
     IsOptional,
@@ -6,9 +5,76 @@ import {
     IsNotEmpty,
     IsObject,
     IsDateString,
+    IsEmail,
+    IsNumber,
+    IsBoolean,
 } from 'class-validator';
 // import { UserRole } from '@prisma/client';
 
+
+export enum Genders {
+    Female = "Female",
+    Male = "Male",
+    NottoSay="NottoSay"
+}
+
+export class UserParamsDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    Id: number;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Email: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Username: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Country: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    BirthDate: Date
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    FirstName: string
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Gender: string
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Password: string
+    
+    @ApiProperty() 
+    @IsOptional()
+    @IsBoolean()
+    IsEmailVerified: boolean
+
+    @ApiProperty() 
+    @IsOptional()
+    @IsString()
+    LastName: string
+
+    @ApiProperty() 
+    @IsOptional()
+    @IsString()
+    Phone: string
+
+}
 export class ResponseLoginUserDTO {
     @ApiProperty()
     @IsString()
@@ -33,14 +99,13 @@ export class ResponseLoginUserDTO {
     @ApiProperty()
     @IsOptional()
     @IsObject()
-    User: UserPayloadDto;
+    User: UserParamsDto;
 
     @ApiProperty()
     @IsOptional()
     @IsObject()
     Success: true;
 }
-
 
 export class ResponseRegisterUserDTO {
     @ApiProperty()
@@ -110,4 +175,155 @@ export class ResponseUserProfileUserDTO{
     // @IsOptional()
     // @IsObject()
     // Success: true;
+}
+
+export class SendCodeDTO {
+
+    @ApiProperty()
+    @IsEmail()
+    @IsNotEmpty()
+    Email: string;
+}
+
+export class VerifyCodeDTO {
+
+    @ApiProperty()
+    @IsNumber()
+    @IsNotEmpty()
+    Code: number;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Token?: string;
+
+}
+
+
+export class CreateServiceUserJsonDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsEmail()
+    Email: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Phone: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Username: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Password: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    FirstName: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    LastName: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Country?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    City?: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Tckn: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsBoolean()
+    CbFirst: boolean;
+}
+
+
+export class RegisterUserJsonDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsEmail()
+    Email: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Phone: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Username: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Password: string;
+
+    // @IsNotEmpty()
+    // @IsString()
+    // RegistrationMethod: RegisterType;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    FirstName: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    LastName: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Country?: string;
+
+    @ApiProperty({example:[Genders.Male, Genders.Female, Genders.NottoSay],})
+    @IsNotEmpty()
+    @IsString()
+    Gender: Genders;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Lang?: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsBoolean()
+    CbFirst: boolean;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    BirthDate: Date;
+}
+
+
+
+export class LoginUserDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsEmail()
+    Email: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Password: string;
 }
