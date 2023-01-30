@@ -1,67 +1,40 @@
-import * as jwt from 'jsonwebtoken';
-import { MailUtilsService, SendEmailDto} from '@mail-utils';
-import { OTPType } from '@prisma/client';
-import { AuthService, MailModeType} from '@auth';
-import authConfig from '@auth/config/auth.config';
-import { generate } from 'generate-password';
-import { ConfigType } from '@nestjs/config';
-import generalConfig from '@shared/config/general.config';
-import {
-    BadRequestException,
-    BadRequestExceptionType,
-    AlreadyExistsExceptionType,
-    AlreadyExistsException,
-    KeypairService,
-    VerifyCodeExceptionType 
-} from '@shared';
-import { UserService, PrismaService, UserOtpCodeService } from '@database';
-import { Injectable, Inject } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import ResponseMessage  from '@shared/enums/response-message.json';
-import { RegisterUserJsonDto } from '../users/dtos';
+import { AuthService, MailModeType } from "@auth";
+import authConfig from "@auth/config/auth.config";
+import { PrismaService, UserOtpCodeService } from "@database";
+import { MailUtilsService, SendEmailDto } from "@mail-utils";
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
+import { ConfigType } from "@nestjs/config";
+import { OTPType } from "@prisma/client";
+import { AlreadyExistsException, AlreadyExistsExceptionType, BadRequestExceptionType, KeypairService, VerifyCodeExceptionType } from "@shared";
+import generalConfig from "@shared/config/general.config";
+import { generate } from "rxjs";
+import { RegisterCompanyUserJsonDto, ResponseRegisterCompanyUserDTO } from "./dtos";
+import ResponseMessage from '@shared/enums/response-message.json';
+
 
 @Injectable()
-export class ServiceUsersService {
+export class CompanyUsersService {
     constructor(
         @Inject(generalConfig.KEY)
         private readonly generalCfg: ConfigType<typeof generalConfig>,
         @Inject(authConfig.KEY)
         private readonly authCfg: ConfigType<typeof authConfig>,
         private readonly prismaService: PrismaService,
-        private readonly userService: UserService,
+        private readonly companyUserService: CompanyUsersService,
         private readonly keypairService: KeypairService,
         private readonly authService: AuthService,
         private readonly userOtpCodeService: UserOtpCodeService,
         private readonly mailUtilsService: MailUtilsService,
     ) {}
 
-    // async getUser(Email: string): Promise<User> {
-
-    //     const user = await this.prismaService.user.findUnique({
-    //         where: { Email }
-    //     });
-
-    //     if(!user) {
-    //         throw new NotFoundException();
-    //     }
-
-    //     delete user.Password;
-    //     return user;
-
-    // }
-
-    // async createUser(data: CreateUserDto): Promise<User> {
-
-    //     const createdUser = await this.userService.createUser(data)
-    //     return createdUser;
-    // }
-
-    async register(input: RegisterUserJsonDto): Promise<object | Error> {
+    async register(
+        input: RegisterCompanyUserJsonDto,
+    ): Promise<ResponseRegisterCompanyUserDTO> {
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR414),
-                414,
+                new Error(ResponseMessage.TR411),
+                411,
             );
         }
         if (
@@ -100,7 +73,7 @@ export class ServiceUsersService {
 
         // Check if the user already exists
 
-        const user = await this.userService.findFirst({
+        const user = await this.companyUserService.findFirst({
             where: { Email: input.Email },
         });
 
@@ -155,7 +128,7 @@ export class ServiceUsersService {
         // delete response.Password;
 
         // Create a new user
-        const newUser = await this.userService.create({
+        const newUser = await this.companyUserService.create({
             Email: input.Email,
             FirstName: input.FirstName,
             LastName: input.LastName,
@@ -217,8 +190,12 @@ export class ServiceUsersService {
 
         return {
             Email: newUser.Email,
-            Data: 'Waiting email verification',
+            Data: ResponseMessage.TR202,
             Token: token,
+            Success: true,
         };
+    
     }
+
+
 }
