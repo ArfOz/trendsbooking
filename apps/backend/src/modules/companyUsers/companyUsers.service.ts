@@ -1,8 +1,9 @@
+import { CreateCompanyUserJsonDto } from './dtos/companyUser-response.dto';
 import { AuthService, MailModeType } from "@auth";
 import authConfig from "@auth/config/auth.config";
 import { PrismaService, UserOtpCodeService } from "@database";
 import { MailUtilsService, SendEmailDto } from "@mail-utils";
-import { BadRequestException, Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { OTPType } from "@prisma/client";
 import { AlreadyExistsException, AlreadyExistsExceptionType, BadRequestExceptionType, KeypairService, VerifyCodeExceptionType } from "@shared";
@@ -10,6 +11,7 @@ import generalConfig from "@shared/config/general.config";
 import { generate } from "rxjs";
 import { RegisterCompanyUserJsonDto, ResponseRegisterCompanyUserDTO } from "./dtos";
 import ResponseMessage from '@shared/enums/response-message.json';
+import { BadRequestException } from '@shared';
 
 
 @Injectable()
@@ -28,13 +30,13 @@ export class CompanyUsersService {
     ) {}
 
     async register(
-        input: RegisterCompanyUserJsonDto,
+        input: CreateCompanyUserJsonDto,
     ): Promise<ResponseRegisterCompanyUserDTO> {
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR411),
-                411,
+                411
             );
         }
         if (

@@ -1,5 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { AllowUnauthorizedRequest } from '@shared/decorators';
+import { CompanyUsersService } from './companyUsers.service';
 import { CreateCompanyUserJsonDto } from './dtos';
 
 @Controller('companyUsers')
