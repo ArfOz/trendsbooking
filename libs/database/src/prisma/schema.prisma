@@ -93,7 +93,7 @@ model UserOTPCode {
   UpdatedAt DateTime? @updatedAt
 }
 
-model ServiceUser {
+model CompanyUser {
   Id        Int      @id @default(autoincrement())
   /// for ex: arif@test.com this have to be unique
   Email     String   @unique
@@ -134,6 +134,10 @@ model ServiceUser {
   /// for ex: YYYY-MM-DD
   CreatedAt DateTime  @default(now())
   UpdatedAt DateTime? @updatedAt
+   /// @HideField({ input: true, output: true })
+  PrivateKey String?
+  /// @HideField({ input: true, output: true })
+  PublicKey  String?
 }
 
 enum ExpiredReasonType {

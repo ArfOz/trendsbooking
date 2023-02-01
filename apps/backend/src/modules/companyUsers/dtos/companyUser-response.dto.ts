@@ -95,20 +95,15 @@ export class ResponseRegisterCompanyUserDTO {
 }
 
 export class CreateCompanyUserJsonDto {
+    // @ApiProperty()
+    // @IsNotEmpty()
+    // @IsString()
+    // Id :string
+
     @ApiProperty()
     @IsNotEmpty()
-    @IsEmail()
+    @IsString()
     Email: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
-    Phone: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    Username: string;
 
     @ApiProperty()
     @IsNotEmpty()
@@ -126,24 +121,74 @@ export class CreateCompanyUserJsonDto {
     LastName: string;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
-    Country?: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    City?: string;
+    Username: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    Tckn: string;
+    Phone: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    TCKN: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsBoolean()
     CbFirst: boolean;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    TaxNo: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    TaxAdmin: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    IBAN: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Sector: Genders;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Salon: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Country: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    City: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    District: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Neighborhood: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    IsActive: boolean;
 }
 
 export class RegisterCompanyUserJsonDto {

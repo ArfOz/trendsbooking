@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { UserOtpCodeModule } from './user-otp-code/user-otp-code.module';
-import { ServiceUserModule } from './service-user/service-user.module';
+import { CompanyUserModule } from './company-user';
 
 @Module({
     imports: [
@@ -11,9 +11,9 @@ import { ServiceUserModule } from './service-user/service-user.module';
         PrismaModule,
         UserModule,
         UserOtpCodeModule,
-        ServiceUserModule,
+        // CompanyUserModule,
     ],
-    providers: [PrismaModule, UserModule],
-    exports: [PrismaModule, UserModule],
+    providers: [PrismaModule, UserModule, UserOtpCodeModule],
+    exports: [PrismaModule, UserModule,  UserOtpCodeModule],
 })
 export class DatabaseModule {}

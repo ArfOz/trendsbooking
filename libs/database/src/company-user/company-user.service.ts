@@ -5,21 +5,21 @@ import {
     KeypairService,
 } from '@shared';
 import { Injectable } from '@nestjs/common';
-import { Prisma, ServiceUser } from '@prisma/client';
+import { CompanyUser, Prisma } from '@prisma/client';
 import { isString } from 'class-validator';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
-export class ServiceUserService {
+export class CompanyUserService {
     constructor(
         private prisma: PrismaService,
         private readonly keypairService: KeypairService,
     ) {}
 
-    async get(where: Prisma.ServiceUserWhereUniqueInput){
+    async get(where: Prisma.CompanyUserWhereUniqueInput){
 
         try {
-            const user = await this.prisma.serviceUser.findUnique({
+            const user = await this.prisma.companyUser.findUnique({
                 where,
                 select: {
                     Id: true,
@@ -113,7 +113,7 @@ export class ServiceUserService {
     //     return user;
     // }
 
-    async create(data: Prisma.ServiceUserCreateInput) {
+    async create(data: Prisma.CompanyUserCreateInput) {
         try {
             let encryptedEmail;
             let encryptedPhone;
@@ -127,7 +127,7 @@ export class ServiceUserService {
                     data.Phone,
                 );
 
-            const createdUser = await this.prisma.serviceUser.create({
+            const createdUser = await this.prisma.companyUser.create({
                 data: { ...data, Email: encryptedEmail, Phone: encryptedPhone },
                 select: {
                     Email: true,
@@ -154,9 +154,9 @@ export class ServiceUserService {
     }
 
     async update(params: {
-        where: Prisma.ServiceUserWhereUniqueInput;
-        data: Prisma.ServiceUserUpdateInput;
-    }): Promise<ServiceUser> {
+        where: Prisma.CompanyUserWhereUniqueInput;
+        data: Prisma.CompanyUserUpdateInput;
+    }): Promise<CompanyUser> {
         const { where, data } = params;
 
         let encryptedDataEmail;
@@ -174,7 +174,7 @@ export class ServiceUserService {
             );
         }
 
-        const updatedUser = await this.prisma.serviceUser.update({
+        const updatedUser = await this.prisma.companyUser.update({
             data: {
                 ...data,
                 Email: encryptedDataEmail,
@@ -196,8 +196,8 @@ export class ServiceUserService {
         return updatedUser;
     }
 
-    async delete(where: Prisma.ServiceUserWhereUniqueInput): Promise<ServiceUser> {
-        return this.prisma.serviceUser.delete({
+    async delete(where: Prisma.CompanyUserWhereUniqueInput): Promise<CompanyUser> {
+        return this.prisma.companyUser.delete({
             where,
         });
     }
@@ -205,8 +205,8 @@ export class ServiceUserService {
     async findFirst(params: {
         skip?: number;
         take?: number;
-        cursor?: Prisma.ServiceUserWhereUniqueInput;
-        where?: Prisma.ServiceUserWhereInput;
+        cursor?: Prisma.CompanyUserWhereUniqueInput;
+        where?: Prisma.CompanyUserWhereInput;
     }) {
         const { skip, take, cursor, where } = params;
 
@@ -229,7 +229,7 @@ export class ServiceUserService {
             searchWhere.Phone = encryptedPhone;
         }
 
-        const user = await this.prisma.serviceUser.findFirst({
+        const user = await this.prisma.companyUser.findFirst({
             skip,
             take,
             cursor,
@@ -243,6 +243,7 @@ export class ServiceUserService {
                 Username: true,
                 Password: true,
                 Phone: true,
+                IsActive:true
             },
         });
 

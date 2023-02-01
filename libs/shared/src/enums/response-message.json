@@ -21,5 +21,6 @@
   "TR415": "Kullanıcı Bulunamadı.",
   "TR416": "Oturum zaman aşımına uğradı. Tekrar giriş yapınız.",
   "TR417": "Hatalı token gönderimi.",
-  "TR418": "Geçerli token gönderiniz."
+  "TR418": "Geçerli token gönderiniz.",
+  "TR419": "Bu hesap hizmet biriminde kullanılmaktadır. İşletmeniz için lütfen farklı bir email adresi deneyiniz."
 }
