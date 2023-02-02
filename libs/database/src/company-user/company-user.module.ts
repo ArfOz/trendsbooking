@@ -1,5 +1,5 @@
-import { PrismaModule } from '@database';
 import { Module } from '@nestjs/common';
+import { PrismaModule } from '@database';
 import { KeypairModule } from '@shared';
 import { CompanyUserService} from './company-user.service';
 

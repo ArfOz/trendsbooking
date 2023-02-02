@@ -194,15 +194,14 @@ export class UsersService {
         });
 
         // Verification code
-        const code = parseInt(
+        const code =
             generate({
                 numbers: true,
                 symbols: false,
                 uppercase: false,
                 lowercase: false,
                 length: 4,
-            }),
-        );
+            })
 
         await this.userOtpCodeService.create({
             User: {
@@ -475,14 +474,14 @@ export class UsersService {
             );
         }
         // Verification code
-        const code = parseInt(
+        const code = 
             generate({
                 numbers: true,
                 symbols: false,
                 uppercase: false,
                 lowercase: false,
                 length: 4,
-            }),
+            }
         );
 
         await this.userOtpCodeService.create({

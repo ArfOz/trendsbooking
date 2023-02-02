@@ -50,6 +50,54 @@ model User {
   UserToken UserToken[]
 }
 
+model CompanyUser {
+  Id           Int               @id @default(autoincrement())
+  /// for ex: arif@test.com this have to be unique
+  Email        String            @unique
+  /// @HideField({output:true})
+  Password     String
+  /// for ex: Arif, Ozkan, Ahmet
+  FirstName    String
+  /// for ex: lastname or surname
+  LastName     String
+  /// for ex : asdasdas
+  Username     String
+  /// For ex:544672654964  !Important it is string
+  Phone        String
+  /// for ex: 11111111110
+  TCKN         String
+  /// Checkbox Confirmation
+  CbFirst      Boolean           @default(false)
+  /// Vergi numarası
+  TaxNo        String
+  /// Vergi dairesi
+  TaxAdmin     String
+  /// Iban Numarası
+  IBAN         String
+  ///Hizmet verilen Müşteri cinsiyeti
+  Sector       Gender[]
+  ///Salon Türü
+  Salon        String
+  /// for ex: Turkey
+  Country      String
+  /// for ex: Ankara İzmir
+  City         String
+  /// İlçe 
+  District     String
+  /// mAHALLE
+  Neighborhood String
+  ///Approved
+  IsActive     Boolean
+  /// for ex: YYYY-MM-DD
+  CreatedAt    DateTime          @default(now())
+  UpdatedAt    DateTime?         @updatedAt
+  /// @HideField({ input: true, output: true })
+  PrivateKey   String?
+  /// @HideField({ input: true, output: true })
+  PublicKey    String?
+  UserOTPCode  UserOTPCode[]
+}
+
 model UserToken {
   /// @HideField({match:'@Input'})
   Id               Int                @id @default(autoincrement())
@@ -71,7 +119,7 @@ model UserOTPCode {
   ///  This will be generated automatically by the database.
   Id        Int       @id @default(autoincrement())
   /// - This field is **required**.
-  Code      Int
+  Code      String
   /// - This field is **required**.
   /// - It is the Int type and the default value is *0*.
   Attempts  Int       @default(0)
@@ -83,9 +131,11 @@ model UserOTPCode {
   /// - This field is **required**.
   ExpiredAt DateTime
   /// - This field is **required**.
-  User      User      @relation(fields: [UserId], references: [Id])
+  User      User?      @relation(fields: [UserId], references: [Id])
+  CompanyUser      CompanyUser?      @relation(fields: [CompanyUserId], references: [Id])
   /// - This field is **required**.
-  UserId    Int
+  UserId    Int?
+  CompanyUserId    Int?
   /// - This field is **required**.
   /// - It is the DateTime and the default value is *now*.
   /// - Ex: "2022-06-22T13:49:35.449Z"
@@ -93,52 +143,32 @@ model UserOTPCode {
   UpdatedAt DateTime? @updatedAt
 }
 
-model CompanyUser {
-  Id        Int      @id @default(autoincrement())
-  /// for ex: arif@test.com this have to be unique
-  Email     String   @unique
-  /// @HideField({output:true})
-  Password  String
-  /// for ex: Arif, Ozkan, Ahmet
-  FirstName String
-  /// for ex: lastname or surname
-  LastName  String
-  /// for ex : asdasdas
-  Username  String
-  /// For ex:544672654964  !Important it is string
-  Phone     String
-  /// for ex: 11111111110
-  TCKN      String
-  /// Checkbox Confirmation
-  CbFirst   Boolean  @default(false)
-  /// Vergi numarası
-  TaxNo     String
-  /// Vergi dairesi
-  TaxAdmin  String
-  /// Iban Numarası
-  IBAN      String
-  ///Hizmet verilen Müşteri cinsiyeti
-  Sector    Gender[]
-  ///Salon Türü
-  Salon     String
-  /// for ex: Turkey
-  Country String
-  /// for ex: Ankara İzmir
-  City    String
-  /// İlçe 
-  District String
-  /// mAHALLE
-  Neighborhood String
-  ///Approved
-  IsActive Boolean 
-  /// for ex: YYYY-MM-DD
-  CreatedAt DateTime  @default(now())
-  UpdatedAt DateTime? @updatedAt
-   /// @HideField({ input: true, output: true })
-  PrivateKey String?
-  /// @HideField({ input: true, output: true })
-  PublicKey  String?
-}
+// model CompanyOTPCode {
+//   /// - This field is **required**.
+//   ///  This will be generated automatically by the database.
+//   Id            Int       @id @default(autoincrement())
+//   /// - This field is **required**.
+//   Code          Int
+//   /// - This field is **required**.
+//   /// - It is the Int type and the default value is *0*.
+//   Attempts      Int       @default(0)
+//   /// - This field is **required**.
+//   /// - It is the boolean type and the default value is *false*.
+//   IsDeleted     Boolean   @default(false)
+//   /// - This field is **required**.
+//   Type          OTPType
+//   /// - This field is **required**.
+//   ExpiredAt     DateTime
+//   /// - This field is **required**.
+//   CompanyUser   CompanyUser      @relation(fields: [CompanyUserId], references: [Id])
+//   /// - This field is **required**.
+//   CompanyUserId Int
+//   /// - This field is **required**.
+//   /// - It is the DateTime and the default value is *now*.
+//   /// - Ex: "2022-06-22T13:49:35.449Z"
+//   CreatedAt     DateTime  @default(now())
+//   UpdatedAt     DateTime? @updatedAt
+// }
 
 enum ExpiredReasonType {
   Expired

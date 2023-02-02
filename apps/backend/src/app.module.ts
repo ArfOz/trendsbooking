@@ -15,9 +15,10 @@ import { ConfigModule } from '@nestjs/config';
             isGlobal: true,
             load: [generalConfig],
         }),
-        TestModule,
-        UsersModule,
         DatabaseModule,
+        // Controllers
+        UsersModule,
+        TestModule,
         CompanyUsersModule
     ],
 

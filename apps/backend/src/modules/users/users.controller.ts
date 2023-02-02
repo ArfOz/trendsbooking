@@ -11,7 +11,7 @@ export class UsersController {
     constructor(private readonly UsersService: UsersService) {}
 
     @AllowUnauthorizedRequest()
-    @Get('test')
+    @Get('testuser')
     getLoggedUser() {
         return 'test page';
     }

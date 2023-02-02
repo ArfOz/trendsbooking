@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "UserOTPCode" ALTER COLUMN "Code" SET DATA TYPE TEXT;

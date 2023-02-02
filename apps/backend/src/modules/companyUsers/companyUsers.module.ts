@@ -1,7 +1,9 @@
+import { UserOtpCodeService } from './../../../../../libs/database/src/user-otp-code/user-otp-code.service';
+import { CompanyUserService } from '@database/company-user/company-user.service';
 
 import authConfig from '@auth/config/auth.config';
 
-import { DatabaseModule, PrismaService } from '@database';
+import { DatabaseModule, PrismaService, UserService } from '@database';
 import { KeypairModule } from '@shared';
 import generalConfig from '@shared/config/general.config';
 import { ConfigModule } from '@nestjs/config';
@@ -18,8 +20,9 @@ import { AuthModule } from '@auth';
         ConfigModule.forFeature(authConfig),
         // forwardRef(()=>DatabaseModule),
         // forwardRef(() => AuthModule),
+        MailUtilsModule,
     ],
-    providers: [CompanyUsersService],
+    providers: [CompanyUsersService, CompanyUserService, PrismaService, UserService, UserOtpCodeService],
     controllers: [CompanyUsersController],
     exports: [CompanyUsersService],
 })
