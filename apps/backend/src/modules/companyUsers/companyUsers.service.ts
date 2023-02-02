@@ -16,7 +16,12 @@ import {
     AlreadyExistsException,
     AlreadyExistsExceptionType,
     BadRequestExceptionType,
+    ForbiddenExceptionType,
     KeypairService,
+    NotFoundException,
+    OtpCodeNotFoundException,
+    TokenExceptionType,
+    TrendsException,
     VerifyCodeExceptionType,
 } from '@shared';
 import generalConfig from '@shared/config/general.config';
@@ -25,6 +30,7 @@ import { BadRequestException } from '@shared';
 import * as bcrypt from 'bcrypt';
 import { generate } from 'generate-password';
 import * as jwt from 'jsonwebtoken';
+import { VerifyCodeDTO } from '../users/dtos';
 
 @Injectable()
 export class CompanyUsersService {
@@ -224,5 +230,97 @@ export class CompanyUsersService {
             Token: token,
             Success: true,
         };
+    }
+
+    async verifyCode(data: VerifyCodeDTO) {
+        try {
+            const payload = jwt.verify(data.Token, this.authCfg.jwt_secret);
+            if (
+                typeof payload === 'object' &&
+                'email' in payload &&
+                data.Code
+            ) {
+                let user = await this.userService.get({
+                    Id: payload.Id,
+                });
+
+                if (!user) {
+                    throw new NotFoundException(
+                        ForbiddenExceptionType.FORBIDDEN,
+                        new Error(ResponseMessage.TR406),
+                        406,
+                    );
+                }
+
+                const otpCode = await this.userOtpCodeService.find({
+                    where: {
+                        UserId: payload.Id,
+                        Type: OTPType.VerifyEmail,
+                        // For test cancelled manually
+                        // Code: data.Code,
+                        IsDeleted: false,
+                        ExpiredAt: {
+                            gte: new Date(),
+                        },
+                    },
+                    orderBy: {
+                        CreatedAt: 'desc',
+                    },
+                    take: 1,
+                });
+
+                if (!otpCode || !otpCode.length) {
+                    throw new OtpCodeNotFoundException(
+                        VerifyCodeExceptionType.CODE_NOT_FOUND,
+                        new Error(ResponseMessage.TR407),
+                        407,
+                    );
+                }
+
+                // if (otpCode[0].Attempts >= 5) {
+                //     throw new BadRequestException(
+                //         BadRequestExceptionType.BAD_REQUEST,
+                //         new Error('Your trial count is over'),
+                //     );
+                // }
+
+                user = await this.userService.update({
+                    where: {
+                        Id: payload.Id,
+                    },
+                    data: {
+                        IsEmailVerified: true,
+                    },
+                });
+                await this.userOtpCodeService.update({
+                    where: {
+                        Id: otpCode[0].Id,
+                    },
+                    data: {
+                        IsDeleted: true,
+                    },
+                });
+
+                return {
+                    Email: user.Email,
+                    Data: ResponseMessage.TR201,
+                    Success: true,
+                };
+            }
+        } catch (error) {
+            if (error?.name === 'TokenExpiredError') {
+                throw new TrendsException(
+                    TokenExceptionType.EXPIRED_TOKEN,
+                    new Error(ResponseMessage.TR408),
+                    400,
+                );
+            }
+
+            throw new TrendsException(
+                TokenExceptionType.EXPIRED_TOKEN,
+                new Error(error),
+                400,
+            );
+        }
     }
 }
