@@ -96,6 +96,7 @@ model CompanyUser {
   /// @HideField({ input: true, output: true })
   PublicKey    String?
   UserOTPCode  UserOTPCode[]
+  IsEmailVerified Boolean @default(false)
 }
 
 model UserToken {

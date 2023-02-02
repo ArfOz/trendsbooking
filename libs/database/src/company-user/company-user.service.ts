@@ -243,7 +243,8 @@ export class CompanyUserService {
                 Username: true,
                 Password: true,
                 Phone: true,
-                IsActive:true
+                IsActive:true,
+                IsEmailVerified:true
             },
         });
 

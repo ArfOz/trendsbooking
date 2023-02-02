@@ -30,7 +30,7 @@ import { BadRequestException } from '@shared';
 import * as bcrypt from 'bcrypt';
 import { generate } from 'generate-password';
 import * as jwt from 'jsonwebtoken';
-import { VerifyCodeDTO } from '../users/dtos';
+import { SendCodeDTO, VerifyCodeDTO } from '../users/dtos';
 
 @Injectable()
 export class CompanyUsersService {
@@ -240,11 +240,11 @@ export class CompanyUsersService {
                 'email' in payload &&
                 data.Code
             ) {
-                let user = await this.userService.get({
+                let companyUser = await this.companyUserService.get({
                     Id: payload.Id,
                 });
 
-                if (!user) {
+                if (!companyUser) {
                     throw new NotFoundException(
                         ForbiddenExceptionType.FORBIDDEN,
                         new Error(ResponseMessage.TR406),
@@ -284,7 +284,7 @@ export class CompanyUsersService {
                 //     );
                 // }
 
-                user = await this.userService.update({
+                companyUser = await this.companyUserService.update({
                     where: {
                         Id: payload.Id,
                     },
@@ -302,7 +302,7 @@ export class CompanyUsersService {
                 });
 
                 return {
-                    Email: user.Email,
+                    Email: companyUser.Email,
                     Data: ResponseMessage.TR201,
                     Success: true,
                 };
@@ -322,5 +322,75 @@ export class CompanyUsersService {
                 400,
             );
         }
+    }
+
+    async sendEmailCode(data: SendCodeDTO) {
+        const companyUser = await this.companyUserService.findFirst({
+            where: { Email: data.Email },
+        });
+
+        if (!companyUser) {
+            throw new AlreadyExistsException(
+                AlreadyExistsExceptionType.NOT_EXIST,
+                new Error(ResponseMessage.TR409),
+                409,
+            );
+        }
+        if (companyUser.IsEmailVerified) {
+            throw new AlreadyExistsException(
+                VerifyCodeExceptionType.VERIFIED,
+                new Error(ResponseMessage.TR410),
+                410,
+            );
+        }
+        // Verification code
+        const code = 
+            generate({
+                numbers: true,
+                symbols: false,
+                uppercase: false,
+                lowercase: false,
+                length: 4,
+            }
+        );
+
+        await this.userOtpCodeService.create({
+            User: {
+                connect: {
+                    Id: companyUser.Id,
+                },
+            },
+            Code: code,
+            ExpiredAt: new Date(
+                Date.now() +
+                    parseInt(this.authCfg.codeValidationTime, 10) * 60 * 1000,
+            ),
+            Type: OTPType.VerifyEmail,
+        });
+
+        const options: SendEmailDto = {
+            to: data.Email,
+            html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
+            subject: "Trendsbooking'e hoşheldiniz",
+        };
+
+        await this.mailUtilsService.sendEmail(options);
+
+        const payload = {
+            mode: MailModeType.VerifyEmail,
+            email: data.Email,
+            Id: companyUser.Id,
+        };
+
+        const token = jwt.sign(payload, this.authCfg.jwt_secret, {
+            expiresIn: `${this.authCfg.codeValidationTime}m`,
+        });
+
+        return {
+            Email: companyUser.Email,
+            Data: ResponseMessage.TR202,
+            Token: token,
+            Success: true,
+        };
     }
 }
