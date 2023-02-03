@@ -91,10 +91,10 @@ export class AuthGuard implements CanActivate {
             req.headers ?? req[Symbol('kHeaders')],
         );
 
-        // if (!rolesRequired && staticTokenRequired) {
-        //     req.hasStaticToken = this.generalCfg.apiAccessToken === token;
-        //     return req.hasStaticToken;
-        // }
+        if (staticTokenRequired) {
+            req.hasStaticToken = this.generalCfg.apiAccessToken === token;
+            return req.hasStaticToken;
+        }
 
         let userPayload;
         try {

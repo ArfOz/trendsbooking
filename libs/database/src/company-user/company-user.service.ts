@@ -16,8 +16,7 @@ export class CompanyUserService {
         private readonly keypairService: KeypairService,
     ) {}
 
-    async get(where: Prisma.CompanyUserWhereUniqueInput){
-
+    async get(where: Prisma.CompanyUserWhereUniqueInput) {
         try {
             const user = await this.prisma.companyUser.findUnique({
                 where,
@@ -31,87 +30,129 @@ export class CompanyUserService {
                     Country: true,
                 },
             });
-    
+
             if (user && user.Email) {
                 user.Email = this.keypairService.decryptWithAppKeys(user.Email);
             }
-    
+
             if (user && user.Phone) {
                 user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
             }
-    
+
             delete user.Id;
             return user;
-            
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-
     }
 
-    // async find(params: {
-    //     skip?: number;
-    //     take?: number;
-    //     cursor?: Prisma.UserWhereUniqueInput;
-    //     where?: Prisma.UserWhereInput;
-    //     orderBy?: Prisma.UserOrderByWithRelationAndSearchRelevanceInput;
-    // }): Promise<User[]> {
-    //     const { skip, take, cursor, where, orderBy } = params;
-    //     return this.prisma.user.findMany({
-    //         skip,
-    //         take,
-    //         cursor,
-    //         where,
-    //         orderBy,
-    //     });
-    // }
+    async find(params: {
+        skip?: number;
+        take?: number;
+        cursor?: Prisma.UserWhereUniqueInput;
+        where?: Prisma.UserWhereInput;
+        orderBy?: Prisma.CompanyUserOrderByWithAggregationInput;
+    }) {
+        const { skip, take, cursor, where, orderBy } = params;
 
-    // async findFirst(params: {
-    //     skip?: number;
-    //     take?: number;
-    //     cursor?: Prisma.UserWhereUniqueInput;
-    //     where?: Prisma.UserWhereInput;
-    //     orderBy?: Prisma.UserOrderByWithRelationAndSearchRelevanceInput;
-    // }) {
-    //     const { skip, take, cursor, where, orderBy } = params;
+        const companyUsers = await this.prisma.companyUser.findMany({
+            skip,
+            take,
+            cursor,
+            where,
+            orderBy,
+            select: {
+                _count:true,
+                CbFirst: true,
+                City: true,
+                Country: true,
+                District: true,
+                CreatedAt: true,
+                Email: true,
+                FirstName: true,
+                IBAN: true,
+                IsActive: true,
+                IsEmailVerified: true,
+                LastName: true,
+                Neighborhood: true,
+                Phone: true,
+                Salon: true,
+                Sector: true,
+                TaxAdmin: true,
+                TaxNo: true,
+                TCKN: true,
+                UpdatedAt: true,
+                Username: true,
+            },
+        });
 
-    //     const searchWhere = where;
+        for (let i = 0; i <= companyUsers.length; i++) {
+            if (
+                companyUsers[i] &&
+                companyUsers[i].Email &&
+                companyUsers[i].Phone
+            ) {
+                companyUsers[i].Email = this.keypairService.decryptWithAppKeys(
+                    companyUsers[i].Email,
+                );
+                companyUsers[i].Phone = this.keypairService.decryptWithAppKeys(
+                    companyUsers[i].Phone,
+                );
+            }
+        }
 
-    //     let encryptedEmail;
-    //     let encryptedPhone;
+        // if (companyUsers && companyUsers.Phone) {
+        //     user.Phone = this.keypairService.decryptWithAppKeys(companyUsers.Phone);
+        // }
+        return companyUsers;
+    }
 
-    //     if (where.Email) {
-    //         encryptedEmail = this.keypairService.encryptWithAppKeys(
-    //             where.Email,
-    //         );
-    //         searchWhere.Email = encryptedEmail;
-    //     }
+    async findFirst(params: {
+        skip?: number;
+        take?: number;
+        cursor?: Prisma.UserWhereUniqueInput;
+        where?: Prisma.UserWhereInput;
+        orderBy?: Prisma.CompanyUserOrderByWithRelationInput;
+    }) {
+        const { skip, take, cursor, where, orderBy } = params;
 
-    //     if (where.Phone) {
-    //         encryptedPhone = this.keypairService.encryptWithAppKeys(
-    //             where.Phone,
-    //         );
-    //         searchWhere.Phone = encryptedPhone;
-    //     }
+        const searchWhere = where;
 
-    //     const user = await this.prisma.user.findFirst({
-    //         skip,
-    //         take,
-    //         cursor,
-    //         orderBy,
-    //         where: searchWhere,
-    //     });
+        let encryptedEmail;
+        let encryptedPhone;
 
-    //     if (user && user.Email) {
-    //         user.Email = this.keypairService.decryptWithAppKeys(user.Email);
-    //     }
+        if (where.Email) {
+            encryptedEmail = this.keypairService.encryptWithAppKeys(
+                where.Email,
+            );
+            searchWhere.Email = encryptedEmail;
+        }
 
-    //     if (user && user.Phone) {
-    //         user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
-    //     }
+        if (where.Phone) {
+            encryptedPhone = this.keypairService.encryptWithAppKeys(
+                where.Phone,
+            );
+            searchWhere.Phone = encryptedPhone;
+        }
 
-    //     return user;
-    // }
+        const user = await this.prisma.companyUser.findFirst({
+            skip,
+            take,
+            cursor,
+            orderBy,
+            where: searchWhere,
+        });
+
+        if (user && user.Email) {
+            user.Email = this.keypairService.decryptWithAppKeys(user.Email);
+        }
+
+        if (user && user.Phone) {
+            user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
+        }
+
+        return user;
+    }
 
     async create(data: Prisma.CompanyUserCreateInput) {
         try {
@@ -196,62 +237,11 @@ export class CompanyUserService {
         return updatedUser;
     }
 
-    async delete(where: Prisma.CompanyUserWhereUniqueInput): Promise<CompanyUser> {
+    async delete(
+        where: Prisma.CompanyUserWhereUniqueInput,
+    ): Promise<CompanyUser> {
         return this.prisma.companyUser.delete({
             where,
         });
-    }
-
-    async findFirst(params: {
-        skip?: number;
-        take?: number;
-        cursor?: Prisma.CompanyUserWhereUniqueInput;
-        where?: Prisma.CompanyUserWhereInput;
-    }) {
-        const { skip, take, cursor, where } = params;
-
-        const searchWhere = where;
-
-        let encryptedEmail;
-        let encryptedPhone;
-
-        if (where.Email) {
-            encryptedEmail = this.keypairService.encryptWithAppKeys(
-                where.Email,
-            );
-            searchWhere.Email = encryptedEmail;
-        }
-
-        if (where.Phone) {
-            encryptedPhone = this.keypairService.encryptWithAppKeys(
-                where.Phone,
-            );
-            searchWhere.Phone = encryptedPhone;
-        }
-
-        const user = await this.prisma.companyUser.findFirst({
-            skip,
-            take,
-            cursor,
-            where: searchWhere,
-            select: {
-                Id: true,
-                Country: true,
-                Email: true,
-                FirstName: true,
-                LastName: true,
-                Username: true,
-                Password: true,
-                Phone: true,
-                IsActive:true,
-                IsEmailVerified:true
-            },
-        });
-
-        if (user && user.Email) {
-            user.Email = this.keypairService.decryptWithAppKeys(user.Email);
-        }
-
-        return user;
     }
 }

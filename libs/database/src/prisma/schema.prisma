@@ -51,61 +51,66 @@ model User {
 }
 
 model CompanyUser {
-  Id           Int               @id @default(autoincrement())
+  Id              Int           @id @default(autoincrement())
   /// for ex: arif@test.com this have to be unique
-  Email        String            @unique
+  Email           String        @unique
   /// @HideField({output:true})
-  Password     String
+  Password        String
   /// for ex: Arif, Ozkan, Ahmet
-  FirstName    String
+  FirstName       String
   /// for ex: lastname or surname
-  LastName     String
+  LastName        String
   /// for ex : asdasdas
-  Username     String
+  Username        String
   /// For ex:544672654964  !Important it is string
-  Phone        String
+  Phone           String
   /// for ex: 11111111110
-  TCKN         String
+  TCKN            String
   /// Checkbox Confirmation
-  CbFirst      Boolean           @default(false)
+  CbFirst         Boolean       @default(false)
   /// Vergi numarası
-  TaxNo        String
+  TaxNo           String
   /// Vergi dairesi
-  TaxAdmin     String
+  TaxAdmin        String
   /// Iban Numarası
-  IBAN         String
+  IBAN            String
   ///Hizmet verilen Müşteri cinsiyeti
-  Sector       Gender[]
+  Sector          Gender[]
   ///Salon Türü
-  Salon        String
+  Salon           String
   /// for ex: Turkey
-  Country      String
+  Country         String
   /// for ex: Ankara İzmir
-  City         String
+  City            String
   /// İlçe 
-  District     String
+  District        String
   /// mAHALLE
-  Neighborhood String
+  Neighborhood    String
   ///Approved
-  IsActive     Boolean
+  IsActive        Boolean
   /// for ex: YYYY-MM-DD
-  CreatedAt    DateTime          @default(now())
-  UpdatedAt    DateTime?         @updatedAt
+  CreatedAt       DateTime      @default(now())
+  UpdatedAt       DateTime?     @updatedAt
   /// @HideField({ input: true, output: true })
-  PrivateKey   String?
+  PrivateKey      String?
   /// @HideField({ input: true, output: true })
-  PublicKey    String?
-  UserOTPCode  UserOTPCode[]
-  IsEmailVerified Boolean @default(false)
+  PublicKey       String?
+  UserOTPCode     UserOTPCode[]
+  IsEmailVerified Boolean       @default(false)
+  UserToken       UserToken[]
 }
 
 model UserToken {
   /// @HideField({match:'@Input'})
   Id               Int                @id @default(autoincrement())
   /// @HideField({input:true})
-  User             User               @relation(fields: [UserId], references: [Id])
+  User             User?               @relation(fields: [UserId], references: [Id])
   /// @HideField({input:true})
-  UserId           Int
+  UserId           Int?
+  /// Companyuser Token
+  CompanyUser      CompanyUser?        @relation(fields: [CompanyUserId], references: [Id])
+  /// @HideField({input:true})
+  CompanyUserId    Int?
   /// @HideField()
   AccessToken      String
   RefreshToken     String
@@ -118,30 +123,30 @@ model UserToken {
 model UserOTPCode {
   /// - This field is **required**.
   ///  This will be generated automatically by the database.
-  Id        Int       @id @default(autoincrement())
+  Id            Int          @id @default(autoincrement())
   /// - This field is **required**.
-  Code      String
+  Code          String
   /// - This field is **required**.
   /// - It is the Int type and the default value is *0*.
-  Attempts  Int       @default(0)
+  Attempts      Int          @default(0)
   /// - This field is **required**.
   /// - It is the boolean type and the default value is *false*.
-  IsDeleted Boolean   @default(false)
+  IsDeleted     Boolean      @default(false)
   /// - This field is **required**.
-  Type      OTPType
+  Type          OTPType
   /// - This field is **required**.
-  ExpiredAt DateTime
+  ExpiredAt     DateTime
   /// - This field is **required**.
-  User      User?      @relation(fields: [UserId], references: [Id])
-  CompanyUser      CompanyUser?      @relation(fields: [CompanyUserId], references: [Id])
+  User          User?        @relation(fields: [UserId], references: [Id])
+  CompanyUser   CompanyUser? @relation(fields: [CompanyUserId], references: [Id])
   /// - This field is **required**.
-  UserId    Int?
-  CompanyUserId    Int?
+  UserId        Int?
+  CompanyUserId Int?
   /// - This field is **required**.
   /// - It is the DateTime and the default value is *now*.
   /// - Ex: "2022-06-22T13:49:35.449Z"
-  CreatedAt DateTime  @default(now())
-  UpdatedAt DateTime? @updatedAt
+  CreatedAt     DateTime     @default(now())
+  UpdatedAt     DateTime?    @updatedAt
 }
 
 // model CompanyOTPCode {

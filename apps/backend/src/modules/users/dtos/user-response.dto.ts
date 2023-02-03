@@ -189,7 +189,7 @@ export class VerifyCodeDTO {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    Token?: string;
+    Token: string;
 }
 
 export class CreateServiceUserJsonDto {

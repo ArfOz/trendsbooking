@@ -1,6 +1,6 @@
 import { SendEmailDto } from '@mail-utils';
-import { OTPType } from '@prisma/client';
-import { CreateCompanyUserJsonDto } from './dtos/companyUser-response.dto';
+import { OTPType, CompanyUser } from '@prisma/client';
+import { CreateCompanyUserJsonDto, ResponseLoginCompanyUserDTO } from './dtos/companyUser-response.dto';
 import { AuthService, MailModeType } from '@auth';
 import authConfig from '@auth/config/auth.config';
 import {
@@ -19,6 +19,7 @@ import {
     ForbiddenExceptionType,
     KeypairService,
     NotFoundException,
+    NotVerifiedException,
     OtpCodeNotFoundException,
     TokenExceptionType,
     TrendsException,
@@ -30,7 +31,7 @@ import { BadRequestException } from '@shared';
 import * as bcrypt from 'bcrypt';
 import { generate } from 'generate-password';
 import * as jwt from 'jsonwebtoken';
-import { SendCodeDTO, VerifyCodeDTO } from '../users/dtos';
+import { LoginUserDto, ResponseLoginUserDTO, SendCodeDTO, VerifyCodeDTO } from '../users/dtos';
 
 @Injectable()
 export class CompanyUsersService {
@@ -39,11 +40,11 @@ export class CompanyUsersService {
         private readonly generalCfg: ConfigType<typeof generalConfig>,
         @Inject(authConfig.KEY)
         private readonly authCfg: ConfigType<typeof authConfig>,
-        // private readonly prismaService: PrismaService,
+        private readonly prismaService: PrismaService,
         private readonly companyUserService: CompanyUserService,
         private readonly userService: UserService,
         private readonly keypairService: KeypairService,
-        // private readonly authService: AuthService,
+        private readonly authService: AuthService,
         private readonly userOtpCodeService: UserOtpCodeService,
         private readonly mailUtilsService: MailUtilsService,
     ) {}
@@ -254,7 +255,7 @@ export class CompanyUsersService {
 
                 const otpCode = await this.userOtpCodeService.find({
                     where: {
-                        UserId: payload.Id,
+                        CompanyUserId: payload.Id,
                         Type: OTPType.VerifyEmail,
                         // For test cancelled manually
                         // Code: data.Code,
@@ -355,7 +356,7 @@ export class CompanyUsersService {
         );
 
         await this.userOtpCodeService.create({
-            User: {
+            CompanyUser: {
                 connect: {
                     Id: companyUser.Id,
                 },
@@ -393,4 +394,88 @@ export class CompanyUsersService {
             Success: true,
         };
     }
+
+    async login(cred: LoginUserDto): Promise<ResponseLoginCompanyUserDTO> {
+        const companyUser = await this.companyUserService.findFirst({
+            where: {
+                Email: cred.Email,
+            },
+        });
+
+        if (!companyUser) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+                406,
+            );
+        }
+        if (!companyUser.IsEmailVerified) {
+            throw new NotVerifiedException(
+                VerifyCodeExceptionType.NOT_VERIFIED,
+                new Error(ResponseMessage.TR404),
+                404,
+            );
+        }
+
+        if (!companyUser.IsActive) {
+            throw new NotVerifiedException(
+                VerifyCodeExceptionType.NOT_VERIFIED,
+                new Error(ResponseMessage.TR420),
+                404,
+            );
+        }
+
+        if (companyUser && (await bcrypt.compare(cred.Password, companyUser.Password))) {
+            const {
+                AccessToken,
+                RefreshToken,
+                ExpiresAccessToken,
+                ExpiresRefreshToken,
+            } = await this.authService.generateAccessAndRefreshToken(companyUser);
+
+            await this.prismaService.userToken.create({
+                data: {
+                    AccessToken: AccessToken,
+                    RefreshToken: RefreshToken,
+                    CompanyUser: {
+                        connect: { Id: companyUser.Id },
+                    },
+                    ExpiresIn: ExpiresAccessToken,
+                    ExpiresInRefresh: ExpiresRefreshToken,
+                },
+            });
+            delete companyUser.Password;
+            delete companyUser.Id;
+
+            // Response varsa Success
+            return {
+                AccessToken,
+                RefreshToken,
+                ExpireTime: ExpiresAccessToken,
+                ExpireTimeRefresh: ExpiresRefreshToken,
+                User: companyUser,
+                Success: true,
+            };
+        }
+
+        throw new BadRequestException(
+            BadRequestExceptionType.BAD_REQUEST,
+            new Error(ResponseMessage.TR403),
+            403
+        );
+    }
+
+    async companies(data){
+        console.log("naber la", data)
+        const companies = await this.companyUserService.find({where:data})
+        return companies
+
+    }
+
+    async activate(data){
+        console.log("naber la")
+        return null
+
+    }
+
 }

@@ -19,10 +19,11 @@ import { AuthModule } from '@auth';
         ConfigModule.forFeature(generalConfig),
         ConfigModule.forFeature(authConfig),
         // forwardRef(()=>DatabaseModule),
-        // forwardRef(() => AuthModule),
+
+        forwardRef(() => AuthModule),
         MailUtilsModule,
     ],
-    providers: [CompanyUsersService, CompanyUserService, PrismaService, UserService, UserOtpCodeService],
+    providers: [CompanyUsersService, CompanyUserService, PrismaService, UserService, UserOtpCodeService, PrismaService],
     controllers: [CompanyUsersController],
     exports: [CompanyUsersService],
 })

@@ -263,3 +263,112 @@ export class LoginCompanyUserDto {
     @IsString()
     Password: string;
 }
+
+export class ResponseLoginCompanyUserDTO {}
+
+export class GetCompaniesWhereFilter {
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Email?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Password?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    FirstName?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    LastName?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Username?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Phone?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    TCKN?: string;
+
+    @ApiProperty()
+    @IsBoolean()
+    @IsOptional()
+    CbFirst?: boolean;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    TaxNo?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    TaxAdmin?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    IBAN?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Sector?: Genders;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Salon?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Country?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    City?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    District?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Neighborhood?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    IsActive?: boolean;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    CreatedAt?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    UpdatedAt?: string;
+
+    @ApiProperty()
+    @IsBoolean()
+    @IsOptional()
+    IsEmailVerified?: boolean;
+}
