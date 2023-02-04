@@ -3,8 +3,9 @@ import { ApiTags } from '@nestjs/swagger';
 import {
     AllowUnauthorizedRequest,
     StaticTokenRequired,
+    UserParam,
 } from '@shared/decorators';
-import { LoginUserDto, SendCodeDTO, VerifyCodeDTO } from '../users/dtos';
+import { LoginUserDto, SendCodeDTO, UserParamsDto, VerifyCodeDTO } from '../users/dtos';
 import { CompanyUsersService } from './companyUsers.service';
 import {
     ActivateCompanyUserDto,
@@ -58,5 +59,10 @@ export class CompanyUsersController {
     @Post('activate')
     async activate(@Body() data: ActivateCompanyUserDto) {
         return this.companyUsersService.activate(data);
+    }
+
+    @Get('logout')
+    logout(@UserParam() user: UserParamsDto) {
+        return this.companyUsersService.logout(user);
     }
 }

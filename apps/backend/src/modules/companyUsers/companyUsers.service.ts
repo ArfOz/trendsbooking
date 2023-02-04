@@ -1,5 +1,5 @@
 import { SendEmailDto } from '@mail-utils';
-import { OTPType, CompanyUser } from '@prisma/client';
+import { OTPType, CompanyUser, ExpiredReasonType } from '@prisma/client';
 import {
     ActivateCompanyUserDto,
     CreateCompanyUserJsonDto,
@@ -39,6 +39,7 @@ import {
     LoginUserDto,
     ResponseLoginUserDTO,
     SendCodeDTO,
+    UserParamsDto,
     VerifyCodeDTO,
 } from '../users/dtos';
 
@@ -519,6 +520,44 @@ export class CompanyUsersService {
         return {
             Data: `${data.Email} hesabı aktif edilmiştir.`,
             Success: true,
+        };
+    }
+
+    async logout(cred: UserParamsDto) {
+        const user = await this.companyUserService.findFirst({
+            where: {
+                Id: cred.Id,
+            },
+        });
+
+        if (!user) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+                406,
+            );
+        }
+
+        const userToken = await this.prismaService.userToken.findFirst({
+            where: {
+                CompanyUserId: cred.Id,
+            },
+            orderBy: { CreatedAt: 'desc' },
+        });
+
+        await this.prismaService.userToken.update({
+            where: {
+                Id: userToken.Id,
+            },
+            data: {
+                AccessToken: ' ',
+                RefreshToken: ' ',
+                ExpiredReason: ExpiredReasonType.Logout,
+            },
+        });
+        return {
+            Success: true,
+            Details: ResponseMessage.TR203,
         };
     }
 }

@@ -15,7 +15,6 @@ import { ConfigModule } from '@nestjs/config';
             load: [generalConfig],
         }),
         DatabaseModule,
-        // Controllers
         UsersModule,
         CompanyUsersModule
     ],
