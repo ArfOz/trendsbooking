@@ -476,11 +476,10 @@ export class CompanyUsersService {
 
     async companies(data) {
         const companies = await this.companyUserService.find({ where: data });
-        return companies;
+        return { companies, Success: true };
     }
 
     async activate(data: ActivateCompanyUserDto) {
-        console.log('naber la', data);
         if (!data.Email) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -508,7 +507,7 @@ export class CompanyUsersService {
             );
         }
 
-        const email = this.keypairService.encryptWithAppKeys(data.Email)
+        const email = this.keypairService.encryptWithAppKeys(data.Email);
 
         await this.companyUserService.update({
             where: { Email: email },
