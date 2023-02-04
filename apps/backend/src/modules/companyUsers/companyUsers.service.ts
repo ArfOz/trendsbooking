@@ -1,6 +1,10 @@
 import { SendEmailDto } from '@mail-utils';
 import { OTPType, CompanyUser } from '@prisma/client';
-import { CreateCompanyUserJsonDto, ResponseLoginCompanyUserDTO } from './dtos/companyUser-response.dto';
+import {
+    ActivateCompanyUserDto,
+    CreateCompanyUserJsonDto,
+    ResponseLoginCompanyUserDTO,
+} from './dtos/companyUser-response.dto';
 import { AuthService, MailModeType } from '@auth';
 import authConfig from '@auth/config/auth.config';
 import {
@@ -31,7 +35,12 @@ import { BadRequestException } from '@shared';
 import * as bcrypt from 'bcrypt';
 import { generate } from 'generate-password';
 import * as jwt from 'jsonwebtoken';
-import { LoginUserDto, ResponseLoginUserDTO, SendCodeDTO, VerifyCodeDTO } from '../users/dtos';
+import {
+    LoginUserDto,
+    ResponseLoginUserDTO,
+    SendCodeDTO,
+    VerifyCodeDTO,
+} from '../users/dtos';
 
 @Injectable()
 export class CompanyUsersService {
@@ -183,16 +192,13 @@ export class CompanyUsersService {
         });
 
         // Verification code
-        const code = 
-            generate({
-                numbers: true,
-                symbols: false,
-                uppercase: false,
-                lowercase: false,
-                length: 4,
-            })
-        ;
-
+        const code = generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 4,
+        });
         await this.userOtpCodeService.create({
             CompanyUser: {
                 connect: {
@@ -345,15 +351,13 @@ export class CompanyUsersService {
             );
         }
         // Verification code
-        const code = 
-            generate({
-                numbers: true,
-                symbols: false,
-                uppercase: false,
-                lowercase: false,
-                length: 4,
-            }
-        );
+        const code = generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 4,
+        });
 
         await this.userOtpCodeService.create({
             CompanyUser: {
@@ -425,13 +429,18 @@ export class CompanyUsersService {
             );
         }
 
-        if (companyUser && (await bcrypt.compare(cred.Password, companyUser.Password))) {
+        if (
+            companyUser &&
+            (await bcrypt.compare(cred.Password, companyUser.Password))
+        ) {
             const {
                 AccessToken,
                 RefreshToken,
                 ExpiresAccessToken,
                 ExpiresRefreshToken,
-            } = await this.authService.generateAccessAndRefreshToken(companyUser);
+            } = await this.authService.generateAccessAndRefreshToken(
+                companyUser,
+            );
 
             await this.prismaService.userToken.create({
                 data: {
@@ -461,21 +470,56 @@ export class CompanyUsersService {
         throw new BadRequestException(
             BadRequestExceptionType.BAD_REQUEST,
             new Error(ResponseMessage.TR403),
-            403
+            403,
         );
     }
 
-    async companies(data){
-        console.log("naber la", data)
-        const companies = await this.companyUserService.find({where:data})
-        return companies
-
+    async companies(data) {
+        const companies = await this.companyUserService.find({ where: data });
+        return companies;
     }
 
-    async activate(data){
-        console.log("naber la")
-        return null
+    async activate(data: ActivateCompanyUserDto) {
+        console.log('naber la', data);
+        if (!data.Email) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR421),
+                421,
+            );
+        }
+        const companyUser = await this.companyUserService.findFirst({
+            where: { Email: data.Email },
+        });
 
+        if (!companyUser) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR409),
+                409,
+            );
+        }
+
+        if (companyUser.IsActive) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR422),
+                409,
+            );
+        }
+
+        const email = this.keypairService.encryptWithAppKeys(data.Email)
+
+        await this.companyUserService.update({
+            where: { Email: email },
+            data: {
+                IsActive: true,
+            },
+        });
+
+        return {
+            Data: `${data.Email} hesabı aktif edilmiştir.`,
+            Success: true,
+        };
     }
-
 }

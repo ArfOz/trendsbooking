@@ -372,3 +372,11 @@ export class GetCompaniesWhereFilter {
     @IsOptional()
     IsEmailVerified?: boolean;
 }
+
+export class ActivateCompanyUserDto{
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Email: string;
+}

@@ -62,7 +62,6 @@ export class CompanyUserService {
             where,
             orderBy,
             select: {
-                _count:true,
                 CbFirst: true,
                 City: true,
                 Country: true,

@@ -23,5 +23,7 @@
   "TR417": "Hatalı token gönderimi.",
   "TR418": "Geçerli token gönderiniz.",
   "TR419": "Bu hesap hizmet biriminde kullanılmaktadır. İşletmeniz için lütfen farklı bir email adresi deneyiniz.",
-  "TR420": "Hesabınız tarafımızdan onaylanamasını müteakip kullanıma açılacaktır."
+  "TR420": "Hesabınız tarafımızdan onaylanamasını müteakip kullanıma açılacaktır.",
+  "TR421": "Lütfen email adresi gönderiniz.",
+  "TR422": "Bu email adresi daha önce onaylanmış"
 }

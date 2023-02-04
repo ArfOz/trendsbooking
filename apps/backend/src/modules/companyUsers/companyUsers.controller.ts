@@ -1,15 +1,20 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
-import { AllowUnauthorizedRequest, StaticTokenRequired } from '@shared/decorators';
+import {
+    AllowUnauthorizedRequest,
+    StaticTokenRequired,
+} from '@shared/decorators';
 import { LoginUserDto, SendCodeDTO, VerifyCodeDTO } from '../users/dtos';
 import { CompanyUsersService } from './companyUsers.service';
-import { CreateCompanyUserJsonDto, GetCompaniesWhereFilter } from './dtos';
+import {
+    ActivateCompanyUserDto,
+    CreateCompanyUserJsonDto,
+    GetCompaniesWhereFilter,
+} from './dtos';
 // import { CreateCompanyUserJsonDto } from './dtos';
 
 @Controller('companyusers')
 export class CompanyUsersController {
-    constructor(private readonly companyUsersService: CompanyUsersService
-        ) {}
-
+    constructor(private readonly companyUsersService: CompanyUsersService) {}
 
     @AllowUnauthorizedRequest()
     @Get('test')
@@ -31,27 +36,25 @@ export class CompanyUsersController {
 
     @AllowUnauthorizedRequest()
     @Post('sendcode')
-    sendEmailCode(@Body() sendCode: SendCodeDTO) {
+    async sendEmailCode(@Body() sendCode: SendCodeDTO) {
         return this.companyUsersService.sendEmailCode(sendCode);
     }
 
     @AllowUnauthorizedRequest()
     @Post('login')
-    login(@Body() data: LoginUserDto) {
+    async login(@Body() data: LoginUserDto) {
         return this.companyUsersService.login(data);
     }
 
-
     @StaticTokenRequired()
     @Get('companies')
-    companies(@Body() data: GetCompaniesWhereFilter){
+    async companies(@Body() data: GetCompaniesWhereFilter) {
         return this.companyUsersService.companies(data);
     }
 
-
     @StaticTokenRequired()
     @Post('activate')
-    activate(@Body() data) {
+    async activate(@Body() data: ActivateCompanyUserDto) {
         return this.companyUsersService.activate(data);
     }
 }
