@@ -1,3 +1,4 @@
+
 // noinspection JSMethodCanBeStatic
 import {
     CanActivate,
@@ -23,9 +24,10 @@ import generalConfig from '@shared/config/general.config';
 
 import jwt from 'jsonwebtoken';
 import { PrismaService, UserService } from '@database';
-import { UserPayloadDto } from '@auth';
 import { ExpiredReasonType } from '@prisma/client';
 import ResponseMessage  from '@shared/enums/response-message.json';
+import { UserPayloadDto } from '@auth';
+
 
 export interface req extends Request {
     user: string; // or any other type
@@ -89,10 +91,10 @@ export class AuthGuard implements CanActivate {
             req.headers ?? req[Symbol('kHeaders')],
         );
 
-        // if (!rolesRequired && staticTokenRequired) {
-        //     req.hasStaticToken = this.generalCfg.apiAccessToken === token;
-        //     return req.hasStaticToken;
-        // }
+        if (staticTokenRequired) {
+            req.hasStaticToken = this.generalCfg.apiAccessToken === token;
+            return req.hasStaticToken;
+        }
 
         let userPayload;
         try {

@@ -1,64 +1,50 @@
-import { UserPayloadDto } from './user-payload.dto';
-import { ApiProperty } from '@nestjs/swagger/dist';
 import {
+    IsBoolean,
+    IsNotEmpty,
+    IsNumber,
     IsOptional,
     IsString,
-    IsNotEmpty,
-    IsObject,
 } from 'class-validator';
-// import { UserRole } from '@prisma/client';
 
-export class ResponseLoginUserDTO {
-    @ApiProperty()
-    @IsString()
+export class UserResponseDto {
     @IsNotEmpty()
-    AccessToken: string;
+    @IsNumber()
+    Id: number;
 
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    RefreshToken: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    ExpireTime?: Date;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    ExpireTimeRefresh: Date;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsObject()
-    User: UserPayloadDto;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsObject()
-    Success: true;
-}
-
-
-export class ResponseRegisterUserDTO {
-    @ApiProperty()
     @IsString()
     @IsNotEmpty()
     Email: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
-    Data: string;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    Token?: string;
-
-    @ApiProperty()
     @IsOptional()
-    @IsObject()
-    Success: true;
+    @IsString()
+    Username: string;
+
+    @IsOptional()
+    @IsString()
+    Country: string | null;
+
+    @IsOptional()
+    @IsString()
+    BirthDate: Date;
+
+    @IsOptional()
+    @IsString()
+    FirstName: string;
+
+    @IsOptional()
+    @IsString()
+    Gender: string;
+
+    @IsOptional()
+    @IsString()
+    Password: string;
+
+    @IsOptional()
+    @IsString()
+    LastName: string;
+
+    @IsOptional()
+    @IsString()
+    Phone: string;
+
 }

@@ -1,52 +1,57 @@
+import { SendEmailDto } from '@mail-utils';
+import { OTPType, CompanyUser, ExpiredReasonType } from '@prisma/client';
 import {
-    RegisterUserJsonDto,
-    LoginUserDto,
-    VerifyCodeDTO,
-    SendCodeDTO,
-    ResponseRegisterUserDTO,
-    ResponseLoginUserDTO,
-    ResponseUserProfileUserDTO,
-    UserParamsDto,
-} from './dtos';
-// Npm packages
-
-import { Injectable, Inject, HttpException } from '@nestjs/common';
+    ActivateCompanyUserDto,
+    CreateCompanyUserJsonDto,
+    ResponseLoginCompanyUserDTO,
+} from './dtos/companyUser-response.dto';
+import { AuthService, MailModeType } from '@auth';
+import authConfig from '@auth/config/auth.config';
+import {
+    PrismaService,
+    UserOtpCodeService,
+    UserService,
+    CompanyUserService,
+} from '@database';
+import { MailUtilsService } from '@mail-utils';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import {
+    AlreadyExistsException,
+    AlreadyExistsExceptionType,
+    BadRequestExceptionType,
+    ForbiddenExceptionType,
+    KeypairService,
+    NotFoundException,
+    NotVerifiedException,
+    OtpCodeNotFoundException,
+    TokenExceptionType,
+    TrendsException,
+    VerifyCodeExceptionType,
+} from '@shared';
+import generalConfig from '@shared/config/general.config';
+import ResponseMessage from '@shared/enums/response-message.json';
+import { BadRequestException } from '@shared';
+import * as bcrypt from 'bcrypt';
 import { generate } from 'generate-password';
 import * as jwt from 'jsonwebtoken';
-import * as bcrypt from 'bcrypt';
-
-// Import modules
-import { MailUtilsService, SendEmailDto } from '@mail-utils';
-import { MailModeType, AuthService } from '@auth';
-import { ExpiredReasonType, OTPType } from '@prisma/client';
-import authConfig from '@auth/config/auth.config';
-import generalConfig from '@shared/config/general.config';
 import {
-    BadRequestException,
-    BadRequestExceptionType,
-    AlreadyExistsExceptionType,
-    AlreadyExistsException,
-    KeypairService,
-    TrendsException,
-    TokenExceptionType,
-    OtpCodeNotFoundException,
-    VerifyCodeExceptionType,
-    NotFoundException,
-    ForbiddenExceptionType,
-    NotVerifiedException,
-} from '@shared';
-import { UserService, PrismaService, UserOtpCodeService } from '@database';
-import ResponseMessage from '@shared/enums/response-message.json';
+    LoginUserDto,
+    ResponseLoginUserDTO,
+    SendCodeDTO,
+    UserParamsDto,
+    VerifyCodeDTO,
+} from '../users/dtos';
 
 @Injectable()
-export class UsersService {
+export class CompanyUsersService {
     constructor(
         @Inject(generalConfig.KEY)
         private readonly generalCfg: ConfigType<typeof generalConfig>,
         @Inject(authConfig.KEY)
         private readonly authCfg: ConfigType<typeof authConfig>,
         private readonly prismaService: PrismaService,
+        private readonly companyUserService: CompanyUserService,
         private readonly userService: UserService,
         private readonly keypairService: KeypairService,
         private readonly authService: AuthService,
@@ -54,30 +59,7 @@ export class UsersService {
         private readonly mailUtilsService: MailUtilsService,
     ) {}
 
-    // async getUser(Email: string): Promise<User> {
-
-    //     const user = await this.prismaService.user.findUnique({
-    //         where: { Email }
-    //     });
-
-    //     if(!user) {
-    //         throw new NotFoundException();
-    //     }
-
-    //     delete user.Password;
-    //     return user;
-
-    // }
-
-    // async createUser(data: CreateUserDto): Promise<User> {
-
-    //     const createdUser = await this.userService.createUser(data)
-    //     return createdUser;
-    // }
-
-    async register(
-        input: RegisterUserJsonDto,
-    ): Promise<ResponseRegisterUserDTO> {
+    async register(input: CreateCompanyUserJsonDto) {
         if (!input.CbFirst) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -90,10 +72,8 @@ export class UsersService {
             !input.Password ||
             !input.Phone ||
             !input.Username ||
-            !input.Gender ||
             !input.FirstName ||
-            !input.LastName ||
-            !input.BirthDate
+            !input.LastName
         ) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -102,8 +82,8 @@ export class UsersService {
             );
         }
 
-        // // Checking password validation
-        // const validationPassword = this.validatePassword(input.Password);
+        // // // Checking password validation
+        // // const validationPassword = this.validatePassword(input.Password);
 
         // if (!validationPassword) {
         //     throw new BadRequestException(
@@ -112,21 +92,32 @@ export class UsersService {
         //     );
         // }
 
-        // if (!input.Agreement) {
-        //     throw new BadRequestException(
-        //         BadRequestExceptionType.BAD_REQUEST,
-        //         new Error('You have to accept the agreement!'),
-        //     );
-        // }
+        if (!input.CbFirst) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR411),
+                411,
+            );
+        }
 
         // Check if the user already exists
 
+        const companyUser = await this.companyUserService.findFirst({
+            where: { Email: input.Email },
+        });
         const user = await this.userService.findFirst({
             where: { Email: input.Email },
         });
-
         if (user) {
-            if (!user.IsEmailVerified) {
+            throw new AlreadyExistsException(
+                VerifyCodeExceptionType.NOT_VERIFIED,
+                new Error(ResponseMessage.TR419),
+                419,
+            );
+        }
+
+        if (companyUser) {
+            if (!companyUser.IsActive) {
                 throw new AlreadyExistsException(
                     VerifyCodeExceptionType.NOT_VERIFIED,
                     new Error(ResponseMessage.TR404),
@@ -176,35 +167,41 @@ export class UsersService {
         // delete response.Password;
 
         // Create a new user
-        const newUser = await this.userService.create({
+        const newUser = await this.companyUserService.create({
             Email: input.Email,
             FirstName: input.FirstName,
             LastName: input.LastName,
             Username: input.Username,
-            BirthDate: new Date(input.BirthDate),
             Phone: input.Phone,
             CbFirst: input.CbFirst,
             Country: input.Country,
-            Gender: input.Gender,
             CreatedAt: new Date(),
             UpdatedAt: new Date(),
             Password: await bcrypt.hash(input.Password, 10),
             PrivateKey: privKey,
             PublicKey: pubKey,
+            City: input.City,
+            District: input.District,
+            IBAN: input.IBAN,
+            Neighborhood: input.Neighborhood,
+            Salon: input.Salon,
+            TaxAdmin: input.TaxAdmin,
+            TaxNo: input.TaxNo,
+            TCKN: input.TCKN,
+            Sector: input.Sector,
+            IsActive: false,
         });
 
         // Verification code
-        const code =
-            generate({
-                numbers: true,
-                symbols: false,
-                uppercase: false,
-                lowercase: false,
-                length: 4,
-            })
-
+        const code = generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 4,
+        });
         await this.userOtpCodeService.create({
-            User: {
+            CompanyUser: {
                 connect: {
                     Id: newUser.Id,
                 },
@@ -241,125 +238,6 @@ export class UsersService {
             Token: token,
             Success: true,
         };
-        // // Response varsa Success
-        // return response;
-    }
-
-    async loginUser(cred: LoginUserDto): Promise<ResponseLoginUserDTO> {
-        const user = await this.userService.findFirst({
-            where: {
-                Email: cred.Email,
-            },
-        });
-
-        if (!user) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR406),
-                406,
-            );
-        }
-        if (!user.IsEmailVerified) {
-            throw new NotVerifiedException(
-                VerifyCodeExceptionType.NOT_VERIFIED,
-                new Error(ResponseMessage.TR404),
-                404,
-            );
-        }
-
-        if (user && (await bcrypt.compare(cred.Password, user.Password))) {
-            const {
-                AccessToken,
-                RefreshToken,
-                ExpiresAccessToken,
-                ExpiresRefreshToken,
-            } = await this.authService.generateAccessAndRefreshToken(user);
-
-            await this.prismaService.userToken.create({
-                data: {
-                    AccessToken: AccessToken,
-                    RefreshToken: RefreshToken,
-                    User: {
-                        connect: { Id: user.Id },
-                    },
-                    ExpiresIn: ExpiresAccessToken,
-                    ExpiresInRefresh: ExpiresRefreshToken,
-                },
-            });
-            delete user.Password;
-            delete user.Id;
-
-            // Response varsa Success
-            return {
-                AccessToken,
-                RefreshToken,
-                ExpireTime: ExpiresAccessToken,
-                ExpireTimeRefresh: ExpiresRefreshToken,
-                User: user,
-                Success: true,
-            };
-        }
-
-        throw new BadRequestException(
-            BadRequestExceptionType.BAD_REQUEST,
-            new Error(ResponseMessage.TR403),
-            403,
-            // new Error('Wrong Password or Email'),
-        );
-    }
-
-    async userProfile(
-        user: UserParamsDto,
-    ): Promise<ResponseUserProfileUserDTO> {
-        return await this.userService.get({ Id: user.Id });
-    }
-
-    async refreshUserToken(refreshToken: string) {
-        const { AccessToken, RefreshToken, User } =
-            await this.authService.refreshToken(refreshToken);
-        const expireTime = new Date(
-            Date.now() + parseInt(this.authCfg.jwt_expired, 10) * 60 * 1000,
-        );
-        const expiretimeRefresh = new Date(
-            Date.now() +
-                parseInt(this.authCfg.jwt_refresh_expired, 10) * 60 * 1000,
-        );
-
-        const userToken = await this.prismaService.userToken.findFirst({
-            where: {
-                UserId: User.Id,
-                RefreshToken: refreshToken,
-            },
-            include: {
-                User: true,
-            },
-        });
-        if (!userToken) {
-            throw new HttpException(ResponseMessage.TR405, 401);
-        }
-
-        await this.prismaService.userToken.update({
-            data: {
-                AccessToken: AccessToken,
-                RefreshToken: RefreshToken,
-                ExpiresIn: expireTime,
-                ExpiresInRefresh: expiretimeRefresh,
-                ExpiredReason: ExpiredReasonType.TokenRefreshed,
-                CreatedAt: new Date(),
-            },
-            where: { Id: userToken.Id },
-        });
-        delete User.Password;
-        delete User.Id;
-
-        return {
-            AccessToken,
-            RefreshToken,
-            ExpireTime: expireTime,
-            ExpireTimeRefresh: expiretimeRefresh,
-            User,
-            Success: true,
-        };
     }
 
     async verifyCode(data: VerifyCodeDTO) {
@@ -370,11 +248,11 @@ export class UsersService {
                 'email' in payload &&
                 data.Code
             ) {
-                let user = await this.userService.get({
+                let companyUser = await this.companyUserService.get({
                     Id: payload.Id,
                 });
 
-                if (!user) {
+                if (!companyUser) {
                     throw new NotFoundException(
                         ForbiddenExceptionType.FORBIDDEN,
                         new Error(ResponseMessage.TR406),
@@ -384,7 +262,7 @@ export class UsersService {
 
                 const otpCode = await this.userOtpCodeService.find({
                     where: {
-                        UserId: payload.Id,
+                        CompanyUserId: payload.Id,
                         Type: OTPType.VerifyEmail,
                         // For test cancelled manually
                         // Code: data.Code,
@@ -414,7 +292,7 @@ export class UsersService {
                 //     );
                 // }
 
-                user = await this.userService.update({
+                companyUser = await this.companyUserService.update({
                     where: {
                         Id: payload.Id,
                     },
@@ -432,7 +310,7 @@ export class UsersService {
                 });
 
                 return {
-                    Email: user.Email,
+                    Email: companyUser.Email,
                     Data: ResponseMessage.TR201,
                     Success: true,
                 };
@@ -455,18 +333,18 @@ export class UsersService {
     }
 
     async sendEmailCode(data: SendCodeDTO) {
-        const user = await this.userService.findFirst({
+        const companyUser = await this.companyUserService.findFirst({
             where: { Email: data.Email },
         });
 
-        if (!user) {
+        if (!companyUser) {
             throw new AlreadyExistsException(
                 AlreadyExistsExceptionType.NOT_EXIST,
                 new Error(ResponseMessage.TR409),
                 409,
             );
         }
-        if (user.IsEmailVerified) {
+        if (companyUser.IsEmailVerified) {
             throw new AlreadyExistsException(
                 VerifyCodeExceptionType.VERIFIED,
                 new Error(ResponseMessage.TR410),
@@ -474,20 +352,18 @@ export class UsersService {
             );
         }
         // Verification code
-        const code = 
-            generate({
-                numbers: true,
-                symbols: false,
-                uppercase: false,
-                lowercase: false,
-                length: 4,
-            }
-        );
+        const code = generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 4,
+        });
 
         await this.userOtpCodeService.create({
-            User: {
+            CompanyUser: {
                 connect: {
-                    Id: user.Id,
+                    Id: companyUser.Id,
                 },
             },
             Code: code,
@@ -509,7 +385,7 @@ export class UsersService {
         const payload = {
             mode: MailModeType.VerifyEmail,
             email: data.Email,
-            Id: user.Id,
+            Id: companyUser.Id,
         };
 
         const token = jwt.sign(payload, this.authCfg.jwt_secret, {
@@ -517,15 +393,138 @@ export class UsersService {
         });
 
         return {
-            Email: user.Email,
+            Email: companyUser.Email,
             Data: ResponseMessage.TR202,
             Token: token,
             Success: true,
         };
     }
 
+    async login(cred: LoginUserDto): Promise<ResponseLoginCompanyUserDTO> {
+        const companyUser = await this.companyUserService.findFirst({
+            where: {
+                Email: cred.Email,
+            },
+        });
+
+        if (!companyUser) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+                406,
+            );
+        }
+        if (!companyUser.IsEmailVerified) {
+            throw new NotVerifiedException(
+                VerifyCodeExceptionType.NOT_VERIFIED,
+                new Error(ResponseMessage.TR404),
+                404,
+            );
+        }
+
+        if (!companyUser.IsActive) {
+            throw new NotVerifiedException(
+                VerifyCodeExceptionType.NOT_VERIFIED,
+                new Error(ResponseMessage.TR420),
+                404,
+            );
+        }
+
+        if (
+            companyUser &&
+            (await bcrypt.compare(cred.Password, companyUser.Password))
+        ) {
+            const {
+                AccessToken,
+                RefreshToken,
+                ExpiresAccessToken,
+                ExpiresRefreshToken,
+            } = await this.authService.generateAccessAndRefreshToken(
+                companyUser,
+            );
+
+            await this.prismaService.userToken.create({
+                data: {
+                    AccessToken: AccessToken,
+                    RefreshToken: RefreshToken,
+                    CompanyUser: {
+                        connect: { Id: companyUser.Id },
+                    },
+                    ExpiresIn: ExpiresAccessToken,
+                    ExpiresInRefresh: ExpiresRefreshToken,
+                },
+            });
+            delete companyUser.Password;
+            delete companyUser.Id;
+
+            // Response varsa Success
+            return {
+                AccessToken,
+                RefreshToken,
+                ExpireTime: ExpiresAccessToken,
+                ExpireTimeRefresh: ExpiresRefreshToken,
+                User: companyUser,
+                Success: true,
+            };
+        }
+
+        throw new BadRequestException(
+            BadRequestExceptionType.BAD_REQUEST,
+            new Error(ResponseMessage.TR403),
+            403,
+        );
+    }
+
+    async companies(data) {
+        const companies = await this.companyUserService.find({ where: data });
+        return { companies, Success: true };
+    }
+
+    async activate(data: ActivateCompanyUserDto) {
+        if (!data.Email) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR421),
+                421,
+            );
+        }
+        const companyUser = await this.companyUserService.findFirst({
+            where: { Email: data.Email },
+        });
+
+        if (!companyUser) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR409),
+                409,
+            );
+        }
+
+        if (companyUser.IsActive) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR422),
+                409,
+            );
+        }
+
+        const email = this.keypairService.encryptWithAppKeys(data.Email);
+
+        await this.companyUserService.update({
+            where: { Email: email },
+            data: {
+                IsActive: true,
+            },
+        });
+
+        return {
+            Data: `${data.Email} hesabı aktif edilmiştir.`,
+            Success: true,
+        };
+    }
+
     async logout(cred: UserParamsDto) {
-        const user = await this.userService.findFirst({
+        const user = await this.companyUserService.findFirst({
             where: {
                 Id: cred.Id,
             },
@@ -541,7 +540,7 @@ export class UsersService {
 
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
-                UserId: cred.Id,
+                CompanyUserId: cred.Id,
             },
             orderBy: { CreatedAt: 'desc' },
         });

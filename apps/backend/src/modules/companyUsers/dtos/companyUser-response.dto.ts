@@ -8,7 +8,6 @@ import {
     IsNumber,
     IsBoolean,
 } from 'class-validator';
-// import { UserRole } from '@prisma/client';
 
 export enum Genders {
     Female = 'Female',
@@ -16,7 +15,7 @@ export enum Genders {
     NottoSay = 'NottoSay',
 }
 
-export class UserParamsDto {
+export class CompanyUserParamsDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
@@ -72,39 +71,8 @@ export class UserParamsDto {
     @IsString()
     Phone: string;
 }
-export class ResponseLoginUserDTO {
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    AccessToken: string;
 
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    RefreshToken: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    ExpireTime?: Date;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    ExpireTimeRefresh: Date;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsObject()
-    User: UserParamsDto;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsObject()
-    Success: true;
-}
-
-export class ResponseRegisterUserDTO {
+export class ResponseRegisterCompanyUserDTO {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
@@ -126,87 +94,16 @@ export class ResponseRegisterUserDTO {
     Success: true;
 }
 
-export class ResponseUserProfileUserDTO {
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    Email: string;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    FirstName: string;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    LastName: string;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    Username: string;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    BirthDate: Date;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    Phone: string;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    Country: string;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    Gender: string;
-
+export class CreateCompanyUserJsonDto {
     // @ApiProperty()
-    // @IsOptional()
-    // @IsObject()
-    // Success: true;
-}
+    // @IsNotEmpty()
+    // @IsString()
+    // Id :string
 
-export class SendCodeDTO {
     @ApiProperty()
-    @IsEmail()
     @IsNotEmpty()
+    @IsString()
     Email: string;
-}
-
-export class VerifyCodeDTO {
-    @ApiProperty()
-    @IsNumber()
-    @IsNotEmpty()
-    Code: number;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    Token: string;
-}
-
-export class CreateServiceUserJsonDto {
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsEmail()
-    Email: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
-    Phone: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    Username: string;
 
     @ApiProperty()
     @IsNotEmpty()
@@ -224,27 +121,77 @@ export class CreateServiceUserJsonDto {
     LastName: string;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
-    Country?: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    City?: string;
+    Username: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    Tckn: string;
+    Phone: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    TCKN: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsBoolean()
     CbFirst: boolean;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    TaxNo: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    TaxAdmin: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    IBAN: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Sector: Genders;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Salon: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Country: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    City: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    District: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Neighborhood: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    IsActive: boolean;
 }
 
-export class RegisterUserJsonDto {
+export class RegisterCompanyUserJsonDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
@@ -305,7 +252,7 @@ export class RegisterUserJsonDto {
     BirthDate: Date;
 }
 
-export class LoginUserDto {
+export class LoginCompanyUserDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
@@ -315,4 +262,121 @@ export class LoginUserDto {
     @IsNotEmpty()
     @IsString()
     Password: string;
+}
+
+export class ResponseLoginCompanyUserDTO {}
+
+export class GetCompaniesWhereFilter {
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Email?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Password?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    FirstName?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    LastName?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Username?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Phone?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    TCKN?: string;
+
+    @ApiProperty()
+    @IsBoolean()
+    @IsOptional()
+    CbFirst?: boolean;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    TaxNo?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    TaxAdmin?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    IBAN?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Sector?: Genders;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Salon?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Country?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    City?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    District?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    Neighborhood?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    IsActive?: boolean;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    CreatedAt?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    UpdatedAt?: string;
+
+    @ApiProperty()
+    @IsBoolean()
+    @IsOptional()
+    IsEmailVerified?: boolean;
+}
+
+export class ActivateCompanyUserDto{
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Email: string;
 }

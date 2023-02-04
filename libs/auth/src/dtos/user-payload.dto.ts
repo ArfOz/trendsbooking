@@ -1,30 +1,53 @@
-import { ApiProperty } from '@nestjs/swagger/dist';
-import { IsOptional, IsString, IsNotEmpty, IsNumber } from 'class-validator';
-// import { UserRole } from '@prisma/client';
+import {
+    IsBoolean,
+    IsNotEmpty,
+    IsNumber,
+    IsOptional,
+    IsString,
+} from 'class-validator';
 
 export class UserPayloadDto {
-    @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
     Id: number;
 
-    @ApiProperty()
     @IsString()
     @IsNotEmpty()
     Email: string;
 
-    @ApiProperty()
     @IsOptional()
     @IsString()
-    Username?: string;
+    Username: string;
 
-    @ApiProperty()
     @IsOptional()
     @IsString()
-    Country?: string;
+    Country: string;
 
-    @ApiProperty()
     @IsOptional()
     @IsString()
-    City?: string;
+    BirthDate: Date;
+
+    @IsOptional()
+    @IsString()
+    FirstName: string;
+
+    @IsOptional()
+    @IsString()
+    Gender: string;
+
+    @IsOptional()
+    @IsString()
+    Password: string;
+
+    @IsOptional()
+    @IsBoolean()
+    IsEmailVerified: boolean;
+
+    @IsOptional()
+    @IsString()
+    LastName: string;
+
+    @IsOptional()
+    @IsString()
+    Phone: string;
 }
