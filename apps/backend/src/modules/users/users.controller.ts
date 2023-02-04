@@ -4,8 +4,11 @@ import { UserParam } from '@shared';
 import { UsersService } from './users.service';
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AllowUnauthorizedRequest } from '@shared/decorators';
+import { ApiTags } from '@nestjs/swagger';
 
 
+
+@ApiTags('CompanyUser')
 @Controller('users')
 export class UsersController {
     constructor(private readonly UsersService: UsersService) {}

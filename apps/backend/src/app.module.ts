@@ -4,7 +4,6 @@ import { CompanyUsersModule } from './modules/companyUsers/companyUsers.module';
 import { DatabaseModule } from '@database';
 import { AuthGuard } from '@guard';
 import { Module } from '@nestjs/common';
-import { TestModule } from './modules/test/test.module';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 
@@ -18,7 +17,6 @@ import { ConfigModule } from '@nestjs/config';
         DatabaseModule,
         // Controllers
         UsersModule,
-        TestModule,
         CompanyUsersModule
     ],
 

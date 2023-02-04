@@ -1,4 +1,5 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import {
     AllowUnauthorizedRequest,
     StaticTokenRequired,
@@ -12,6 +13,7 @@ import {
 } from './dtos';
 // import { CreateCompanyUserJsonDto } from './dtos';
 
+@ApiTags('CompanyUser')
 @Controller('companyusers')
 export class CompanyUsersController {
     constructor(private readonly companyUsersService: CompanyUsersService) {}
