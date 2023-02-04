@@ -1,13 +1,11 @@
-import { UserOtpCodeService } from './../../../../../libs/database/src/user-otp-code/user-otp-code.service';
-import { CompanyUserService } from '@database/company-user/company-user.service';
+
+import { forwardRef, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 import authConfig from '@auth/config/auth.config';
-
-import { DatabaseModule, PrismaService, UserService } from '@database';
+import { DatabaseModule, PrismaService, UserService, CompanyUserService, UserOtpCodeService  } from '@database';
 import { KeypairModule } from '@shared';
 import generalConfig from '@shared/config/general.config';
-import { ConfigModule } from '@nestjs/config';
-import { forwardRef, Module } from '@nestjs/common';
 import { MailUtilsModule } from '@mail-utils';
 import { CompanyUsersController } from './companyUsers.controller';
 import { CompanyUsersService } from './companyUsers.service';

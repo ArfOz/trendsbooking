@@ -18,7 +18,6 @@ import authConfig from './config/auth.config';
 
 import ResponseMessage from '@shared/enums/response-message.json';
 import { UserPayloadDto } from './dtos';
-import { UserResponseDto } from '@auth';
 @Injectable()
 export class AuthService {
     constructor(

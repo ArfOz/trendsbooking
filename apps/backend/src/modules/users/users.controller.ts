@@ -27,35 +27,35 @@ export class UsersController {
 
     @AllowUnauthorizedRequest()
     @Post('login')
-    login(@Body() data: LoginUserDto) {
+    async login(@Body() data: LoginUserDto) {
         return this.UsersService.loginUser(data);
     }
 
     @Get('userprofile')
-    userProfile(@UserParam() user: UserParamsDto) {
+    async userProfile(@UserParam() user: UserParamsDto) {
         return this.UsersService.userProfile(user);
     }
 
     @AllowUnauthorizedRequest()
     @Post('refreshusertoken')
-    refreshUserToken(@Body('RefreshToken') refreshToken: string) {
+    async refreshUserToken(@Body('RefreshToken') refreshToken: string) {
         return this.UsersService.refreshUserToken(refreshToken);
     }
 
     @AllowUnauthorizedRequest()
     @Post('verifycode')
-    verifyCode(@Body() verifyCode: VerifyCodeDTO) {
+    async verifyCode(@Body() verifyCode: VerifyCodeDTO) {
         return this.UsersService.verifyCode(verifyCode);
     }
 
     @AllowUnauthorizedRequest()
     @Post('sendcode')
-    sendEmailCode(@Body() sendCode: SendCodeDTO) {
+    async sendEmailCode(@Body() sendCode: SendCodeDTO) {
         return this.UsersService.sendEmailCode(sendCode);
     }
 
     @Get('logout')
-    logout(@UserParam() user: UserParamsDto) {
+    async logout(@UserParam() user: UserParamsDto) {
         return this.UsersService.logout(user);
     }
 }

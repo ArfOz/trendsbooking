@@ -62,7 +62,7 @@ export class CompanyUsersController {
     }
 
     @Get('logout')
-    logout(@UserParam() user: UserParamsDto) {
+    async logout(@UserParam() user: UserParamsDto) {
         return this.companyUsersService.logout(user);
     }
 }

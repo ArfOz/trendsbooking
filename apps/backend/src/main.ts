@@ -28,6 +28,7 @@ async function bootstrap() {
         .setTitle('TrendsBooking')
         .setDescription('TrendsBooking Endpoints')
         .setVersion('1.0')
+        .addTag('TrendsBooking Endpoints')
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);
