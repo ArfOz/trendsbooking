@@ -109,9 +109,25 @@ export class AuthGuard implements CanActivate {
                 417,
             );
         }
-        const exist = await this.prisma.userToken.findFirst({
-            where: { UserId: userPayload.Id, AccessToken: token },
-        });
+
+        console.log("userpayload", userPayload)
+        let exist;
+        switch (userPayload.Role
+            ) {
+            case "Provider":
+                
+            exist = await this.prisma.userToken.findFirst({
+                where: { CompanyUserId: userPayload.Id, AccessToken: token },
+            });
+                break;
+        
+            default:
+                exist = await this.prisma.userToken.findFirst({
+                    where: { UserId: userPayload.Id, AccessToken: token },
+                });
+                break;
+        }
+        
 
         if (!exist) {
             throw new TrendsException(

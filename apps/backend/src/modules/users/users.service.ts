@@ -279,7 +279,7 @@ export class UsersService {
                 data: {
                     AccessToken: AccessToken,
                     RefreshToken: RefreshToken,
-                    User: {
+                    CompanyUser: {
                         connect: { Id: user.Id },
                     },
                     ExpiresIn: ExpiresAccessToken,

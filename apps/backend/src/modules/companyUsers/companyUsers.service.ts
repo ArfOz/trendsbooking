@@ -407,6 +407,9 @@ export class CompanyUsersService {
             },
         });
 
+        console.log("asdas0", companyUser)
+
+        companyUser["Role"] = "Provider"
         if (!companyUser) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -537,7 +540,7 @@ export class CompanyUsersService {
                 406,
             );
         }
-
+        console.log("arif", user)
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
                 CompanyUserId: cred.Id,
@@ -559,5 +562,13 @@ export class CompanyUsersService {
             Success: true,
             Details: ResponseMessage.TR203,
         };
+    }
+
+    async profile(
+        user: UserParamsDto,
+    )
+    // : Promise<ResponseCompanyUserProfileUserDTO> 
+    {
+        return await this.companyUserService.get({ Id: user.Id });
     }
 }

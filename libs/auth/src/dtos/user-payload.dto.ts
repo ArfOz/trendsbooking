@@ -50,4 +50,8 @@ export class UserPayloadDto {
     @IsOptional()
     @IsString()
     Phone: string;
+
+    @IsOptional()
+    @IsString()
+    Role: string;
 }
