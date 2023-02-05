@@ -7,7 +7,7 @@ export const style = {
         width: '50%',
         height: '25vh',
         m: 'auto',
-        mt: 5,
+        mt: 10,
     },
     title: {
         fontFamily: 'Roboto',

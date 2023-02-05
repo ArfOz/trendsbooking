@@ -55,6 +55,7 @@ export const style = {
     },
     rowBox3: {
         border: '1px solid #07232C',
+        borderRadius: '12px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

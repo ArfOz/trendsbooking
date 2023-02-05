@@ -12,14 +12,16 @@ function Right() {
                     justifyContent: 'space-between',
                     alignItems: 'flex-end',
                     width: '15%',
+                    height:'7vh',
                     mr: 0,
+                  
                 }}
             >
                 <Button
                     variant="outlined"
                     sx={style.navbarbuttons}
                     onClick={() => {
-                        alert('işletme hesabı sayfasına yönlenecek');
+                        alert('giriş yap sayfasına yönlenecek');
                     }}
                 >
                     Giriş Yap
@@ -28,7 +30,7 @@ function Right() {
                 <Button
                     sx={style.navbarbuttons}
                     onClick={() => {
-                        alert('giriş yap sayfasına yönlenecek');
+                        alert('Üye ol sayfasına yönlenecek');
                     }}
                 >
                     Üye Ol

@@ -1,20 +1,20 @@
 export const buttons = {
     submit: {
-      width: '294px',
-      height: '40px',
-      fontSize: '1rem',
-      ml: '250px',
-      backgroundColor: '#F75936',
-      color: 'white',
-      '&:hover': {
-          color: '#F75936',
-      },
-    },
-    next: {
         width: '294px',
         height: '40px',
         fontSize: '1rem',
-        ml: '410px',
+        ml: '250px',
+        backgroundColor: '#F75936',
+        color: 'white',
+        '&:hover': {
+            color: '#F75936',
+        },
+    },
+    next: {
+        width: '40%',
+        height: '100%',
+        fontSize: '1rem',
+        //ml: '410px',
         backgroundColor: '#F75936',
         color: 'white',
         '&:hover': {
@@ -22,15 +22,15 @@ export const buttons = {
         },
     },
     back: {
-      width: '294px',
-      height: '40px',
-      fontSize: '1rem',
-      ml: '50px',
-      backgroundColor: '#F75936',
-      color: 'white',
-      '&:hover': {
-          color: '#F75936',
-      },
+        width: '40%',
+        height: '100%',
+        fontSize: '1rem',
+        //ml: '50px',
+        backgroundColor: '#F75936',
+        color: 'white',
+        '&:hover': {
+            color: '#F75936',
+        },
     },
 };
 
@@ -98,14 +98,12 @@ export const boxStyle = {
     headerBox: {
         width: '100%',
         mt: 2,
-        ml:2,
-
+        ml: 2,
     },
     logoWord: {
         width: 'calc(100% - 350px)',
         mt: 4,
-        ml: 3
-
+        ml: 3,
     },
     progressBarEmpty: {
         width: '50%',
@@ -113,18 +111,15 @@ export const boxStyle = {
         background: '#F2F8FF',
         borderRadius: '15px',
         mb: 2,
-        mt:2
+        mt: 2,
     },
     progressBarFull: {},
 
     form: {
-      display:"flex",
-      flexDirection: 'column',
-      width: '100%',
-      border:"2px solid green",
-  },
-
-
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+    },
 
     rightside: {
         backgroundImage: 'url(https://source.unsplash.com/random)',
@@ -133,8 +128,6 @@ export const boxStyle = {
         backgroundPosition: 'center',
         height: '100vh',
     },
-
-
 };
 
 export const input = {

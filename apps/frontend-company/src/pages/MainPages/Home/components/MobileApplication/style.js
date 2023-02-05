@@ -1,10 +1,10 @@
-import mobilback from "../../../../../assets/mobilback.jpg";
+import mobilapiback from "../../../../../assets/mobilapiback.png";
 
 
 
 export const style = {
   BoxContainer: {
-    background: `url(${mobilback})`,
+    background: `url(${mobilapiback})`,
     backgroundPosition: "center",
     backgroundSize: "cover",
     width: "87%",
