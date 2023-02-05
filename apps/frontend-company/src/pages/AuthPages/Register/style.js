@@ -11,10 +11,10 @@ export const buttons = {
         },
     },
     next: {
-        width: '294px',
-        height: '40px',
+        width: '40%',
+        height: '100%',
         fontSize: '1rem',
-        ml: '410px',
+        //ml: '410px',
         backgroundColor: '#F75936',
         color: 'white',
         '&:hover': {
@@ -22,10 +22,10 @@ export const buttons = {
         },
     },
     back: {
-        width: '294px',
-        height: '40px',
+        width: '40%',
+        height: '100%',
         fontSize: '1rem',
-        ml: '50px',
+        //ml: '50px',
         backgroundColor: '#F75936',
         color: 'white',
         '&:hover': {

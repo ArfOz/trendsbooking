@@ -298,7 +298,7 @@ export default function Register() {
                                             sx={{
                                                 display: 'flex',
                                                 flexDirection: 'column',
-                                                border: '1px solid red',
+
                                                 m: 3,
                                             }}
                                         >
@@ -457,18 +457,17 @@ export default function Register() {
                                                 sx={{
                                                     display: 'flex',
                                                     flexDirection: 'column',
-                                                    border: '1px solid red',
-                                                    m: 3,
+                                                    
+                                                    height: '55vh',
                                                 }}
                                             >
                                                 <Box
                                                     sx={{
                                                         display: 'flex',
                                                         flexDirection: 'row',
-                                                        justifyContent:
-                                                            'space-around',
-                                                        p: 1,
-                                                        m: 1,
+                                                        justifyContent: 'left',
+                                                        m: 'auto',
+                                                        width: '90%',
                                                     }}
                                                 >
                                                     <TextField
@@ -483,7 +482,7 @@ export default function Register() {
                                                         height="80px"
                                                         size="small"
                                                         sx={{
-                                                            width: '40%',
+                                                            width: '50%',
                                                         }}
                                                     />
 
@@ -499,7 +498,8 @@ export default function Register() {
                                                         height="80px"
                                                         size="small"
                                                         sx={{
-                                                            width: '40%',
+                                                            width: '50%',
+                                                            ml: 15,
                                                         }}
                                                     />
                                                 </Box>
@@ -507,10 +507,9 @@ export default function Register() {
                                                     sx={{
                                                         display: 'flex',
                                                         flexDirection: 'row',
-                                                        justifyContent:
-                                                            'space-around',
-                                                        p: 1,
-                                                        m: 1,
+                                                        justifyContent: 'left',
+                                                        m: 'auto',
+                                                        width: '90%',
                                                     }}
                                                 >
                                                     <TextField
@@ -525,7 +524,7 @@ export default function Register() {
                                                         height="80px"
                                                         size="small"
                                                         sx={{
-                                                            width: '40%',
+                                                            width: '50%',
                                                         }}
                                                     />
 
@@ -541,7 +540,8 @@ export default function Register() {
                                                         height="80px"
                                                         size="small"
                                                         sx={{
-                                                            width: '40%',
+                                                            width: '50%',
+                                                            ml: 15,
                                                         }}
                                                         helperText="En az 6 karakterden oluşmalıdır."
                                                     />
@@ -549,10 +549,9 @@ export default function Register() {
                                                 <Box
                                                     sx={{
                                                         display: 'flex',
-                                                        flexDirection: 'row',
                                                         justifyContent: 'left',
-                                                        p: 1,
-                                                        m: 1,
+                                                        m: 'auto',
+                                                        width: '90%',
                                                     }}
                                                 >
                                                     <TextField
@@ -570,6 +569,21 @@ export default function Register() {
                                                             width: '40%',
                                                         }}
                                                     />
+                                                    {/* <TextField
+                                                        margin="normal"
+                                                        required
+                                                        id="Iban"
+                                                        label="IBAN Numaranız"
+                                                        name="Iban"
+                                                        autoComplete="text"
+
+                                                        onChange={handleChange}
+                                                        height="80px"
+                                                        size="small"
+                                                        sx={{
+                                                            width: '40%',
+                                                        }}
+                                                    /> */}
                                                 </Box>
                                             </Box>
                                         </Box>
@@ -640,6 +654,25 @@ export default function Register() {
                                                                 width: '80%',
                                                             }}
                                                         />
+                                                        <FormGroup>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox />
+                                                                }
+                                                                id="CbFirst"
+                                                                name="CbFirst"
+                                                                value={
+                                                                    registerForm.CbFirst
+                                                                }
+                                                                checked={
+                                                                    registerForm.CbFirst
+                                                                }
+                                                                onChange={
+                                                                    handleChange
+                                                                }
+                                                                label="Sözleşmeyi okudum kabul ediyorum"
+                                                            />
+                                                        </FormGroup>
                                                     </Box>
                                                 </Grid>
                                                 <Grid item md={6} lg={6} xl={6}>
@@ -681,7 +714,7 @@ export default function Register() {
                                                     align="center"
                                                     sx={{
                                                         color: '#F75936',
-                                                        width: '50%',
+                                                        width: '30%',
                                                         margin: 'auto',
                                                     }}
                                                 >
@@ -750,16 +783,37 @@ export default function Register() {
                                     <Button
                                         onClick={handleNext}
                                         variant="outlined"
-                                        sx={buttons.next}
+                                        size="small"
+                                        sx={{
+                                            width: '36%',
+                                            height: '100%',
+                                            fontSize: '1rem',
+                                            ml: '420px',
+                                            backgroundColor: '#F75936',
+                                            color: 'white',
+                                            '&:hover': {
+                                                color: '#F75936',
+                                            },
+                                        }}
+
                                         // disabled={activeStep === maxSteps - 1}
                                     >
                                         İLERİ
                                     </Button>
                                 )}
                                 {activeStep === 1 && (
-                                    <>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            m: 'auto',
+                                            width: '90%',
+
+                                            mt:8,
+                                        }}
+                                    >
                                         <Button
-                                            size="small"
+                                            size="large"
                                             onClick={handleBack}
                                             variant="outlined"
                                             sx={buttons.back}
@@ -768,7 +822,7 @@ export default function Register() {
                                             GERİ
                                         </Button>
                                         <Button
-                                            size="small"
+                                            size="large"
                                             onClick={handleNext}
                                             variant="outlined"
                                             sx={buttons.next}
@@ -776,7 +830,7 @@ export default function Register() {
                                         >
                                             İLERİ
                                         </Button>
-                                    </>
+                                    </Box>
                                 )}
                                 {activeStep == 2 && (
                                     <Button
@@ -789,7 +843,7 @@ export default function Register() {
                                         DOĞRULA
                                     </Button>
                                 )}
-                                {activeStep === maxSteps - 1 && (
+                                {/* {activeStep === maxSteps - 1 && (
                                     <Button
                                         type="submit"
                                         variant="outlined"
@@ -801,16 +855,7 @@ export default function Register() {
                                             'HESAP OLUŞTUR'
                                         )}
                                     </Button>
-                                )}
-                                {activeStep == 0 && (
-                                    <Grid container>
-                                        <Grid item>
-                                            <Link href="#" variant="body1">
-                                                {'Zaten Hesabın var mı!'}
-                                            </Link>
-                                        </Grid>
-                                    </Grid>
-                                )}
+                                )} */}
                             </Box>
                         </Box>
                     </Grid>
