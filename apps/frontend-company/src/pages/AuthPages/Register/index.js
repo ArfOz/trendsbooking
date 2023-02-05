@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AuthLayout } from '../../../layout';
 import { buttons, modal, boxStyle } from './style';
 import { styled } from '@mui/material/styles';
@@ -43,10 +43,8 @@ const initialState = {
 export default function Register() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [registerForm, setRegisterForm] = useState(initialState);
-
     const [activeElement, setActiveElement] = useState();
     const maxSteps = 3;
-
     const auth = useAuth();
 
     //Slider
@@ -54,7 +52,8 @@ export default function Register() {
 
     const handleNext = (e) => {
         setActiveElement(
-            e.target.parentNode.childNodes[0].childNodes[0].childNodes,
+            e.target.parentNode.parentNode.childNodes[0].childNodes[0]
+                .childNodes,
         );
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
@@ -457,7 +456,7 @@ export default function Register() {
                                                 sx={{
                                                     display: 'flex',
                                                     flexDirection: 'column',
-                                                    
+
                                                     height: '55vh',
                                                 }}
                                             >
@@ -779,39 +778,20 @@ export default function Register() {
                                         </Modal>
                                     </>
                                 )}
-                                {activeStep < 1 && (
-                                    <Button
-                                        onClick={handleNext}
-                                        variant="outlined"
-                                        size="small"
-                                        sx={{
-                                            width: '36%',
-                                            height: '100%',
-                                            fontSize: '1rem',
-                                            ml: '420px',
-                                            backgroundColor: '#F75936',
-                                            color: 'white',
-                                            '&:hover': {
-                                                color: '#F75936',
-                                            },
-                                        }}
-
-                                        // disabled={activeStep === maxSteps - 1}
-                                    >
-                                        İLERİ
-                                    </Button>
-                                )}
-                                {activeStep === 1 && (
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            m: 'auto',
-                                            width: '90%',
-
-                                            mt:8,
-                                        }}
-                                    >
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: `${
+                                            activeStep === 0
+                                                ? 'flex-end'
+                                                : 'space-between'
+                                        }`,
+                                        m: 'auto',
+                                        width: '90%',
+                                        mt: 8,
+                                    }}
+                                >
+                                    {activeStep > 0 && (
                                         <Button
                                             size="large"
                                             onClick={handleBack}
@@ -821,28 +801,41 @@ export default function Register() {
                                         >
                                             GERİ
                                         </Button>
+                                    )}
+                                    {activeStep !== maxSteps - 1 && (
                                         <Button
-                                            size="large"
                                             onClick={handleNext}
                                             variant="outlined"
-                                            sx={buttons.next}
+                                            size="small"
+                                            sx={{
+                                                width: '36%',
+                                                height: '100%',
+                                                fontSize: '1rem',
+                                                // ml: '420px',
+                                                backgroundColor: '#F75936',
+                                                color: 'white',
+                                                '&:hover': {
+                                                    color: '#F75936',
+                                                },
+                                            }}
+
                                             // disabled={activeStep === maxSteps - 1}
                                         >
                                             İLERİ
                                         </Button>
-                                    </Box>
-                                )}
-                                {activeStep == 2 && (
-                                    <Button
-                                        size="small"
-                                        onClick={handleSubmitVerification}
-                                        variant="outlined"
-                                        sx={buttons.back}
-                                        disabled={activeStep <= 0}
-                                    >
-                                        DOĞRULA
-                                    </Button>
-                                )}
+                                    )}
+                                    {activeStep == 2 && (
+                                        <Button
+                                            size="small"
+                                            onClick={handleSubmitVerification}
+                                            variant="outlined"
+                                            sx={buttons.back}
+                                            disabled={activeStep <= 0}
+                                        >
+                                            DOĞRULA
+                                        </Button>
+                                    )}
+                                </Box>
                                 {/* {activeStep === maxSteps - 1 && (
                                     <Button
                                         type="submit"
