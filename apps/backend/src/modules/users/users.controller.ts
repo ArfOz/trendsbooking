@@ -31,7 +31,7 @@ export class UsersController {
         return this.UsersService.loginUser(data);
     }
 
-    @Get('userprofile')
+    @Get('profile')
     async userProfile(@UserParam() user: UserParamsDto) {
         return this.UsersService.userProfile(user);
     }

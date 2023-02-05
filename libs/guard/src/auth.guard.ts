@@ -129,7 +129,6 @@ export class AuthGuard implements CanActivate {
                     new Error(ResponseMessage.TR422),
                     422,
                 );
-                break;
         }
 
         if (!exist) {
