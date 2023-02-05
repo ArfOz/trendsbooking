@@ -5,7 +5,7 @@ import {
     CreateCompanyUserJsonDto,
     ResponseLoginCompanyUserDTO,
 } from './dtos/companyUser-response.dto';
-import { AuthService, MailModeType } from '@auth';
+import { AuthService, MailModeType, UserType } from '@auth';
 import authConfig from '@auth/config/auth.config';
 import {
     PrismaService,
@@ -409,7 +409,7 @@ export class CompanyUsersService {
 
         console.log("asdas0", companyUser)
 
-        companyUser["Role"] = "Provider"
+        
         if (!companyUser) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -433,6 +433,7 @@ export class CompanyUsersService {
             );
         }
 
+        companyUser["Role"] = UserType.Provider
         if (
             companyUser &&
             (await bcrypt.compare(cred.Password, companyUser.Password))

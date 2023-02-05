@@ -119,7 +119,6 @@ export class AuthService {
             Email: user.Email,
             Role : user.Role
         };
-        console.log("arif", user.Role)
 
         const expiresAccessToken = new Date(
             Date.now() + parseInt(this.authCfg.jwt_expired!, 10) * 60 * 1000,

@@ -1,4 +1,3 @@
-
 // noinspection JSMethodCanBeStatic
 import {
     CanActivate,
@@ -25,9 +24,8 @@ import generalConfig from '@shared/config/general.config';
 import jwt from 'jsonwebtoken';
 import { PrismaService, UserService } from '@database';
 import { ExpiredReasonType } from '@prisma/client';
-import ResponseMessage  from '@shared/enums/response-message.json';
-import { UserPayloadDto } from '@auth';
-
+import ResponseMessage from '@shared/enums/response-message.json';
+import { UserPayloadDto, UserType } from '@auth';
 
 export interface req extends Request {
     user: string; // or any other type
@@ -109,25 +107,30 @@ export class AuthGuard implements CanActivate {
                 417,
             );
         }
-
-        console.log("userpayload", userPayload)
         let exist;
-        switch (userPayload.Role
-            ) {
-            case "Provider":
-                
-            exist = await this.prisma.userToken.findFirst({
-                where: { CompanyUserId: userPayload.Id, AccessToken: token },
-            });
+        switch (userPayload.Role) {
+            case UserType.Provider:
+                exist = await this.prisma.userToken.findFirst({
+                    where: {
+                        CompanyUserId: userPayload.Id,
+                        AccessToken: token,
+                    },
+                });
                 break;
-        
-            default:
+
+            case UserType.Normal:
                 exist = await this.prisma.userToken.findFirst({
                     where: { UserId: userPayload.Id, AccessToken: token },
                 });
                 break;
+            default:
+                throw new TrendsException(
+                    'Not User Type',
+                    new Error(ResponseMessage.TR422),
+                    422,
+                );
+                break;
         }
-        
 
         if (!exist) {
             throw new TrendsException(
