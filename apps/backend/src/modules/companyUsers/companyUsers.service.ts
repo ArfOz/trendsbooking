@@ -2,6 +2,7 @@ import { SendEmailDto } from '@mail-utils';
 import { OTPType, CompanyUser, ExpiredReasonType } from '@prisma/client';
 import {
     ActivateCompanyUserDto,
+    CompanyUserParamsDto,
     CreateCompanyUserJsonDto,
     ResponseLoginCompanyUserDTO,
 } from './dtos/companyUser-response.dto';
@@ -406,9 +407,6 @@ export class CompanyUsersService {
                 Email: cred.Email,
             },
         });
-
-        console.log("asdas0", companyUser)
-
         
         if (!companyUser) {
             throw new BadRequestException(
@@ -541,7 +539,6 @@ export class CompanyUsersService {
                 406,
             );
         }
-        console.log("arif", user)
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
                 CompanyUserId: cred.Id,
@@ -566,7 +563,7 @@ export class CompanyUsersService {
     }
 
     async profile(
-        user: UserParamsDto,
+        user: CompanyUserParamsDto,
     )
     // : Promise<ResponseCompanyUserProfileUserDTO> 
     {

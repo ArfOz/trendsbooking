@@ -122,6 +122,7 @@ export class AuthGuard implements CanActivate {
                 exist = await this.prisma.userToken.findFirst({
                     where: { UserId: userPayload.Id, AccessToken: token },
                 });
+
                 break;
             default:
                 throw new TrendsException(
@@ -167,9 +168,25 @@ export class AuthGuard implements CanActivate {
             );
         }
 
-        const user = await this.prisma.user.findUnique({
-            where: { Id: userPayload.Id },
-        });
+        let user;
+        switch (userPayload.Role) {
+            case UserType.Provider:
+                user = await this.prisma.companyUser.findUnique({
+                    where: { Id: userPayload.Id },
+                });
+                break;
+            case UserType.Normal:
+                user = await this.prisma.user.findUnique({
+                    where: { Id: userPayload.Id },
+                });
+                break;
+            default:
+                throw new TrendsException(
+                    'Not User Type',
+                    new Error(ResponseMessage.TR422),
+                    422,
+                );
+        }
 
         if (!user) {
             throw new UserNotExistException(
