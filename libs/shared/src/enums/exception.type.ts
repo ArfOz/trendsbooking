@@ -7,6 +7,7 @@ export enum UnauthorizedExceptionType {
     UNAUTHORIZED_ACCESS = 'UNAUTHORIZED_ACCESS',
     NO_AUTHORIZATION_TOKEN = 'NO_AUTHORIZATION_TOKEN',
     USER_NOT_REGISTERED = 'USER_NOT_REGISTERED',
+    NO_USER_ROLE = "USER_HAS_NO_ROLE"
 }
 
 export enum BadRequestExceptionType {

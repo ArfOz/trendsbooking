@@ -1,3 +1,4 @@
+import { UserRole } from '@prisma/client';
 // noinspection JSMethodCanBeStatic
 import {
     CanActivate,
@@ -69,31 +70,31 @@ export class AuthGuard implements CanActivate {
             context.getHandler(),
         );
 
-        // const rolesRequired = this.reflector.get<UserRole[]>(
-        //     'rolesRequired',
-        //     context.getHandler(),
-        // );
-
+        const rolesRequired = this.reflector.get<UserRole[]>(
+            'rolesRequired',
+            context.getHandler(),
+        );
         return (
             allowUnauthorizedRequest ||
-            this.validateRequest(req, staticTokenRequired)
+            this.validateRequest(req, staticTokenRequired, rolesRequired)
         );
     }
 
     private async validateRequest(
         req,
         staticTokenRequired: boolean,
-        // rolesRequired?: UserRole[],
+        rolesRequired?: UserRole[],
     ): Promise<boolean> {
+        // Get token from headers
         const token = this.getBearerToken(
             req.headers ?? req[Symbol('kHeaders')],
         );
 
-        if (staticTokenRequired) {
+        if (!rolesRequired && staticTokenRequired) {
             req.hasStaticToken = this.generalCfg.apiAccessToken === token;
             return req.hasStaticToken;
         }
-
+        // tokendan user bilgilerini alıyoruz.
         let userPayload;
         try {
             userPayload = jwt.verify(
@@ -107,6 +108,7 @@ export class AuthGuard implements CanActivate {
                 417,
             );
         }
+        // Burada role göre token var mı yok mu bakılacak
         let exist;
         switch (userPayload.Role) {
             case UserType.Provider:
@@ -126,8 +128,8 @@ export class AuthGuard implements CanActivate {
                 break;
             default:
                 throw new TrendsException(
-                    'Not User Type',
-                    new Error(ResponseMessage.TR422),
+                    UnauthorizedExceptionType.NO_USER_ROLE,
+                    new Error(ResponseMessage.TR425),
                     422,
                 );
         }
@@ -168,6 +170,7 @@ export class AuthGuard implements CanActivate {
             );
         }
 
+        // Burada kullanıcı tipine göre kullanıcı bilgileri kontrol edilecek.Ve requeste eklenecek.
         let user;
         switch (userPayload.Role) {
             case UserType.Provider:
@@ -182,8 +185,8 @@ export class AuthGuard implements CanActivate {
                 break;
             default:
                 throw new TrendsException(
-                    'Not User Type',
-                    new Error(ResponseMessage.TR422),
+                    UnauthorizedExceptionType.NO_USER_ROLE,
+                    new Error(ResponseMessage.TR425),
                     422,
                 );
         }
@@ -195,18 +198,18 @@ export class AuthGuard implements CanActivate {
                 415,
             );
         }
-
-        // if (
-        //     rolesRequired &&
-        //     user.Role !== 'Admin' &&
-        //     !rolesRequired.includes(user.Role)
-        // ) {
-        //     throw new EkipException(
-        //         'User does not have required role.',
-        //         403,
-        //         new Error('User does not have required role.'),
-        //     );
-        // }
+        // Admin de eklenecek.
+        if (
+            rolesRequired &&
+            user.Role !== 'Admin' &&
+            !rolesRequired.includes(user.Role)
+        ) {
+            throw new TrendsException(
+                UnauthorizedExceptionType.UNAUTHORIZED_ACCESS,
+                new Error(ResponseMessage.TR424),
+                424,
+            );
+        }
 
         req.user = {
             ...userPayload,

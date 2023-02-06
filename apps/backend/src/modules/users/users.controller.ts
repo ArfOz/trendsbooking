@@ -3,7 +3,7 @@ import { UserParam } from '@shared';
 
 import { UsersService } from './users.service';
 import { Controller, Get, Post, Body } from '@nestjs/common';
-import { AllowUnauthorizedRequest } from '@shared/decorators';
+import { AllowUnauthorizedRequest, RolesRequired } from '@shared/decorators';
 import { ApiTags } from '@nestjs/swagger';
 
 
@@ -31,6 +31,7 @@ export class UsersController {
         return this.usersService.loginUser(data);
     }
 
+    @RolesRequired(['Normal'])
     @Get('profile')
     async profile(@UserParam() user: UserParamsDto) {
         return this.usersService.profile(user);

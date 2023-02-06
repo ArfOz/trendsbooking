@@ -4,6 +4,7 @@ import {
     AllowUnauthorizedRequest,
     StaticTokenRequired,
     UserParam,
+    RolesRequired
 } from '@shared/decorators';
 import { LoginUserDto, SendCodeDTO, UserParamsDto, VerifyCodeDTO } from '../users/dtos';
 import { CompanyUsersService } from './companyUsers.service';
@@ -61,6 +62,7 @@ export class CompanyUsersController {
         return this.companyUsersService.activate(data);
     }
 
+    @RolesRequired(['Provider'])
     @Get('profile')
     async profile(@UserParam() user: UserParamsDto) {
         return this.companyUsersService.profile(user);
