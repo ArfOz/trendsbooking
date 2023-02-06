@@ -68,6 +68,7 @@ export class CompanyUsersController {
         return this.companyUsersService.profile(user);
     }
 
+    @RolesRequired(['Provider'])
     @Get('logout')
     async logout(@UserParam() user: UserParamsDto) {
         return this.companyUsersService.logout(user);

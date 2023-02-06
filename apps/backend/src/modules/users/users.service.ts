@@ -313,7 +313,6 @@ export class UsersService {
         user: UserParamsDto,
     ): Promise<ResponseUserProfileUserDTO> {
 
-        console.log("arif", user)
         return await this.userService.get({ Id: user.Id });
     }
 

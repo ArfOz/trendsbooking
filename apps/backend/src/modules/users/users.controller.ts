@@ -37,6 +37,7 @@ export class UsersController {
         return this.usersService.profile(user);
     }
 
+    @RolesRequired(['Normal'])
     @AllowUnauthorizedRequest()
     @Post('refreshusertoken')
     async refreshUserToken(@Body('RefreshToken') refreshToken: string) {
@@ -55,6 +56,7 @@ export class UsersController {
         return this.usersService.sendEmailCode(sendCode);
     }
 
+    @RolesRequired(['Normal'])
     @Get('logout')
     async logout(@UserParam() user: UserParamsDto) {
         return this.usersService.logout(user);

@@ -20,7 +20,6 @@ export const UserParam = createParamDecorator(
                     500,
                 );
         }
-        console.log("arifffffff", req)
         const { user } = req;
         if (!user || typeof user === 'string') {
             return null;

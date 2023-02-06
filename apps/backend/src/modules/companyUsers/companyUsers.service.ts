@@ -38,7 +38,6 @@ import { generate } from 'generate-password';
 import * as jwt from 'jsonwebtoken';
 import {
     LoginUserDto,
-    ResponseLoginUserDTO,
     SendCodeDTO,
     UserParamsDto,
     VerifyCodeDTO,

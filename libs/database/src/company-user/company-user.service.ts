@@ -18,7 +18,6 @@ export class CompanyUserService {
 
     async get(where: Prisma.CompanyUserWhereUniqueInput) {
         try {
-            console.log("asdasd", where)
             const user = await this.prisma.companyUser.findUnique({
                 where,
                 select: {
@@ -40,11 +39,9 @@ export class CompanyUserService {
                 user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
             }
 
-            console.log("arifzsdsdsa", user)
             delete user.Id;
             return user;
         } catch (error) {
-            console.log("arif")
             console.log(error);
         }
     }
