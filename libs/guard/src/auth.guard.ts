@@ -1,4 +1,4 @@
-
+import { UserRole } from '@prisma/client';
 // noinspection JSMethodCanBeStatic
 import {
     CanActivate,
@@ -25,9 +25,8 @@ import generalConfig from '@shared/config/general.config';
 import jwt from 'jsonwebtoken';
 import { PrismaService, UserService } from '@database';
 import { ExpiredReasonType } from '@prisma/client';
-import ResponseMessage  from '@shared/enums/response-message.json';
-import { UserPayloadDto } from '@auth';
-
+import ResponseMessage from '@shared/enums/response-message.json';
+import { UserPayloadDto, UserType } from '@auth';
 
 export interface req extends Request {
     user: string; // or any other type
@@ -71,31 +70,31 @@ export class AuthGuard implements CanActivate {
             context.getHandler(),
         );
 
-        // const rolesRequired = this.reflector.get<UserRole[]>(
-        //     'rolesRequired',
-        //     context.getHandler(),
-        // );
-
+        const rolesRequired = this.reflector.get<UserRole[]>(
+            'rolesRequired',
+            context.getHandler(),
+        );
         return (
             allowUnauthorizedRequest ||
-            this.validateRequest(req, staticTokenRequired)
+            this.validateRequest(req, staticTokenRequired, rolesRequired)
         );
     }
 
     private async validateRequest(
         req,
         staticTokenRequired: boolean,
-        // rolesRequired?: UserRole[],
+        rolesRequired?: UserRole[],
     ): Promise<boolean> {
+        // Get token from headers
         const token = this.getBearerToken(
             req.headers ?? req[Symbol('kHeaders')],
         );
 
-        if (staticTokenRequired) {
+        if (!rolesRequired && staticTokenRequired) {
             req.hasStaticToken = this.generalCfg.apiAccessToken === token;
             return req.hasStaticToken;
         }
-
+        // tokendan user bilgilerini alıyoruz.
         let userPayload;
         try {
             userPayload = jwt.verify(
@@ -109,9 +108,31 @@ export class AuthGuard implements CanActivate {
                 417,
             );
         }
-        const exist = await this.prisma.userToken.findFirst({
-            where: { UserId: userPayload.Id, AccessToken: token },
-        });
+        // Burada role göre token var mı yok mu bakılacak
+        let exist;
+        switch (userPayload.Role) {
+            case UserType.Provider:
+                exist = await this.prisma.userToken.findFirst({
+                    where: {
+                        CompanyUserId: userPayload.Id,
+                        AccessToken: token,
+                    },
+                });
+                break;
+
+            case UserType.Normal:
+                exist = await this.prisma.userToken.findFirst({
+                    where: { UserId: userPayload.Id, AccessToken: token },
+                });
+
+                break;
+            default:
+                throw new TrendsException(
+                    UnauthorizedExceptionType.NO_USER_ROLE,
+                    new Error(ResponseMessage.TR425),
+                    422,
+                );
+        }
 
         if (!exist) {
             throw new TrendsException(
@@ -149,9 +170,26 @@ export class AuthGuard implements CanActivate {
             );
         }
 
-        const user = await this.prisma.user.findUnique({
-            where: { Id: userPayload.Id },
-        });
+        // Burada kullanıcı tipine göre kullanıcı bilgileri kontrol edilecek.Ve requeste eklenecek.
+        let user;
+        switch (userPayload.Role) {
+            case UserType.Provider:
+                user = await this.prisma.companyUser.findUnique({
+                    where: { Id: userPayload.Id },
+                });
+                break;
+            case UserType.Normal:
+                user = await this.prisma.user.findUnique({
+                    where: { Id: userPayload.Id },
+                });
+                break;
+            default:
+                throw new TrendsException(
+                    UnauthorizedExceptionType.NO_USER_ROLE,
+                    new Error(ResponseMessage.TR425),
+                    422,
+                );
+        }
 
         if (!user) {
             throw new UserNotExistException(
@@ -160,18 +198,18 @@ export class AuthGuard implements CanActivate {
                 415,
             );
         }
-
-        // if (
-        //     rolesRequired &&
-        //     user.Role !== 'Admin' &&
-        //     !rolesRequired.includes(user.Role)
-        // ) {
-        //     throw new EkipException(
-        //         'User does not have required role.',
-        //         403,
-        //         new Error('User does not have required role.'),
-        //     );
-        // }
+        // Admin de eklenecek.
+        if (
+            rolesRequired &&
+            user.Role !== 'Admin' &&
+            !rolesRequired.includes(user.Role)
+        ) {
+            throw new TrendsException(
+                UnauthorizedExceptionType.UNAUTHORIZED_ACCESS,
+                new Error(ResponseMessage.TR424),
+                424,
+            );
+        }
 
         req.user = {
             ...userPayload,

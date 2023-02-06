@@ -25,5 +25,8 @@
   "TR419": "Bu hesap hizmet biriminde kullanılmaktadır. İşletmeniz için lütfen farklı bir email adresi deneyiniz.",
   "TR420": "Hesabınız tarafımızdan onaylanamasını müteakip kullanıma açılacaktır.",
   "TR421": "Lütfen email adresi gönderiniz.",
-  "TR422": "Bu email adresi daha önce onaylanmış"
+  "TR422": "Bu email adresi daha önce onaylanmış",
+  "TR423": "Kullanıcı tipi belli değil",
+  "TR424": "Yetki alanı dışı!!!",
+  "TR425": "Kullanıcının rolü yok!!!"
 }

@@ -18,7 +18,7 @@ import * as bcrypt from 'bcrypt';
 
 // Import modules
 import { MailUtilsService, SendEmailDto } from '@mail-utils';
-import { MailModeType, AuthService } from '@auth';
+import { MailModeType, AuthService, UserType } from '@auth';
 import { ExpiredReasonType, OTPType } from '@prisma/client';
 import authConfig from '@auth/config/auth.config';
 import generalConfig from '@shared/config/general.config';
@@ -267,6 +267,7 @@ export class UsersService {
             );
         }
 
+        user["Role"] = UserType.Normal
         if (user && (await bcrypt.compare(cred.Password, user.Password))) {
             const {
                 AccessToken,
@@ -308,9 +309,10 @@ export class UsersService {
         );
     }
 
-    async userProfile(
+    async profile(
         user: UserParamsDto,
     ): Promise<ResponseUserProfileUserDTO> {
+
         return await this.userService.get({ Id: user.Id });
     }
 
@@ -398,7 +400,6 @@ export class UsersService {
                     },
                     take: 1,
                 });
-
                 if (!otpCode || !otpCode.length) {
                     throw new OtpCodeNotFoundException(
                         VerifyCodeExceptionType.CODE_NOT_FOUND,

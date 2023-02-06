@@ -2,10 +2,11 @@ import { SendEmailDto } from '@mail-utils';
 import { OTPType, CompanyUser, ExpiredReasonType } from '@prisma/client';
 import {
     ActivateCompanyUserDto,
+    CompanyUserParamsDto,
     CreateCompanyUserJsonDto,
     ResponseLoginCompanyUserDTO,
 } from './dtos/companyUser-response.dto';
-import { AuthService, MailModeType } from '@auth';
+import { AuthService, MailModeType, UserType } from '@auth';
 import authConfig from '@auth/config/auth.config';
 import {
     PrismaService,
@@ -37,7 +38,6 @@ import { generate } from 'generate-password';
 import * as jwt from 'jsonwebtoken';
 import {
     LoginUserDto,
-    ResponseLoginUserDTO,
     SendCodeDTO,
     UserParamsDto,
     VerifyCodeDTO,
@@ -406,7 +406,7 @@ export class CompanyUsersService {
                 Email: cred.Email,
             },
         });
-
+        
         if (!companyUser) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -430,6 +430,7 @@ export class CompanyUsersService {
             );
         }
 
+        companyUser["Role"] = UserType.Provider
         if (
             companyUser &&
             (await bcrypt.compare(cred.Password, companyUser.Password))
@@ -537,7 +538,6 @@ export class CompanyUsersService {
                 406,
             );
         }
-
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
                 CompanyUserId: cred.Id,
@@ -559,5 +559,13 @@ export class CompanyUsersService {
             Success: true,
             Details: ResponseMessage.TR203,
         };
+    }
+
+    async profile(
+        user: CompanyUserParamsDto,
+    )
+    // : Promise<ResponseCompanyUserProfileUserDTO> 
+    {
+        return await this.companyUserService.get({ Id: user.Id });
     }
 }

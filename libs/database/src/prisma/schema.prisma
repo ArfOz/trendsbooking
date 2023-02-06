@@ -42,12 +42,14 @@ model User {
   /// for ex: YYYY-MM-DD
   CreatedAt  DateTime? @default(now())
   UpdatedAt  DateTime? @updatedAt
-
+  // Email code tables
   UserOTPCode UserOTPCode[]
-
+  // Verified email
   IsEmailVerified Boolean @default(false)
-
+  // Token Table
   UserToken UserToken[]
+  /// - It is the UserRole and the default value is *Normal*.
+  Role UserRole @default(Normal)
 }
 
 model CompanyUser {
@@ -98,17 +100,19 @@ model CompanyUser {
   UserOTPCode     UserOTPCode[]
   IsEmailVerified Boolean       @default(false)
   UserToken       UserToken[]
+  /// - It is the UserRole and the default value is *Provider*.
+  Role UserRole @default(Provider)
 }
 
 model UserToken {
   /// @HideField({match:'@Input'})
   Id               Int                @id @default(autoincrement())
   /// @HideField({input:true})
-  User             User?               @relation(fields: [UserId], references: [Id])
+  User             User?              @relation(fields: [UserId], references: [Id])
   /// @HideField({input:true})
   UserId           Int?
   /// Companyuser Token
-  CompanyUser      CompanyUser?        @relation(fields: [CompanyUserId], references: [Id])
+  CompanyUser      CompanyUser?       @relation(fields: [CompanyUserId], references: [Id])
   /// @HideField({input:true})
   CompanyUserId    Int?
   /// @HideField()
@@ -192,4 +196,10 @@ enum Gender {
 enum OTPType {
   VerifyPhone
   VerifyEmail
+}
+
+enum UserRole {
+  Normal
+  Provider
+  Admin
 }

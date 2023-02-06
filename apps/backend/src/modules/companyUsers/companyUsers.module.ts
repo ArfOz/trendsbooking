@@ -3,7 +3,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import authConfig from '@auth/config/auth.config';
-import { DatabaseModule, PrismaService, UserService, CompanyUserService, UserOtpCodeService  } from '@database';
+import { PrismaService, UserService, CompanyUserService, UserOtpCodeService  } from '@database';
 import { KeypairModule } from '@shared';
 import generalConfig from '@shared/config/general.config';
 import { MailUtilsModule } from '@mail-utils';

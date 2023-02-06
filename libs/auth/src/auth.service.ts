@@ -117,6 +117,7 @@ export class AuthService {
         const payload = {
             Id: user.Id,
             Email: user.Email,
+            Role : user.Role
         };
 
         const expiresAccessToken = new Date(
