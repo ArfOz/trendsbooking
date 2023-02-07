@@ -1,5 +1,5 @@
 import { SendEmailDto } from '@mail-utils';
-import { OTPType, CompanyUser, ExpiredReasonType } from '@prisma/client';
+import { OTPType, ExpiredReasonType } from '@prisma/client';
 import {
     ActivateCompanyUserDto,
     CompanyUserParamsDto,
@@ -29,10 +29,10 @@ import {
     TokenExceptionType,
     TrendsException,
     VerifyCodeExceptionType,
+    BadRequestException
 } from '@shared';
 import generalConfig from '@shared/config/general.config';
 import ResponseMessage from '@shared/enums/response-message.json';
-import { BadRequestException } from '@shared';
 import * as bcrypt from 'bcrypt';
 import { generate } from 'generate-password';
 import * as jwt from 'jsonwebtoken';

@@ -1,13 +1,4 @@
-import {
-    RegisterUserJsonDto,
-    LoginUserDto,
-    VerifyCodeDTO,
-    SendCodeDTO,
-    ResponseRegisterUserDTO,
-    ResponseLoginUserDTO,
-    ResponseUserProfileUserDTO,
-    UserParamsDto,
-} from './dtos';
+
 // Npm packages
 
 import { Injectable, Inject, HttpException } from '@nestjs/common';
@@ -38,6 +29,16 @@ import {
 } from '@shared';
 import { UserService, PrismaService, UserOtpCodeService } from '@database';
 import ResponseMessage from '@shared/enums/response-message.json';
+import {
+    RegisterUserJsonDto,
+    LoginUserDto,
+    VerifyCodeDTO,
+    SendCodeDTO,
+    ResponseRegisterUserDTO,
+    ResponseLoginUserDTO,
+    ResponseUserProfileUserDTO,
+    UserParamsDto,
+} from './dtos';
 
 @Injectable()
 export class UsersService {
@@ -53,27 +54,6 @@ export class UsersService {
         private readonly userOtpCodeService: UserOtpCodeService,
         private readonly mailUtilsService: MailUtilsService,
     ) {}
-
-    // async getUser(Email: string): Promise<User> {
-
-    //     const user = await this.prismaService.user.findUnique({
-    //         where: { Email }
-    //     });
-
-    //     if(!user) {
-    //         throw new NotFoundException();
-    //     }
-
-    //     delete user.Password;
-    //     return user;
-
-    // }
-
-    // async createUser(data: CreateUserDto): Promise<User> {
-
-    //     const createdUser = await this.userService.createUser(data)
-    //     return createdUser;
-    // }
 
     async register(
         input: RegisterUserJsonDto,

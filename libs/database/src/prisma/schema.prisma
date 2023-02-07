@@ -104,6 +104,11 @@ model CompanyUser {
   Role UserRole @default(Provider)
 }
 
+model Department{
+    /// @HideField({output:true})
+  Id         Int       @id @default(autoincrement())
+}
+
 model UserToken {
   /// @HideField({match:'@Input'})
   Id               Int                @id @default(autoincrement())
@@ -203,3 +208,4 @@ enum UserRole {
   Provider
   Admin
 }
+
