@@ -14,42 +14,42 @@ generator erd {
 
 model User {
   /// @HideField({output:true})
-  Id         Int       @id @default(autoincrement())
+  Id              Int           @id @default(autoincrement())
   /// for ex: arif@test.com this have to be unique
-  Email      String    @unique
+  Email           String        @unique
   /// @HideField({output:true})
-  Password   String
+  Password        String
   /// for ex: arfoz
-  Username   String
+  Username        String
   /// for ex: Arif, Ozkan, Ahmet
-  FirstName  String
+  FirstName       String
   /// for ex: lastname or surname
-  LastName   String
+  LastName        String
   /// for ex: Turkey
-  Country    String?
+  Country         String?
   /// For ex:544672654964  !Important it is string
-  Phone      String
+  Phone           String
   /// for ex: Turkey
-  Gender     Gender    @default(NottoSay)
+  Gender          Gender        @default(NottoSay)
   /// Checkbox Confirmation
-  CbFirst    Boolean   @default(false)
+  CbFirst         Boolean       @default(false)
   /// for ex: YYYY-MM-DD
-  BirthDate  DateTime  @default(now())
+  BirthDate       DateTime      @default(now())
   /// @HideField({ input: true, output: true })
-  PrivateKey String?
+  PrivateKey      String?
   /// @HideField({ input: true, output: true })
-  PublicKey  String?
+  PublicKey       String?
   /// for ex: YYYY-MM-DD
-  CreatedAt  DateTime? @default(now())
-  UpdatedAt  DateTime? @updatedAt
+  CreatedAt       DateTime?     @default(now())
+  UpdatedAt       DateTime?     @updatedAt
   // Email code tables
-  UserOTPCode UserOTPCode[]
+  UserOTPCode     UserOTPCode[]
   // Verified email
-  IsEmailVerified Boolean @default(false)
+  IsEmailVerified Boolean       @default(false)
   // Token Table
-  UserToken UserToken[]
+  UserToken       UserToken[]
   /// - It is the UserRole and the default value is *Normal*.
-  Role UserRole @default(Normal)
+  Role            UserRole      @default(Normal)
 }
 
 model CompanyUser {
@@ -101,12 +101,30 @@ model CompanyUser {
   IsEmailVerified Boolean       @default(false)
   UserToken       UserToken[]
   /// - It is the UserRole and the default value is *Provider*.
-  Role UserRole @default(Provider)
+  Role            UserRole      @default(Provider)
 }
 
-model Department{
-    /// @HideField({output:true})
-  Id         Int       @id @default(autoincrement())
+model Department {
+  /// @HideField({output:true})
+  Id      Int      @id @default(autoincrement())
+  ///Çalışanlar
+  Workers Worker[]
+  ///Salon Tipi
+  Salon 
+  ServiceType
+}
+
+model Worker {
+  /// @HideField({output:true})
+  Id           Int        @id @default(autoincrement())
+  /// for ex: Arif, Ozkan, Ahmet
+  FirstName    String
+  /// for ex: lastname or surname
+  LastName     String
+  /// For ex:544672654964  !Important it is string
+  Phone        String
+  Department   Department @relation(fields: [DepartmentId], references: [Id])
+  DepartmentId Int
 }
 
 model UserToken {
@@ -158,32 +176,17 @@ model UserOTPCode {
   UpdatedAt     DateTime?    @updatedAt
 }
 
-// model CompanyOTPCode {
-//   /// - This field is **required**.
-//   ///  This will be generated automatically by the database.
-//   Id            Int       @id @default(autoincrement())
-//   /// - This field is **required**.
-//   Code          Int
-//   /// - This field is **required**.
-//   /// - It is the Int type and the default value is *0*.
-//   Attempts      Int       @default(0)
-//   /// - This field is **required**.
-//   /// - It is the boolean type and the default value is *false*.
-//   IsDeleted     Boolean   @default(false)
-//   /// - This field is **required**.
-//   Type          OTPType
-//   /// - This field is **required**.
-//   ExpiredAt     DateTime
-//   /// - This field is **required**.
-//   CompanyUser   CompanyUser      @relation(fields: [CompanyUserId], references: [Id])
-//   /// - This field is **required**.
-//   CompanyUserId Int
-//   /// - This field is **required**.
-//   /// - It is the DateTime and the default value is *now*.
-//   /// - Ex: "2022-06-22T13:49:35.449Z"
-//   CreatedAt     DateTime  @default(now())
-//   UpdatedAt     DateTime? @updatedAt
-// }
+model WorkTime {
+  /// @HideField({match:'@Input'})
+  Id Int @id @default(autoincrement())
+
+  MorningStartAt  DateTime 	@db.Time(3)
+  // MorningEndAt  TIME ()
+  // ShiftStart  TIME ()
+  // ShiftEnd  TIME ()
+  // NightStartAt  TIME ()
+  // NightEndAt  TIME ()
+}
 
 enum ExpiredReasonType {
   Expired
@@ -209,3 +212,15 @@ enum UserRole {
   Admin
 }
 
+enum ServiceType {
+  Hair
+  Nail
+  MakeUp
+  Massage
+  Wax
+  Solarium
+  SkinCare
+  LaserHairRemoval
+  Tattoo
+  Others
+}
