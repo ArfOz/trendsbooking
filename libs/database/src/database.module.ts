@@ -4,6 +4,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { UserOtpCodeModule } from './user-otp-code/user-otp-code.module';
 import { CompanyUserModule } from './company-user';
+import { DepartmentModule } from './department/department.module';
 
 @Module({
     imports: [
@@ -11,9 +12,10 @@ import { CompanyUserModule } from './company-user';
         PrismaModule,
         UserModule,
         UserOtpCodeModule,
+        DepartmentModule,
         // CompanyUserModule,
     ],
     providers: [PrismaModule, UserModule, UserOtpCodeModule],
-    exports: [PrismaModule, UserModule,  UserOtpCodeModule],
+    exports: [PrismaModule, UserModule, UserOtpCodeModule],
 })
 export class DatabaseModule {}
