@@ -23,21 +23,24 @@ import {
     CircularProgress,
 } from '@mui/material';
 import LogoWord from './components/LogoWord';
-import Paper from '@mui/material/Paper';
 import { useAuth } from '../../../context/authContext';
 import Verification from './components/Verification';
 
 const initialState = {
-    FirstSecondName: '',
-    TCId: '',
+    FirstName: '',
+    LastName: '',
+    TCKN: '',
     Email: '',
     Password: '',
     Phone: '',
-    TaxNu: '',
-    CusGender: '',
-    TaxOff: false,
-    HallType: '',
-    Iban: '',
+    TaxNo: '',
+    Sector: '',
+    TaxAdmin: '',
+    Salon: '',
+    IBAN: '',
+    Country: '',
+    City: '',
+    District: '',
 };
 
 export default function Register() {
@@ -314,8 +317,8 @@ export default function Register() {
                                                 <TextField
                                                     margin="normal"
                                                     required
-                                                    id="FirstSecondName"
-                                                    label="Adınız Soyadınız"
+                                                    id="FirstName"
+                                                    label="Adınız"
                                                     name="FirstSecondName"
                                                     autoComplete="text"
                                                     variant="outlined"
@@ -330,9 +333,9 @@ export default function Register() {
                                                 <TextField
                                                     margin="normal"
                                                     required
-                                                    id="TCId"
-                                                    label="TC Kimlik Numaranız"
-                                                    name="TCId"
+                                                    id="LastName"
+                                                    label="Soyadınız"
+                                                    name="LastName"
                                                     autoComplete="text"
                                                     variant="outlined"
                                                     onChange={handleChange}
@@ -464,7 +467,7 @@ export default function Register() {
                                                     sx={{
                                                         display: 'flex',
                                                         flexDirection: 'row',
-                                                        justifyContent: 'left',
+                                                        justifyContent: 'space-between',
                                                         m: 'auto',
                                                         width: '90%',
                                                     }}
@@ -481,26 +484,46 @@ export default function Register() {
                                                         height="80px"
                                                         size="small"
                                                         sx={{
-                                                            width: '50%',
+                                                            width: '40%',
                                                         }}
                                                     />
 
-                                                    <TextField
-                                                        margin="normal"
-                                                        required
-                                                        id="CusGender"
-                                                        label="Hizmet Verilen Müşteri cinsiyeti"
-                                                        name="CusGender"
-                                                        autoComplete="text"
-                                                        variant="outlined"
-                                                        onChange={handleChange}
-                                                        height="80px"
-                                                        size="small"
-                                                        sx={{
-                                                            width: '50%',
-                                                            ml: 15,
-                                                        }}
-                                                    />
+                                                    <FormControl sx={{ minWidth: '40%'}}>
+                                                        <InputLabel id="Gender-label">
+                                                            Müşteri Cinsiyeti
+                                                        </InputLabel>
+                                                        <Select
+                                                            labelId="Gender-label"
+                                                            id="Sector"
+                                                            name="Sector"
+                                                            value={
+                                                                registerForm.Gender
+                                                            }
+                                                            label="Cinsiyet"
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                        >
+                                                            <MenuItem
+                                                                value={'Male'}
+                                                            >
+                                                                Erkek
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={'Female'}
+                                                            >
+                                                                Kadın
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={
+                                                                    'NottoSay'
+                                                                }
+                                                            >
+                                                                Belirtmek
+                                                                İstemiyorum
+                                                            </MenuItem>
+                                                        </Select>
+                                                    </FormControl>
                                                 </Box>
                                                 <Box
                                                     sx={{
@@ -548,7 +571,8 @@ export default function Register() {
                                                 <Box
                                                     sx={{
                                                         display: 'flex',
-                                                        justifyContent: 'left',
+                                                        justifyContent:
+                                                            'space-between',
                                                         m: 'auto',
                                                         width: '90%',
                                                     }}
@@ -568,21 +592,20 @@ export default function Register() {
                                                             width: '40%',
                                                         }}
                                                     />
-                                                    {/* <TextField
+                                                    <TextField
                                                         margin="normal"
                                                         required
-                                                        id="Iban"
-                                                        label="IBAN Numaranız"
-                                                        name="Iban"
+                                                        id="TCKN"
+                                                        label="TC Kimlik Numaranız "
+                                                        name="TCKN"
                                                         autoComplete="text"
-
                                                         onChange={handleChange}
                                                         height="80px"
                                                         size="small"
                                                         sx={{
                                                             width: '40%',
                                                         }}
-                                                    /> */}
+                                                    />
                                                 </Box>
                                             </Box>
                                         </Box>
