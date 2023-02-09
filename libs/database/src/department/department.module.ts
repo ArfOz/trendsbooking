@@ -1,4 +1,4 @@
-import { PrismaModule } from '@database/prisma';
+import { PrismaModule } from '@database';
 import { Module } from '@nestjs/common';
 import { KeypairModule } from '@shared';
 import { DepartmentService } from './department.service';

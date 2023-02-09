@@ -23,4 +23,44 @@ export class DepartmentService {
             where,
         });
     }
+
+    async find(params: {
+        skip?: number;
+        take?: number;
+        cursor?: Prisma.DepartmentWhereUniqueInput;
+        where?: Prisma.DepartmentWhereInput;
+        orderBy?: Prisma.DepartmentOrderByWithRelationInput;
+    }) {
+        const { skip, take, cursor, where, orderBy} = params;
+        return this.prisma.department.findMany({
+            skip,
+            take,
+            cursor,
+            where,
+            orderBy,
+        });
+    }
+
+    async create(data: Prisma.DepartmentCreateInput): Promise<Department> {
+        return this.prisma.department.create({ data });
+    }
+
+    async update(params: {
+        where: Prisma.DepartmentWhereUniqueInput;
+        data: Prisma.DepartmentUpdateInput;
+    }): Promise<Department> {
+        const { where, data } = params;
+        return this.prisma.department.update({
+            data,
+            where,
+        });
+    }
+
+    async delete(
+        where: Prisma.DepartmentWhereUniqueInput,
+    ): Promise<Department> {
+        return this.prisma.department.delete({
+            where,
+        });
+    }
 }
