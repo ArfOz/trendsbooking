@@ -38,6 +38,17 @@ export class DepartmentService {
             cursor,
             where,
             orderBy,
+            select:{
+                Salon:true,
+                ServiceType:true,
+                Workers:{
+                    select:{
+                        FirstName:true,
+                        LastName:true,
+                        Phone:true
+                    }
+                }
+            }
         });
     }
 
