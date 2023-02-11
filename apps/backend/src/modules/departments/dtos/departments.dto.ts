@@ -56,4 +56,13 @@ export class AddDepartmentsJsonDto {
     ServiceType: ServiceTypeEnum;
 }
 
+export class DepartmentDetailsJsonDto{
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    Id: number;
+
+}
+
 

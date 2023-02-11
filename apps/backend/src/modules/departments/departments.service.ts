@@ -41,4 +41,21 @@ export class DepartmentsService {
             Success: true,
         };
     }
+
+    async getdetails(user: UserParamsDto, id?: number) {
+        console.log(user, id);
+
+
+        const data = await this.departmentService.find(
+            {where:{
+                CompanyUserId:user.Id
+            }
+        }
+        )
+        return {
+            Data: ResponseMessage.TR204,
+            Success: true,
+            details:data
+        };
+    }
 }

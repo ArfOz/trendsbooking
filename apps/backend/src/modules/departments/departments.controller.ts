@@ -26,4 +26,13 @@ export class DepartmentController {
         ) {
         return this.departmentsService.add(user,input);
     }
+
+    @RolesRequired(['Provider'])
+    @Post('getdetails')
+    async getWorkers(
+        @UserParam() user: UserParamsDto,
+        @Body() id?: number
+        ) {
+        return this.departmentsService.getdetails(user,id);
+    }
 }
