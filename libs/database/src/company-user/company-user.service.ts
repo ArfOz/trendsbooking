@@ -27,7 +27,8 @@ export class CompanyUserService {
                     Departments:{
                         select:{
                             Salon:true,
-                            ServiceType:true
+                            ServiceType:true,
+                            Id:true
                         }
                     },
                     District:true,

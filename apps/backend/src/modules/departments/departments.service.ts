@@ -42,12 +42,13 @@ export class DepartmentsService {
         };
     }
 
-    async getdetails(user: UserParamsDto, id?: number) {
-        console.log(user, id);
+    async getdetails(user: UserParamsDto, DepartmentId?: number) {
+        console.log(user, DepartmentId);
 
         const data = await this.departmentService.find({
             where: {
                 CompanyUserId: user.Id,
+                Id: DepartmentId,
             },
         });
         return {

@@ -45,9 +45,11 @@ export class DepartmentService {
                     select:{
                         FirstName:true,
                         LastName:true,
-                        Phone:true
+                        Phone:true,
+                        Id:true
                     }
-                }
+                },
+                Id:true
             }
         });
     }

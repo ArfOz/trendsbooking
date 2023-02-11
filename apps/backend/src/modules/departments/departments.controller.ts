@@ -1,7 +1,7 @@
 import { UserParam } from './../../../../../libs/shared/src/decorators/user.decorator';
 import { UserParamsDto } from './../users/dtos/user-response.dto';
 import { RolesRequired } from '@shared/decorators';
-import { AddDepartmentsJsonDto } from './dtos/departments.dto';
+import { AddDepartmentsJsonDto, DepartmentDetailsJsonDto } from './dtos/departments.dto';
 import { AllowUnauthorizedRequest } from './../../../../../libs/shared/src/decorators/unauthorized-request.decorator';
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -31,8 +31,8 @@ export class DepartmentController {
     @Post('getdetails')
     async getWorkers(
         @UserParam() user: UserParamsDto,
-        @Body() id?: number
+        @Body() input?: DepartmentDetailsJsonDto
         ) {
-        return this.departmentsService.getdetails(user,id);
+        return this.departmentsService.getdetails(user,input.Id);
     }
 }
