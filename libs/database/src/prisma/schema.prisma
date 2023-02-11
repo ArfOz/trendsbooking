@@ -77,7 +77,7 @@ model CompanyUser {
   /// Iban Numarası
   IBAN            String
   ///Hizmet verilen Müşteri cinsiyeti
-  Sector          Gender[]
+  Sector          ServiceGender[]
   ///Salon Türü
   Salon           String
   /// for ex: Turkey
@@ -203,6 +203,12 @@ enum Gender {
   Male
   Female
   NottoSay
+}
+
+enum ServiceGender {
+  Male
+  Female
+  Unisex
 }
 
 enum OTPType {

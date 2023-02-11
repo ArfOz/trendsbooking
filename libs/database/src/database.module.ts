@@ -13,9 +13,9 @@ import { DepartmentModule } from './department/department.module';
         UserModule,
         UserOtpCodeModule,
         DepartmentModule,
-        // CompanyUserModule,
+        CompanyUserModule,
     ],
-    providers: [PrismaModule, UserModule, UserOtpCodeModule],
-    exports: [PrismaModule, UserModule, UserOtpCodeModule],
+    providers: [PrismaModule, UserModule, UserOtpCodeModule, DepartmentModule],
+    exports: [PrismaModule, UserModule, UserOtpCodeModule, DepartmentModule],
 })
 export class DatabaseModule {}

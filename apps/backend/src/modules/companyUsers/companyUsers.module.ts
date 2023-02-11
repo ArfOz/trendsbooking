@@ -21,7 +21,7 @@ import { AuthModule } from '@auth';
         forwardRef(() => AuthModule),
         MailUtilsModule,
     ],
-    providers: [CompanyUsersService, CompanyUserService, PrismaService, UserService, UserOtpCodeService, PrismaService],
+    providers: [CompanyUsersService, CompanyUserService, PrismaService, UserService, UserOtpCodeService],
     controllers: [CompanyUsersController],
     exports: [CompanyUsersService],
 })

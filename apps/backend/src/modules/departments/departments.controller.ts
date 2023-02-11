@@ -1,3 +1,7 @@
+import { UserParam } from './../../../../../libs/shared/src/decorators/user.decorator';
+import { UserParamsDto } from './../users/dtos/user-response.dto';
+import { RolesRequired } from '@shared/decorators';
+import { AddDepartmentsJsonDto } from './dtos/departments.dto';
 import { AllowUnauthorizedRequest } from './../../../../../libs/shared/src/decorators/unauthorized-request.decorator';
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -14,9 +18,12 @@ export class DepartmentController {
         return 'test departments page';
     }
 
-//     @AllowUnauthorizedRequest()
-//     @Post('add')
-//     async registerWithEmail(@Body() input: CreateCompanyUserJsonDto) {
-//         return this.departmentsService.add(input);
-//     }
+    @RolesRequired(['Provider'])
+    @Post('add')
+    async add(
+        @UserParam() user: UserParamsDto,
+        @Body() input: AddDepartmentsJsonDto
+        ) {
+        return this.departmentsService.add(user,input);
+    }
 }
