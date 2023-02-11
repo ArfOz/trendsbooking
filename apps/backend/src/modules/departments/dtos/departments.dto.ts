@@ -9,6 +9,19 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
+enum ServiceTypeEnum{
+    Hair="Hair",
+    Nail="Nail",
+    MakeUp="MakeUp",
+    Massage="Massage",
+    Wax="Wax",
+    Solarium="Solarium",
+    SkinCare="SkinCare",
+    LaserHairRemoval="LaserHairRemoval",
+    Tattoo="Tattoo",
+    Others="Others"
+
+}
 export class WorkerCreateJsonDto {
     @ApiProperty()
     @IsNotEmpty()
@@ -40,5 +53,7 @@ export class AddDepartmentsJsonDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    ServiceType: string;
+    ServiceType: ServiceTypeEnum;
 }
+
+

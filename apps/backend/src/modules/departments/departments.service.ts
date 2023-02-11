@@ -5,16 +5,12 @@ import ResponseMessage from '@shared/enums/response-message.json';
 import { AddDepartmentsJsonDto } from './dtos/departments.dto';
 import { Injectable } from '@nestjs/common';
 import { DepartmentService } from '@database';
+import { UserParamsDto } from '../users/dtos';
 
 @Injectable()
 export class DepartmentsService {
-
-    constructor(
-        private readonly departmentService: DepartmentService,
-    ){
-
-    }
-    async add(user, input: AddDepartmentsJsonDto) {
+    constructor(private readonly departmentService: DepartmentService) {}
+    async add(user: UserParamsDto, input: AddDepartmentsJsonDto) {
         console.log(user, input);
 
         if (!input.Salon || !input.ServiceType || !input.Workers) {
@@ -25,17 +21,20 @@ export class DepartmentsService {
             );
         }
 
-        const data :Prisma.DepartmentCreateInput= {
-            Workers: input.Workers?,
+        const data: Prisma.DepartmentCreateInput = {
+            Workers: {
+                create: {
+                    FirstName: input.Workers.FirstName,
+                    LastName: input.Workers.LastName,
+                    Phone: input.Workers.Phone,
+                },
+            },
             Salon: input.Salon,
-            // ServiceType?: DepartmentCreateServiceTypeInput | Enumerable<ServiceType>
-            // CompanyUser?: CompanyUserCreateNestedOneWithoutDepartmentsInput
-        }
+            ServiceType: input.ServiceType,
+            CompanyUser: { connect: { Id: user.Id } },
+        };
 
-        await this.departmentService.create({
-
-        })
-
+        await this.departmentService.create(data);
 
         return {
             Data: ResponseMessage.TR204,
