@@ -7,6 +7,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { DepartmentsModule } from './modules/departments/departments.module';
+import { WorkersModule } from './modules/workers/workers.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { DepartmentsModule } from './modules/departments/departments.module';
         UsersModule,
         CompanyUsersModule,
         DepartmentsModule,
+        WorkersModule,
     ],
     providers: [
         {
