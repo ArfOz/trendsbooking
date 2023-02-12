@@ -1,11 +1,14 @@
 import { Prisma, Worker } from '@prisma/client';
 import { PrismaService } from '@database';
 import { Injectable } from '@nestjs/common';
-import { BadRequestException, BadRequestExceptionType, KeypairService } from '@shared';
+import {
+    BadRequestException,
+    BadRequestExceptionType,
+    KeypairService,
+} from '@shared';
 
 @Injectable()
 export class WorkerService {
-
     constructor(
         private prisma: PrismaService,
         private readonly keypairService: KeypairService,
@@ -42,10 +45,9 @@ export class WorkerService {
                 //     TaxNo:true,
                 //     TaxAdmin:true,
                 //     TCKN:true,
-                    
+
                 // },
-            }
-            );
+            });
 
             // if (user && user.Email) {
             //     user.Email = this.keypairService.decryptWithAppKeys(user.Email);
@@ -58,7 +60,11 @@ export class WorkerService {
             delete user.Id;
             return user;
         } catch (error) {
-            console.log(error);
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(error),
+                400,
+            );
         }
     }
 
@@ -171,36 +177,17 @@ export class WorkerService {
 
     async create(data: Prisma.WorkerCreateInput) {
         try {
-            let encryptedEmail;
-            let encryptedPhone;
+            const createdUser = await this.prisma.worker.create({
+                select: {
+                    Phone: true,
+                    FirstName: true,
+                    LastName: true,
+                    Id: true,
+                },
+                data,
+            });
 
-            // if (data.Email)
-            //     encryptedEmail = this.keypairService.encryptWithAppKeys(
-            //         data.Email,
-            //     );
-            // if (data.Phone)
-            //     encryptedPhone = this.keypairService.encryptWithAppKeys(
-            //         data.Phone,
-            //     );
-
-            // const createdUser = await this.prisma.worker.create({
-            //     data: { ...data, Email: encryptedEmail, Phone: encryptedPhone },
-            //     select: {
-            //         Email: true,
-            //         Phone: true,
-            //         Country: true,
-            //         FirstName: true,
-            //         LastName: true,
-            //         Username: true,
-            //         Id: true,
-            //     },
-            // });
-
-            // if (data.Email) createdUser.Email = data.Email;
-            // if (data.Phone) createdUser.Phone = data.Phone;
-
-            return null
-            // return createdUser;
+            return createdUser;
         } catch (error) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -250,13 +237,11 @@ export class WorkerService {
         //         updatedUser.Phone,
         //     );
 
-        return null
+        return null;
         // return updatedUser;
     }
 
-    async delete(
-        where: Prisma.WorkerWhereUniqueInput,
-    ): Promise<Worker> {
+    async delete(where: Prisma.WorkerWhereUniqueInput): Promise<Worker> {
         return this.prisma.worker.delete({
             where,
         });

@@ -23,14 +23,14 @@ export class WorkersController {
         return this.workersService.getDetails(user,input.WorkerId);
     }
 
-    // @RolesRequired(['Provider'])
-    // @Post('add')
-    // async add(
-    //     @UserParam() user: UserParamsDto,
-    //     @Body() input: WorkersAddJsonDto
-    //     ) {
-    //     return this.workersService.add(user,input);
-    // }
+    @RolesRequired(['Provider'])
+    @Post('addworkers')
+    async add(
+        @UserParam() user: UserParamsDto,
+        @Body() input: WorkersAddJsonDto
+        ) {
+        return this.workersService.add(user,input);
+    }
 
 
 }

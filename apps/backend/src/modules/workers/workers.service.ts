@@ -3,6 +3,8 @@ import { WorkerService } from '@database';
 import { Injectable } from '@nestjs/common';
 import { UserParamsDto } from '../users/dtos';
 import { WorkersAddJsonDto, WorkersGetJsonDto } from './dtos/workers.dto';
+import { BadRequestException, BadRequestExceptionType } from '@shared';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class WorkersService {
@@ -12,42 +14,35 @@ export class WorkersService {
         console.log(user, workerId);
 
         const data = await this.workerService.get({
-            Id:workerId
+            Id: workerId,
         });
         return {
             Success: true,
             Data: data,
         };
     }
-
+    // To do her company kendine ait olan departmana ekleme yapacak bunun kontrolü de olacak.
     async add(user: UserParamsDto, input: WorkersAddJsonDto) {
-        console.log(user, input);
 
-        // if (!input.Salon || !input.ServiceType || !input.Workers) {
-        //     throw new BadRequestException(
-        //         BadRequestExceptionType.BAD_REQUEST,
-        //         new Error(ResponseMessage.TR426),
-        //         426,
-        //     );
-        // }
+        if (!input.FirstName || !input.LastName || !input.Phone) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR427),
+                427,
+            );
+        }
 
-        // const data: Prisma.DepartmentCreateInput = {
-        //     Workers: {
-        //         create: {
-        //             FirstName: input.Workers.FirstName,
-        //             LastName: input.Workers.LastName,
-        //             Phone: input.Workers.Phone,
-        //         },
-        //     },
-        //     Salon: input.Salon,
-        //     ServiceType: input.ServiceType,
-        //     CompanyUser: { connect: { Id: user.Id } },
-        // };
+        const data: Prisma.WorkerCreateInput = {
+            FirstName: input.FirstName,
+            LastName: input.LastName,
+            Phone: input.Phone,
+            Department: { connect: { Id: input.DepartmentId } },
+        };
 
-        // await this.departmentService.create(data);
+        await this.workerService.create(data);
 
         return {
-            Data: ResponseMessage.TR204,
+            Data: ResponseMessage.TR205,
             Success: true,
         };
     }

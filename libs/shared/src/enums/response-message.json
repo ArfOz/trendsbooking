@@ -5,7 +5,8 @@
   "TR201": "Email adresiniz başarılı bir şekilde etkinleştirilmiştir.",
   "TR202": "Email onayı bekleniyor",
   "TR203": "Başarılı bir şekilde çıkış yaptınız",
-  "TR204" :"Şubeniz başarılı bir şekilde eklenmiştir.",
+  "TR204": "Şubeniz başarılı bir şekilde eklenmiştir.",
+  "TR205": "Şubenize çalışan eklenmiştir.",
 
   "TR403": "Parola veya Email adresi yanlış.",
   "TR404": "Lütfen hesabınızı etkinleştiriniz.",
@@ -30,5 +31,6 @@
   "TR423": "Kullanıcı tipi belli değil",
   "TR424": "Yetki alanı dışı!!!",
   "TR425": "Kullanıcının rolü yok!!!",
-  "TR426": "Salon, servis türü ve çalışanlar zorunludur."
+  "TR426": "Salon, servis türü ve çalışanlar zorunludur.",
+  "TR427": "Ad, Soyad ve Telefon Numarası zorunludur"
 }
