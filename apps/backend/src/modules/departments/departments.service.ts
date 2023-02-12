@@ -11,8 +11,6 @@ import { UserParamsDto } from '../users/dtos';
 export class DepartmentsService {
     constructor(private readonly departmentService: DepartmentService) {}
     async add(user: UserParamsDto, input: AddDepartmentsJsonDto) {
-        console.log(user, input);
-
         if (!input.Salon || !input.ServiceType || !input.Workers) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -43,8 +41,6 @@ export class DepartmentsService {
     }
 
     async getdetails(user: UserParamsDto, DepartmentId?: number) {
-        console.log(user, DepartmentId);
-
         const data = await this.departmentService.find({
             where: {
                 CompanyUserId: user.Id,

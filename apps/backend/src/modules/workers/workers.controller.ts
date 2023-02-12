@@ -25,11 +25,20 @@ export class WorkersController {
 
     @RolesRequired(['Provider'])
     @Post('addworkers')
-    async add(
+    async addworker(
         @UserParam() user: UserParamsDto,
         @Body() input: WorkersAddJsonDto
         ) {
-        return this.workersService.add(user,input);
+        return this.workersService.addworker(user,input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('deleteworker')
+    async deleteworker(
+        @UserParam() user: UserParamsDto,
+        @Body() input: WorkersGetJsonDto
+        ) {
+        return this.workersService.deleteworker(user,input);
     }
 
 

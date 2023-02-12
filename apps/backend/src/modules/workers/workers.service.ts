@@ -11,8 +11,13 @@ export class WorkersService {
     constructor(private readonly workerService: WorkerService) {}
 
     async getDetails(user: UserParamsDto, workerId: number) {
-        console.log(user, workerId);
-
+        if (!workerId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR428),
+                428,
+            );
+        }
         const data = await this.workerService.get({
             Id: workerId,
         });
@@ -22,8 +27,7 @@ export class WorkersService {
         };
     }
     // To do her company kendine ait olan departmana ekleme yapacak bunun kontrolü de olacak.
-    async add(user: UserParamsDto, input: WorkersAddJsonDto) {
-
+    async addworker(user: UserParamsDto, input: WorkersAddJsonDto) {
         if (!input.FirstName || !input.LastName || !input.Phone) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -31,6 +35,12 @@ export class WorkersService {
                 427,
             );
         }
+
+        const response = await this.workerService.find({
+            where: { DepartmentId: input.DepartmentId },
+        });
+
+        console.log("ressss", response)
 
         const data: Prisma.WorkerCreateInput = {
             FirstName: input.FirstName,
@@ -44,6 +54,23 @@ export class WorkersService {
         return {
             Data: ResponseMessage.TR205,
             Success: true,
+        };
+    }
+
+    async deleteworker(user: UserParamsDto, input: WorkersGetJsonDto) {
+        if (!input.WorkerId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR428),
+                428,
+            );
+        }
+        const data = await this.workerService.delete({
+            Id: input.WorkerId,
+        });
+        return {
+            Success: true,
+            Data: data,
         };
     }
 }

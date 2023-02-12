@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger/dist';
-import { IsNotEmpty, IsString, IsOptional, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
 
 export class WorkersAddJsonDto {
-
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
@@ -22,12 +21,9 @@ export class WorkersAddJsonDto {
     @IsNotEmpty()
     @IsString()
     Phone: string;
-
-
 }
 
-export class WorkersGetJsonDto{
-    
+export class WorkersGetJsonDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
