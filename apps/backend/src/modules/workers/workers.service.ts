@@ -2,12 +2,23 @@ import ResponseMessage from '@shared/enums/response-message.json';
 import { WorkerService } from '@database';
 import { Injectable } from '@nestjs/common';
 import { UserParamsDto } from '../users/dtos';
-import { WorkersAddJsonDto } from './dtos/workers.dto';
+import { WorkersAddJsonDto, WorkersGetJsonDto } from './dtos/workers.dto';
 
 @Injectable()
 export class WorkersService {
-
     constructor(private readonly workerService: WorkerService) {}
+
+    async getDetails(user: UserParamsDto, workerId: number) {
+        console.log(user, workerId);
+
+        const data = await this.workerService.get({
+            Id:workerId
+        });
+        return {
+            Success: true,
+            Data: data,
+        };
+    }
 
     async add(user: UserParamsDto, input: WorkersAddJsonDto) {
         console.log(user, input);

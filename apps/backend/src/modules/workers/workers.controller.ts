@@ -2,7 +2,7 @@ import { AllowUnauthorizedRequest, RolesRequired, UserParam } from '@shared/deco
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UserParamsDto } from '../users/dtos';
 import { WorkersService } from './workers.service';
-import { WorkersAddJsonDto } from './dtos/workers.dto';
+import { WorkersAddJsonDto, WorkersGetJsonDto } from './dtos/workers.dto';
 
 @Controller('workers')
 export class WorkersController {
@@ -15,11 +15,22 @@ export class WorkersController {
     }
 
     @RolesRequired(['Provider'])
-    @Post('add')
-    async add(
+    @Post('getdetails')
+    async getDetails(
         @UserParam() user: UserParamsDto,
-        @Body() input: WorkersAddJsonDto
+        @Body() input: WorkersGetJsonDto
         ) {
-        return this.workersService.add(user,input);
+        return this.workersService.getDetails(user,input.WorkerId);
     }
+
+    // @RolesRequired(['Provider'])
+    // @Post('add')
+    // async add(
+    //     @UserParam() user: UserParamsDto,
+    //     @Body() input: WorkersAddJsonDto
+    //     ) {
+    //     return this.workersService.add(user,input);
+    // }
+
+
 }
