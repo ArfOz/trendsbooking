@@ -248,7 +248,7 @@ export class CompanyUsersService {
                 'email' in payload &&
                 data.Code
             ) {
-                let companyUser = await this.companyUserService.get({
+                const companyUser = await this.companyUserService.get({
                     Id: payload.Id,
                 });
 
@@ -292,7 +292,7 @@ export class CompanyUsersService {
                 //     );
                 // }
 
-                companyUser = await this.companyUserService.update({
+                const companyUpdatedUser = await this.companyUserService.update({
                     where: {
                         Id: payload.Id,
                     },
@@ -310,7 +310,7 @@ export class CompanyUsersService {
                 });
 
                 return {
-                    Email: companyUser.Email,
+                    Email: companyUpdatedUser.Email,
                     Data: ResponseMessage.TR201,
                     Success: true,
                 };
@@ -422,13 +422,15 @@ export class CompanyUsersService {
             );
         }
 
-        if (!companyUser.IsActive) {
-            throw new NotVerifiedException(
-                VerifyCodeExceptionType.NOT_VERIFIED,
-                new Error(ResponseMessage.TR420),
-                404,
-            );
-        }
+
+        // Burası randevu açıldığında düzenlenecek. Admin tarafından onaylanana kadar randevu alamayacak.
+        // if (!companyUser.IsActive) {
+        //     throw new NotVerifiedException(
+        //         VerifyCodeExceptionType.NOT_VERIFIED,
+        //         new Error(ResponseMessage.TR420),
+        //         404,
+        //     );
+        // }
 
         companyUser["Role"] = UserType.Provider
         if (
