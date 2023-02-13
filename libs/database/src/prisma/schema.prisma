@@ -129,6 +129,8 @@ model Worker {
   Phone        String
   Department   Department @relation(fields: [DepartmentId], references: [Id])
   DepartmentId Int
+
+  Roles WorkerRoles[]
 }
 
 model UserToken {
@@ -233,4 +235,9 @@ enum ServiceType {
   LaserHairRemoval
   Tattoo
   Others
+}
+
+enum WorkerRoles {
+  Admin
+  Normal
 }
