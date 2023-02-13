@@ -73,8 +73,24 @@ export class WorkersService {
                 428,
             );
         }
+
+        const response = await this.workerService.find({
+            where: {
+                Id:input.WorkerId,
+                Department: { CompanyUserId: user.Id },
+            },
+        });
+
+        if (!response || response.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
         const data = await this.workerService.delete({
             Id: input.WorkerId,
+        
         });
         return {
             Success: true,

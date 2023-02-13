@@ -203,8 +203,8 @@ export class WorkerService {
     }): Promise<Worker> {
         const { where, data } = params;
 
-        let encryptedDataEmail;
-        let encryptedDataPhone;
+        // let encryptedDataEmail;
+        // let encryptedDataPhone;
 
         // if (data.Email) {
         //     encryptedDataEmail = this.keypairService.encryptWithAppKeys(
