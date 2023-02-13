@@ -26,7 +26,6 @@ export class WorkersService {
             Data: data,
         };
     }
-    // To do her company kendine ait olan departmana ekleme yapacak bunun kontrolü de olacak.
     async addworker(user: UserParamsDto, input: WorkersAddJsonDto) {
         if (!input.FirstName || !input.LastName || !input.Phone) {
             throw new BadRequestException(
@@ -37,10 +36,19 @@ export class WorkersService {
         }
 
         const response = await this.workerService.find({
-            where: { DepartmentId: input.DepartmentId },
+            where: {
+                DepartmentId: input.DepartmentId,
+                Department: { CompanyUserId: user.Id },
+            },
         });
 
-        console.log("ressss", response)
+        if (!response || response.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
 
         const data: Prisma.WorkerCreateInput = {
             FirstName: input.FirstName,
