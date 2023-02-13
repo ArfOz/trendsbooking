@@ -20,11 +20,11 @@ function useProvideAuth() {
     const [isLoading, setIsLoading] = useState(false);
 
     function postLogin(data) {
-        setLoginErrors(null)
+        setLoginErrors(null);
         setIsLoading(true);
         const options = {
             method: 'POST',
-            url: 'http://localhost:3300/api/users/login',
+            url: 'http://localhost:3300/api/companyusers/login',
             headers: {
                 'Content-Type': 'application/json',
                 accept: 'application/json',
@@ -44,13 +44,13 @@ function useProvideAuth() {
                 console.error(error);
                 setLoginErrors(error);
             });
-    };
+    }
     function postRegister(data) {
-        setRegisterErrors(null)
+        setRegisterErrors(null);
         setIsLoading(true);
         const options = {
             method: 'POST',
-            url: 'http://localhost:3300/api/users/register',
+            url: 'http://localhost:3300/api/companyusers/register',
             headers: {
                 'Content-Type': 'application/json',
                 accept: 'application/json',
@@ -63,14 +63,14 @@ function useProvideAuth() {
             .then(function (response) {
                 console.log(response);
                 setRegisterUser(response.data);
-                setIsLoading(false)
+                setIsLoading(false);
             })
             .catch(function (error) {
-                setIsLoading(false)
+                setIsLoading(false);
                 console.log('error', error);
                 setRegisterErrors(error);
             });
-    };
+    }
     return {
         registerUser,
         loginUser,
@@ -81,4 +81,3 @@ function useProvideAuth() {
         isLoading,
     };
 }
-
