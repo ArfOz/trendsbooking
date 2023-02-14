@@ -16,9 +16,7 @@ export class DepartmentService {
         private readonly keypairService: KeypairService,
     ) {}
 
-    async get(
-        where: Prisma.DepartmentWhereUniqueInput,
-    ){
+    async get(where: Prisma.DepartmentWhereUniqueInput) {
         return this.prisma.userOTPCode.findUnique({
             where,
         });
@@ -31,26 +29,27 @@ export class DepartmentService {
         where?: Prisma.DepartmentWhereInput;
         orderBy?: Prisma.DepartmentOrderByWithRelationInput;
     }) {
-        const { skip, take, cursor, where, orderBy} = params;
+        const { skip, take, cursor, where, orderBy } = params;
         return this.prisma.department.findMany({
             skip,
             take,
             cursor,
             where,
             orderBy,
-            select:{
-                Salon:true,
-                ServiceType:true,
-                Workers:{
-                    select:{
-                        FirstName:true,
-                        LastName:true,
-                        Phone:true,
-                        Id:true
-                    }
+            select: {
+                Salon: true,
+                ServiceType: true,
+                Workers: {
+                    select: {
+                        FirstName: true,
+                        LastName: true,
+                        Phone: true,
+                        Id: true,
+                        WorkTime: true,
+                    },
                 },
-                Id:true
-            }
+                Id: true,
+            },
         });
     }
 

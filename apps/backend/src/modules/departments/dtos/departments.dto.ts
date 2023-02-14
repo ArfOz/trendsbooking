@@ -22,6 +22,38 @@ enum ServiceTypeEnum{
     Others="Others"
 
 }
+
+export class WorkTime{
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    MorningStartAt:  string
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    MorningEndAt:  string
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    ShiftStart:  string
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    ShiftEnd:  string
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    NightStartAt:  string
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    NightEndAt:  string
+}
 export class WorkerCreateJsonDto {
     @ApiProperty()
     @IsNotEmpty()
@@ -54,6 +86,11 @@ export class AddDepartmentsJsonDto {
     @IsNotEmpty()
     @IsString()
     ServiceType: ServiceTypeEnum;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsObject()
+    WorkTime: WorkTime;
 }
 
 export class DepartmentDetailsJsonDto{

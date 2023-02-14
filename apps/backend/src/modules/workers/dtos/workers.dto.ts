@@ -6,32 +6,32 @@ export class WorkTime{
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    MorningStartAt: Date | string
+    MorningStartAt:  string
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    MorningEndAt: Date | string
+    MorningEndAt:  string
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    ShiftStart: Date | string
+    ShiftStart:  string
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    ShiftEnd: Date | string
+    ShiftEnd:  string
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    NightStartAt: Date | string
+    NightStartAt:  string
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    NightEndAt: Date | string
+    NightEndAt:  string
 }
 
 export class WorkersAddJsonDto {
