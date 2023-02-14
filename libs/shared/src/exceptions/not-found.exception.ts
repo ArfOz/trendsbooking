@@ -6,8 +6,9 @@ export class NotFoundException extends TrendsException {
     constructor(
         type: string | NotFoundExceptionType,
         details: Error,
-        status: number,
+        status: HttpStatus.NOT_FOUND,
+        code:number
     ) {
-        super(type, details, status);
+        super(type, details, status, code);
     }
 }

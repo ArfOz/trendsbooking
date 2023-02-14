@@ -1,10 +1,14 @@
+import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+
+// Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
 import { WorkerService } from '@database';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, BadRequestExceptionType } from '@shared';
+
+// DTOs area
 import { UserParamsDto } from '../users/dtos';
 import { WorkersAddJsonDto, WorkersGetJsonDto } from './dtos/workers.dto';
-import { BadRequestException, BadRequestExceptionType } from '@shared';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class WorkersService {
@@ -80,7 +84,7 @@ export class WorkersService {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR428),
-                428,
+                428
             );
         }
 

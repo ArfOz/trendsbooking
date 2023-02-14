@@ -1,11 +1,13 @@
-import { SendEmailDto } from '@mail-utils';
+// Npm Packages
+import { Inject, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { generate } from 'generate-password';
+import * as jwt from 'jsonwebtoken';
 import { OTPType, ExpiredReasonType } from '@prisma/client';
-import {
-    ActivateCompanyUserDto,
-    CompanyUserParamsDto,
-    CreateCompanyUserJsonDto,
-    ResponseLoginCompanyUserDTO,
-} from './dtos/companyUser-response.dto';
+
+// Libs area
+import { SendEmailDto } from '@mail-utils';
+
 import { AuthService, MailModeType, UserType } from '@auth';
 import authConfig from '@auth/config/auth.config';
 import {
@@ -15,7 +17,7 @@ import {
     CompanyUserService,
 } from '@database';
 import { MailUtilsService } from '@mail-utils';
-import { Inject, Injectable } from '@nestjs/common';
+
 import { ConfigType } from '@nestjs/config';
 import {
     AlreadyExistsException,
@@ -29,19 +31,25 @@ import {
     TokenExceptionType,
     TrendsException,
     VerifyCodeExceptionType,
-    BadRequestException
+    BadRequestException,
 } from '@shared';
 import generalConfig from '@shared/config/general.config';
 import ResponseMessage from '@shared/enums/response-message.json';
-import * as bcrypt from 'bcrypt';
-import { generate } from 'generate-password';
-import * as jwt from 'jsonwebtoken';
+
+// DTO area
 import {
     LoginUserDto,
     SendCodeDTO,
     UserParamsDto,
     VerifyCodeDTO,
 } from '../users/dtos';
+
+import {
+    ActivateCompanyUserDto,
+    CompanyUserParamsDto,
+    CreateCompanyUserJsonDto,
+    ResponseLoginCompanyUserDTO,
+} from './dtos/companyUser-response.dto';
 
 @Injectable()
 export class CompanyUsersService {
@@ -131,8 +139,6 @@ export class CompanyUsersService {
                 );
             }
         }
-
-        // Generate a username
 
         // Generate a public/private key pair
         const keys = this.keypairService.generateKey();
@@ -285,6 +291,7 @@ export class CompanyUsersService {
                     );
                 }
 
+                // Burası ilerleyen zamanlarda yapılacak en fazla 5 defa denenebilecek.
                 // if (otpCode[0].Attempts >= 5) {
                 //     throw new BadRequestException(
                 //         BadRequestExceptionType.BAD_REQUEST,
@@ -292,14 +299,16 @@ export class CompanyUsersService {
                 //     );
                 // }
 
-                const companyUpdatedUser = await this.companyUserService.update({
-                    where: {
-                        Id: payload.Id,
+                const companyUpdatedUser = await this.companyUserService.update(
+                    {
+                        where: {
+                            Id: payload.Id,
+                        },
+                        data: {
+                            IsEmailVerified: true,
+                        },
                     },
-                    data: {
-                        IsEmailVerified: true,
-                    },
-                });
+                );
                 await this.userOtpCodeService.update({
                     where: {
                         Id: otpCode[0].Id,
@@ -406,7 +415,7 @@ export class CompanyUsersService {
                 Email: cred.Email,
             },
         });
-        
+
         if (!companyUser) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -422,7 +431,6 @@ export class CompanyUsersService {
             );
         }
 
-
         // Burası randevu açıldığında düzenlenecek. Admin tarafından onaylanana kadar randevu alamayacak.
         // if (!companyUser.IsActive) {
         //     throw new NotVerifiedException(
@@ -432,7 +440,7 @@ export class CompanyUsersService {
         //     );
         // }
 
-        companyUser["Role"] = UserType.Provider
+        companyUser['Role'] = UserType.Provider;
         if (
             companyUser &&
             (await bcrypt.compare(cred.Password, companyUser.Password))
@@ -565,8 +573,7 @@ export class CompanyUsersService {
 
     async profile(
         user: CompanyUserParamsDto,
-    )
-    // : Promise<ResponseCompanyUserProfileUserDTO> 
+    ) // : Promise<ResponseCompanyUserProfileUserDTO>
     {
         return await this.companyUserService.get({ Id: user.Id });
     }

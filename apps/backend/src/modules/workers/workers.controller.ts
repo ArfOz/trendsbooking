@@ -1,5 +1,5 @@
-import { AllowUnauthorizedRequest, RolesRequired, UserParam } from '@shared/decorators';
 import { Body, Controller, Get, Post } from '@nestjs/common';
+import { AllowUnauthorizedRequest, RolesRequired, UserParam } from '@shared';
 import { UserParamsDto } from '../users/dtos';
 import { WorkersService } from './workers.service';
 import { WorkersAddJsonDto, WorkersGetJsonDto } from './dtos/workers.dto';

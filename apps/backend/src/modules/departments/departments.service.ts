@@ -1,11 +1,14 @@
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { BadRequestExceptionType } from './../../../../../libs/shared/src/enums/exception.type';
-import { BadRequestException } from './../../../../../libs/shared/src/exceptions/bad-request.exception';
+
+// Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
-import { AddDepartmentsJsonDto } from './dtos/departments.dto';
-import { Injectable } from '@nestjs/common';
+import { BadRequestExceptionType, BadRequestException } from '@shared';
 import { DepartmentService } from '@database';
+
+// DTO area
 import { UserParamsDto } from '../users/dtos';
+import { AddDepartmentsJsonDto } from './dtos/departments.dto';
 
 @Injectable()
 export class DepartmentsService {
@@ -15,7 +18,8 @@ export class DepartmentsService {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR426),
-                426,
+                HttpStatus.BAD_REQUEST,
+                426
             );
         }
 

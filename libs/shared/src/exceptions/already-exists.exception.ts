@@ -10,8 +10,9 @@ export class AlreadyExistsException extends TrendsException {
             | AlreadyExistsExceptionType
             | VerifyCodeExceptionType = AlreadyExistsExceptionType.ALREADY_EXISTS,
         details: Error,
-        status: number,
+        status: HttpStatus.CONFLICT,
+        code:number
     ) {
-        super(type, details, status);
+        super(type, details, status, code);
     }
 }

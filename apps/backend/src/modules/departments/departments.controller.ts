@@ -1,11 +1,14 @@
-import { UserParam } from './../../../../../libs/shared/src/decorators/user.decorator';
-import { UserParamsDto } from './../users/dtos/user-response.dto';
-import { RolesRequired } from '@shared/decorators';
-import { AddDepartmentsJsonDto, DepartmentDetailsJsonDto } from './dtos/departments.dto';
-import { AllowUnauthorizedRequest } from './../../../../../libs/shared/src/decorators/unauthorized-request.decorator';
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+
 import { DepartmentsService } from './departments.service';
+
+// Libs area
+import { AllowUnauthorizedRequest, UserParam, RolesRequired  } from '@shared';
+
+// DTO area
+import { UserParamsDto } from './../users/dtos/user-response.dto';
+import { AddDepartmentsJsonDto, DepartmentDetailsJsonDto } from './dtos/departments.dto';
 
 @ApiTags('Departments')
 @Controller('departments')

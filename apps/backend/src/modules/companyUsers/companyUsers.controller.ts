@@ -5,7 +5,7 @@ import {
     StaticTokenRequired,
     UserParam,
     RolesRequired
-} from '@shared/decorators';
+} from '@shared';
 import { LoginUserDto, SendCodeDTO, UserParamsDto, VerifyCodeDTO } from '../users/dtos';
 import { CompanyUsersService } from './companyUsers.service';
 import {

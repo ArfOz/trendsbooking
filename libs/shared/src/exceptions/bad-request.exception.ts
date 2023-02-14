@@ -7,9 +7,11 @@ export class BadRequestException extends TrendsException {
         // eslint-disable-next-line default-param-last
         type: keyof typeof BadRequestExceptionType,
         // error?: Error,
-        details :Error,
-        status:number
+        details: Error,
+        
+        code: number,
     ) {
-        super(type, details, status);
+        const status= HttpStatus.BAD_REQUEST
+        super(type, details, status, code);
     }
 }
