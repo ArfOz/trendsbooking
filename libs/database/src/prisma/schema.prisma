@@ -187,16 +187,16 @@ model UserOTPCode {
 model WorkTime {
   /// @HideField({match:'@Input'})
   Id             Int      @id @default(autoincrement())
-  MorningStartAt DateTime @db.Time(3)
-  MorningEndAt   DateTime @db.Time(3)
-  ShiftStart     DateTime @db.Time(3)
-  ShiftEnd       DateTime @db.Time(3)
-  NightStartAt   DateTime @db.Time(3)
-  NightEndAt     DateTime @db.Time(3)
+  MorningStartAt String
+  MorningEndAt   String
+  ShiftStart     String
+  ShiftEnd       String
+  NightStartAt   String
+  NightEndAt     String
 
-  Worker   Worker? @relation(fields: [WorkerId], references: [Id])
+  Worker   Worker @relation(fields: [WorkerId], references: [Id])
   /// @HideField({input:true})
-  WorkerId Int?
+  WorkerId Int
 }
 
 enum ExpiredReasonType {

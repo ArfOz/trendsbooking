@@ -55,6 +55,16 @@ export class WorkersService {
             LastName: input.LastName,
             Phone: input.Phone,
             Department: { connect: { Id: input.DepartmentId } },
+            WorkTime:{
+                create:{
+                    MorningStartAt:input.WorkTime.MorningStartAt ,
+                    MorningEndAt:input.WorkTime.MorningEndAt,
+                    ShiftStart:input.WorkTime.ShiftStart,
+                    ShiftEnd:input.WorkTime.ShiftEnd,
+                    NightStartAt:input.WorkTime.NightStartAt,
+                    NightEndAt:input.WorkTime.NightEndAt
+                }
+            }
         };
 
         await this.workerService.create(data);
