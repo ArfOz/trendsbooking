@@ -4,9 +4,14 @@ import {
     AllowUnauthorizedRequest,
     StaticTokenRequired,
     UserParam,
-    RolesRequired
-} from '@shared/decorators';
-import { LoginUserDto, SendCodeDTO, UserParamsDto, VerifyCodeDTO } from '../users/dtos';
+    RolesRequired,
+} from '@shared';
+import {
+    LoginUserDto,
+    SendCodeDTO,
+    UserParamsDto,
+    VerifyCodeDTO,
+} from '../users/dtos';
 import { CompanyUsersService } from './companyUsers.service';
 import {
     ActivateCompanyUserDto,

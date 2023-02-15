@@ -1,13 +1,3 @@
-import {
-    RegisterUserJsonDto,
-    LoginUserDto,
-    VerifyCodeDTO,
-    SendCodeDTO,
-    ResponseRegisterUserDTO,
-    ResponseLoginUserDTO,
-    ResponseUserProfileUserDTO,
-    UserParamsDto,
-} from './dtos';
 // Npm packages
 
 import { Injectable, Inject, HttpException } from '@nestjs/common';
@@ -38,6 +28,16 @@ import {
 } from '@shared';
 import { UserService, PrismaService, UserOtpCodeService } from '@database';
 import ResponseMessage from '@shared/enums/response-message.json';
+import {
+    RegisterUserJsonDto,
+    LoginUserDto,
+    VerifyCodeDTO,
+    SendCodeDTO,
+    ResponseRegisterUserDTO,
+    ResponseLoginUserDTO,
+    ResponseUserProfileUserDTO,
+    UserParamsDto,
+} from './dtos';
 
 @Injectable()
 export class UsersService {
@@ -53,27 +53,6 @@ export class UsersService {
         private readonly userOtpCodeService: UserOtpCodeService,
         private readonly mailUtilsService: MailUtilsService,
     ) {}
-
-    // async getUser(Email: string): Promise<User> {
-
-    //     const user = await this.prismaService.user.findUnique({
-    //         where: { Email }
-    //     });
-
-    //     if(!user) {
-    //         throw new NotFoundException();
-    //     }
-
-    //     delete user.Password;
-    //     return user;
-
-    // }
-
-    // async createUser(data: CreateUserDto): Promise<User> {
-
-    //     const createdUser = await this.userService.createUser(data)
-    //     return createdUser;
-    // }
 
     async register(
         input: RegisterUserJsonDto,
@@ -194,14 +173,13 @@ export class UsersService {
         });
 
         // Verification code
-        const code =
-            generate({
-                numbers: true,
-                symbols: false,
-                uppercase: false,
-                lowercase: false,
-                length: 4,
-            })
+        const code = generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 4,
+        });
 
         await this.userOtpCodeService.create({
             User: {
@@ -266,8 +244,6 @@ export class UsersService {
                 404,
             );
         }
-
-        user["Role"] = UserType.Normal
         if (user && (await bcrypt.compare(cred.Password, user.Password))) {
             const {
                 AccessToken,
@@ -309,10 +285,7 @@ export class UsersService {
         );
     }
 
-    async profile(
-        user: UserParamsDto,
-    ): Promise<ResponseUserProfileUserDTO> {
-
+    async profile(user: UserParamsDto): Promise<ResponseUserProfileUserDTO> {
         return await this.userService.get({ Id: user.Id });
     }
 
@@ -475,15 +448,13 @@ export class UsersService {
             );
         }
         // Verification code
-        const code = 
-            generate({
-                numbers: true,
-                symbols: false,
-                uppercase: false,
-                lowercase: false,
-                length: 4,
-            }
-        );
+        const code = generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 4,
+        });
 
         await this.userOtpCodeService.create({
             User: {

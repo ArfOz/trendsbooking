@@ -1,9 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger/dist';
-import { IsOptional, IsString, IsNotEmpty, IsBoolean, IsNumber } from 'class-validator';
+import {
+    IsOptional,
+    IsString,
+    IsNotEmpty,
+    IsBoolean,
+    IsNumber,
+} from 'class-validator';
 // import { UserRole } from '@prisma/client';
 
 export class UserProfileData {
-
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
@@ -58,8 +63,4 @@ export class UserProfileData {
     // Device: string;
 
     // Browser: string;
-
- 
-
-
 }

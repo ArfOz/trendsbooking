@@ -1,12 +1,12 @@
-import { ForbiddenExceptionType, VerifyCodeExceptionType } from './../enums/exception.type';
+import { HttpStatus } from '@nestjs/common';
+import {
+    VerifyCodeExceptionType,
+} from './../enums/exception.type';
 import { NotFoundException } from './not-found.exception';
 
 export class OtpCodeNotFoundException extends NotFoundException {
-    constructor(
-        type: VerifyCodeExceptionType,
-        error: Error,
-        status:number
-    ) {
-        super(type, error, status);
+    constructor(type: VerifyCodeExceptionType, error: Error, code: number) {
+        const status = HttpStatus.NOT_FOUND;
+        super(type, error, code, status);
     }
 }

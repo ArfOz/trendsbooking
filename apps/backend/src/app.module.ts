@@ -6,6 +6,8 @@ import { AuthGuard } from '@guard';
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { DepartmentsModule } from './modules/departments/departments.module';
+import { WorkersModule } from './modules/workers/workers.module';
 
 @Module({
     imports: [
@@ -16,10 +18,10 @@ import { ConfigModule } from '@nestjs/config';
         }),
         DatabaseModule,
         UsersModule,
-        CompanyUsersModule
+        CompanyUsersModule,
+        DepartmentsModule,
+        WorkersModule,
     ],
-
-    controllers: [],
     providers: [
         {
             provide: APP_GUARD,

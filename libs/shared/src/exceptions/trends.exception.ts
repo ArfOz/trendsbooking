@@ -1,11 +1,21 @@
-import { HttpException } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class TrendsException extends HttpException {
     error: Error;
-    details:Error;
-    statusCode:number;  
+    details: Error;
+    code: number;
+    statusCode?: number;
 
-    constructor(message?: string,  details?: Error, statusCode?: number,) {
-        super({ error: message , details:details.message}, statusCode);
+    constructor(
+        message?: string,
+        details?: Error,
+        code?: number,
+        statusCode?: number,
+    ) {
+        statusCode = statusCode || HttpStatus.FORBIDDEN
+        super(
+            { error: message, details: details.message, code: code },
+            statusCode,
+        );
     }
 }
