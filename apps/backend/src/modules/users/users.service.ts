@@ -1,4 +1,3 @@
-
 // Npm packages
 
 import { Injectable, Inject, HttpException } from '@nestjs/common';
@@ -174,14 +173,13 @@ export class UsersService {
         });
 
         // Verification code
-        const code =
-            generate({
-                numbers: true,
-                symbols: false,
-                uppercase: false,
-                lowercase: false,
-                length: 4,
-            })
+        const code = generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 4,
+        });
 
         await this.userOtpCodeService.create({
             User: {
@@ -247,7 +245,7 @@ export class UsersService {
             );
         }
 
-        user["Role"] = UserType.Normal
+        user['Role'] = UserType.Normal;
         if (user && (await bcrypt.compare(cred.Password, user.Password))) {
             const {
                 AccessToken,
@@ -289,10 +287,7 @@ export class UsersService {
         );
     }
 
-    async profile(
-        user: UserParamsDto,
-    ): Promise<ResponseUserProfileUserDTO> {
-
+    async profile(user: UserParamsDto): Promise<ResponseUserProfileUserDTO> {
         return await this.userService.get({ Id: user.Id });
     }
 
@@ -451,19 +446,17 @@ export class UsersService {
             throw new AlreadyExistsException(
                 VerifyCodeExceptionType.VERIFIED,
                 new Error(ResponseMessage.TR410),
-                410
+                410,
             );
         }
         // Verification code
-        const code = 
-            generate({
-                numbers: true,
-                symbols: false,
-                uppercase: false,
-                lowercase: false,
-                length: 4,
-            }
-        );
+        const code = generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 4,
+        });
 
         await this.userOtpCodeService.create({
             User: {

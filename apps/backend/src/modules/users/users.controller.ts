@@ -1,12 +1,16 @@
-import { RegisterUserJsonDto, VerifyCodeDTO, SendCodeDTO, UserParamsDto, LoginUserDto} from './dtos';
+import {
+    RegisterUserJsonDto,
+    VerifyCodeDTO,
+    SendCodeDTO,
+    UserParamsDto,
+    LoginUserDto,
+} from './dtos';
 import { UserParam } from '@shared';
 
 import { UsersService } from './users.service';
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AllowUnauthorizedRequest, RolesRequired } from '@shared/decorators';
 import { ApiTags } from '@nestjs/swagger';
-
-
 
 @ApiTags('User')
 @Controller('users')

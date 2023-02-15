@@ -18,28 +18,26 @@ export class WorkersController {
     @Post('getdetails')
     async getDetails(
         @UserParam() user: UserParamsDto,
-        @Body() input: WorkersGetJsonDto
-        ) {
-        return this.workersService.getDetails(user,input.WorkerId);
+        @Body() input: WorkersGetJsonDto,
+    ) {
+        return this.workersService.getDetails(user, input.WorkerId);
     }
 
     @RolesRequired(['Provider'])
     @Post('addworkers')
     async addworker(
         @UserParam() user: UserParamsDto,
-        @Body() input: WorkersAddJsonDto
-        ) {
-        return this.workersService.addworker(user,input);
+        @Body() input: WorkersAddJsonDto,
+    ) {
+        return this.workersService.addworker(user, input);
     }
 
     @RolesRequired(['Provider'])
     @Post('deleteworker')
     async deleteworker(
         @UserParam() user: UserParamsDto,
-        @Body() input: WorkersGetJsonDto
-        ) {
-        return this.workersService.deleteworker(user,input);
+        @Body() input: WorkersGetJsonDto,
+    ) {
+        return this.workersService.deleteworker(user, input);
     }
-
-
 }

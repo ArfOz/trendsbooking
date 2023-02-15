@@ -9,50 +9,49 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-enum ServiceTypeEnum{
-    Hair="Hair",
-    Nail="Nail",
-    MakeUp="MakeUp",
-    Massage="Massage",
-    Wax="Wax",
-    Solarium="Solarium",
-    SkinCare="SkinCare",
-    LaserHairRemoval="LaserHairRemoval",
-    Tattoo="Tattoo",
-    Others="Others"
-
+enum ServiceTypeEnum {
+    Hair = 'Hair',
+    Nail = 'Nail',
+    MakeUp = 'MakeUp',
+    Massage = 'Massage',
+    Wax = 'Wax',
+    Solarium = 'Solarium',
+    SkinCare = 'SkinCare',
+    LaserHairRemoval = 'LaserHairRemoval',
+    Tattoo = 'Tattoo',
+    Others = 'Others',
 }
 
-export class WorkTime{
+export class WorkTime {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    MorningStartAt:  string
+    MorningStartAt: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    MorningEndAt:  string
+    MorningEndAt: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    ShiftStart:  string
+    ShiftStart: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    ShiftEnd:  string
+    ShiftEnd: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    NightStartAt:  string
+    NightStartAt: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    NightEndAt:  string
+    NightEndAt: string;
 }
 export class WorkerCreateJsonDto {
     @ApiProperty()
@@ -93,12 +92,9 @@ export class AddDepartmentsJsonDto {
     WorkTime: WorkTime;
 }
 
-export class DepartmentDetailsJsonDto{
-
+export class DepartmentDetailsJsonDto {
     @ApiProperty()
     @IsOptional()
     @IsNumber()
     Id: number;
-
 }
-

@@ -1,37 +1,36 @@
 import { ApiProperty } from '@nestjs/swagger/dist';
 import { IsNotEmpty, IsString, IsNumber, IsObject } from 'class-validator';
 
-
-export class WorkTime{
+export class WorkTime {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    MorningStartAt:  string
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
-    MorningEndAt:  string
+    MorningStartAt: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    ShiftStart:  string
+    MorningEndAt: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    ShiftEnd:  string
+    ShiftStart: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    NightStartAt:  string
+    ShiftEnd: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    NightEndAt:  string
+    NightStartAt: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    NightEndAt: string;
 }
 
 export class WorkersAddJsonDto {

@@ -572,9 +572,8 @@ export class CompanyUsersService {
     }
 
     async profile(
-        user: CompanyUserParamsDto,
-    ) // : Promise<ResponseCompanyUserProfileUserDTO>
-    {
+        user: CompanyUserParamsDto, // : Promise<ResponseCompanyUserProfileUserDTO>
+    ) {
         return await this.companyUserService.get({ Id: user.Id });
     }
 }

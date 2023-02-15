@@ -21,33 +21,32 @@ export class CompanyUserService {
             const user = await this.prisma.companyUser.findUnique({
                 where,
                 select: {
-                    City:true,
+                    City: true,
                     Country: true,
-                    CreatedAt:true,
-                    Departments:{
-                        select:{
-                            Salon:true,
-                            ServiceType:true,
-                            Id:true
-                        }
+                    CreatedAt: true,
+                    Departments: {
+                        select: {
+                            Salon: true,
+                            ServiceType: true,
+                            Id: true,
+                        },
                     },
-                    District:true,
+                    District: true,
                     Email: true,
                     FirstName: true,
-                    IBAN:true,
+                    IBAN: true,
                     Id: true,
-                    IsEmailVerified:true,
+                    IsEmailVerified: true,
                     LastName: true,
-                    Neighborhood:true,
+                    Neighborhood: true,
                     Phone: true,
-                    Role:true,
-                    Salon:true,
-                    Sector:true,
+                    Role: true,
+                    Salon: true,
+                    Sector: true,
                     Username: true,
-                    TaxNo:true,
-                    TaxAdmin:true,
-                    TCKN:true,
-                    
+                    TaxNo: true,
+                    TaxAdmin: true,
+                    TCKN: true,
                 },
             });
 

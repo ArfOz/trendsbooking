@@ -7,11 +7,9 @@ import { DepartmentsService } from './departments.service';
 import { KeypairModule } from '@shared';
 import { DepartmentService, PrismaService } from '@database';
 
-
 @Module({
-    imports:[KeypairModule],
+    imports: [KeypairModule],
     providers: [DepartmentsService, DepartmentService, PrismaService],
     controllers: [DepartmentController],
-
 })
 export class DepartmentsModule {}

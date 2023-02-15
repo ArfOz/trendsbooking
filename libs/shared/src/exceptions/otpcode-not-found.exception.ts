@@ -6,12 +6,8 @@ import {
 import { NotFoundException } from './not-found.exception';
 
 export class OtpCodeNotFoundException extends NotFoundException {
-    constructor(
-        type: VerifyCodeExceptionType,
-        error: Error,
-        code: number,
-    ) {
+    constructor(type: VerifyCodeExceptionType, error: Error, code: number) {
         const status = HttpStatus.NOT_FOUND;
-        super(type, error,  code, status);
+        super(type, error, code, status);
     }
 }

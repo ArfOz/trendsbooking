@@ -16,9 +16,9 @@ export enum Genders {
 }
 
 export enum ServiceGenders {
-    Male ='Male',
+    Male = 'Male',
     Female = 'Female',
-    Unisex = 'Unisex'
+    Unisex = 'Unisex',
 }
 
 export class CompanyUserParamsDto {
@@ -379,8 +379,7 @@ export class GetCompaniesWhereFilter {
     IsEmailVerified?: boolean;
 }
 
-export class ActivateCompanyUserDto{
-
+export class ActivateCompanyUserDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()

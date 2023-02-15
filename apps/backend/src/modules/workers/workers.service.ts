@@ -59,16 +59,16 @@ export class WorkersService {
             LastName: input.LastName,
             Phone: input.Phone,
             Department: { connect: { Id: input.DepartmentId } },
-            WorkTime:{
-                create:{
-                    MorningStartAt:input.WorkTime.MorningStartAt ,
-                    MorningEndAt:input.WorkTime.MorningEndAt,
-                    ShiftStart:input.WorkTime.ShiftStart,
-                    ShiftEnd:input.WorkTime.ShiftEnd,
-                    NightStartAt:input.WorkTime.NightStartAt,
-                    NightEndAt:input.WorkTime.NightEndAt
-                }
-            }
+            WorkTime: {
+                create: {
+                    MorningStartAt: input.WorkTime.MorningStartAt,
+                    MorningEndAt: input.WorkTime.MorningEndAt,
+                    ShiftStart: input.WorkTime.ShiftStart,
+                    ShiftEnd: input.WorkTime.ShiftEnd,
+                    NightStartAt: input.WorkTime.NightStartAt,
+                    NightEndAt: input.WorkTime.NightEndAt,
+                },
+            },
         };
 
         await this.workerService.create(data);
@@ -84,13 +84,13 @@ export class WorkersService {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR428),
-                428
+                428,
             );
         }
 
         const response = await this.workerService.find({
             where: {
-                Id:input.WorkerId,
+                Id: input.WorkerId,
                 Department: { CompanyUserId: user.Id },
             },
         });
@@ -104,7 +104,6 @@ export class WorkersService {
         }
         const data = await this.workerService.delete({
             Id: input.WorkerId,
-        
         });
         return {
             Success: true,

@@ -31,19 +31,16 @@ export class AuthService {
         private readonly userOtpCodeService: UserOtpCodeService,
     ) {}
 
-    async refreshToken(
-        token: string,
-    ): Promise<{
+    async refreshToken(token: string): Promise<{
         AccessToken: string;
         RefreshToken: string;
-        User: any
+        User: any;
     }> {
         const userPayload = jwt.verify(
             token,
             this.authCfg.jwt_secret_refresh!,
         ) as UserPayloadDto;
 
-        
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
                 UserId: userPayload.Id,
@@ -117,7 +114,7 @@ export class AuthService {
         const payload = {
             Id: user.Id,
             Email: user.Email,
-            Role : user.Role
+            Role: user.Role,
         };
 
         const expiresAccessToken = new Date(
@@ -188,7 +185,7 @@ export class AuthService {
                 NotFoundExceptionType.NOT_FOUND,
                 new Error(ResponseMessage.TR203),
                 203,
-                203
+                203,
             );
         }
 

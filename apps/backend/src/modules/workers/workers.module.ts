@@ -4,11 +4,11 @@ import { WorkersController } from './workers.controller';
 import { WorkersService } from './workers.service';
 
 // Libs area
-import { PrismaService,WorkerService  } from '@database';
+import { PrismaService, WorkerService } from '@database';
 import { KeypairModule } from '@shared';
 
 @Module({
-    imports:[KeypairModule],
+    imports: [KeypairModule],
     providers: [WorkersService, WorkerService, PrismaService],
     controllers: [WorkersController],
 })

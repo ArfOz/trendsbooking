@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma, UserOTPCode} from '@prisma/client';
+import { Prisma, UserOTPCode } from '@prisma/client';
 
 @Injectable()
 export class UserOtpCodeService {
-
-
     constructor(private prisma: PrismaService) {}
 
     async get(
@@ -23,7 +21,7 @@ export class UserOtpCodeService {
         where?: Prisma.UserOTPCodeWhereInput;
         orderBy?: Prisma.UserOTPCodeOrderByWithRelationInput;
     }): Promise<UserOTPCode[]> {
-        const { skip, take, cursor, where, orderBy} = params;
+        const { skip, take, cursor, where, orderBy } = params;
         return this.prisma.userOTPCode.findMany({
             skip,
             take,
