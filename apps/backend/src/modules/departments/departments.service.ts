@@ -1,4 +1,4 @@
-import { Injectable, HttpStatus } from '@nestjs/common';
+import { Injectable} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 // Libs area
@@ -18,7 +18,6 @@ export class DepartmentsService {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR426),
-                HttpStatus.BAD_REQUEST,
                 426
             );
         }

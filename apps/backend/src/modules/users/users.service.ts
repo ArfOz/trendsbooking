@@ -451,7 +451,7 @@ export class UsersService {
             throw new AlreadyExistsException(
                 VerifyCodeExceptionType.VERIFIED,
                 new Error(ResponseMessage.TR410),
-                410,
+                410
             );
         }
         // Verification code

@@ -188,6 +188,7 @@ export class AuthService {
                 NotFoundExceptionType.NOT_FOUND,
                 new Error(ResponseMessage.TR203),
                 203,
+                203
             );
         }
 

@@ -279,7 +279,6 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException(
                 UnauthorizedExceptionType.NO_AUTHORIZATION_TOKEN,
                 new Error('Token yok!'),
-                500,
                 500
             );
         }
