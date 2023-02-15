@@ -1,6 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
 import {
-    ForbiddenExceptionType,
     VerifyCodeExceptionType,
 } from './../enums/exception.type';
 import { NotFoundException } from './not-found.exception';

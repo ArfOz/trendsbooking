@@ -1,4 +1,3 @@
-import { VerifyCodeExceptionType } from './../enums/exception.type';
 import { HttpStatus } from '@nestjs/common';
 import { TrendsException } from './trends.exception';
 

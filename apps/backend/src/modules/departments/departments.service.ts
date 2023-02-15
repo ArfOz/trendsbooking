@@ -54,12 +54,21 @@ export class DepartmentsService {
     }
 
     async getdetails(user: UserParamsDto, DepartmentId?: number) {
+
         const data = await this.departmentService.find({
             where: {
                 CompanyUserId: user.Id,
                 Id: DepartmentId,
             },
         });
+
+        if (!data || data.length<1){
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
         return {
             Success: true,
             Data: data,

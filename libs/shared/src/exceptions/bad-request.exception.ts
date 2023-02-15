@@ -11,6 +11,6 @@ export class BadRequestException extends TrendsException {
         code: number,
     ) {
         const status = HttpStatus.BAD_REQUEST;
-        super(type, details, status, code);
+        super(type, details, code, status);
     }
 }
