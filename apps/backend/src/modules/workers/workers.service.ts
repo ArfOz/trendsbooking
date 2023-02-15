@@ -22,9 +22,22 @@ export class WorkersService {
                 428,
             );
         }
-        const data = await this.workerService.get({
-            Id: workerId,
+        const data = await this.workerService.find({
+            where: {
+                Id: workerId,
+                Department:{
+                    CompanyUserId:user.Id
+                }
+            },
         });
+
+        if (!data || data.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR430),
+                430,
+            );
+        }
         return {
             Success: true,
             Data: data,
