@@ -247,6 +247,7 @@ export class UserService {
                 Username: true,
                 Password: true,
                 Phone: true,
+                Role:true
             },
         });
 

@@ -439,8 +439,6 @@ export class CompanyUsersService {
         //         404,
         //     );
         // }
-
-        companyUser['Role'] = UserType.Provider;
         if (
             companyUser &&
             (await bcrypt.compare(cred.Password, companyUser.Password))

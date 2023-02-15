@@ -244,8 +244,6 @@ export class UsersService {
                 404,
             );
         }
-
-        user['Role'] = UserType.Normal;
         if (user && (await bcrypt.compare(cred.Password, user.Password))) {
             const {
                 AccessToken,
