@@ -51,7 +51,6 @@ export class WorkersService {
                 427,
             );
         }
-
         const response = await this.workerService.find({
             where: {
                 DepartmentId: input.DepartmentId,
