@@ -158,43 +158,57 @@ export class UserService {
         where: Prisma.UserWhereUniqueInput;
         data: Prisma.UserUpdateInput;
     }): Promise<User> {
-        const { where, data } = params;
+        try {
+            const { where, data } = params;
 
-        let encryptedDataEmail;
-        let encryptedDataPhone;
+            let encryptedDataEmail;
+            let encryptedDataPhone;
 
-        if (data.Email) {
-            encryptedDataEmail = this.keypairService.encryptWithAppKeys(
-                isString(data.Email) ? data.Email : data.Email.set,
-            );
+            let newData: Prisma.UserUpdateInput = { ...data };
+            if (data.Email) {
+                encryptedDataEmail = this.keypairService.encryptWithAppKeys(
+                    isString(data.Email) ? data.Email : data.Email.set,
+                );
+                newData = {
+                    ...data,
+                    Email: encryptedDataEmail,
+                };
+            }
+
+            if (data.Phone) {
+                encryptedDataPhone = this.keypairService.encryptWithAppKeys(
+                    isString(data.Phone) ? data.Phone : data.Phone.set,
+                );
+
+                newData = {
+                    ...data,
+                    Phone: encryptedDataPhone,
+                };
+            }
+
+            const updatedUser = await this.prisma.user.update({
+                data: {
+                    ...newData,
+                },
+                where: {
+                    Email: where.Email,
+                },
+            });
+
+            // if (updatedUser.Email)
+            //     updatedUser.Email = this.keypairService.decryptWithAppKeys(
+            //         updatedUser.Email,
+            //     );
+
+            // if (updatedUser.Phone)
+            //     updatedUser.Phone = this.keypairService.decryptWithAppKeys(
+            //         updatedUser.Phone,
+            //     );
+
+            return updatedUser;
+        } catch (error) {
+            console.log('err', error);
         }
-
-        if (data.Phone) {
-            encryptedDataPhone = this.keypairService.encryptWithAppKeys(
-                isString(data.Phone) ? data.Phone : data.Phone.set,
-            );
-        }
-
-        const updatedUser = await this.prisma.user.update({
-            data: {
-                ...data,
-                Email: encryptedDataEmail,
-                Phone: encryptedDataPhone,
-            },
-            where,
-        });
-
-        if (updatedUser.Email)
-            updatedUser.Email = this.keypairService.decryptWithAppKeys(
-                updatedUser.Email,
-            );
-
-        if (updatedUser.Phone)
-            updatedUser.Phone = this.keypairService.decryptWithAppKeys(
-                updatedUser.Phone,
-            );
-
-        return updatedUser;
     }
 
     async delete(where: Prisma.UserWhereUniqueInput): Promise<User> {
@@ -247,7 +261,7 @@ export class UserService {
                 Username: true,
                 Password: true,
                 Phone: true,
-                Role:true
+                Role: true,
             },
         });
 
