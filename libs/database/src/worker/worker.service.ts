@@ -83,48 +83,17 @@ export class WorkerService {
             cursor,
             where,
             orderBy,
-            // select: {
-            //     CbFirst: true,
-            //     City: true,
-            //     Country: true,
-            //     District: true,
-            //     CreatedAt: true,
-            //     Email: true,
-            //     FirstName: true,
-            //     IBAN: true,
-            //     IsActive: true,
-            //     IsEmailVerified: true,
-            //     LastName: true,
-            //     Neighborhood: true,
-            //     Phone: true,
-            //     Salon: true,
-            //     Sector: true,
-            //     TaxAdmin: true,
-            //     TaxNo: true,
-            //     TCKN: true,
-            //     UpdatedAt: true,
-            //     Username: true,
-            // },
+            select: {
+                Id: true,
+                FirstName: true,
+                LastName: true,
+                Phone: true,
+                DepartmentId: true,
+                Roles: true,
+                WorkTime: true,
+            },
         });
 
-        // for (let i = 0; i <= companyUsers.length; i++) {
-        //     if (
-        //         companyUsers[i] &&
-        //         companyUsers[i].Email &&
-        //         companyUsers[i].Phone
-        //     ) {
-        //         companyUsers[i].Email = this.keypairService.decryptWithAppKeys(
-        //             companyUsers[i].Email,
-        //         );
-        //         companyUsers[i].Phone = this.keypairService.decryptWithAppKeys(
-        //             companyUsers[i].Phone,
-        //         );
-        //     }
-        // }
-
-        // if (companyUsers && companyUsers.Phone) {
-        //     user.Phone = this.keypairService.decryptWithAppKeys(companyUsers.Phone);
-        // }
         return companyUsers;
     }
 
