@@ -291,11 +291,23 @@ export class UsersService {
         return await this.userService.get({ Id: user.Id });
     }
 
-    async updateProfile(
-        user: UserParamsDto,
-        data: UserProfileUpdateDto,
-    ){
-
+    async updateProfile(user: UserParamsDto, data: UserProfileUpdateDto) {
+        if (
+            !data.BirthDate &&
+            !data.Country &&
+            !data.FirstName &&
+            !data.Gender &&
+            !data.LastName &&
+            !data.Password &&
+            !data.Phone &&
+            !data.Username
+        ) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR431),
+                431,
+            );
+        }
         await this.userService.update({
             where: {
                 Email: user.Email,
@@ -304,10 +316,10 @@ export class UsersService {
         });
 
         return {
-            data,
-            Success: true
-
-        }
+            data: ResponseMessage.TR206,
+            Success: true,
+            statusCode: 206,
+        };
     }
 
     async refreshUserToken(refreshToken: string) {
