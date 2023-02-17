@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UploadedFile } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { DepartmentsService } from './departments.service';
@@ -40,5 +40,15 @@ export class DepartmentController {
         @Body() input?: DepartmentDetailsJsonDto,
     ) {
         return this.departmentsService.getdetails(user, input.Id);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('addphotos')
+    async addPhotos(
+        @UserParam() user: UserParamsDto,
+        @UploadedFile
+
+    ) {
+        return this.departmentsService.addphotos(user);
     }
 }

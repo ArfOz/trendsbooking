@@ -74,4 +74,9 @@ export class DepartmentsService {
             Data: data,
         };
     }
+
+    async addphotos(){
+
+        return null
+    }
 }
