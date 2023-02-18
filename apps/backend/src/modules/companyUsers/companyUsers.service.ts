@@ -75,6 +75,8 @@ export class CompanyUsersService {
                 411,
             );
         }
+
+        // country city district neighbor hariç
         if (
             !input.Email ||
             !input.Password ||

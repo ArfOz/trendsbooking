@@ -199,6 +199,13 @@ model WorkTime {
   WorkerId Int
 }
 
+model DepartmentPhotos{
+  Id             Int      @id @default(autoincrement())
+  field Bytes @db.ByteA
+  
+
+}
+
 enum ExpiredReasonType {
   Expired
   SignInFromDifferentLocation
