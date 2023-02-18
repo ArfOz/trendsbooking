@@ -76,14 +76,20 @@ export class CompanyUsersService {
             );
         }
 
-        // country city district neighbor hariç
         if (
             !input.Email ||
             !input.Password ||
+            !input.FirstName ||
+            !input.LastName ||
             !input.Phone ||
             !input.Username ||
-            !input.FirstName ||
-            !input.LastName
+            !input.TCKN ||
+            !input.CbFirst ||
+            !input.TaxNo ||
+            !input.TaxAdmin ||
+            !input.IBAN ||
+            !input.Sector ||
+            !input.Salon
         ) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,

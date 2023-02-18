@@ -42,13 +42,13 @@ export class DepartmentController {
         return this.departmentsService.getdetails(user, input.Id);
     }
 
-    @RolesRequired(['Provider'])
-    @Post('addphotos')
-    async addPhotos(
-        @UserParam() user: UserParamsDto,
-        @UploadedFile
+    // @RolesRequired(['Provider'])
+    // @Post('addphotos')
+    // async addPhotos(
+    //     @UserParam() user: UserParamsDto,
+    //     @UploadedFile
 
-    ) {
-        return this.departmentsService.addphotos(user);
-    }
+    // ) {
+    //     return this.departmentsService.addphotos(user);
+    // }
 }
