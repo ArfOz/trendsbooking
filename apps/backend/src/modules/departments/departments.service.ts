@@ -75,8 +75,9 @@ export class DepartmentsService {
         };
     }
 
-    async addphotos(){
+    async addphotos(user, file){
 
+        console.log("userrrr", user, file)
         return null
     }
 }

@@ -8,7 +8,7 @@ import { OTPType, ExpiredReasonType } from '@prisma/client';
 // Libs area
 import { SendEmailDto } from '@mail-utils';
 
-import { AuthService, MailModeType, UserType } from '@auth';
+import { AuthService, MailModeType } from '@auth';
 import authConfig from '@auth/config/auth.config';
 import {
     PrismaService,
