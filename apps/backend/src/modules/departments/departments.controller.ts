@@ -56,6 +56,7 @@ export class DepartmentController {
     }
 
     @AllowUnauthorizedRequest()
+    // @RolesRequired(['Provider'])
     @Post('addphotos')
     @UseInterceptors(
         FileInterceptor("file"))
@@ -73,11 +74,15 @@ export class DepartmentController {
         },
       })
       @ApiConsumes("multipart/form-data")
-    async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    async addPhotos(
+      // @UserParam() user: UserParamsDto,
+      @UploadedFile() file: Express.Multer.File) {
         console.log("asdasdasd",file);
 
         const myimage = await Buffer.from(file.buffer).toString('base64');
         const mimeType = 'image/jpeg'
+
+        // await this.departmentsService.addphotos(user, file)
         return `<html><body><img src="data:${mimeType};base64,${myimage}" /></body></html>`
     }
 
