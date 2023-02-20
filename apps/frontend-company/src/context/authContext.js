@@ -18,6 +18,10 @@ function useProvideAuth() {
     const [registerErrors, setRegisterErrors] = useState();
     const [loginErrors, setLoginErrors] = useState();
     const [isLoading, setIsLoading] = useState(false);
+    const [sendCodeData, setSendCodeData] = useState();
+    const [sendCodeErrors, setSendCodeErrors] = useState();
+    const [verifyCodeData, setVerifyCodeData] = useState();
+    const [verifyCodeErrors, setVerifyCodeErrors] = useState();
 
     function postLogin(data) {
         setLoginErrors(null);
@@ -71,13 +75,66 @@ function useProvideAuth() {
                 setRegisterErrors(error);
             });
     }
+    function verifyCode(data) {
+        setVerifyCodeErrors(null);
+        setIsLoading(true);
+        const options = {
+            method: 'POST',
+            url: 'http://localhost:3300/api/companyusers/verifycode',
+            headers: { 'Content-Type': 'application/json' },
+            data: data,
+        };
+
+        axios
+            .request(options)
+            .then(function (response) {
+                console.log(response.data);
+                setVerifyCodeData(response.data);
+                setIsLoading(false);
+            })
+            .catch(function (error) {
+                console.error(error);
+                setVerifyCodeErrors(error);
+                setIsLoading(false);
+            });
+    }
+
+    function sendCode(data) {
+        setSendCodeErrors(null);
+        setIsLoading(true);
+        const options = {
+            method: 'POST',
+            url: 'http://localhost:3300/api/companyusers/sendcode',
+            headers: { 'Content-Type': 'application/json' },
+            data: data,
+        };
+
+        axios
+            .request(options)
+            .then(function (response) {
+                console.log('authContext', response.data);
+                setSendCodeData(response.data);
+                setIsLoading(false);
+            })
+            .catch(function (error) {
+                console.error(error);
+                setSendCodeErrors(error);
+                setIsLoading(false);
+            });
+    }
     return {
         registerUser,
         loginUser,
         postLogin,
         postRegister,
+        verifyCode,
+        sendCode,
         loginErrors,
         registerErrors,
         isLoading,
+        verifyCodeData,
+        sendCodeData,
+        sendCodeErrors,
+        verifyCodeErrors,
     };
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AuthLayout } from '../../../layout';
 import { buttons, modal, boxStyle } from './style';
 import { styled } from '@mui/material/styles';
-import ErrorModal from './components/ErrorModal';
+import { useNavigate } from 'react-router-dom';
 import {
     Grid,
     Typography,
@@ -25,6 +25,7 @@ import {
 import LogoWord from './components/LogoWord';
 import { useAuth } from '../../../context/authContext';
 import Verification from './components/Verification';
+import ErrorModal from './components/ErrorModal';
 
 const initialState = {
     Username: '',
@@ -39,19 +40,21 @@ const initialState = {
     TaxAdmin: '',
     Salon: '',
     IBAN: '',
-    Country: '',
+    Country: 'tr',
     City: '',
     District: '',
     CbFirst: false,
-    Neighborhood: 'test',
+    Neighborhood: '',
 };
 
 export default function Register() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [registerForm, setRegisterForm] = useState(initialState);
     const [activeElement, setActiveElement] = useState();
-    const maxSteps = 3;
+    const [successMessage, setSuccessMessage] = useState('');
+    const maxSteps = 4;
     const auth = useAuth();
+    const navigate = useNavigate();
 
     //Slider
     const [activeStep, setActiveStep] = useState(0);
@@ -69,6 +72,7 @@ export default function Register() {
     };
 
     useEffect(() => {
+        console.log('activeElement', activeElement);
         if (activeElement) {
             Array.from(activeElement).map((item, index) => {
                 if (index === activeStep) {
@@ -93,6 +97,15 @@ export default function Register() {
         setError(null);
     };
 
+    const [buttonsChild, setButtonsChild] = useState(2);
+    const buttonsRef = useRef();
+    useEffect(() => {
+        if (buttonsRef.current.childNodes.length === 1) {
+            setButtonsChild(1);
+        }
+    }, [buttonsRef]);
+
+    console.log('buttonsRef', buttonsChild);
     useEffect(() => {
         if (modalCheckbox) {
             setRegisterForm({ ...registerForm, ['CbFirst']: true });
@@ -124,12 +137,31 @@ export default function Register() {
     const handleChangeVerification = (e) => {
         setVerification(e);
     };
-
-    const handleSubmitVerification = (e) => {
+    const handleSubmitVerification = async (e) => {
         e.preventDefault();
         console.log('verification', verification);
+        if (auth.registerUser.Token) {
+            await auth.verifyCode({
+                Code: parseInt(verification),
+                Token: auth.registerUser.Token,
+            });
+        }
     };
+
+    useEffect(() => {
+        if (auth.verifyCodeData?.Success) {
+            setError('Kaydınız başarılı bir şekilde gerçekleşmiştir.');
+            setSuccessMessage('Başarılı:');
+        }
+    }, [auth.verifyCodeData]);
+
+    const handleSuccess = () => {
+        setOpen(false);
+        navigate('/');
+    };
+
     //VERIFICATION
+
     const [error, setError] = useState('');
     const [registered, setRegistered] = useState(false);
 
@@ -179,13 +211,10 @@ export default function Register() {
     }, [error]);
 
     useEffect(() => {
-        if (auth.registerUser) {
-            // localStorage.setItem(
-            //     'registerResponse',
-            //     JSON.stringify(auth.registerUser),
-            // );
-            setActiveStep(2);
+        if (auth.registerUser?.Data === 'Email onayı bekleniyor') {
+            setActiveStep(3);
         }
+        //console.log('auth.registerUser', auth.registerUser);
     }, [auth.registerUser]);
 
     return (
@@ -198,6 +227,23 @@ export default function Register() {
                             <Box sx={boxStyle.headerBox}>
                                 <Box sx={boxStyle.LogoWord}>
                                     <LogoWord />
+                                </Box>
+                                <Box>
+                                    <Typography
+                                        component="h1"
+                                        variant="h4"
+                                        sx={{
+                                            color: '#F75936',
+                                            mb: 2,
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                            padding: '0 6rem',
+                                        }}
+                                    >
+                                        {activeStep === 3
+                                            ? 'Lütfen mailinize gelen doğrulama kodunu giriniz'
+                                            : 'Hesap Oluşturun!'}
+                                    </Typography>
                                 </Box>
                             </Box>
                             <Typography
@@ -238,7 +284,6 @@ export default function Register() {
                                             sx={{
                                                 display: 'flex',
                                                 flexDirection: 'column',
-
                                                 m: 3,
                                             }}
                                         >
@@ -403,6 +448,7 @@ export default function Register() {
                                             sx={{
                                                 display: 'none',
                                                 flexDirection: 'column',
+                                                m: 3,
                                             }}
                                         >
                                             <Box
@@ -579,6 +625,8 @@ export default function Register() {
                                             sx={{
                                                 display: 'none',
                                                 flexDirection: 'column',
+
+                                                m: 3,
                                             }}
                                         >
                                             <Grid container compenent="">
@@ -633,9 +681,9 @@ export default function Register() {
                                                         <TextField
                                                             margin="normal"
                                                             required
-                                                            id="Street"
+                                                            id="Neighborhood"
                                                             label="Sokak"
-                                                            name="Street"
+                                                            name="Neighborhood"
                                                             autoComplete="text"
                                                             variant="outlined"
                                                             onChange={
@@ -647,7 +695,7 @@ export default function Register() {
                                                                 width: '80%',
                                                             }}
                                                             value={
-                                                                registerForm.Street
+                                                                registerForm.Neighborhood
                                                             }
                                                         />
                                                         <FormGroup>
@@ -685,6 +733,11 @@ export default function Register() {
                                                 </Grid>
                                             </Grid>
                                         </Box>
+                                        <Verification
+                                            handleChangeVerification={
+                                                handleChangeVerification
+                                            }
+                                        />
                                     </Box>
                                 </Box>
                                 {activeStep === 2 && (
@@ -776,11 +829,12 @@ export default function Register() {
                                     </>
                                 )}
                                 <Box
+                                    ref={buttonsRef}
                                     sx={{
                                         display: 'flex',
                                         justifyContent: `${
-                                            activeStep === 0
-                                                ? 'flex-end'
+                                            buttonsChild == 1
+                                                ? 'center'
                                                 : 'space-between'
                                         }`,
                                         m: 'auto',
@@ -788,7 +842,7 @@ export default function Register() {
                                         mt: 8,
                                     }}
                                 >
-                                    {activeStep > 0 && (
+                                    {activeStep < 3 && (
                                         <Button
                                             size="large"
                                             onClick={handleBack}
@@ -799,7 +853,7 @@ export default function Register() {
                                             GERİ
                                         </Button>
                                     )}
-                                    {activeStep !== maxSteps - 1 && (
+                                    {activeStep < 2 && (
                                         <Button
                                             onClick={handleNext}
                                             variant="outlined"
@@ -821,10 +875,10 @@ export default function Register() {
                                             İLERİ
                                         </Button>
                                     )}
-                                    {activeStep == 2 && (
+                                    {activeStep == 3 && (
                                         <Button
                                             size="small"
-                                            type="submit"
+                                            onClick={handleSubmitVerification}
                                             variant="outlined"
                                             sx={buttons.back}
                                             disabled={activeStep <= 0}
@@ -832,20 +886,20 @@ export default function Register() {
                                             DOĞRULA
                                         </Button>
                                     )}
+                                    {activeStep === 2 && (
+                                        <Button
+                                            type="submit"
+                                            variant="outlined"
+                                            sx={buttons.submit}
+                                        >
+                                            {auth.isLoading ? (
+                                                <CircularProgress />
+                                            ) : (
+                                                'HESAP OLUŞTUR'
+                                            )}
+                                        </Button>
+                                    )}
                                 </Box>
-                                {/* {activeStep === maxSteps - 1 && (
-                                    <Button
-                                        type="submit"
-                                        variant="outlined"
-                                        sx={buttons.submit}
-                                    >
-                                        {auth.isLoading ? (
-                                            <CircularProgress />
-                                        ) : (
-                                            'HESAP OLUŞTUR'
-                                        )}
-                                    </Button>
-                                )} */}
                             </Box>
                         </Box>
                     </Grid>
@@ -858,6 +912,8 @@ export default function Register() {
                 open={openError}
                 handleClose={handleCloseError}
                 error={error}
+                successMessage={successMessage}
+                handleSuccess={handleSuccess}
             />
         </AuthLayout>
     );
