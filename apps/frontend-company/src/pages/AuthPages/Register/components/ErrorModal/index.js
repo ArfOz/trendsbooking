@@ -16,7 +16,13 @@ const style = {
     p: 4,
 };
 
-export default function ErrorModal({ open, handleClose, error }) {
+export default function ErrorModal({
+    open,
+    handleClose,
+    error,
+    successMessage,
+    handleSuccess,
+}) {
     return (
         <div>
             <Modal
@@ -31,12 +37,17 @@ export default function ErrorModal({ open, handleClose, error }) {
                         variant="h6"
                         component="h2"
                     >
-                        Hata:
+                        {successMessage ? successMessage : 'Hata:'}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         {error}
                     </Typography>
-                    <Button onClick={handleClose} sx={{float:'right'}}>Tamam</Button>
+                    <Button
+                        onClick={successMessage ? handleSuccess : handleClose}
+                        sx={{ float: 'right' }}
+                    >
+                        Tamam
+                    </Button>
                 </Box>
             </Modal>
         </div>
