@@ -6,5 +6,5 @@ export default registerAs('general', () => ({
     privateKey: process.env.PRIVATE_KEY,
     nonce: process.env.NONCE,
     PORT: process.env.PORT ?? 8080,
-    apiAccessToken: process.env.ACCESSTOKEN
+    apiAccessToken: process.env.ACCESSTOKEN,
 }));

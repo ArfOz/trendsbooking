@@ -4,8 +4,14 @@ import {
     AllowUnauthorizedRequest,
     StaticTokenRequired,
     UserParam,
-} from '@shared/decorators';
-import { LoginUserDto, SendCodeDTO, UserParamsDto, VerifyCodeDTO } from '../users/dtos';
+    RolesRequired,
+} from '@shared';
+import {
+    LoginUserDto,
+    SendCodeDTO,
+    UserParamsDto,
+    VerifyCodeDTO,
+} from '../users/dtos';
 import { CompanyUsersService } from './companyUsers.service';
 import {
     ActivateCompanyUserDto,
@@ -61,6 +67,13 @@ export class CompanyUsersController {
         return this.companyUsersService.activate(data);
     }
 
+    @RolesRequired(['Provider'])
+    @Get('profile')
+    async profile(@UserParam() user: UserParamsDto) {
+        return this.companyUsersService.profile(user);
+    }
+
+    @RolesRequired(['Provider'])
     @Get('logout')
     async logout(@UserParam() user: UserParamsDto) {
         return this.companyUsersService.logout(user);

@@ -18,13 +18,17 @@ function useProvideAuth() {
     const [registerErrors, setRegisterErrors] = useState();
     const [loginErrors, setLoginErrors] = useState();
     const [isLoading, setIsLoading] = useState(false);
+    const [sendCodeData, setSendCodeData] = useState();
+    const [sendCodeErrors, setSendCodeErrors] = useState();
+    const [verifyCodeData, setVerifyCodeData] = useState();
+    const [verifyCodeErrors, setVerifyCodeErrors] = useState();
 
     function postLogin(data) {
-        setLoginErrors(null)
+        setLoginErrors(null);
         setIsLoading(true);
         const options = {
             method: 'POST',
-            url: 'http://localhost:3300/api/users/login',
+            url: 'http://localhost:3300/api/companyusers/login',
             headers: {
                 'Content-Type': 'application/json',
                 accept: 'application/json',
@@ -44,13 +48,13 @@ function useProvideAuth() {
                 console.error(error);
                 setLoginErrors(error);
             });
-    };
+    }
     function postRegister(data) {
-        setRegisterErrors(null)
+        setRegisterErrors(null);
         setIsLoading(true);
         const options = {
             method: 'POST',
-            url: 'http://localhost:3300/api/users/register',
+            url: 'http://localhost:3300/api/companyusers/register',
             headers: {
                 'Content-Type': 'application/json',
                 accept: 'application/json',
@@ -63,22 +67,74 @@ function useProvideAuth() {
             .then(function (response) {
                 console.log(response);
                 setRegisterUser(response.data);
-                setIsLoading(false)
+                setIsLoading(false);
             })
             .catch(function (error) {
-                setIsLoading(false)
+                setIsLoading(false);
                 console.log('error', error);
                 setRegisterErrors(error);
             });
-    };
+    }
+    function verifyCode(data) {
+        setVerifyCodeErrors(null);
+        setIsLoading(true);
+        const options = {
+            method: 'POST',
+            url: 'http://localhost:3300/api/companyusers/verifycode',
+            headers: { 'Content-Type': 'application/json' },
+            data: data,
+        };
+
+        axios
+            .request(options)
+            .then(function (response) {
+                console.log(response.data);
+                setVerifyCodeData(response.data);
+                setIsLoading(false);
+            })
+            .catch(function (error) {
+                console.error(error);
+                setVerifyCodeErrors(error);
+                setIsLoading(false);
+            });
+    }
+
+    function sendCode(data) {
+        setSendCodeErrors(null);
+        setIsLoading(true);
+        const options = {
+            method: 'POST',
+            url: 'http://localhost:3300/api/companyusers/sendcode',
+            headers: { 'Content-Type': 'application/json' },
+            data: data,
+        };
+
+        axios
+            .request(options)
+            .then(function (response) {
+                console.log('authContext', response.data);
+                setSendCodeData(response.data);
+                setIsLoading(false);
+            })
+            .catch(function (error) {
+                console.error(error);
+                setSendCodeErrors(error);
+                setIsLoading(false);
+            });
+    }
     return {
         registerUser,
         loginUser,
         postLogin,
         postRegister,
+        verifyCode,
+        sendCode,
         loginErrors,
         registerErrors,
         isLoading,
+        verifyCodeData,
+        sendCodeData,
+        sendCodeErrors,
+        verifyCodeErrors,
     };
 }
-

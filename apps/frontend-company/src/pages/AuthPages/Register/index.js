@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AuthLayout } from '../../../layout';
 import { buttons, modal, boxStyle } from './style';
 import { styled } from '@mui/material/styles';
-import ErrorModal from './components/ErrorModal';
+import { useNavigate } from 'react-router-dom';
 import {
     Grid,
     Typography,
@@ -23,29 +23,38 @@ import {
     CircularProgress,
 } from '@mui/material';
 import LogoWord from './components/LogoWord';
-import Paper from '@mui/material/Paper';
 import { useAuth } from '../../../context/authContext';
 import Verification from './components/Verification';
+import ErrorModal from './components/ErrorModal';
 
 const initialState = {
-    FirstSecondName: '',
-    TCId: '',
+    Username: '',
+    FirstName: '',
+    LastName: '',
+    TCKN: '',
     Email: '',
     Password: '',
     Phone: '',
-    TaxNu: '',
-    CusGender: '',
-    TaxOff: false,
-    HallType: '',
-    Iban: '',
+    TaxNo: '',
+    Sector: '',
+    TaxAdmin: '',
+    Salon: '',
+    IBAN: '',
+    Country: 'tr',
+    City: '',
+    District: '',
+    CbFirst: false,
+    Neighborhood: '',
 };
 
 export default function Register() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [registerForm, setRegisterForm] = useState(initialState);
     const [activeElement, setActiveElement] = useState();
-    const maxSteps = 3;
+    const [successMessage, setSuccessMessage] = useState('');
+    const maxSteps = 4;
     const auth = useAuth();
+    const navigate = useNavigate();
 
     //Slider
     const [activeStep, setActiveStep] = useState(0);
@@ -63,6 +72,7 @@ export default function Register() {
     };
 
     useEffect(() => {
+        console.log('activeElement', activeElement);
         if (activeElement) {
             Array.from(activeElement).map((item, index) => {
                 if (index === activeStep) {
@@ -87,6 +97,15 @@ export default function Register() {
         setError(null);
     };
 
+    const [buttonsChild, setButtonsChild] = useState(2);
+    const buttonsRef = useRef();
+    useEffect(() => {
+        if (buttonsRef.current.childNodes.length === 1) {
+            setButtonsChild(1);
+        }
+    }, [buttonsRef]);
+
+    console.log('buttonsRef', buttonsChild);
     useEffect(() => {
         if (modalCheckbox) {
             setRegisterForm({ ...registerForm, ['CbFirst']: true });
@@ -118,110 +137,64 @@ export default function Register() {
     const handleChangeVerification = (e) => {
         setVerification(e);
     };
-
-    const handleSubmitVerification = (e) => {
+    const handleSubmitVerification = async (e) => {
         e.preventDefault();
         console.log('verification', verification);
+        if (auth.registerUser.Token) {
+            await auth.verifyCode({
+                Code: parseInt(verification),
+                Token: auth.registerUser.Token,
+            });
+        }
     };
+
+    useEffect(() => {
+        if (auth.verifyCodeData?.Success) {
+            setError('Kaydınız başarılı bir şekilde gerçekleşmiştir.');
+            setSuccessMessage('Başarılı:');
+        }
+    }, [auth.verifyCodeData]);
+
+    const handleSuccess = () => {
+        setOpen(false);
+        navigate('/');
+    };
+
     //VERIFICATION
+
     const [error, setError] = useState('');
     const [registered, setRegistered] = useState(false);
 
     const handleSubmit = async (e) => {
         setError('');
         e.preventDefault();
+        console.log('registerForm', registerForm);
         registerForm['Username'] =
             registerForm.FirstName + ' ' + registerForm.LastName;
-        console.log('registerForm', registerForm);
-        if (
-            !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
-                registerForm.Email,
-            )
-        ) {
-            setError('Lütfen geçerli bir email giriniz...');
-            setRegistered(false);
-        } else if (registerForm.Password.length < 6) {
-            setError('Şifre en az 6 karakterden oluşmalıdır...');
-            setRegistered(false);
-        } else if (registerForm.Password !== confirmPassword) {
-            setError('Şifre doğrulanamadı...');
-            setRegistered(false);
-        } else if (
-            registerForm.Phone.length !== 12 ||
-            parseInt(registerForm.Phone.slice(0, 2)) !== 90
-        ) {
-            setError('Lütfen geçerli bir telefon numarası giriniz...');
-            setRegistered(false);
-        } else {
-            await auth.postRegister(registerForm);
-            setRegistered(true);
-        }
+        await auth.postRegister(registerForm);
+        // if (
+        //     !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+        //         registerForm.Email,
+        //     )
+        // ) {
+        //     setError('Lütfen geçerli bir email giriniz...');
+        //     setRegistered(false);
+        // } else if (registerForm.Password.length < 6) {
+        //     setError('Şifre en az 6 karakterden oluşmalıdır...');
+        //     setRegistered(false);
+        // } else if (registerForm.Password !== confirmPassword) {
+        //     setError('Şifre doğrulanamadı...');
+        //     setRegistered(false);
+        // } else if (
+        //     registerForm.Phone.length !== 12 ||
+        //     parseInt(registerForm.Phone.slice(0, 2)) !== 90
+        // ) {
+        //     setError('Lütfen geçerli bir telefon numarası giriniz...');
+        //     setRegistered(false);
+        // } else {
+        //     setRegistered(true);
+        // }
     };
-
-    useEffect(() => {
-        if (registered) {
-            if (
-                auth.registerErrors?.response.data.details.toString() ===
-                'Please check the box!!!'
-            ) {
-                console.log(
-                    'object :>> ',
-                    auth.registerErrors?.response.data.details.toString(),
-                );
-                setError('Lütfen sözleşmeyi okuyup kabul ediniz!!!');
-            } else if (
-                auth.registerErrors?.response.data.details.toString() ===
-                'Ooops... User already exists'
-            ) {
-                setError(
-                    'Lütfen daha önce kayıt olmamış bir email ile giriş yapınız!!!',
-                );
-            } else if (
-                auth.registerErrors?.response.data.details.toString() ===
-                'Email, Password, Phone, Username, Gender, FirstName, LastName, BirthDate and are required.'
-            ) {
-                let initialValues = {
-                    FirstName: 'Ad',
-                    LastName: 'Soyad',
-                    BirthDate: 'Doğum Tarihi',
-                    Gender: 'Cinsiyet',
-                };
-                let emptyValues = [];
-                for (const key in registerForm) {
-                    if (Object.hasOwnProperty.call(registerForm, key)) {
-                        const element = registerForm[key];
-                        if (!element) {
-                            emptyValues.push(initialValues[key]);
-                        }
-                    }
-                }
-                emptyValues.length > 1 && emptyValues.splice(-1, 0, 've');
-                let newError = replaceChar(
-                    replaceChar(
-                        emptyValues.join(', '),
-                        '',
-                        emptyValues.join(', ').lastIndexOf(','),
-                    ),
-                    '',
-                    replaceChar(
-                        emptyValues.join(', '),
-                        '',
-                        emptyValues.join(', ').lastIndexOf(','),
-                    ).lastIndexOf(','),
-                );
-                console.log(newError);
-
-                emptyValues.length > 0 &&
-                    setError(
-                        `${
-                            emptyValues.length > 1 ? newError : emptyValues
-                        } boş bırakılamaz!!!`,
-                    );
-            } else {
-                setError('');
-            }
-        }
-    }, [auth.registerErrors]);
 
     function replaceChar(origString, replaceChar, index) {
         let firstPart = origString.substr(0, index);
@@ -238,13 +211,10 @@ export default function Register() {
     }, [error]);
 
     useEffect(() => {
-        if (auth.registerUser) {
-            // localStorage.setItem(
-            //     'registerResponse',
-            //     JSON.stringify(auth.registerUser),
-            // );
-            setActiveStep(2);
+        if (auth.registerUser?.Data === 'Email onayı bekleniyor') {
+            setActiveStep(3);
         }
+        //console.log('auth.registerUser', auth.registerUser);
     }, [auth.registerUser]);
 
     return (
@@ -257,6 +227,23 @@ export default function Register() {
                             <Box sx={boxStyle.headerBox}>
                                 <Box sx={boxStyle.LogoWord}>
                                     <LogoWord />
+                                </Box>
+                                <Box>
+                                    <Typography
+                                        component="h1"
+                                        variant="h4"
+                                        sx={{
+                                            color: '#F75936',
+                                            mb: 2,
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                            padding: '0 6rem',
+                                        }}
+                                    >
+                                        {activeStep === 3
+                                            ? 'Lütfen mailinize gelen doğrulama kodunu giriniz'
+                                            : 'Hesap Oluşturun!'}
+                                    </Typography>
                                 </Box>
                             </Box>
                             <Typography
@@ -297,7 +284,6 @@ export default function Register() {
                                             sx={{
                                                 display: 'flex',
                                                 flexDirection: 'column',
-
                                                 m: 3,
                                             }}
                                         >
@@ -314,9 +300,9 @@ export default function Register() {
                                                 <TextField
                                                     margin="normal"
                                                     required
-                                                    id="FirstSecondName"
-                                                    label="Adınız Soyadınız"
-                                                    name="FirstSecondName"
+                                                    id="FirstName"
+                                                    label="Adınız"
+                                                    name="FirstName"
                                                     autoComplete="text"
                                                     variant="outlined"
                                                     onChange={handleChange}
@@ -325,14 +311,17 @@ export default function Register() {
                                                     sx={{
                                                         width: '40%',
                                                     }}
+                                                    value={
+                                                        registerForm.FirstName
+                                                    }
                                                 />
 
                                                 <TextField
                                                     margin="normal"
                                                     required
-                                                    id="TCId"
-                                                    label="TC Kimlik Numaranız"
-                                                    name="TCId"
+                                                    id="LastName"
+                                                    label="Soyadınız"
+                                                    name="LastName"
                                                     autoComplete="text"
                                                     variant="outlined"
                                                     onChange={handleChange}
@@ -341,6 +330,9 @@ export default function Register() {
                                                     sx={{
                                                         width: '40%',
                                                     }}
+                                                    value={
+                                                        registerForm.LastName
+                                                    }
                                                 />
                                             </Box>
                                             <Box
@@ -360,6 +352,24 @@ export default function Register() {
                                                     label="E-Posta Adresiniz"
                                                     name="Email"
                                                     autoComplete="email"
+                                                    variant="outlined"
+                                                    onChange={handleChange}
+                                                    height="80px"
+                                                    size="small"
+                                                    sx={{
+                                                        width: '40%',
+                                                    }}
+                                                    value={registerForm.Email}
+                                                />
+
+                                                <TextField
+                                                    margin="normal"
+                                                    required
+                                                    id="Password"
+                                                    type="password"
+                                                    label="Şifreniz"
+                                                    name="Password"
+                                                    autoComplete="password"
                                                     pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
                                                     variant="outlined"
                                                     onChange={handleChange}
@@ -368,23 +378,10 @@ export default function Register() {
                                                     sx={{
                                                         width: '40%',
                                                     }}
-                                                />
-
-                                                <TextField
-                                                    margin="normal"
-                                                    required
-                                                    id="Password"
-                                                    label="Şifreniz"
-                                                    name="Password"
-                                                    autoComplete="password"
-                                                    variant="outlined"
-                                                    onChange={handleChange}
-                                                    height="80px"
-                                                    size="small"
-                                                    sx={{
-                                                        width: '40%',
-                                                    }}
                                                     helperText="En az 6 karakterden oluşmalıdır."
+                                                    value={
+                                                        registerForm.Password
+                                                    }
                                                 />
                                             </Box>
                                             <Box
@@ -411,6 +408,7 @@ export default function Register() {
                                                     sx={{
                                                         width: '40%',
                                                     }}
+                                                    value={registerForm.Phone}
                                                 />
 
                                                 <TextField
@@ -450,6 +448,7 @@ export default function Register() {
                                             sx={{
                                                 display: 'none',
                                                 flexDirection: 'column',
+                                                m: 3,
                                             }}
                                         >
                                             <Box
@@ -464,7 +463,8 @@ export default function Register() {
                                                     sx={{
                                                         display: 'flex',
                                                         flexDirection: 'row',
-                                                        justifyContent: 'left',
+                                                        justifyContent:
+                                                            'space-between',
                                                         m: 'auto',
                                                         width: '90%',
                                                     }}
@@ -472,35 +472,57 @@ export default function Register() {
                                                     <TextField
                                                         margin="normal"
                                                         required
-                                                        id="TaxNu"
+                                                        id="TaxNo"
                                                         label="Vergi Numaranız"
-                                                        name="TaxNu"
+                                                        name="TaxNo"
                                                         autoComplete="text"
                                                         variant="outlined"
                                                         onChange={handleChange}
                                                         height="80px"
                                                         size="small"
                                                         sx={{
-                                                            width: '50%',
+                                                            width: '40%',
                                                         }}
                                                     />
 
-                                                    <TextField
-                                                        margin="normal"
-                                                        required
-                                                        id="CusGender"
-                                                        label="Hizmet Verilen Müşteri cinsiyeti"
-                                                        name="CusGender"
-                                                        autoComplete="text"
-                                                        variant="outlined"
-                                                        onChange={handleChange}
-                                                        height="80px"
-                                                        size="small"
+                                                    <FormControl
                                                         sx={{
-                                                            width: '50%',
-                                                            ml: 15,
+                                                            minWidth: '40%',
+                                                            height: '%40',
                                                         }}
-                                                    />
+                                                    >
+                                                        <InputLabel>
+                                                            Cinsiyet
+                                                        </InputLabel>
+
+                                                        <Select
+                                                            id="Sector"
+                                                            name="Sector"
+                                                            label="Cinsiyet"
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                        >
+                                                            <MenuItem
+                                                                value={'Male'}
+                                                            >
+                                                                Erkek
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={'Female'}
+                                                            >
+                                                                Kadın
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={
+                                                                    'NottoSay'
+                                                                }
+                                                            >
+                                                                Belirtmek
+                                                                İstemiyorum
+                                                            </MenuItem>
+                                                        </Select>
+                                                    </FormControl>
                                                 </Box>
                                                 <Box
                                                     sx={{
@@ -514,9 +536,9 @@ export default function Register() {
                                                     <TextField
                                                         margin="normal"
                                                         required
-                                                        id="TaxOff"
+                                                        id="TaxAdmin"
                                                         label="Vergi Dairesi"
-                                                        name="TaxOff"
+                                                        name="TaxAdmin"
                                                         autoComplete="text"
                                                         variant="outlined"
                                                         onChange={handleChange}
@@ -525,15 +547,18 @@ export default function Register() {
                                                         sx={{
                                                             width: '50%',
                                                         }}
+                                                        value={
+                                                            registerForm.TaxAdmin
+                                                        }
                                                     />
 
                                                     <TextField
                                                         margin="normal"
                                                         required
-                                                        id="HallType"
+                                                        id="Salon"
                                                         label="Salon Türü"
-                                                        name="Password"
-                                                        autoComplete="password"
+                                                        name="Salon"
+                                                        autoComplete="text"
                                                         variant="outlined"
                                                         onChange={handleChange}
                                                         height="80px"
@@ -543,12 +568,16 @@ export default function Register() {
                                                             ml: 15,
                                                         }}
                                                         helperText="En az 6 karakterden oluşmalıdır."
+                                                        value={
+                                                            registerForm.Salon
+                                                        }
                                                     />
                                                 </Box>
                                                 <Box
                                                     sx={{
                                                         display: 'flex',
-                                                        justifyContent: 'left',
+                                                        justifyContent:
+                                                            'space-between',
                                                         m: 'auto',
                                                         width: '90%',
                                                     }}
@@ -556,9 +585,9 @@ export default function Register() {
                                                     <TextField
                                                         margin="normal"
                                                         required
-                                                        id="Iban"
+                                                        id="IBAN"
                                                         label="IBAN Numaranız"
-                                                        name="Iban"
+                                                        name="IBAN"
                                                         autoComplete="text"
                                                         variant="outlined"
                                                         onChange={handleChange}
@@ -567,22 +596,27 @@ export default function Register() {
                                                         sx={{
                                                             width: '40%',
                                                         }}
+                                                        value={
+                                                            registerForm.IBAN
+                                                        }
                                                     />
-                                                    {/* <TextField
+                                                    <TextField
                                                         margin="normal"
                                                         required
-                                                        id="Iban"
-                                                        label="IBAN Numaranız"
-                                                        name="Iban"
+                                                        id="TCKN"
+                                                        label="TC Kimlik Numaranız "
+                                                        name="TCKN"
                                                         autoComplete="text"
-
                                                         onChange={handleChange}
                                                         height="80px"
                                                         size="small"
                                                         sx={{
                                                             width: '40%',
                                                         }}
-                                                    /> */}
+                                                        value={
+                                                            registerForm.TCKN
+                                                        }
+                                                    />
                                                 </Box>
                                             </Box>
                                         </Box>
@@ -591,6 +625,8 @@ export default function Register() {
                                             sx={{
                                                 display: 'none',
                                                 flexDirection: 'column',
+
+                                                m: 3,
                                             }}
                                         >
                                             <Grid container compenent="">
@@ -618,6 +654,9 @@ export default function Register() {
                                                             sx={{
                                                                 width: '80%',
                                                             }}
+                                                            value={
+                                                                registerForm.City
+                                                            }
                                                         />
                                                         <TextField
                                                             margin="normal"
@@ -635,13 +674,16 @@ export default function Register() {
                                                             sx={{
                                                                 width: '80%',
                                                             }}
+                                                            value={
+                                                                registerForm.District
+                                                            }
                                                         />
                                                         <TextField
                                                             margin="normal"
                                                             required
-                                                            id="Street"
+                                                            id="Neighborhood"
                                                             label="Sokak"
-                                                            name="Street"
+                                                            name="Neighborhood"
                                                             autoComplete="text"
                                                             variant="outlined"
                                                             onChange={
@@ -652,6 +694,9 @@ export default function Register() {
                                                             sx={{
                                                                 width: '80%',
                                                             }}
+                                                            value={
+                                                                registerForm.Neighborhood
+                                                            }
                                                         />
                                                         <FormGroup>
                                                             <FormControlLabel
@@ -688,6 +733,11 @@ export default function Register() {
                                                 </Grid>
                                             </Grid>
                                         </Box>
+                                        <Verification
+                                            handleChangeVerification={
+                                                handleChangeVerification
+                                            }
+                                        />
                                     </Box>
                                 </Box>
                                 {activeStep === 2 && (
@@ -779,11 +829,12 @@ export default function Register() {
                                     </>
                                 )}
                                 <Box
+                                    ref={buttonsRef}
                                     sx={{
                                         display: 'flex',
                                         justifyContent: `${
-                                            activeStep === 0
-                                                ? 'flex-end'
+                                            buttonsChild == 1
+                                                ? 'center'
                                                 : 'space-between'
                                         }`,
                                         m: 'auto',
@@ -791,7 +842,7 @@ export default function Register() {
                                         mt: 8,
                                     }}
                                 >
-                                    {activeStep > 0 && (
+                                    {activeStep < 3 && (
                                         <Button
                                             size="large"
                                             onClick={handleBack}
@@ -802,7 +853,7 @@ export default function Register() {
                                             GERİ
                                         </Button>
                                     )}
-                                    {activeStep !== maxSteps - 1 && (
+                                    {activeStep < 2 && (
                                         <Button
                                             onClick={handleNext}
                                             variant="outlined"
@@ -824,7 +875,7 @@ export default function Register() {
                                             İLERİ
                                         </Button>
                                     )}
-                                    {activeStep == 2 && (
+                                    {activeStep == 3 && (
                                         <Button
                                             size="small"
                                             onClick={handleSubmitVerification}
@@ -835,20 +886,20 @@ export default function Register() {
                                             DOĞRULA
                                         </Button>
                                     )}
+                                    {activeStep === 2 && (
+                                        <Button
+                                            type="submit"
+                                            variant="outlined"
+                                            sx={buttons.submit}
+                                        >
+                                            {auth.isLoading ? (
+                                                <CircularProgress />
+                                            ) : (
+                                                'HESAP OLUŞTUR'
+                                            )}
+                                        </Button>
+                                    )}
                                 </Box>
-                                {/* {activeStep === maxSteps - 1 && (
-                                    <Button
-                                        type="submit"
-                                        variant="outlined"
-                                        sx={buttons.submit}
-                                    >
-                                        {auth.isLoading ? (
-                                            <CircularProgress />
-                                        ) : (
-                                            'HESAP OLUŞTUR'
-                                        )}
-                                    </Button>
-                                )} */}
                             </Box>
                         </Box>
                     </Grid>
@@ -861,6 +912,8 @@ export default function Register() {
                 open={openError}
                 handleClose={handleCloseError}
                 error={error}
+                successMessage={successMessage}
+                handleSuccess={handleSuccess}
             />
         </AuthLayout>
     );

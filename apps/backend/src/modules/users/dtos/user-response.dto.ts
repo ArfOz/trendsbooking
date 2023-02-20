@@ -182,9 +182,9 @@ export class SendCodeDTO {
 
 export class VerifyCodeDTO {
     @ApiProperty()
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
-    Code: number;
+    Code: string;
 
     @ApiProperty()
     @IsString()

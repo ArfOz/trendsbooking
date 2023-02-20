@@ -1,0 +1,44 @@
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
+import { DepartmentsService } from './departments.service';
+
+// Libs area
+import { AllowUnauthorizedRequest, UserParam, RolesRequired } from '@shared';
+
+// DTO area
+import { UserParamsDto } from './../users/dtos/user-response.dto';
+import {
+    AddDepartmentsJsonDto,
+    DepartmentDetailsJsonDto,
+} from './dtos/departments.dto';
+
+@ApiTags('Departments')
+@Controller('departments')
+export class DepartmentController {
+    constructor(private readonly departmentsService: DepartmentsService) {}
+
+    @AllowUnauthorizedRequest()
+    @Get('test')
+    getLoggedCompanyUser() {
+        return 'test departments page';
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('add')
+    async add(
+        @UserParam() user: UserParamsDto,
+        @Body() input: AddDepartmentsJsonDto,
+    ) {
+        return this.departmentsService.add(user, input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('getdetails')
+    async getWorkers(
+        @UserParam() user: UserParamsDto,
+        @Body() input?: DepartmentDetailsJsonDto,
+    ) {
+        return this.departmentsService.getdetails(user, input.Id);
+    }
+}

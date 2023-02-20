@@ -16,8 +16,7 @@ export class UserService {
         private readonly keypairService: KeypairService,
     ) {}
 
-    async get(where: Prisma.UserWhereUniqueInput){
-
+    async get(where: Prisma.UserWhereUniqueInput) {
         try {
             const user = await this.prisma.user.findUnique({
                 where,
@@ -33,22 +32,20 @@ export class UserService {
                     Gender: true,
                 },
             });
-    
+
             if (user && user.Email) {
                 user.Email = this.keypairService.decryptWithAppKeys(user.Email);
             }
-    
+
             if (user && user.Phone) {
                 user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
             }
-    
+
             delete user.Id;
             return user;
-            
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-
     }
 
     // async find(params: {
@@ -250,6 +247,7 @@ export class UserService {
                 Username: true,
                 Password: true,
                 Phone: true,
+                Role:true
             },
         });
 

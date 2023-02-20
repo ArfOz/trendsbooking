@@ -15,6 +15,12 @@ export enum Genders {
     NottoSay = 'NottoSay',
 }
 
+export enum ServiceGenders {
+    Male = 'Male',
+    Female = 'Female',
+    Unisex = 'Unisex',
+}
+
 export class CompanyUserParamsDto {
     @ApiProperty()
     @IsNotEmpty()
@@ -158,7 +164,7 @@ export class CreateCompanyUserJsonDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    Sector: Genders;
+    Sector: ServiceGenders;
 
     @ApiProperty()
     @IsNotEmpty()
@@ -373,8 +379,7 @@ export class GetCompaniesWhereFilter {
     IsEmailVerified?: boolean;
 }
 
-export class ActivateCompanyUserDto{
-
+export class ActivateCompanyUserDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()

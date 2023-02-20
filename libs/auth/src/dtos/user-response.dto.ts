@@ -46,5 +46,4 @@ export class UserResponseDto {
     @IsOptional()
     @IsString()
     Phone: string;
-
 }

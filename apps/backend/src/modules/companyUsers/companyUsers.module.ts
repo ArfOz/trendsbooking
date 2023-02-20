@@ -1,14 +1,20 @@
-
 import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
+import { CompanyUsersController } from './companyUsers.controller';
+import { CompanyUsersService } from './companyUsers.service';
+// Libs area
 import authConfig from '@auth/config/auth.config';
-import { DatabaseModule, PrismaService, UserService, CompanyUserService, UserOtpCodeService  } from '@database';
+import {
+    PrismaService,
+    UserService,
+    CompanyUserService,
+    UserOtpCodeService,
+} from '@database';
 import { KeypairModule } from '@shared';
 import generalConfig from '@shared/config/general.config';
 import { MailUtilsModule } from '@mail-utils';
-import { CompanyUsersController } from './companyUsers.controller';
-import { CompanyUsersService } from './companyUsers.service';
+
 import { AuthModule } from '@auth';
 
 @Module({
@@ -21,7 +27,13 @@ import { AuthModule } from '@auth';
         forwardRef(() => AuthModule),
         MailUtilsModule,
     ],
-    providers: [CompanyUsersService, CompanyUserService, PrismaService, UserService, UserOtpCodeService, PrismaService],
+    providers: [
+        CompanyUsersService,
+        CompanyUserService,
+        PrismaService,
+        UserService,
+        UserOtpCodeService,
+    ],
     controllers: [CompanyUsersController],
     exports: [CompanyUsersService],
 })

@@ -1,11 +1,14 @@
+// Npm Packages
+import { Inject, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { generate } from 'generate-password';
+import * as jwt from 'jsonwebtoken';
+import { OTPType, ExpiredReasonType } from '@prisma/client';
+
+// Libs area
 import { SendEmailDto } from '@mail-utils';
-import { OTPType, CompanyUser, ExpiredReasonType } from '@prisma/client';
-import {
-    ActivateCompanyUserDto,
-    CreateCompanyUserJsonDto,
-    ResponseLoginCompanyUserDTO,
-} from './dtos/companyUser-response.dto';
-import { AuthService, MailModeType } from '@auth';
+
+import { AuthService, MailModeType, UserType } from '@auth';
 import authConfig from '@auth/config/auth.config';
 import {
     PrismaService,
@@ -14,7 +17,7 @@ import {
     CompanyUserService,
 } from '@database';
 import { MailUtilsService } from '@mail-utils';
-import { Inject, Injectable } from '@nestjs/common';
+
 import { ConfigType } from '@nestjs/config';
 import {
     AlreadyExistsException,
@@ -28,20 +31,25 @@ import {
     TokenExceptionType,
     TrendsException,
     VerifyCodeExceptionType,
+    BadRequestException,
 } from '@shared';
 import generalConfig from '@shared/config/general.config';
 import ResponseMessage from '@shared/enums/response-message.json';
-import { BadRequestException } from '@shared';
-import * as bcrypt from 'bcrypt';
-import { generate } from 'generate-password';
-import * as jwt from 'jsonwebtoken';
+
+// DTO area
 import {
     LoginUserDto,
-    ResponseLoginUserDTO,
     SendCodeDTO,
     UserParamsDto,
     VerifyCodeDTO,
 } from '../users/dtos';
+
+import {
+    ActivateCompanyUserDto,
+    CompanyUserParamsDto,
+    CreateCompanyUserJsonDto,
+    ResponseLoginCompanyUserDTO,
+} from './dtos/companyUser-response.dto';
 
 @Injectable()
 export class CompanyUsersService {
@@ -131,8 +139,6 @@ export class CompanyUsersService {
                 );
             }
         }
-
-        // Generate a username
 
         // Generate a public/private key pair
         const keys = this.keypairService.generateKey();
@@ -248,7 +254,7 @@ export class CompanyUsersService {
                 'email' in payload &&
                 data.Code
             ) {
-                let companyUser = await this.companyUserService.get({
+                const companyUser = await this.companyUserService.get({
                     Id: payload.Id,
                 });
 
@@ -285,6 +291,7 @@ export class CompanyUsersService {
                     );
                 }
 
+                // Burası ilerleyen zamanlarda yapılacak en fazla 5 defa denenebilecek.
                 // if (otpCode[0].Attempts >= 5) {
                 //     throw new BadRequestException(
                 //         BadRequestExceptionType.BAD_REQUEST,
@@ -292,14 +299,16 @@ export class CompanyUsersService {
                 //     );
                 // }
 
-                companyUser = await this.companyUserService.update({
-                    where: {
-                        Id: payload.Id,
+                const companyUpdatedUser = await this.companyUserService.update(
+                    {
+                        where: {
+                            Id: payload.Id,
+                        },
+                        data: {
+                            IsEmailVerified: true,
+                        },
                     },
-                    data: {
-                        IsEmailVerified: true,
-                    },
-                });
+                );
                 await this.userOtpCodeService.update({
                     where: {
                         Id: otpCode[0].Id,
@@ -310,7 +319,7 @@ export class CompanyUsersService {
                 });
 
                 return {
-                    Email: companyUser.Email,
+                    Email: companyUpdatedUser.Email,
                     Data: ResponseMessage.TR201,
                     Success: true,
                 };
@@ -422,14 +431,14 @@ export class CompanyUsersService {
             );
         }
 
-        if (!companyUser.IsActive) {
-            throw new NotVerifiedException(
-                VerifyCodeExceptionType.NOT_VERIFIED,
-                new Error(ResponseMessage.TR420),
-                404,
-            );
-        }
-
+        // Burası randevu açıldığında düzenlenecek. Admin tarafından onaylanana kadar randevu alamayacak.
+        // if (!companyUser.IsActive) {
+        //     throw new NotVerifiedException(
+        //         VerifyCodeExceptionType.NOT_VERIFIED,
+        //         new Error(ResponseMessage.TR420),
+        //         404,
+        //     );
+        // }
         if (
             companyUser &&
             (await bcrypt.compare(cred.Password, companyUser.Password))
@@ -537,7 +546,6 @@ export class CompanyUsersService {
                 406,
             );
         }
-
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
                 CompanyUserId: cred.Id,
@@ -559,5 +567,11 @@ export class CompanyUsersService {
             Success: true,
             Details: ResponseMessage.TR203,
         };
+    }
+
+    async profile(
+        user: CompanyUserParamsDto, // : Promise<ResponseCompanyUserProfileUserDTO>
+    ) {
+        return await this.companyUserService.get({ Id: user.Id });
     }
 }

@@ -1,4 +1,4 @@
-import { VerifyCodeExceptionType } from './../enums/exception.type';
+import { VerifyCodeExceptionType } from '../enums/exception.type';
 import { HttpStatus } from '@nestjs/common';
 import { TrendsException } from './trends.exception';
 import { AlreadyExistsExceptionType } from '../enums/exception.type';
@@ -10,8 +10,9 @@ export class AlreadyExistsException extends TrendsException {
             | AlreadyExistsExceptionType
             | VerifyCodeExceptionType = AlreadyExistsExceptionType.ALREADY_EXISTS,
         details: Error,
-        status: number,
+        code: number,
     ) {
-        super(type, details, status);
+        const status = HttpStatus.CONFLICT;
+        super(type, details, status, code);
     }
 }
