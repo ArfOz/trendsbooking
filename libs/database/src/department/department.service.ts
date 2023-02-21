@@ -17,7 +17,7 @@ export class DepartmentService {
     ) {}
 
     async get(where: Prisma.DepartmentWhereUniqueInput) {
-        return this.prisma.userOTPCode.findUnique({
+        return this.prisma.department.findUnique({
             where,
         });
     }

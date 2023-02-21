@@ -1,5 +1,6 @@
 export * from './company-user';
 export * from './department';
+export * from './department-photos';
 export * from './prisma';
 export * from './user';
 export * from './user-otp-code';

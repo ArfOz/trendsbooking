@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 // Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
 import { BadRequestExceptionType, BadRequestException } from '@shared';
-import { DepartmentService } from '@database';
+import { DepartmentService, DepartmentPhotosService  } from '@database';
 
 // DTO area
 import { UserParamsDto } from '../users/dtos';
@@ -12,7 +12,10 @@ import { AddDepartmentsJsonDto } from './dtos/departments.dto';
 
 @Injectable()
 export class DepartmentsService {
-    constructor(private readonly departmentService: DepartmentService) {}
+    constructor(
+        private readonly departmentService: DepartmentService,
+        private readonly departmentPhotosService: DepartmentPhotosService
+        ) {}
     async add(user: UserParamsDto, input: AddDepartmentsJsonDto) {
         if (!input.Salon || !input.ServiceType || !input.Workers) {
             throw new BadRequestException(
@@ -75,9 +78,42 @@ export class DepartmentsService {
         };
     }
 
-    async addphotos(user, file){
+    async addphotos(user:UserParamsDto, departmentId : number,file: Express.Multer.File){
 
-        console.log("userrrr", user, file)
-        return null
+        const authorizator = await this.departmentService.find(
+            {
+                where:{
+                    CompanyUserId:{},
+                    AND:{
+                        Id:{
+                            equals:departmentId
+                        }
+                    }
+                }
+            }
+        )
+
+        if (!authorizator|| authorizator.length<1){
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
+
+        const data :Prisma.DepartmentPhotosCreateInput={
+            ImageBuffer:Buffer.from(file.buffer).toString('base64'),
+            MimeType:file.mimetype,
+            Department:{
+                connect:{
+                    Id:departmentId,
+                }
+            }
+        }
+        const response = await this.departmentPhotosService.create(data)
+        return {
+            data:response,
+            Success:true
+        }
     }
 }

@@ -98,3 +98,10 @@ export class DepartmentDetailsJsonDto {
     @IsNumber()
     Id: number;
 }
+
+export class DepartmentIdParamsDto{
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    DepartmentId: string
+}

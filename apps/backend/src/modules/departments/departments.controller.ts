@@ -3,11 +3,14 @@ import {
     Controller,
     FileTypeValidator,
     Get,
+    HttpStatus,
     MaxFileSizeValidator,
     ParseFilePipe,
+    ParseFilePipeBuilder,
     Post,
     UploadedFile,
     UseInterceptors,
+    ValidationError,
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Express } from 'express';
@@ -17,13 +20,20 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { DepartmentsService } from './departments.service';
 
 // Libs area
-import { AllowUnauthorizedRequest, UserParam, RolesRequired } from '@shared';
+import {
+    AllowUnauthorizedRequest,
+    UserParam,
+    RolesRequired,
+    BadRequestException,
+    BadRequestExceptionType,
+} from '@shared';
 
 // DTO area
 import { UserParamsDto } from './../users/dtos/user-response.dto';
 import {
     AddDepartmentsJsonDto,
     DepartmentDetailsJsonDto,
+    DepartmentIdParamsDto,
 } from './dtos/departments.dto';
 
 @ApiTags('Departments')
@@ -55,35 +65,57 @@ export class DepartmentController {
         return this.departmentsService.getdetails(user, input.Id);
     }
 
-    @AllowUnauthorizedRequest()
-    // @RolesRequired(['Provider'])
+
+    // Resim kalitesi düşürülecek.
+    // @AllowUnauthorizedRequest()
+    @RolesRequired(['Provider'])
     @Post('addphotos')
-    @UseInterceptors(
-        FileInterceptor("file"))
-      @ApiBody({
+    @UseInterceptors(FileInterceptor('file'))
+    @ApiBody({
         required: true,
-        type: "multipart/form-data",
+        type: 'multipart/form-data',
         schema: {
-          type: "object",
-          properties: {
-            file: {
-              type: "string",
-              format: "binary",
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
             },
-          },
         },
-      })
-      @ApiConsumes("multipart/form-data")
+    })
+    @ApiConsumes('multipart/form-data')
     async addPhotos(
-      // @UserParam() user: UserParamsDto,
-      @UploadedFile() file: Express.Multer.File) {
-        console.log("asdasdasd",file);
+        @UserParam() user: UserParamsDto,
+        @Body() data: DepartmentIdParamsDto,
+        @UploadedFile(
+            new ParseFilePipeBuilder()
+                .addFileTypeValidator({
+                    fileType: 'jpeg',
+                })
+                // .addMaxSizeValidator({
+                //     maxSize: 1000,
+                // })
+                .build({
+                    exceptionFactory(error) {
+                        new BadRequestException(
+                            BadRequestExceptionType.BAD_REQUEST,
+                            new Error(error),
+                            420,
+                        );
+                    },
+                }),
+        )
+        file: Express.Multer.File,
+    ) {
+        const response = await this.departmentsService.addphotos(
+            user,
+            parseInt(data.DepartmentId),
+            file,
+        );
 
-        const myimage = await Buffer.from(file.buffer).toString('base64');
-        const mimeType = 'image/jpeg'
+        return `<html><body><img src="data:${response.data.MimeType};base64,${response.data.ImageBuffer}" /></body></html>`;
 
-        // await this.departmentsService.addphotos(user, file)
-        return `<html><body><img src="data:${mimeType};base64,${myimage}" /></body></html>`
+        // return response;
     }
-
 }
