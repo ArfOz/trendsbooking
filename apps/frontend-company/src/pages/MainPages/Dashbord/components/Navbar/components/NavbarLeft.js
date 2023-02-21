@@ -1,14 +1,17 @@
 import React from 'react';
 
-import { style } from './style';
+import { Box, } from '@mui/material';
+import trendbiz from '../../../../../../assets/trendbiz.png';
 
-function NavbarLeft() {
+
+const NavbarLeft = () => {
     return (
         <>
-        <h1>NavbarLeft</h1>
-
+            <Box>
+                <img src={trendbiz} alt="" />
+            </Box>
         </>
     );
-}
+};
 
 export default NavbarLeft;
