@@ -6,7 +6,7 @@ import { AppBar, Toolbar } from '@mui/material';
 function Navbar() {
     return (
         <>
-            <AppBar position="fixed" color="info"
+            <AppBar position="relative" color="info"
             sx={{
                 boxShadow: "none",
             }}>

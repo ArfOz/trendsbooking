@@ -13,7 +13,7 @@ function ViewMyStore() {
         alignItems:"center",
         width:"83%", 
         ml:20,    
-        mt:15,
+        mt:10,
     }}>
         <MyStoreLeft/>
         <MyStoreRight/>
