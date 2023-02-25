@@ -10,7 +10,7 @@ import {
   ResetPassword,
   Home,
   Shop,
-  Dashbord,
+  Dashboard,
   NotFound404,
 } from "../pages";
 
@@ -24,7 +24,7 @@ const AppRouter = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path='/shop' element={<Shop />} />
-        <Route path='/dashbord' element={<Dashbord />} />
+        <Route path='/dashboard' element={<Dashboard />} />
         
         
 
