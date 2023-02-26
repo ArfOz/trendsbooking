@@ -528,7 +528,8 @@ export default function Register() {
                                                     sx={{
                                                         display: 'flex',
                                                         flexDirection: 'row',
-                                                        justifyContent: 'space-between',
+                                                        justifyContent:
+                                                            'space-between',
                                                         m: 'auto',
                                                         width: '90%',
                                                     }}
@@ -542,7 +543,7 @@ export default function Register() {
                                                         autoComplete="text"
                                                         variant="outlined"
                                                         onChange={handleChange}
-                                                        height="80px"
+                                                        //height="80px"
                                                         size="small"
                                                         sx={{
                                                             width: '40%',
@@ -555,7 +556,7 @@ export default function Register() {
                                                     <FormControl
                                                         sx={{
                                                             minWidth: '40%',
-                                                            height: '%40',
+                                                            height: '40%x',
                                                         }}
                                                     >
                                                         <InputLabel>
