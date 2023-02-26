@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthLayout } from '../../../layout';
-//import LogoWord from './components/LogoWord/LogoWord';
+import LogoWord from './components/LogoWord';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -86,9 +86,9 @@ const Login = () => {
                     {/*##################  Form Section #################  */}
                     <Grid item xs={12} sm={6} md={6} l={12}>
                         <Grid item>
-                            {/* <Box sx={boxStyle.logoWord}>
+                            <Box sx={boxStyle.logoWord}>
                                 <LogoWord />
-                            </Box> */}
+                            </Box>
                         </Grid>
 
                         <Box sx={boxStyle.leftside}>
