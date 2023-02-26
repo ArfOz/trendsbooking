@@ -85,23 +85,25 @@ const Login = () => {
                 <Grid container component="">
                     {/*##################  Form Section #################  */}
                     <Grid item xs={12} sm={6} md={6} l={12}>
-                        <Grid item>
-                            <Box sx={boxStyle.logoWord}>
-                                <LogoWord />
-                            </Box>
-                        </Grid>
+                        <Box sx={boxStyle.logoWord}>
+                            <LogoWord />
+                        </Box>
 
                         <Box sx={boxStyle.leftside}>
-                            <Typography
-                                component="h2"
-                                variant="h4"
-                                style={{ color: '#07232C' }}
-                            >
-                                Hoşgeldiniz
-                            </Typography>
+                            <Box sx={{m:5}}>
+                                <Typography
+                                    component="h2"
+                                    variant="h3"
+                                    style={{ color: '#07232C', m: 2 }}
+                                >
+                                    Hoşgeldiniz
+                                </Typography>
+                            </Box>
+
                             <Grid item>
-                                <Box sx={{ m: 2 }}>
+                                <Box sx={{ m: 0, width:"100%" }}>
                                     <GoogleLoginButton
+
                                         onClick={() =>
                                             alert(
                                                 'Merhaba Google ile giriş geliştirilmektedir.',
@@ -133,11 +135,13 @@ const Login = () => {
                                     autoComplete="email"
                                     variant="standard"
                                     autoFocus
-                                    height="80px"
-                                    size="small"
+                                    //height="80px"
+                                    //size="large"
                                     value={loginForm.email}
                                     onChange={handleChange}
-                                    sx={{ width: '100%' }}
+                                    //sx={{ width: '100%' }}
+                                    fullWidth
+
                                 />
                                 <TextField
                                     margin="normal"
@@ -147,8 +151,8 @@ const Login = () => {
                                     type="password"
                                     id="password"
                                     variant="standard"
-                                    height="80px"
-                                    size="small"
+                                    //height="80px"
+                                    //size="large"
                                     autoComplete="current-password"
                                     value={loginForm.password}
                                     onChange={handleChange}
@@ -166,11 +170,13 @@ const Login = () => {
                                 />
                                 <Button
                                     type="submit"
+                                    //size='large'
                                     fullWidth
                                     variant="outlined"
                                     sx={{
+                                        
                                         mt: '30px',
-                                        mb: '10px',
+                                        mb: '30px',
                                         backgroundColor: '#07232C',
                                         border: '1px solid green',
                                         color: 'white',

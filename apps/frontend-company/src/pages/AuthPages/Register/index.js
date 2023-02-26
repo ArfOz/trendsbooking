@@ -528,7 +528,7 @@ export default function Register() {
                                                     sx={{
                                                         display: 'flex',
                                                         flexDirection: 'row',
-                                                        justifyContent: 'left',
+                                                        justifyContent: 'space-between',
                                                         m: 'auto',
                                                         width: '90%',
                                                     }}
@@ -545,14 +545,91 @@ export default function Register() {
                                                         height="80px"
                                                         size="small"
                                                         sx={{
-                                                            width: '50%',
+                                                            width: '40%',
                                                         }}
                                                         value={
                                                             registerForm.TaxAdmin
                                                         }
                                                     />
 
-                                                    <TextField
+                                                    <FormControl
+                                                        sx={{
+                                                            minWidth: '40%',
+                                                            height: '%40',
+                                                        }}
+                                                    >
+                                                        <InputLabel>
+                                                            Salon Türü
+                                                        </InputLabel>
+                                                        <Select
+                                                            id="Salon"
+                                                            name="Salon"
+                                                            label="Salon Türü"
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                        >
+                                                            <MenuItem
+                                                                value={'Hair'}
+                                                            >
+                                                                Saç
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={'Nail'}
+                                                            >
+                                                                Tırnak
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={'MakeUp'}
+                                                            >
+                                                                Makyaj
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={
+                                                                    'Massage'
+                                                                }
+                                                            >
+                                                                Masaj
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={'Wax'}
+                                                            >
+                                                                Wax
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={
+                                                                    'Solarium'
+                                                                }
+                                                            >
+                                                                Solaryum
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={
+                                                                    'SkinCare'
+                                                                }
+                                                            >
+                                                                Cilt Bakımı
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={
+                                                                    'LaserHairRemoval'
+                                                                }
+                                                            >
+                                                                Lazer Saç Kesimi
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={'Tattoo'}
+                                                            >
+                                                                Tattoo
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={'Others'}
+                                                            >
+                                                                Diğerleri
+                                                            </MenuItem>
+                                                        </Select>
+                                                    </FormControl>
+                                                    {/* <TextField
                                                         margin="normal"
                                                         required
                                                         id="Salon"
@@ -571,7 +648,7 @@ export default function Register() {
                                                         value={
                                                             registerForm.Salon
                                                         }
-                                                    />
+                                                    /> */}
                                                 </Box>
                                                 <Box
                                                     sx={{

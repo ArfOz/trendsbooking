@@ -3,22 +3,21 @@ export const boxStyle = {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
-      height: "100vh",
+      height: "90%",
       
+
     },
-  
+
     headerBox: {},
     logoWord: {
       position: "relative",
       width: "100%",
-      height: "26.38px",
+      height: "8%",
       mt:2,
       ml:2,
-      
+
     },
-  
+
     rightside: {
       backgroundImage: "url(https://source.unsplash.com/random)",
       backgroundRepeat: "no-repeat",
@@ -27,4 +26,3 @@ export const boxStyle = {
       height: "100vh",
     },
   };
-  
