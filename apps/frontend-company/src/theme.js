@@ -23,6 +23,10 @@ const theme = createTheme({
         green:{
           main:"#1b5e20",
 
+        },
+        third:{
+          main:"#6F8D97",
+
         }
     },
       

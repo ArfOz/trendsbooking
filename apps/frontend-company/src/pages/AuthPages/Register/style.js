@@ -44,16 +44,18 @@ export const modal = {
     p: 4,
 
     button: {
-        mt: 2,
-        fontSize: '1rem',
-        p: '10px',
-        backgroundColor: '#fff',
-        border: '1px solid #07232C',
-        color: '#07232C',
-        '&:hover': {
-            backgroundColor: '#fff',
-            color: '#07232C',
-        },
+      width: '30%',
+      mt: 2,
+      ml: '6%',
+      fontSize: '1rem',
+      p: '10px',
+      backgroundColor: '#fff',
+      border: '1px solid #07232C',
+      color: '#07232C',
+      '&:hover': {
+          backgroundColor: '#fff',
+          color: '#07232C',
+      },
     },
     scrollBar: {
         height: '500px',
