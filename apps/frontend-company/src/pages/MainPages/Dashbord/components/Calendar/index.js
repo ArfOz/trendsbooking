@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import SaloonLeft from './components/SaloonLeft';
-import SaloonRight from './components/SaloonRight';
+import { Box,} from '@mui/material';
+import CalendarLeft from './components/CalendarLeft';
+import CalendarRight from './components/CalendarRight';
 
-function SaloonPerformance() {
+function Calendar() {
     return (
         <>
             <Box
@@ -18,11 +18,11 @@ function SaloonPerformance() {
                     alignItems: 'center',
                 }}
             >
-                <SaloonLeft />
-                <SaloonRight />
+                <CalendarLeft />
+                <CalendarRight />
             </Box>
         </>
     );
 }
 
-export default SaloonPerformance;
+export default Calendar;
