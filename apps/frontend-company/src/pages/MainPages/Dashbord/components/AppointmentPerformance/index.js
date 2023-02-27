@@ -13,7 +13,7 @@ function AppointmentPerformance() {
                     background: '#FFFFFF',
                     borderRadius: '10px',
                     m: 'auto',
-                    mt: 3,
+                    mt: 7,
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-around',

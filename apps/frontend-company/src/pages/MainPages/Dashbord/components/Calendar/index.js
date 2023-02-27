@@ -12,7 +12,7 @@ function Calendar() {
                     height: '64vh',
                     borderRadius: '10px',
                     m: 'auto',
-                    mt: 3,
+                    mt: 7,
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',

@@ -27,6 +27,9 @@ const theme = createTheme({
         third:{
           main:"#6F8D97",
 
+        },
+        NavbarTop:{
+          main:"#0C323E",
         }
     },
       
