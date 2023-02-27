@@ -110,7 +110,7 @@ export const boxStyle = {
     progressBarEmpty: {
         width: '50%',
         height: '10px',
-        background: '#07232C',
+        background: '#F2F8FF',
         borderRadius: '15px',
         mb: 2,
         mt: 2,
