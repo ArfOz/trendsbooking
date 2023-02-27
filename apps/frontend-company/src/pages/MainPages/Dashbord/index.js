@@ -2,8 +2,9 @@ import { Box } from '@mui/material';
 import React from 'react';
 
 import { MainLayout } from '../../../layout';
+import Footer from '../../../components/Footer';
 
-import { AppointmentPerformance, Navbar, SaloonPerformance, ViewMyStore } from './components';
+import { AppointmentPerformance, Calendar, Navbar, SaloonPerformance, ViewMyStore } from './components';
 
 const Dashbord = () => {
     return (
@@ -17,6 +18,8 @@ const Dashbord = () => {
             <ViewMyStore />
             <AppointmentPerformance />
             <SaloonPerformance/>
+            <Calendar/>
+            <Footer />
           
             </Box>
             
