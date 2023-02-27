@@ -233,7 +233,7 @@ export default function Register() {
                                         component="h1"
                                         variant="h4"
                                         sx={{
-                                            color: '#F75936',
+                                            color: '#07232C',
                                             mb: 2,
                                             fontWeight: 'bold',
                                             textAlign: 'center',
@@ -258,7 +258,7 @@ export default function Register() {
                                 <Box
                                     sx={{
                                         borderRadius: '15px',
-                                        background: ' #F75936',
+                                        background: '#07232C',
                                         height: '10px',
                                         width: `${
                                             ((activeStep + 1) / maxSteps) * 100
@@ -840,7 +840,7 @@ export default function Register() {
                                                     component="h2"
                                                     align="center"
                                                     sx={{
-                                                        color: '#F75936',
+                                                        color: '#07232C',
                                                         width: '30%',
                                                         margin: 'auto',
                                                     }}
@@ -941,10 +941,10 @@ export default function Register() {
                                                 height: '100%',
                                                 fontSize: '1rem',
                                                 // ml: '420px',
-                                                backgroundColor: '#F75936',
+                                                backgroundColor: '#07232C',
                                                 color: 'white',
                                                 '&:hover': {
-                                                    color: '#F75936',
+                                                    color: '#07232C',
                                                 },
                                             }}
 
