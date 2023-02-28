@@ -65,17 +65,21 @@ export class DepartmentController {
         return this.departmentsService.getdetails(user, input.Id);
     }
 
-
     // Resim kalitesi düşürülecek.
     // @AllowUnauthorizedRequest()
     @RolesRequired(['Provider'])
     @Post('addphotos')
-    @UseInterceptors(FileInterceptor('file'))
+    @UseInterceptors(FileInterceptor('file',
+    {
+        storage: diskStorage({
+          destination: './uploadedFiles/avatars'
+        })
+      }))
     @ApiBody({
         required: true,
         type: 'multipart/form-data',
         schema: {
-            type: 'object',
+            type: 'jpeg',
             properties: {
                 file: {
                     type: 'string',
@@ -88,25 +92,11 @@ export class DepartmentController {
     async addPhotos(
         @UserParam() user: UserParamsDto,
         @Body() data: DepartmentIdParamsDto,
-        @UploadedFile(
-            new ParseFilePipeBuilder()
-                .addFileTypeValidator({
-                    fileType: 'jpeg',
-                })
-                // .addMaxSizeValidator({
-                //     maxSize: 1000,
-                // })
-                .build({
-                    exceptionFactory(error) {
-                        new BadRequestException(
-                            BadRequestExceptionType.BAD_REQUEST,
-                            new Error(error),
-                            420,
-                        );
-                    },
-                }),
-        )
-        file: Express.Multer.File,
+        @UploadedFile(new ParseFilePipe({
+            validators: [
+              new FileTypeValidator({ fileType: 'jpeg' }),
+            ],
+          }),) file: Express.Multer.File,
     ) {
         const response = await this.departmentsService.addphotos(
             user,
@@ -114,8 +104,8 @@ export class DepartmentController {
             file,
         );
 
-        return `<html><body><img src="data:${response.data.MimeType};base64,${response.data.ImageBuffer}" /></body></html>`;
+        // return `<html><body><img src="data:${response.data.MimeType};base64,${response.data.ImageBuffer}" /></body></html>`;
 
-        // return response;
+        return response;
     }
 }

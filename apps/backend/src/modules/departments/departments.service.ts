@@ -1,3 +1,4 @@
+import { ImageServerService } from './../../../../../libs/shared/src/modules/image-server/image-server.service';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
@@ -14,7 +15,8 @@ import { AddDepartmentsJsonDto } from './dtos/departments.dto';
 export class DepartmentsService {
     constructor(
         private readonly departmentService: DepartmentService,
-        private readonly departmentPhotosService: DepartmentPhotosService
+        private readonly departmentPhotosService: DepartmentPhotosService,
+        private readonly imageServer: ImageServerService
         ) {}
     async add(user: UserParamsDto, input: AddDepartmentsJsonDto) {
         if (!input.Salon || !input.ServiceType || !input.Workers) {
@@ -93,6 +95,10 @@ export class DepartmentsService {
             }
         )
 
+        await this.imageServer.addPhoto()
+        
+        console.log("asdasds", file)
+
         if (!authorizator|| authorizator.length<1){
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -101,18 +107,25 @@ export class DepartmentsService {
             );
         }
 
-        const data :Prisma.DepartmentPhotosCreateInput={
-            ImageBuffer:Buffer.from(file.buffer).toString('base64'),
-            MimeType:file.mimetype,
-            Department:{
-                connect:{
-                    Id:departmentId,
-                }
-            }
-        }
-        const response = await this.departmentPhotosService.create(data)
+        // const data :Prisma.DepartmentPhotosCreateInput={
+        //     ImageBuffer:Buffer.from(file.buffer).toString('base64'),
+        //     MimeType:file.mimetype,
+        //     Department:{
+        //         connect:{
+        //             Id:departmentId,
+        //         }
+        //     }
+        // }
+
+        // await this.httpService.get(
+            
+        // )
+
+
+        console.log("data")
+        // const response = await this.departmentPhotosService.create(data)
         return {
-            data:response,
+            data:"asdasd",
             Success:true
         }
     }
