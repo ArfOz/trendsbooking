@@ -69,17 +69,12 @@ export class DepartmentController {
     // @AllowUnauthorizedRequest()
     @RolesRequired(['Provider'])
     @Post('addphotos')
-    @UseInterceptors(FileInterceptor('file',
-    {
-        storage: diskStorage({
-          destination: './uploadedFiles/avatars'
-        })
-      }))
+    @UseInterceptors(FileInterceptor('file'))
     @ApiBody({
         required: true,
         type: 'multipart/form-data',
         schema: {
-            type: 'jpeg',
+            type: 'object',
             properties: {
                 file: {
                     type: 'string',
@@ -92,11 +87,7 @@ export class DepartmentController {
     async addPhotos(
         @UserParam() user: UserParamsDto,
         @Body() data: DepartmentIdParamsDto,
-        @UploadedFile(new ParseFilePipe({
-            validators: [
-              new FileTypeValidator({ fileType: 'jpeg' }),
-            ],
-          }),) file: Express.Multer.File,
+        @UploadedFile() file: Express.Multer.File,
     ) {
         const response = await this.departmentsService.addphotos(
             user,

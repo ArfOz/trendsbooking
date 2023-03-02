@@ -95,9 +95,12 @@ export class DepartmentsService {
             }
         )
 
-        await this.imageServer.addPhoto()
+        // const arif = Buffer.from(file.buffer).toString('base64')
+        // console.log("fileeeeeeeeeeeeeeee", file)
+
+        await this.imageServer.addPhoto(file)
         
-        console.log("asdasds", file)
+        // console.log("asdasds", file)
 
         if (!authorizator|| authorizator.length<1){
             throw new BadRequestException(
