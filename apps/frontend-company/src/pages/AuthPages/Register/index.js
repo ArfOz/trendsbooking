@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AuthLayout } from '../../../layout';
-import { buttons, modal, boxStyle } from './style';
+import { buttons, modal, boxStyle, input } from './style';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -56,6 +56,13 @@ export default function Register() {
     const auth = useAuth();
     const navigate = useNavigate();
 
+    const title = [
+        'Kullanıcı Bilgileri',
+        'İşletme Bilgileri',
+        'İşletme Bilgileri',
+        '',
+    ];
+
     //Slider
     const [activeStep, setActiveStep] = useState(0);
 
@@ -72,7 +79,6 @@ export default function Register() {
     };
 
     useEffect(() => {
-        console.log('activeElement', activeElement);
         if (activeElement) {
             Array.from(activeElement).map((item, index) => {
                 if (index === activeStep) {
@@ -97,15 +103,16 @@ export default function Register() {
         setError(null);
     };
 
-    const [buttonsChild, setButtonsChild] = useState(2);
+    const [buttonsChild, setButtonsChild] = useState(1);
     const buttonsRef = useRef();
     useEffect(() => {
         if (buttonsRef.current.childNodes.length === 1) {
             setButtonsChild(1);
+        } else {
+            setButtonsChild(2);
         }
-    }, [buttonsRef]);
+    }, [activeStep]);
 
-    console.log('buttonsRef', buttonsChild);
     useEffect(() => {
         if (modalCheckbox) {
             setRegisterForm({ ...registerForm, ['CbFirst']: true });
@@ -246,19 +253,35 @@ export default function Register() {
                                     </Typography>
                                 </Box>
                             </Box>
-                            <Typography
-                                component="p"
-                                variant="text"
-                                sx={{ width: '50%' }}
-                                align="right"
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    width: '90%',
+                                }}
                             >
-                                {activeStep + 1}/{maxSteps}
-                            </Typography>
+                                <Typography
+                                    component="p"
+                                    variant="text"
+                                    sx={{ width: '50%', fontWeight: '600' }}
+                                    align="left"
+                                >
+                                    {title[activeStep]}
+                                </Typography>
+                                <Typography
+                                    component="p"
+                                    variant="text"
+                                    sx={{ width: '50%' }}
+                                    align="right"
+                                >
+                                    {activeStep + 1}/{maxSteps}
+                                </Typography>
+                            </Box>
                             <Box sx={boxStyle.progressBarEmpty}>
                                 <Box
                                     sx={{
                                         borderRadius: '15px',
-                                        background: '#07232C',
+                                        background: ' #07232C',
                                         height: '10px',
                                         width: `${
                                             ((activeStep + 1) / maxSteps) * 100
@@ -287,16 +310,7 @@ export default function Register() {
                                                 m: 3,
                                             }}
                                         >
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'row',
-                                                    justifyContent:
-                                                        'space-around',
-                                                    p: 1,
-                                                    m: 1,
-                                                }}
-                                            >
+                                            <Box sx={input.formBox}>
                                                 <TextField
                                                     margin="normal"
                                                     required
@@ -308,9 +322,7 @@ export default function Register() {
                                                     onChange={handleChange}
                                                     height="80px"
                                                     size="small"
-                                                    sx={{
-                                                        width: '40%',
-                                                    }}
+                                                    sx={input.formInput}
                                                     value={
                                                         registerForm.FirstName
                                                     }
@@ -327,24 +339,13 @@ export default function Register() {
                                                     onChange={handleChange}
                                                     height="80px"
                                                     size="small"
-                                                    sx={{
-                                                        width: '40%',
-                                                    }}
+                                                    sx={input.formInput}
                                                     value={
                                                         registerForm.LastName
                                                     }
                                                 />
                                             </Box>
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'row',
-                                                    justifyContent:
-                                                        'space-around',
-                                                    p: 1,
-                                                    m: 1,
-                                                }}
-                                            >
+                                            <Box sx={input.formBox}>
                                                 <TextField
                                                     margin="normal"
                                                     required
@@ -356,9 +357,7 @@ export default function Register() {
                                                     onChange={handleChange}
                                                     height="80px"
                                                     size="small"
-                                                    sx={{
-                                                        width: '40%',
-                                                    }}
+                                                    sx={input.formInput}
                                                     value={registerForm.Email}
                                                 />
 
@@ -375,25 +374,14 @@ export default function Register() {
                                                     onChange={handleChange}
                                                     height="80px"
                                                     size="small"
-                                                    sx={{
-                                                        width: '40%',
-                                                    }}
+                                                    sx={input.formInput}
                                                     helperText="En az 6 karakterden oluşmalıdır."
                                                     value={
                                                         registerForm.Password
                                                     }
                                                 />
                                             </Box>
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'row',
-                                                    justifyContent:
-                                                        'space-around',
-                                                    p: 1,
-                                                    m: 1,
-                                                }}
-                                            >
+                                            <Box sx={input.formBox}>
                                                 <TextField
                                                     margin="normal"
                                                     required
@@ -405,9 +393,7 @@ export default function Register() {
                                                     onChange={handleChange}
                                                     height="80px"
                                                     size="small"
-                                                    sx={{
-                                                        width: '40%',
-                                                    }}
+                                                    sx={input.formInput}
                                                     value={registerForm.Phone}
                                                 />
 
@@ -437,9 +423,7 @@ export default function Register() {
                                                         )
                                                     }
                                                     size="small"
-                                                    sx={{
-                                                        width: '40%',
-                                                    }}
+                                                    sx={input.formInput}
                                                 />
                                             </Box>
                                         </Box>
@@ -455,20 +439,9 @@ export default function Register() {
                                                 sx={{
                                                     display: 'flex',
                                                     flexDirection: 'column',
-
-                                                    height: '55vh',
                                                 }}
                                             >
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        flexDirection: 'row',
-                                                        justifyContent:
-                                                            'space-between',
-                                                        m: 'auto',
-                                                        width: '90%',
-                                                    }}
-                                                >
+                                                <Box sx={input.formBox}>
                                                     <TextField
                                                         margin="normal"
                                                         required
@@ -480,25 +453,21 @@ export default function Register() {
                                                         onChange={handleChange}
                                                         height="80px"
                                                         size="small"
-                                                        sx={{
-                                                            width: '40%',
-                                                        }}
+                                                        sx={input.formInput}
                                                     />
 
                                                     <FormControl
-                                                        sx={{
-                                                            minWidth: '40%',
-                                                            height: '%40',
-                                                        }}
+                                                        sx={input.formSelect}
+                                                        size="small"
                                                     >
                                                         <InputLabel>
                                                             Cinsiyet
                                                         </InputLabel>
-
                                                         <Select
                                                             id="Sector"
                                                             name="Sector"
                                                             label="Cinsiyet"
+                                                            defaultValue={''}
                                                             onChange={
                                                                 handleChange
                                                             }
@@ -524,16 +493,7 @@ export default function Register() {
                                                         </Select>
                                                     </FormControl>
                                                 </Box>
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        flexDirection: 'row',
-                                                        justifyContent:
-                                                            'space-between',
-                                                        m: 'auto',
-                                                        width: '90%',
-                                                    }}
-                                                >
+                                                <Box sx={input.formBox}>
                                                     <TextField
                                                         margin="normal"
                                                         required
@@ -545,19 +505,15 @@ export default function Register() {
                                                         onChange={handleChange}
                                                         //height="80px"
                                                         size="small"
-                                                        sx={{
-                                                            width: '40%',
-                                                        }}
+                                                        sx={input.formInput}
                                                         value={
                                                             registerForm.TaxAdmin
                                                         }
                                                     />
 
                                                     <FormControl
-                                                        sx={{
-                                                            minWidth: '40%',
-                                                            height: '40%x',
-                                                        }}
+                                                        sx={input.formSelect}
+                                                        size="small"
                                                     >
                                                         <InputLabel>
                                                             Salon Türü
@@ -566,6 +522,7 @@ export default function Register() {
                                                             id="Salon"
                                                             name="Salon"
                                                             label="Salon Türü"
+                                                            defaultValue={''}
                                                             onChange={
                                                                 handleChange
                                                             }
@@ -651,15 +608,7 @@ export default function Register() {
                                                         }
                                                     /> */}
                                                 </Box>
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        justifyContent:
-                                                            'space-between',
-                                                        m: 'auto',
-                                                        width: '90%',
-                                                    }}
-                                                >
+                                                <Box sx={input.formBox}>
                                                     <TextField
                                                         margin="normal"
                                                         required
@@ -669,11 +618,9 @@ export default function Register() {
                                                         autoComplete="text"
                                                         variant="outlined"
                                                         onChange={handleChange}
-                                                        height="80px"
+                                                        // height="80px"
                                                         size="small"
-                                                        sx={{
-                                                            width: '40%',
-                                                        }}
+                                                        sx={input.formInput}
                                                         value={
                                                             registerForm.IBAN
                                                         }
@@ -686,11 +633,9 @@ export default function Register() {
                                                         name="TCKN"
                                                         autoComplete="text"
                                                         onChange={handleChange}
-                                                        height="80px"
+                                                        // height="80px"
                                                         size="small"
-                                                        sx={{
-                                                            width: '40%',
-                                                        }}
+                                                        sx={input.formInput}
                                                         value={
                                                             registerForm.TCKN
                                                         }
@@ -703,11 +648,17 @@ export default function Register() {
                                             sx={{
                                                 display: 'none',
                                                 flexDirection: 'column',
-
                                                 m: 3,
                                             }}
                                         >
-                                            <Grid container compenent="">
+                                            <Grid
+                                                container
+                                                compenent=""
+                                                sx={{
+                                                    p: '8px',
+                                                    m: '8px',
+                                                }}
+                                            >
                                                 <Grid item md={6} lg={6} xl={6}>
                                                     <Box
                                                         sx={{
@@ -802,7 +753,7 @@ export default function Register() {
                                                         sx={{
                                                             backgroundColor:
                                                                 'rgba(217,217,217)',
-                                                            width: '380px',
+                                                            width: '100%',
                                                             height: '380px',
                                                             borderRadius:
                                                                 '16px',
@@ -912,7 +863,7 @@ export default function Register() {
                                         display: 'flex',
                                         justifyContent: `${
                                             buttonsChild == 1
-                                                ? 'center'
+                                                ? 'flex-end'
                                                 : 'space-between'
                                         }`,
                                         m: 'auto',
@@ -920,7 +871,7 @@ export default function Register() {
                                         mt: 8,
                                     }}
                                 >
-                                    {activeStep < 3 && (
+                                    {activeStep < 3 && activeStep > 0 && (
                                         <Button
                                             size="large"
                                             onClick={handleBack}
@@ -935,19 +886,8 @@ export default function Register() {
                                         <Button
                                             onClick={handleNext}
                                             variant="outlined"
-                                            size="small"
-                                            sx={{
-                                                width: '36%',
-                                                height: '100%',
-                                                fontSize: '1rem',
-                                                // ml: '420px',
-                                                backgroundColor: '#07232C',
-                                                color: 'white',
-                                                '&:hover': {
-                                                    color: '#07232C',
-                                                },
-                                            }}
-
+                                            size="large"
+                                            sx={buttons.back}
                                             // disabled={activeStep === maxSteps - 1}
                                         >
                                             İLERİ
@@ -968,7 +908,7 @@ export default function Register() {
                                         <Button
                                             type="submit"
                                             variant="outlined"
-                                            sx={buttons.submit}
+                                            sx={buttons.back}
                                         >
                                             {auth.isLoading ? (
                                                 <CircularProgress />
