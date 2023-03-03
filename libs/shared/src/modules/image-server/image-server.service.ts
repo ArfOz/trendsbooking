@@ -2,6 +2,7 @@ import { Multer } from 'multer';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import generalConfig from '../../config/general.config';
+import { v4 as uuidv4 } from 'uuid';
 
 import Client from 'ssh2-sftp-client';
 const sftp = new Client();
@@ -12,7 +13,7 @@ export class ImageServerService {
         private readonly generalCfg: ConfigType<typeof generalConfig>,
     ) {}
     async addPhoto(file: Express.Multer.File) {
-        const data2 = Buffer.from(file.buffer);
+        const data = Buffer.from(file.buffer);
         const config = {
             host: this.generalCfg.sftpHost,
             port: this.generalCfg.sftpPort,
@@ -20,20 +21,30 @@ export class ImageServerService {
             password: this.generalCfg.sftpPassword,
         };
 
-        console.log('config', file, typeof file.buffer);
+        const fileName: string = uuidv4();
 
-        const myimage = await Buffer.from(file.buffer);
+        const fileType: string = file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length)
 
+        console.log("file", fileName)
+
+
+        console.log('config', file, typeof file.buffer, );
+
+        console.log("fileasdas", file.originalname)
+
+        const filePath = `/root/photos/departments/${fileName}${fileType}`
         await sftp.connect(config);
 
         await sftp
-            .list('/root/photos/')
+            .list('/root/photos/departments/')
             .then((res) => console.log('asdasda', res));
 
-        await sftp.put(data2, '/root/photos/aw.jpg');
+        await sftp.put(data, filePath);
 
         await sftp.end();
 
-        return true;
+        return {
+            fileName,
+        };
     }
 }

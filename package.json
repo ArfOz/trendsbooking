@@ -56,7 +56,8 @@
     "swiper": "^8.4.5",
     "tslib": "^2.3.0",
     "tweetnacl": "^1.0.3",
-    "uniqid": "^5.4.0"
+    "uniqid": "^5.4.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.14.5",
