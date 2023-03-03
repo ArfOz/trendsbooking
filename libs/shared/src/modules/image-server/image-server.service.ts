@@ -1,8 +1,10 @@
-import { Multer } from 'multer';
+
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import generalConfig from '../../config/general.config';
 import { v4 as uuidv4 } from 'uuid';
+import { Express } from 'express';
+import { Multer } from 'multer';
 
 import Client from 'ssh2-sftp-client';
 const sftp = new Client();
@@ -23,16 +25,12 @@ export class ImageServerService {
 
         const fileName: string = uuidv4();
 
-        const fileType: string = file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length)
+        const fileType: string = file.originalname.substring(
+            file.originalname.lastIndexOf('.')+1,
+            file.originalname.length,
+        );
 
-        console.log("file", fileName)
-
-
-        console.log('config', file, typeof file.buffer, );
-
-        console.log("fileasdas", file.originalname)
-
-        const filePath = `/root/photos/departments/${fileName}${fileType}`
+        const filePath = `/root/photos/departments/${fileName}.${fileType}`;
         await sftp.connect(config);
 
         await sftp
@@ -45,7 +43,7 @@ export class ImageServerService {
 
         return {
             fileName,
-            fileType
+            fileType,
         };
     }
 }

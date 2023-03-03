@@ -1,6 +1,6 @@
 import { ImageServerService } from './../../../../../libs/shared/src/modules/image-server/image-server.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, DepartmentPhotos } from '@prisma/client';
 
 // Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
@@ -121,9 +121,7 @@ export class DepartmentsService {
             }
         }
 
-
-        console.log("data")
-        const response = await this.departmentPhotosService.create(data)
+        const response : DepartmentPhotos = await this.departmentPhotosService.create(data)
         return {
             data:response.ImageName,
             Success:true
