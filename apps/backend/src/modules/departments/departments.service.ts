@@ -98,7 +98,7 @@ export class DepartmentsService {
         // const arif = Buffer.from(file.buffer).toString('base64')
         // console.log("fileeeeeeeeeeeeeeee", file)
 
-        const response = await this.imageServer.addPhoto(file)
+        const responseServer = await this.imageServer.addPhoto(file)
         
         // console.log("asdasds", file)
 
@@ -111,8 +111,9 @@ export class DepartmentsService {
         }
 
         const data :Prisma.DepartmentPhotosCreateInput={
-            ImageBuffer:Buffer.from(file.buffer).toString('base64'),
-            MimeType:file.mimetype,
+        ImageName:file.originalname,
+        ImageType:responseServer.fileType,
+        ImageServerName:responseServer.fileName,
             Department:{
                 connect:{
                     Id:departmentId,
@@ -122,9 +123,9 @@ export class DepartmentsService {
 
 
         console.log("data")
-        // const response = await this.departmentPhotosService.create(data)
+        const response = await this.departmentPhotosService.create(data)
         return {
-            data:"asdasd",
+            data:response.ImageName,
             Success:true
         }
     }

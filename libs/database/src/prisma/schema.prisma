@@ -201,12 +201,10 @@ model WorkTime {
 }
 
 model DepartmentPhotos {
-  Id Int @id @default(autoincrement())
-
-  ImageBuffer String
-
-  MimeType String
-
+  Id        Int    @id @default(autoincrement())
+  ImageName String
+  ImageType       String
+  ImageServerName String
   Department   Department? @relation(fields: [DepartmentId], references: [Id])
   DepartmentId Int?
 }
