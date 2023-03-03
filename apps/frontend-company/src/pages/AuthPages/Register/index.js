@@ -26,6 +26,9 @@ import LogoWord from './components/LogoWord';
 import { useAuth } from '../../../context/authContext';
 import Verification from './components/Verification';
 import ErrorModal from './components/ErrorModal';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import { isValid } from 'iban';
 
 const initialState = {
     Username: '',
@@ -179,29 +182,102 @@ export default function Register() {
         registerForm['Username'] =
             registerForm.FirstName + ' ' + registerForm.LastName;
         await auth.postRegister(registerForm);
-        // if (
-        //     !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
-        //         registerForm.Email,
-        //     )
-        // ) {
-        //     setError('Lütfen geçerli bir email giriniz...');
-        //     setRegistered(false);
-        // } else if (registerForm.Password.length < 6) {
-        //     setError('Şifre en az 6 karakterden oluşmalıdır...');
-        //     setRegistered(false);
-        // } else if (registerForm.Password !== confirmPassword) {
-        //     setError('Şifre doğrulanamadı...');
-        //     setRegistered(false);
-        // } else if (
-        //     registerForm.Phone.length !== 12 ||
-        //     parseInt(registerForm.Phone.slice(0, 2)) !== 90
-        // ) {
-        //     setError('Lütfen geçerli bir telefon numarası giriniz...');
-        //     setRegistered(false);
-        // } else {
-        //     setRegistered(true);
-        // }
+        if (
+            !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+                registerForm.Email,
+            )
+        ) {
+            setError('Lütfen geçerli bir email giriniz...');
+            setRegistered(false);
+        } else if (registerForm.Password.length < 6) {
+            setError('Şifre en az 6 karakterden oluşmalıdır...');
+            setRegistered(false);
+        } else if (registerForm.Password !== confirmPassword) {
+            setError('Şifre doğrulanamadı...');
+            setRegistered(false);
+        } else if (
+            registerForm.Phone.length !== 12 ||
+            parseInt(registerForm.Phone.slice(0, 2)) !== 90
+        ) {
+            setError('Lütfen geçerli bir telefon numarası giriniz...');
+            setRegistered(false);
+        } else if (
+            registerForm.TCKN.length !== 11 ||
+            registerForm.TCKN[0] == 0 ||
+            registerForm.TCKN[10] % 2 == 1 ||
+            isNaN(registerForm.TCKN)
+        ) {
+            setError('Lütfen geçerli bir TC Kimlik numarası giriniz...');
+            setRegistered(false);
+            // } else if (
+            //     !isValid(registerForm.IBAN)
+            // ) {
+            //     setError('Lütfen geçerli bir IBAN giriniz...');
+            //     setRegistered(false);
+        } else {
+            setRegistered(true);
+        }
     };
+
+    useEffect(() => {
+        if (registered) {
+            console.log('auth.registerErrors :>> ', auth.registerErrors);
+            if (auth.registerErrors?.response.data.code == 411) {
+                setError('Lütfen sözleşmeyi okuyup kabul ediniz!!!');
+            } else if (
+                auth.registerErrors?.response.data.details?.toString() ===
+                'Ooops... User already exists'
+            ) {
+                setError(
+                    'Lütfen daha önce kayıt olmamış bir email ile giriş yapınız!!!',
+                );
+            } else if (auth.registerErrors?.response.data.code == 412) {
+                let initialValues = {
+                    FirstName: 'Ad',
+                    LastName: 'Soyad',
+                    IBAN: 'IBAN Numarası',
+                    Salon: 'Salon Türü',
+                    Sector: 'Cinsiyet',
+                    TCKN: 'TC Kimlik Numarası',
+                    TaxNo: 'Vergi Numarası',
+                };
+                let emptyValues = [];
+                for (const key in registerForm) {
+                    if (Object.hasOwnProperty.call(registerForm, key)) {
+                        const element = registerForm[key];
+                        if (!element) {
+                            emptyValues.push(initialValues[key]);
+                        }
+                    }
+                }
+                emptyValues.length > 1 && emptyValues.splice(-1, 0, 've');
+                let newError = replaceChar(
+                    replaceChar(
+                        emptyValues.join(', '),
+                        '',
+                        emptyValues.join(', ').lastIndexOf(','),
+                    ),
+                    '',
+                    replaceChar(
+                        emptyValues.join(', '),
+                        '',
+                        emptyValues.join(', ').lastIndexOf(','),
+                    ).lastIndexOf(','),
+                );
+                console.log(newError);
+
+                emptyValues.length > 0 &&
+                    setError(
+                        `${
+                            emptyValues.length > 1 ? newError : emptyValues
+                        } boş bırakılamaz!!!`,
+                    );
+            } else {
+                setError('');
+                // setActiveStep(2);
+            }
+        }
+    }, [auth.registerErrors]);
 
     function replaceChar(origString, replaceChar, index) {
         let firstPart = origString.substr(0, index);
@@ -382,7 +458,7 @@ export default function Register() {
                                                 />
                                             </Box>
                                             <Box sx={input.formBox}>
-                                                <TextField
+                                                {/* <TextField
                                                     margin="normal"
                                                     required
                                                     id="Phone"
@@ -395,8 +471,33 @@ export default function Register() {
                                                     size="small"
                                                     sx={input.formInput}
                                                     value={registerForm.Phone}
-                                                />
-
+                                                /> */}
+                                                <Box sx={{ width: '40%' }}>
+                                                    <InputLabel htmlFor="component-simple">
+                                                        Telefon Numarası
+                                                    </InputLabel>
+                                                    <PhoneInput
+                                                        country={'tr'}
+                                                        value={
+                                                            registerForm.Phone
+                                                        }
+                                                        onChange={
+                                                            handleChangePhone
+                                                        }
+                                                        onlyCountries={['tr']}
+                                                        inputProps={{
+                                                            name: 'Phone',
+                                                            required: true,
+                                                            autoFocus: true,
+                                                            style: {
+                                                                width: '100%',
+                                                            },
+                                                        }}
+                                                    />
+                                                    <FormHelperText>
+                                                        Örnek: +90 123 456 7890
+                                                    </FormHelperText>
+                                                </Box>
                                                 <TextField
                                                     margin="normal"
                                                     required
