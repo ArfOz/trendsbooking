@@ -1,6 +1,7 @@
 import { ImageServerService } from './../../../../../libs/shared/src/modules/image-server/image-server.service';
 import { Injectable } from '@nestjs/common';
 import { Prisma, DepartmentPhotos } from '@prisma/client';
+import sharp from 'sharp';
 
 // Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
@@ -96,8 +97,12 @@ export class DepartmentsService {
         )
 
         // const arif = Buffer.from(file.buffer).toString('base64')
-        // console.log("fileeeeeeeeeeeeeeee", file)
+        console.log("fileeeeeeeeeeeeeeee", file)
 
+        // İmage resize
+        const reImage = await sharp(file.buffer).jpeg({}).toBuffer()
+        file['buffer'] = reImage
+        console.log("reimage", reImage)
         const responseServer = await this.imageServer.addPhoto(file)
         
         // console.log("asdasds", file)
