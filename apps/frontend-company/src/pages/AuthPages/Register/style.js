@@ -8,6 +8,7 @@ export const buttons = {
         color: 'white',
         '&:hover': {
             color: '#07232C',
+            border: '1px solid #07232C',
         },
     },
     next: {
@@ -19,6 +20,7 @@ export const buttons = {
         color: 'white',
         '&:hover': {
             color: '#07232C',
+            border: '1px solid #07232C',
         },
     },
     back: {
@@ -30,6 +32,7 @@ export const buttons = {
         color: 'white',
         '&:hover': {
             color: '#07232C',
+            border: '1px solid #07232C',
         },
     },
 };
@@ -77,7 +80,7 @@ export const modal = {
     checkbox: {
         fontSize: '1rem !important',
         p: '10px !important',
-        backgroundColor: '#07232C!important',
+        backgroundColor: '#07232C !important',
         border: '1px solid green !important',
         color: 'white !important',
         width: '45%',
@@ -108,7 +111,7 @@ export const boxStyle = {
         ml: 3,
     },
     progressBarEmpty: {
-        width: '50%',
+        width: '90%',
         height: '10px',
         background: '#F2F8FF',
         borderRadius: '15px',
@@ -135,5 +138,26 @@ export const boxStyle = {
 export const input = {
     '&:invalid': {
         border: 'red solid 2px',
+    },
+    formInput: {
+        borderRadius: '10px',
+        width: '40%',
+    },
+    formSelect: {
+        borderRadius: '10px',
+        width: '40%',
+        mt: '16px',
+        mb: '8px',
+    },
+    formBox: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        // m: 'auto',
+        // width: '90%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        p: 1,
+        m: 1,
     },
 };
