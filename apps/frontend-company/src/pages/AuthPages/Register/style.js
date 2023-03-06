@@ -4,10 +4,11 @@ export const buttons = {
         height: '40px',
         fontSize: '1rem',
         ml: '250px',
-        backgroundColor: '#F75936',
+        backgroundColor: '#07232C',
         color: 'white',
         '&:hover': {
-            color: '#F75936',
+            color: '#07232C',
+            border: '1px solid #07232C',
         },
     },
     next: {
@@ -15,10 +16,11 @@ export const buttons = {
         height: '100%',
         fontSize: '1rem',
         //ml: '410px',
-        backgroundColor: '#F75936',
+        backgroundColor: '#07232C',
         color: 'white',
         '&:hover': {
-            color: '#F75936',
+            color: '#07232C',
+            border: '1px solid #07232C',
         },
     },
     back: {
@@ -26,10 +28,11 @@ export const buttons = {
         height: '100%',
         fontSize: '1rem',
         //ml: '50px',
-        backgroundColor: '#F75936',
+        backgroundColor: '#07232C',
         color: 'white',
         '&:hover': {
-            color: '#F75936',
+            color: '#07232C',
+            border: '1px solid #07232C',
         },
     },
 };
@@ -44,18 +47,18 @@ export const modal = {
     p: 4,
 
     button: {
-      width: '30%',
-      mt: 2,
-      ml: '6%',
-      fontSize: '1rem',
-      p: '10px',
-      backgroundColor: '#fff',
-      border: '1px solid #07232C',
-      color: '#07232C',
-      '&:hover': {
-          backgroundColor: '#fff',
-          color: '#07232C',
-      },
+        width: '30%',
+        mt: 2,
+        ml: '6%',
+        fontSize: '1rem',
+        p: '10px',
+        backgroundColor: '#fff',
+        border: '1px solid #07232C',
+        color: '#07232C',
+        '&:hover': {
+            backgroundColor: '#fff',
+            color: '#07232C',
+        },
     },
     scrollBar: {
         height: '500px',
@@ -77,7 +80,7 @@ export const modal = {
     checkbox: {
         fontSize: '1rem !important',
         p: '10px !important',
-        backgroundColor: '#F75936 !important',
+        backgroundColor: '#07232C !important',
         border: '1px solid green !important',
         color: 'white !important',
         width: '45%',
@@ -108,7 +111,7 @@ export const boxStyle = {
         ml: 3,
     },
     progressBarEmpty: {
-        width: '50%',
+        width: '90%',
         height: '10px',
         background: '#F2F8FF',
         borderRadius: '15px',
@@ -135,5 +138,26 @@ export const boxStyle = {
 export const input = {
     '&:invalid': {
         border: 'red solid 2px',
+    },
+    formInput: {
+        borderRadius: '10px',
+        width: '40%',
+    },
+    formSelect: {
+        borderRadius: '10px',
+        width: '40%',
+        mt: '16px',
+        mb: '8px',
+    },
+    formBox: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        // m: 'auto',
+        // width: '90%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        p: 1,
+        m: 1,
     },
 };
