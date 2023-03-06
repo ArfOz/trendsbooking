@@ -17,11 +17,12 @@ import { Link as RouterLink } from 'react-router-dom';
 import { GoogleLoginButton } from 'react-social-login-buttons';
 import { Context } from '../../../context/Context';
 import { boxStyle } from './style';
+import { useAuth } from '../../../context/authContext';
 
 const initialState = {
-    email: JSON.parse(localStorage.getItem('loginForm'))?.email,
-    password: JSON.parse(localStorage.getItem('loginForm'))?.password,
-    remember: localStorage.getItem('remember'),
+    Email: JSON.parse(localStorage.getItem('loginForm'))?.Email,
+    Password: JSON.parse(localStorage.getItem('loginForm'))?.Password,
+    // Remember: localStorage.getItem('remember'),
 };
 
 //Ayrı  component  yazılabilir
@@ -49,14 +50,13 @@ const Login = () => {
     const [remember, setRemember] = useState(
         JSON.parse(localStorage.getItem('remember')),
     );
-    const { deneme } = useContext(Context);
-    console.log('deneme Login:>> ', deneme);
+    const auth = useAuth();
 
     const handleChange = (e) => {
         setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
     };
     const handleRemember = (e) => {
-        setLoginForm({ ...loginForm, ['remember']: e.target.checked });
+        // setLoginForm({ ...loginForm, ['remember']: e.target.checked });
         setRemember(e.target.checked);
     };
 
@@ -69,6 +69,7 @@ const Login = () => {
             localStorage.setItem('remember', remember);
             localStorage.removeItem('loginForm');
         }
+        await auth.postLogin(loginForm);
         console.log('loginForm :>> ', loginForm);
         console.log('loginForm :>> ', loginForm);
         // const user = await login(email, password);
@@ -131,13 +132,13 @@ const Login = () => {
                                     required
                                     id="email"
                                     label="E-Posta Adresi"
-                                    name="email"
+                                    name="Email"
                                     autoComplete="email"
                                     variant="standard"
                                     autoFocus
                                     //height="80px"
                                     //size="large"
-                                    value={loginForm.email}
+                                    value={loginForm.Email}
                                     onChange={handleChange}
                                     //sx={{ width: '100%' }}
                                     fullWidth
@@ -146,7 +147,7 @@ const Login = () => {
                                 <TextField
                                     margin="normal"
                                     required
-                                    name="password"
+                                    name="Password"
                                     label="Şifre"
                                     type="password"
                                     id="password"
@@ -154,7 +155,7 @@ const Login = () => {
                                     //height="80px"
                                     //size="large"
                                     autoComplete="current-password"
-                                    value={loginForm.password}
+                                    value={loginForm.Password}
                                     onChange={handleChange}
                                 />
                                 <FormControlLabel
@@ -162,7 +163,7 @@ const Login = () => {
                                         <Checkbox
                                             onChange={handleRemember}
                                             checked={remember}
-                                            value="remember"
+                                            value="Remember"
                                             color="primary"
                                         />
                                     }

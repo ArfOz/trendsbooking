@@ -240,6 +240,7 @@ export default function Register() {
                     Sector: 'Cinsiyet',
                     TCKN: 'TC Kimlik Numarası',
                     TaxNo: 'Vergi Numarası',
+                    TaxAdmin: 'Vergi Dairesi'
                 };
                 let emptyValues = [];
                 for (const key in registerForm) {
