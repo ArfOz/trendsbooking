@@ -1,3 +1,4 @@
+import { IsEmail } from 'class-validator';
 // Npm packages
 
 import { Injectable, Inject, HttpException } from '@nestjs/common';
@@ -9,7 +10,7 @@ import * as bcrypt from 'bcrypt';
 // Import modules
 import { MailUtilsService, SendEmailDto } from '@mail-utils';
 import { MailModeType, AuthService, UserType } from '@auth';
-import { ExpiredReasonType, OTPType } from '@prisma/client';
+import { ExpiredReasonType, OTPType, Prisma } from '@prisma/client';
 import authConfig from '@auth/config/auth.config';
 import generalConfig from '@shared/config/general.config';
 import {
@@ -37,6 +38,7 @@ import {
     ResponseLoginUserDTO,
     ResponseUserProfileUserDTO,
     UserParamsDto,
+    UserProfileUpdateDto,
 } from './dtos';
 
 @Injectable()
@@ -287,6 +289,37 @@ export class UsersService {
 
     async profile(user: UserParamsDto): Promise<ResponseUserProfileUserDTO> {
         return await this.userService.get({ Id: user.Id });
+    }
+
+    async updateProfile(user: UserParamsDto, data: UserProfileUpdateDto) {
+        if (
+            !data.BirthDate &&
+            !data.Country &&
+            !data.FirstName &&
+            !data.Gender &&
+            !data.LastName &&
+            !data.Password &&
+            !data.Phone &&
+            !data.Username
+        ) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR431),
+                431,
+            );
+        }
+        await this.userService.update({
+            where: {
+                Email: user.Email,
+            },
+            data,
+        });
+
+        return {
+            data: ResponseMessage.TR206,
+            Success: true,
+            statusCode: 206,
+        };
     }
 
     async refreshUserToken(refreshToken: string) {

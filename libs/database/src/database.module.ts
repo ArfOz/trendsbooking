@@ -6,6 +6,7 @@ import { UserOtpCodeModule } from './user-otp-code/user-otp-code.module';
 import { CompanyUserModule } from './company-user';
 import { DepartmentModule } from './department/department.module';
 import { WorkerModule } from './worker/worker.module';
+import { DepartmentPhotosModule } from './department-photos/department-photos.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { WorkerModule } from './worker/worker.module';
         DepartmentModule,
         CompanyUserModule,
         WorkerModule,
+        DepartmentPhotosModule,
     ],
     providers: [PrismaModule, UserModule, UserOtpCodeModule, DepartmentModule],
     exports: [PrismaModule, UserModule, UserOtpCodeModule, DepartmentModule],

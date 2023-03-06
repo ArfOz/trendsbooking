@@ -3,7 +3,9 @@ import { AllowUnauthorizedRequest, RolesRequired, UserParam } from '@shared';
 import { UserParamsDto } from '../users/dtos';
 import { WorkersService } from './workers.service';
 import { WorkersAddJsonDto, WorkersGetJsonDto } from './dtos/workers.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Workers')
 @Controller('workers')
 export class WorkersController {
     constructor(private readonly workersService: WorkersService) {}

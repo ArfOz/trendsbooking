@@ -8,7 +8,7 @@ import { OTPType, ExpiredReasonType } from '@prisma/client';
 // Libs area
 import { SendEmailDto } from '@mail-utils';
 
-import { AuthService, MailModeType, UserType } from '@auth';
+import { AuthService, MailModeType } from '@auth';
 import authConfig from '@auth/config/auth.config';
 import {
     PrismaService,
@@ -75,13 +75,21 @@ export class CompanyUsersService {
                 411,
             );
         }
+
         if (
             !input.Email ||
             !input.Password ||
+            !input.FirstName ||
+            !input.LastName ||
             !input.Phone ||
             !input.Username ||
-            !input.FirstName ||
-            !input.LastName
+            !input.TCKN ||
+            !input.CbFirst ||
+            !input.TaxNo ||
+            !input.TaxAdmin ||
+            !input.IBAN ||
+            !input.Sector ||
+            !input.Salon
         ) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,

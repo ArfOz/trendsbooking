@@ -7,4 +7,8 @@ export default registerAs('general', () => ({
     nonce: process.env.NONCE,
     PORT: process.env.PORT ?? 8080,
     apiAccessToken: process.env.ACCESSTOKEN,
+    sftpPort: parseInt(process.env.SFTPPORT),
+    sftpHost : process.env.SFTPHOST,
+    sftpUsername: process.env.SFTPUSERNAME,
+    sftpPassword : process.env.SFTPPASSWORD
 }));

@@ -4,6 +4,7 @@ import {
     SendCodeDTO,
     UserParamsDto,
     LoginUserDto,
+    UserProfileUpdateDto,
 } from './dtos';
 import { UserParam } from '@shared';
 
@@ -39,6 +40,16 @@ export class UsersController {
     @Get('profile')
     async profile(@UserParam() user: UserParamsDto) {
         return this.usersService.profile(user);
+    }
+
+    // Email update işlemi sonra eklenecek orada mail kontrolü de olacak. Yani maile bildirim gidecek.
+    @RolesRequired(['Normal'])
+    @Post('updateprofile')
+    async updateProfile(
+        @UserParam() user: UserParamsDto,
+        @Body() data: UserProfileUpdateDto,
+    ) {
+        return this.usersService.updateProfile(user, data);
     }
 
     @RolesRequired(['Normal'])

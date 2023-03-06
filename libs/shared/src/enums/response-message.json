@@ -7,6 +7,7 @@
   "TR203": "Başarılı bir şekilde çıkış yaptınız",
   "TR204": "Şubeniz başarılı bir şekilde eklenmiştir.",
   "TR205": "Şubenize çalışan eklenmiştir.",
+  "TR206": "Profiliniz başarılı bir şekilde güncellenmiştir.",
 
   "TR403": "Parola veya Email adresi yanlış.",
   "TR404": "Lütfen hesabınızı etkinleştiriniz.",
@@ -34,5 +35,7 @@
   "TR426": "Salon, servis türü ve çalışanlar zorunludur.",
   "TR427": "Ad, Soyad ve Telefon Numarası zorunludur",
   "TR428": "Çalışan IDsi yok...",
-  "TR429": "Böyle bir şubeniz bulunmamaktadır."
+  "TR429": "Böyle bir şubeniz bulunmamaktadır.",
+  "TR430": "Böyle bir çalışanınız bulunmamaktadır.",
+  "TR431" : "Doğum tarihi, Ülke, Ad, Soyad, Cinsiyet, Şifreü Telefon Numarası veya Kullanıcı adından en az biri zorunludur."
 }
