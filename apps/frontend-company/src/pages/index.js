@@ -4,6 +4,8 @@ import ResetPassword from './AuthPages/ResetPassword'
 
 import Home from './MainPages/Home'
 import Shop from './MainPages/Shop'
+import Dashboard from './MainPages/Dashbord'
+
 
 import NotFound404 from './General/NotFound404'
 
@@ -14,5 +16,6 @@ export {
   ResetPassword,
   Home,
   Shop,
+  Dashboard, 
   NotFound404,
 }
