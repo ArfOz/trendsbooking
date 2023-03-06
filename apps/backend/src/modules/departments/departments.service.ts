@@ -1,12 +1,11 @@
-import { ImageServerService } from './../../../../../libs/shared/src/modules/image-server/image-server.service';
 import { Injectable } from '@nestjs/common';
 import { Prisma, DepartmentPhotos } from '@prisma/client';
 import sharp from 'sharp';
 
 // Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
-import { BadRequestExceptionType, BadRequestException } from '@shared';
-import { DepartmentService, DepartmentPhotosService  } from '@database';
+import { BadRequestExceptionType, BadRequestException, ImageServerService } from '@shared';
+import { DepartmentService, DepartmentPhotosService } from '@database';
 
 // DTO area
 import { UserParamsDto } from '../users/dtos';
@@ -17,8 +16,8 @@ export class DepartmentsService {
     constructor(
         private readonly departmentService: DepartmentService,
         private readonly departmentPhotosService: DepartmentPhotosService,
-        private readonly imageServer: ImageServerService
-        ) {}
+        private readonly imageServer: ImageServerService,
+    ) {}
     async add(user: UserParamsDto, input: AddDepartmentsJsonDto) {
         if (!input.Salon || !input.ServiceType || !input.Workers) {
             throw new BadRequestException(
@@ -60,7 +59,6 @@ export class DepartmentsService {
     }
 
     async getdetails(user: UserParamsDto, DepartmentId?: number) {
-
         const data = await this.departmentService.find({
             where: {
                 CompanyUserId: user.Id,
@@ -68,7 +66,7 @@ export class DepartmentsService {
             },
         });
 
-        if (!data || data.length<1){
+        if (!data || data.length < 1) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR429),
@@ -81,33 +79,43 @@ export class DepartmentsService {
         };
     }
 
-    async addphotos(user:UserParamsDto, departmentId : number,file: Express.Multer.File){
-
-        const authorizator = await this.departmentService.find(
-            {
-                where:{
-                    CompanyUserId:{},
-                    AND:{
-                        Id:{
-                            equals:departmentId
-                        }
-                    }
-                }
-            }
-        )
+    async addphotos(
+        user: UserParamsDto,
+        departmentId: number,
+        file: Express.Multer.File,
+    ) {
+        const authorizator = await this.departmentService.find({
+            where: {
+                CompanyUserId: {},
+                AND: {
+                    Id: {
+                        equals: departmentId,
+                    },
+                },
+            },
+        });
 
         // const arif = Buffer.from(file.buffer).toString('base64')
-        console.log("fileeeeeeeeeeeeeeee", file)
+        console.log('fileeeeeeeeeeeeeeee', file);
 
         // İmage resize
-        const reImage = await sharp(file.buffer).jpeg({}).toBuffer()
-        file['buffer'] = reImage
-        console.log("reimage", reImage)
-        const responseServer = await this.imageServer.addPhoto(file)
-        
+        const reImage = await sharp(file.buffer)
+            .resize(
+                1200,
+                630,
+                {
+                    fit: sharp.fit.inside,
+                    withoutEnlargement: true,
+                },
+            )
+            .toBuffer();
+        file['buffer'] = reImage;
+        console.log('reimage', reImage);
+        const responseServer = await this.imageServer.addPhoto(file);
+
         // console.log("asdasds", file)
 
-        if (!authorizator|| authorizator.length<1){
+        if (!authorizator || authorizator.length < 1) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR429),
@@ -115,21 +123,22 @@ export class DepartmentsService {
             );
         }
 
-        const data :Prisma.DepartmentPhotosCreateInput={
-        ImageName:file.originalname,
-        ImageType:responseServer.fileType,
-        ImageServerName:responseServer.fileName,
-            Department:{
-                connect:{
-                    Id:departmentId,
-                }
-            }
-        }
+        const data: Prisma.DepartmentPhotosCreateInput = {
+            ImageName: file.originalname,
+            ImageType: responseServer.fileType,
+            ImageServerName: responseServer.fileName,
+            Department: {
+                connect: {
+                    Id: departmentId,
+                },
+            },
+        };
 
-        const response : DepartmentPhotos = await this.departmentPhotosService.create(data)
+        const response: DepartmentPhotos =
+            await this.departmentPhotosService.create(data);
         return {
-            data:response.ImageName,
-            Success:true
-        }
+            data: response.ImageName,
+            Success: true,
+        };
     }
 }
