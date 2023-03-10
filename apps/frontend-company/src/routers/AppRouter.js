@@ -11,6 +11,7 @@ import {
     Home,
     Shop,
     Dashboard,
+    Randevu,
     Services,
     NotFound404,
 } from '../pages';
@@ -24,6 +25,7 @@ const AppRouter = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/shop" element={<Shop />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/randevu" element={<Randevu />} />
                 <Route path="/services" element={<Services />} />
 
                 <Route
