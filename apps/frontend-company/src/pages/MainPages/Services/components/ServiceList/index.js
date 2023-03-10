@@ -21,6 +21,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import { Button } from '@mui/material';
 
 function createData(name, time, price, worker, prim) {
     return {
@@ -289,9 +290,9 @@ export default function EnhancedTable() {
         setPage(0);
     };
 
-    const handleChangeDense = (event) => {
-        setDense(event.target.checked);
-    };
+    // const handleChangeDense = (event) => {
+    //     setDense(event.target.checked);
+    // };
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
@@ -369,6 +370,7 @@ export default function EnhancedTable() {
                                             <TableCell align="right">
                                                 {row.prim}
                                             </TableCell>
+                                            <Button variant="outlined" sx={{marginLeft:3}}>Düzenle</Button>
                                         </TableRow>
                                     );
                                 })}
@@ -394,12 +396,12 @@ export default function EnhancedTable() {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-            <FormControlLabel
+            {/* <FormControlLabel
                 control={
                     <Switch checked={dense} onChange={handleChangeDense} />
                 }
                 label="Dense padding"
-            />
+            /> */}
         </Box>
     );
 }

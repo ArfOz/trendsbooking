@@ -6,7 +6,7 @@ import MainTop from  './components/MainTop';
 //import Footer from '../../../components/Footer'';
 import {Navbar} from './components';
 import EnhancedTable from './components/ServiceList';
-
+import Footer from '../../../components/Footer'
 
 const Services = () => {
     return (
@@ -21,7 +21,7 @@ const Services = () => {
                 <Navbar />
                 <MainTop />
                 <EnhancedTable/>
-                {/* <Footer /> */}
+                <Footer />
             </Box>
         </MainLayout>
     );
