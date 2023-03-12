@@ -96,17 +96,22 @@ const Login = () => {
     }, [auth.loginUser]);
 
     useEffect(() => {
-        if (auth.loginErrors?.response.data.code == 403) {
+        if (
+            auth.loginErrors?.response.data.details ==
+            'Parola veya Email adresi yanlış.'
+        ) {
             setError('E-posta adresi veya şifre yanlış!!!');
         } else if (auth.loginErrors?.response.data.code == 406) {
             setError('Kullanıcı Bulunamadı. Lütfen kayıt olunuz!!!');
-        } else {
-            setError('');
-        }
-        if (auth.loginErrors?.response.data.code == 404) {
+        } else if (
+            auth.loginErrors?.response.data.details ==
+            'Lütfen hesabınızı etkinleştiriniz.'
+        ) {
             auth.sendCode({
                 Email: loginForm.Email,
             });
+        } else {
+            setError('');
         }
     }, [auth.loginErrors]);
 
