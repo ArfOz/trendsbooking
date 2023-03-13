@@ -302,7 +302,7 @@ export default function EnhancedTable() {
 
     return (
         <Box sx={{ width: '100%' }}>
-            <Paper sx={{ width: '100%', mb: 2 }}>
+            <Paper sx={{ width: '100%'}}>
                 <EnhancedTableToolbar numSelected={selected.length} />
                 <TableContainer>
                     <Table
@@ -370,7 +370,12 @@ export default function EnhancedTable() {
                                             <TableCell align="right">
                                                 {row.prim}
                                             </TableCell>
-                                            <Button variant="outlined" sx={{marginLeft:3}}>Düzenle</Button>
+                                            <Button
+                                                variant="outlined"
+                                                sx={{ marginLeft: 3 }}
+                                            >
+                                                Düzenle
+                                            </Button>
                                         </TableRow>
                                     );
                                 })}
