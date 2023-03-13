@@ -18,8 +18,8 @@ export default function Calendar() {
     const [value, setValue] = React.useState(dayjs('2022-04-07'));
 
     return (
-        <Box>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <>
+            <LocalizationProvider dateAdapter={AdapterDayjs} >
                 <StaticDatePicker
                     orientation="landscape"
                     openTo="day"
@@ -31,6 +31,6 @@ export default function Calendar() {
                     renderInput={(params) => <TextField {...params} />}
                 />
             </LocalizationProvider>
-        </Box>
+        </>
     );
 }
