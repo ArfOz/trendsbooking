@@ -298,7 +298,11 @@ export default function EnhancedTable() {
 
     return (
         <Box sx={{ width: '100%' }}>
+<<<<<<< HEAD
             <Paper sx={{ width: '100%' }}>
+=======
+            <Paper sx={{ width: '100%'}}>
+>>>>>>> 9f92235e04dc18713e64f095d4b1cf65c1dbbc96
                 <EnhancedTableToolbar numSelected={selected.length} />
                 <TableContainer>
                     <Table
@@ -366,12 +370,20 @@ export default function EnhancedTable() {
                                             <TableCell align="right">
                                                 {row.prim}
                                             </TableCell>
+<<<<<<< HEAD
                                             {/* <Button
+=======
+                                            <Button
+>>>>>>> 9f92235e04dc18713e64f095d4b1cf65c1dbbc96
                                                 variant="outlined"
                                                 sx={{ marginLeft: 3 }}
                                             >
                                                 Düzenle
+<<<<<<< HEAD
                                             </Button> */}
+=======
+                                            </Button>
+>>>>>>> 9f92235e04dc18713e64f095d4b1cf65c1dbbc96
                                         </TableRow>
                                     );
                                 })}
