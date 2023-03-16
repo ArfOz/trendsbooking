@@ -1,5 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 import grey from "@mui/material/colors/grey";
+import { green } from '@mui/material/colors';
+
 
 
 
@@ -50,7 +52,18 @@ const theme = createTheme({
             disableRipple:true,
                     
           }
-        }
+        },
+        MuiCheckbox: {
+          styleOverrides: {
+            root: {
+              '--MuiCheckbox-size': '30px',
+              color: grey[500],
+              '&.Mui-checked': {
+                color: '#F65936',
+              },
+            },
+          },
+        },
       },
    
      

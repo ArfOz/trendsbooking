@@ -8,6 +8,8 @@ import { Navbar } from '../Dashbord/components';
 import AppointmentCalendar from './components/AppointmentCalendar';
 import Calendar from './components/RandevuLeft/components/Calendar';
 import CheckBox from './components/RandevuLeft/components/CheckBox';
+import MakeAnAppointment from './components/RandevuLeft/components/MakeAnAppointment';
+import RightTop from './components/RandevuRight/component/RightTop';
 
 const Randevu = () => {
     return (
@@ -41,20 +43,27 @@ const Randevu = () => {
                             mr: 5,
                             background: '#FFFFFF',
                             borderRadius: '12px',
+                            position: 'relative',
                         }}
                     >
                         {/* Sol kutu */}
                         <Calendar />
-                        <CheckBox />
+                        <CheckBox/>
+                        <CheckBox/>
+                        <MakeAnAppointment/>
+                        <MakeAnAppointment/>
+                       
                     </Box>
                     <Box
                         sx={{
                             border: '2px solid blue',
                         }}
                     >
-                        Sağ kutu
+                        <RightTop/>
                     </Box>
                 </Box>
+
+                
 
                 {/* <Footer /> */}
             </Box>

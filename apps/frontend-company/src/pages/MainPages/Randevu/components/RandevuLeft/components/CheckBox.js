@@ -1,91 +1,159 @@
-import React, { useState } from 'react';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import {
-    Typography,
+    Box,
     Button,
     Checkbox,
     FormControlLabel,
-    Box,
+    FormGroup,
+    Paper,
+    Typography,
 } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import { useState } from 'react';
 
-const CheckBox = () => {
-    const [isOpen, setIsOpen] = useState(true);
+function CheckBox() {
+    const [showCheckboxes, setShowCheckboxes] = useState(false);
 
-    const onClickEvent = () => {
-        setIsOpen(!isOpen);
+    const [clickAll, setClickAll] = useState(false);
+
+    const handleChangeAll = (event) => {
+        setClickAll(event.target.checked);
+        setClick1(event.target.checked);
+        setClick2(event.target.checked);
+        setClick3(event.target.checked);
+    };
+    // option 1 için
+    const [click1, setClick1] = useState(false);
+
+    const handleChange1 = (event) => {
+        setClick1(event.target.checked);
+    };
+    // option 2 için
+    const [click2, setClick2] = useState(false);
+
+    const handleChange2 = (event) => {
+        setClick2(event.target.checked);
+    };
+    // option 3 için
+    const [click3, setClick3] = useState(false);
+
+    const handleChange3 = (event) => {
+        setClick3(event.target.checked);
     };
 
-    const [checked, setChecked] = useState(false);
-
-    const handleChange = (event) => {
-        setChecked(event.target.checked);
+    const handleButtonClick = () => {
+        setShowCheckboxes(!showCheckboxes);
     };
+
     return (
         <>
             <Button
                 variant="contained"
-                onClick={onClickEvent}
+                onClick={handleButtonClick}
+                startIcon={
+                    showCheckboxes ? (
+                        <ArrowDropDownIcon color="info" />
+                    ) : (
+                        <ArrowRightIcon color="info" />
+                    )
+                }
                 sx={{
-                    backgroundColor: '#F2F8FF',
+                    background: '#F2F8FF',
                     borderRadius: '5px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     width: '90%',
-                    ml: 2,
                     '&:hover': {
                         backgroundColor: '#F2F8FF',
                     },
+                    m: 'auto',
+                    mt:3,
                 }}
-                startIcon={
-                    isOpen ? (
-                        <ArrowRightIcon sx={{ color: 'black' }} />
-                    ) : (
-                        <ArrowDropDownIcon sx={{ color: 'black' }} />
-                    )
-                }
             >
                 <Typography
-                    fontFamily="Roboto"
-                    fontWeight={500}
-                    fontSize={14}
-                    color="#07232C"
-                    textTransform="capitalize"
+                    sx={{
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: 500,
+                        fontSize: '14px',
+                        lineHeight: '20px',
+                        textAlign: 'center',
+                        textTransform: 'capitalize',
+                        color: 'black',
+                    }}
                 >
                     Personel
                 </Typography>
             </Button>
+            {showCheckboxes && (
+                <Box
+                    sx={{
+                        flexDirection: 'column',
+                        width: '70%',
+                        m: 'auto',
+                        mt:2,
+                        borderLeft: '1px solid #D9D9D9',
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: '100%',
+                            ml: 2,
+                        }}
+                    >
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={clickAll}
+                                    onChange={handleChangeAll}
+                                    size="small"
+                                    color="secondary"
+                                />
+                            }
+                            label="Hepsi"
+                        />
 
-            <Box
-                sx={{
-                    ml: 10,
-                }}
-            >
-                <input type="checkbox" name="hepsi" id="" />
-                <label for="hepsi"> Hepsi</label>
-                <br></br>
-            </Box>
-            <Box
-                sx={{
-                    ml: 12,
-                }}
-            >
-                <input type="checkbox" name="acun" id="" />
-                <label for="acun"> Acun</label>
-                <br></br>
-                <input type="checkbox" name="tarık" id="" />
-                <label for="tarık"> Tarık</label>
-                <br></br>
-                <input type="checkbox" name="derya" id="" />
-                <label for="derya"> Derya</label>
-                <br></br>
-                <input type="checkbox" name="acun" id="" />
-                <label for="acun"> Acun</label>
-                <br></br>
-                <input type="checkbox" name="tarık" id="" />
-                <label for="tarık"> Tarık</label>
-                <br></br>
-            </Box>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={click1}
+                                    onChange={handleChange1}
+                                    size="small"
+                                    color="secondary"
+                                />
+                            }
+                            label="Acun"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={click2}
+                                    onChange={handleChange2}
+                                    size="small"
+                                    color="secondary"
+                                />
+                            }
+                            label="Hadise"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={click3}
+                                    onChange={handleChange3}
+                                    size="small"
+                                    color="secondary"
+                                />
+                            }
+                            label="Murat"
+                        />
+                    </Box>
+                </Box>
+            )}
         </>
     );
-};
+}
 
 export default CheckBox;
