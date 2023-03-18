@@ -2,11 +2,15 @@ import { Box } from '@mui/material';
 import React from 'react';
 
 import { MainLayout } from '../../../layout';
-import MainTop from  './components/MainTop';
-//import Footer from '../../../components/Footer'';
-import {Navbar} from './components';
+import MainTop from './components/MainTop';
+import Footer from '../../../components/Footer';
 
-import Footer from '../../../components/Footer'
+import { Navbar } from './components';
+import BasicTable from './components/ServiceList';
+
+
+
+
 
 const Services = () => {
     return (
@@ -20,7 +24,7 @@ const Services = () => {
             >
                 <Navbar />
                 <MainTop />
-                {/* <EnhancedTable/> */}
+                <BasicTable/>
                 <Footer />
             </Box>
         </MainLayout>
