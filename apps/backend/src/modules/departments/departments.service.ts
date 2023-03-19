@@ -9,7 +9,7 @@ import { DepartmentService, DepartmentPhotosService } from '@database';
 
 // DTO area
 import { UserParamsDto } from '../users/dtos';
-import { AddDepartmentsJsonDto } from './dtos/departments.dto';
+import { AddDepartmentsJsonDto, UpdateDepartmentsJsonDto } from './dtos/departments.dto';
 
 @Injectable()
 export class DepartmentsService {
@@ -76,6 +76,29 @@ export class DepartmentsService {
         return {
             Success: true,
             Data: data,
+        };
+    }
+
+    async updateDepartments(user: UserParamsDto,input: UpdateDepartmentsJsonDto){
+
+        const data : Prisma.DepartmentUpdateInput={
+            CompanyUser: {
+                connect:{Id:user.Id}
+            },
+            ServiceTimes:input.ServiceTimes
+
+        }
+
+        const where : Prisma.DepartmentWhereUniqueInput={
+            Id:user.Id
+        }
+
+
+        await this.departmentService.update({data, where})
+
+        return {
+            Data: ResponseMessage.TR207,
+            Success: true,
         };
     }
 

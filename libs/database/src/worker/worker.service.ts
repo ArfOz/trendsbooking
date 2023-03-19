@@ -91,6 +91,7 @@ export class WorkerService {
                 DepartmentId: true,
                 Roles: true,
                 WorkTime: true,
+                Services:true
             },
         });
 

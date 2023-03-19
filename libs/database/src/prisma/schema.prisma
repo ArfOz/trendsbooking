@@ -117,6 +117,7 @@ model Department {
   CompanyUser   CompanyUser?       @relation(fields: [CompanyUserId], references: [Id])
   CompanyUserId Int?
   Photos        DepartmentPhotos[]
+  ServiceTimes Json?
 }
 
 model Worker {
@@ -134,6 +135,8 @@ model Worker {
   WorkTime WorkTime[]
 
   Roles WorkerRoles @default(Normal)
+
+  Services Json?
 }
 
 model UserToken {

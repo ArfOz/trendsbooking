@@ -81,6 +81,7 @@ export class WorkersService {
                     NightEndAt: input.WorkTime.NightEndAt,
                 },
             },
+            Services: input.Services
         };
 
         await this.workerService.create(data);

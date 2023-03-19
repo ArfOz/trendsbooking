@@ -68,6 +68,8 @@ export class WorkerCreateJsonDto {
     @IsNotEmpty()
     @IsString()
     Phone: string;
+
+
 }
 
 export class AddDepartmentsJsonDto {
@@ -90,6 +92,36 @@ export class AddDepartmentsJsonDto {
     @IsNotEmpty()
     @IsObject()
     WorkTime: WorkTime;
+}
+
+export class UpdateDepartmentsJsonDto {
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    Workers: WorkerCreateJsonDto;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Salon: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    ServiceType: ServiceTypeEnum;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsObject()
+    WorkTime: WorkTime;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    ServiceTimes?: object
+
+    // Photos?: DepartmentPhotosUpdateManyWithoutDepartmentNestedInput
+    
 }
 
 export class DepartmentDetailsJsonDto {

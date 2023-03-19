@@ -39,6 +39,7 @@ export class DepartmentService {
             select: {
                 Salon: true,
                 ServiceType: true,
+                ServiceTimes:true,
                 Workers: {
                     select: {
                         FirstName: true,
@@ -46,6 +47,7 @@ export class DepartmentService {
                         Phone: true,
                         Id: true,
                         WorkTime: true,
+                       
                     },
                 },
                 Id: true,

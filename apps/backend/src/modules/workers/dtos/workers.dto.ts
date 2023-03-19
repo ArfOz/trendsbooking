@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger/dist';
-import { IsNotEmpty, IsString, IsNumber, IsObject } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsObject, IsOptional } from 'class-validator';
 
 export class WorkTime {
     @ApiProperty()
@@ -58,6 +58,11 @@ export class WorkersAddJsonDto {
     @IsNotEmpty()
     @IsObject()
     WorkTime: WorkTime;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    Services?: object
 }
 
 export class WorkersGetJsonDto {

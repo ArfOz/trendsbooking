@@ -34,6 +34,7 @@ import {
     AddDepartmentsJsonDto,
     DepartmentDetailsJsonDto,
     DepartmentIdParamsDto,
+    UpdateDepartmentsJsonDto,
 } from './dtos/departments.dto';
 
 @ApiTags('Departments')
@@ -54,6 +55,15 @@ export class DepartmentController {
         @Body() input: AddDepartmentsJsonDto,
     ) {
         return this.departmentsService.add(user, input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('update')
+    async update(
+        @UserParam() user: UserParamsDto,
+        @Body() input: UpdateDepartmentsJsonDto,
+    ) {
+        return this.departmentsService.updateDepartments(user, input);
     }
 
     @RolesRequired(['Provider'])
