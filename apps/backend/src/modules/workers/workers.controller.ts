@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AllowUnauthorizedRequest, RolesRequired, UserParam } from '@shared';
 import { UserParamsDto } from '../users/dtos';
 import { WorkersService } from './workers.service';
-import { WorkersAddJsonDto, WorkersGetJsonDto } from './dtos/workers.dto';
+import { WorkersAddJsonDto, WorkersGetJsonDto, WorkersUpdateJsonDto } from './dtos/workers.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Workers')
@@ -31,7 +31,16 @@ export class WorkersController {
         @UserParam() user: UserParamsDto,
         @Body() input: WorkersAddJsonDto,
     ) {
-        return this.workersService.addworker(user, input);
+        return this.workersService.addWorker(user, input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('updateworker')
+    async updateworker(
+        @UserParam() user: UserParamsDto,
+        @Body() input: WorkersUpdateJsonDto,
+    ) {
+        return this.workersService.updateWorker(user, input);
     }
 
     @RolesRequired(['Provider'])
@@ -40,6 +49,6 @@ export class WorkersController {
         @UserParam() user: UserParamsDto,
         @Body() input: WorkersGetJsonDto,
     ) {
-        return this.workersService.deleteworker(user, input);
+        return this.workersService.deleteWorker(user, input);
     }
 }

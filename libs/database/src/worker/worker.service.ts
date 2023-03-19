@@ -207,8 +207,17 @@ export class WorkerService {
         //         updatedUser.Phone,
         //     );
 
-        return null;
-        // return updatedUser;
+
+        const updatedUser = await this.prisma.worker.update({
+            data: {
+                ...data,
+            },
+            where: {
+                Id:where.Id
+            },
+        });
+
+        return updatedUser;
     }
 
     async delete(where: Prisma.WorkerWhereUniqueInput): Promise<Worker> {

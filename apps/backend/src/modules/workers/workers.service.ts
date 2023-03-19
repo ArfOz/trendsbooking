@@ -8,7 +8,7 @@ import { BadRequestException, BadRequestExceptionType } from '@shared';
 
 // DTOs area
 import { UserParamsDto } from '../users/dtos';
-import { WorkersAddJsonDto, WorkersGetJsonDto } from './dtos/workers.dto';
+import { WorkersAddJsonDto, WorkersGetJsonDto, WorkersUpdateJsonDto } from './dtos/workers.dto';
 
 @Injectable()
 export class WorkersService {
@@ -43,7 +43,7 @@ export class WorkersService {
             Data: data,
         };
     }
-    async addworker(user: UserParamsDto, input: WorkersAddJsonDto) {
+    async addWorker(user: UserParamsDto, input: WorkersAddJsonDto) {
         if (!input.FirstName || !input.LastName || !input.Phone) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -92,7 +92,7 @@ export class WorkersService {
         };
     }
 
-    async deleteworker(user: UserParamsDto, input: WorkersGetJsonDto) {
+    async deleteWorker(user: UserParamsDto, input: WorkersGetJsonDto) {
         if (!input.WorkerId) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -121,6 +121,61 @@ export class WorkersService {
         return {
             Success: true,
             Data: data,
+        };
+    }
+
+    async updateWorker(user:UserParamsDto, input:WorkersUpdateJsonDto){
+
+        if (!input.WorkerId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR428),
+                428,
+            );
+        }
+
+        const worker = await this.workerService.find({
+            where: {
+                Id: input.WorkerId,
+                Department:{
+                    CompanyUserId:user.Id
+                }
+            },
+        });
+
+        if (!worker || worker.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR430),
+                430,
+            );
+        }
+
+
+        const where: Prisma.WorkerWhereUniqueInput ={
+            Id:input.WorkerId
+        };
+        const data: Prisma.WorkerUpdateInput = {
+            FirstName:input.FirstName,
+            LastName:input.LastName,
+            Phone:input.Phone,
+            Roles:input.Roles,
+            Services:input.Services,
+            WorkTime:{
+                update:{
+                    where:{
+                        Id:worker[0].WorkTime[0].Id
+                    },
+                    data:input.WorkTime
+                }
+            }
+
+        };
+        const updatedData = await this.workerService.update({where, data})
+
+        return {
+            Success: true,
+            Data: updatedData,
         };
     }
 }

@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger/dist';
 import { IsNotEmpty, IsString, IsNumber, IsObject, IsOptional } from 'class-validator';
 
+
+export enum WorkerRoles {
+    Admin = 'Admin',
+    Normal = 'Normal'
+}
 export class WorkTime {
     @ApiProperty()
     @IsNotEmpty()
@@ -70,4 +75,43 @@ export class WorkersGetJsonDto {
     @IsNotEmpty()
     @IsNumber()
     WorkerId: number;
+}
+
+export class WorkersUpdateJsonDto {
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    WorkerId?: number
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    FirstName?: string
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    LastName?: string
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Phone?: string
+    
+    // Burası daha sonra düzenlenmeliÖnemli
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    WorkTime?: WorkTime
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Roles?: WorkerRoles
+
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    Services?: object
 }
