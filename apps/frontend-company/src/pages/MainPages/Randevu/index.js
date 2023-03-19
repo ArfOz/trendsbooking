@@ -13,6 +13,7 @@ import RightTop from './components/RandevuRight/component/RightTop';
 import RightCalendar from './components/RandevuRight/component/RightCalendar';
 import AppointmentRequests from './components/RandevuRight/component/AppointmentRequests';
 import Waiting from './components/RandevuRight/component/Waiting';
+import Cards from './components/RandevuRight/component/Cards';
 
 const Randevu = () => {
     return (
@@ -22,7 +23,7 @@ const Randevu = () => {
                     height: '100%',
                     width: '100%',
                     backgroundColor: '#F3F1F7',
-                    border:'3px solid purple',
+                    border: '3px solid purple',
                 }}
             >
                 <Navbar />
@@ -42,7 +43,7 @@ const Randevu = () => {
                 >
                     <Box
                         sx={{
-                            border: '2px solid red',
+                          
                             ml: 5,
                             mr: 5,
                             background: '#FFFFFF',
@@ -52,30 +53,28 @@ const Randevu = () => {
                     >
                         {/* Sol kutu */}
                         <Calendar />
-                        <CheckBox/>
-                        <CheckBox/>
-                        <MakeAnAppointment/>
-                        <MakeAnAppointment/>
-                       
+                        <CheckBox />
+                        <CheckBox />
+                        <MakeAnAppointment />
+                        <MakeAnAppointment />
                     </Box>
                     <Box
                         sx={{
-                            border: '2px solid blue',
+                        
                             background: '#FFFFFF',
                             borderRadius: '12px',
                         }}
                     >
-                         {/* sağ kutu */}
-                        <RightTop/>
-                        <RightCalendar/>
-                        <AppointmentRequests/>
-                        <Waiting/>
+                        {/* sağ kutu */}
+                        <RightTop />
+                        <RightCalendar />
+                        <AppointmentRequests />
+                        <Waiting />
+                        <Cards />
                     </Box>
                 </Box>
 
-                
-
-                {/* <Footer /> */}
+                <Footer />
             </Box>
         </MainLayout>
     );

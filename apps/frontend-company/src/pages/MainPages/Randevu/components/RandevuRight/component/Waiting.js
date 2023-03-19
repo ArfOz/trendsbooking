@@ -52,7 +52,7 @@ function Waiting() {
                 </Typography>
             </Box>
             <Box>
-            <Divider />
+            <Divider sx={{mt:3}}/>
 
             </Box>
             
