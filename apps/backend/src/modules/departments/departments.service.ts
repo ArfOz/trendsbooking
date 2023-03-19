@@ -141,4 +141,11 @@ export class DepartmentsService {
             Success: true,
         };
     }
+
+    // async getphoto(){
+
+    //     const responseServer = await this.imageServer.getPhoto();
+
+    //     return responseServer
+    // }
 }

@@ -99,4 +99,14 @@ export class DepartmentController {
 
         return response;
     }
+
+    // @RolesRequired(['Provider'])
+    // @Get('getphotos')
+    // async getPhotos(){
+
+
+    //     const response = await this.departmentsService.getphoto(
+    //     );
+
+    // }
 }
