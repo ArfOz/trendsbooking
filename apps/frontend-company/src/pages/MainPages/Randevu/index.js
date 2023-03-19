@@ -10,6 +10,9 @@ import Calendar from './components/RandevuLeft/components/Calendar';
 import CheckBox from './components/RandevuLeft/components/CheckBox';
 import MakeAnAppointment from './components/RandevuLeft/components/MakeAnAppointment';
 import RightTop from './components/RandevuRight/component/RightTop';
+import RightCalendar from './components/RandevuRight/component/RightCalendar';
+import AppointmentRequests from './components/RandevuRight/component/AppointmentRequests';
+import Waiting from './components/RandevuRight/component/Waiting';
 
 const Randevu = () => {
     return (
@@ -62,7 +65,11 @@ const Randevu = () => {
                             borderRadius: '12px',
                         }}
                     >
+                         {/* sağ kutu */}
                         <RightTop/>
+                        <RightCalendar/>
+                        <AppointmentRequests/>
+                        <Waiting/>
                     </Box>
                 </Box>
 
