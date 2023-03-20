@@ -117,8 +117,23 @@ model Department {
   CompanyUser   CompanyUser?       @relation(fields: [CompanyUserId], references: [Id])
   CompanyUserId Int?
   Photos        DepartmentPhotos[]
-  ServiceTimes Json?
+  Services Services[]
   DepartmentID String?
+}
+
+
+model Services{
+  Id        Int    @id @default(autoincrement()) 
+  ServiceType ServiceType
+  ServiceTimes String
+  ServiceName String
+  Price String
+  Prim String
+  ServiceGender ServiceGender
+  Workers Worker[]
+  WorkerId Int?
+  Department   Department? @relation(fields: [DepartmentId], references: [Id])
+  DepartmentId Int?
 }
 
 model Worker {
@@ -132,12 +147,12 @@ model Worker {
   Phone        String
   Department   Department @relation(fields: [DepartmentId], references: [Id])
   DepartmentId Int
-
+  Services Services @relation(fields: [ServiceId], references: [Id])
+  ServiceId Int
   WorkTime WorkTime[]
 
   Roles WorkerRoles @default(Normal)
 
-  Services Json?
 }
 
 model UserToken {
@@ -212,6 +227,7 @@ model DepartmentPhotos {
   Department   Department? @relation(fields: [DepartmentId], references: [Id])
   DepartmentId Int?
 }
+
 
 enum ExpiredReasonType {
   Expired

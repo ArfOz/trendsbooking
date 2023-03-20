@@ -12,5 +12,6 @@
       "files": ["*.json", "*.html", "*.yaml", "*.yml"],
       "options": { "tabWidth": 2 }
     }
-  ]
+  ],
+  "editor.formatOnSave": true
 }
