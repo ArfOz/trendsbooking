@@ -22,6 +22,7 @@
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.11",
+    "@mui/styles": "^5.11.13",
     "@mui/x-date-pickers": "^5.0.20",
     "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/axios": "^2.0.0",
