@@ -50,7 +50,7 @@ export default function BasicTable(props) {
                             <TableCell align="left">
                                 {' '}
                                 <Typography
-                                    variant="h6"
+                                    variant="h5"
                                     gutterBottom
                                     component="div"
                                 >
@@ -74,7 +74,15 @@ export default function BasicTable(props) {
                                     )}
                                 </IconButton>
                             </TableCell>
-                            <TableCell align="left">Kaş Bakımı</TableCell>
+                            <TableCell align="left">
+                                <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    component="div"
+                                >
+                                    Kaş Bakımı
+                                </Typography>
+                            </TableCell>
                         </TableRow>
 
                         <TableRow>
@@ -166,7 +174,16 @@ export default function BasicTable(props) {
                                     )}
                                 </IconButton>
                             </TableCell>
-                            <TableCell align="left">Saç Bakımı</TableCell>
+                            <TableCell align="left">
+                                {' '}
+                                <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    component="div"
+                                >
+                                    Saç Bakımı
+                                </Typography>
+                            </TableCell>
                         </TableRow>
 
                         <TableRow>
@@ -258,7 +275,13 @@ export default function BasicTable(props) {
                                     )}
                                 </IconButton>
                             </TableCell>
-                            <TableCell align="left">Cilt Bakımı</TableCell>
+                            <TableCell align="left"> <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    component="div"
+                                >
+                                    Cilt Bakımı
+                                </Typography></TableCell>
                         </TableRow>
 
                         <TableRow>
