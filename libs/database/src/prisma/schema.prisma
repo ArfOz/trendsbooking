@@ -118,6 +118,7 @@ model Department {
   CompanyUserId Int?
   Photos        DepartmentPhotos[]
   ServiceTimes Json?
+  DepartmentID String?
 }
 
 model Worker {
