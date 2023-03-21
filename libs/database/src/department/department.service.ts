@@ -46,7 +46,8 @@ export class DepartmentService {
                         Phone: true,
                         Id: true,
                         WorkTime: true,
-                       
+                        Services: true,
+                        DepartmentId: true,
                     },
                 },
                 Id: true,

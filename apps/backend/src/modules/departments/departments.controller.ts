@@ -32,6 +32,7 @@ import {
 import { UserParamsDto } from './../users/dtos/user-response.dto';
 import {
     AddDepartmentsJsonDto,
+    AddWorkerJsonDto,
     DepartmentDetailsJsonDto,
     DepartmentIdParamsDto,
     UpdateDepartmentsJsonDto,
@@ -58,13 +59,33 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
-    @Post('update')
+    @Post('updatedepartment')
     async update(
         @UserParam() user: UserParamsDto,
         @Body() input: UpdateDepartmentsJsonDto,
     ) {
         return this.departmentsService.updateDepartments(user, input);
     }
+
+    @RolesRequired(['Provider'])
+    @Post('addworker')
+    async addWorker(
+        @UserParam() user: UserParamsDto,
+        @Body() input: AddWorkerJsonDto,
+    ) {
+        return this.departmentsService.addworker(user, input);
+    }
+    // @RolesRequired(['Provider'])
+    // @Post('updateworker')
+    // async updateWorker() {
+    //     return this.updateWorker();
+    // }
+
+    // @RolesRequired(['Provider'])
+    // @Post('deleteworker')
+    // async deleteWorker() {
+    //     return this.deleteWorker();
+    // }
 
     @RolesRequired(['Provider'])
     @Post('getdetails')
@@ -75,45 +96,44 @@ export class DepartmentController {
         return this.departmentsService.getdetails(user, input.Id);
     }
 
-    // Resim kalitesi düşürülecek.
-    // @AllowUnauthorizedRequest()
-    @RolesRequired(['Provider'])
-    @Post('addphotos')
-    @UseInterceptors(FileInterceptor('file'))
-    @ApiBody({
-        required: true,
-        type: 'multipart/form-data',
-        schema: {
-            type: 'object',
-            properties: {
-                file: {
-                    type: 'string',
-                    format: 'binary',
-                },
-            },
-        },
-    })
-    @ApiConsumes('multipart/form-data')
-    async addPhotos(
-        @UserParam() user: UserParamsDto,
-        @Body() data: DepartmentIdParamsDto,
-        @UploadedFile() file: Express.Multer.File,
-    ) {
-        const response = await this.departmentsService.addphotos(
-            user,
-            parseInt(data.DepartmentId),
-            file,
-        );
+    // // Resim kalitesi düşürülecek.
+    // // @AllowUnauthorizedRequest()
+    // @RolesRequired(['Provider'])
+    // @Post('addphotos')
+    // @UseInterceptors(FileInterceptor('file'))
+    // @ApiBody({
+    //     required: true,
+    //     type: 'multipart/form-data',
+    //     schema: {
+    //         type: 'object',
+    //         properties: {
+    //             file: {
+    //                 type: 'string',
+    //                 format: 'binary',
+    //             },
+    //         },
+    //     },
+    // })
+    // @ApiConsumes('multipart/form-data')
+    // async addPhotos(
+    //     @UserParam() user: UserParamsDto,
+    //     @Body() data: DepartmentIdParamsDto,
+    //     @UploadedFile() file: Express.Multer.File,
+    // ) {
+    //     const response = await this.departmentsService.addphotos(
+    //         user,
+    //         parseInt(data.DepartmentId),
+    //         file,
+    //     );
 
-        // return `<html><body><img src="data:${response.data.MimeType};base64,${response.data.ImageBuffer}" /></body></html>`;
+    //     // return `<html><body><img src="data:${response.data.MimeType};base64,${response.data.ImageBuffer}" /></body></html>`;
 
-        return response;
-    }
+    //     return response;
+    // }
 
     // @RolesRequired(['Provider'])
     // @Get('getphotos')
     // async getPhotos(){
-
 
     //     const response = await this.departmentsService.getphoto(
     //     );

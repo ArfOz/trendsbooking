@@ -22,6 +22,11 @@ enum ServiceTypeEnum {
     Others = 'Others',
 }
 
+enum WorkerRoles {
+    Normal = 'Normal',
+    Admin = 'Admin',
+}
+
 export class WorkTime {
     @ApiProperty()
     @IsNotEmpty()
@@ -68,8 +73,6 @@ export class WorkerCreateJsonDto {
     @IsNotEmpty()
     @IsString()
     Phone: string;
-
-
 }
 
 export class AddDepartmentsJsonDto {
@@ -118,10 +121,9 @@ export class UpdateDepartmentsJsonDto {
     @ApiProperty()
     @IsOptional()
     @IsObject()
-    ServiceTimes?: object
+    ServiceTimes?: object;
 
     // Photos?: DepartmentPhotosUpdateManyWithoutDepartmentNestedInput
-    
 }
 
 export class DepartmentDetailsJsonDto {
@@ -131,9 +133,41 @@ export class DepartmentDetailsJsonDto {
     Id: number;
 }
 
-export class DepartmentIdParamsDto{
+export class DepartmentIdParamsDto {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    DepartmentId: string
+    DepartmentId: string;
+}
+
+export class AddWorkerJsonDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    DepartmentId: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    FirstName: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    LastName: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Phone: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Roles: WorkerRoles;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Services: any;
 }

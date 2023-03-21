@@ -5,11 +5,23 @@ import { DepartmentsService } from './departments.service';
 
 // Libs area
 import { KeypairModule, ImageServerService } from '@shared';
-import { DepartmentPhotosService, DepartmentService, PrismaService } from '@database';
+import {
+    DepartmentPhotosService,
+    DepartmentService,
+    PrismaService,
+    WorkerService,
+} from '@database';
 
 @Module({
     imports: [KeypairModule],
-    providers: [DepartmentsService, DepartmentService, PrismaService, DepartmentPhotosService, ImageServerService],
+    providers: [
+        DepartmentsService,
+        DepartmentService,
+        PrismaService,
+        DepartmentPhotosService,
+        ImageServerService,
+        WorkerService,
+    ],
     controllers: [DepartmentController],
 })
 export class DepartmentsModule {}

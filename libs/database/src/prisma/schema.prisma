@@ -117,23 +117,21 @@ model Department {
   CompanyUser   CompanyUser?       @relation(fields: [CompanyUserId], references: [Id])
   CompanyUserId Int?
   Photos        DepartmentPhotos[]
-  Services Services[]
-  DepartmentID String?
+  Services      Services[]
+  DepartmentID  String?
 }
 
-
-model Services{
-  Id        Int    @id @default(autoincrement()) 
-  ServiceType ServiceType
-  ServiceTimes String
-  ServiceName String
-  Price String
-  Prim String
+model Services {
+  Id            Int           @id @default(autoincrement())
+  ServiceType   ServiceType
+  ServiceName   String
+  ServiceTimes  String
   ServiceGender ServiceGender
-  Workers Worker[]
-  WorkerId Int?
-  Department   Department? @relation(fields: [DepartmentId], references: [Id])
-  DepartmentId Int?
+  Price         String
+  Prim          String
+  Workers       Worker[]
+  Department    Department?   @relation(fields: [DepartmentId], references: [Id])
+  DepartmentId  Int?
 }
 
 model Worker {
@@ -147,12 +145,11 @@ model Worker {
   Phone        String
   Department   Department @relation(fields: [DepartmentId], references: [Id])
   DepartmentId Int
-  Services Services @relation(fields: [ServiceId], references: [Id])
-  ServiceId Int
-  WorkTime WorkTime[]
+  Services     Services   @relation(fields: [ServiceId], references: [Id])
+  ServiceId    Int
+  WorkTime     WorkTime[]
 
   Roles WorkerRoles @default(Normal)
-
 }
 
 model UserToken {
@@ -220,14 +217,13 @@ model WorkTime {
 }
 
 model DepartmentPhotos {
-  Id        Int    @id @default(autoincrement())
-  ImageName String
+  Id              Int         @id @default(autoincrement())
+  ImageName       String
   ImageType       String
   ImageServerName String
-  Department   Department? @relation(fields: [DepartmentId], references: [Id])
-  DepartmentId Int?
+  Department      Department? @relation(fields: [DepartmentId], references: [Id])
+  DepartmentId    Int?
 }
-
 
 enum ExpiredReasonType {
   Expired

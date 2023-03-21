@@ -3,6 +3,8 @@
   "useTabs": false,
   "trailingComma": "all",
   "endOfLine": "auto",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
   "overrides": [
     {
       "files": ["*.js", "*.ts", "*.jsx", "*.tsx", "*.mjs", "*.cjs"],
@@ -12,6 +14,6 @@
       "files": ["*.json", "*.html", "*.yaml", "*.yml"],
       "options": { "tabWidth": 2 }
     }
-  ],
-  "editor.formatOnSave": true
+  ]
+
 }

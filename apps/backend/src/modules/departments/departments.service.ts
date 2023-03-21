@@ -1,15 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, DepartmentPhotos } from '@prisma/client';
 import sharp from 'sharp';
+import { generate } from 'generate-password';
 
 // Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
-import { BadRequestExceptionType, BadRequestException, ImageServerService } from '@shared';
-import { DepartmentService, DepartmentPhotosService } from '@database';
+import {
+    BadRequestExceptionType,
+    BadRequestException,
+    ImageServerService,
+} from '@shared';
+import {
+    DepartmentService,
+    DepartmentPhotosService,
+    WorkerService,
+} from '@database';
 
 // DTO area
 import { UserParamsDto } from '../users/dtos';
-import { AddDepartmentsJsonDto, UpdateDepartmentsJsonDto } from './dtos/departments.dto';
+import {
+    AddDepartmentsJsonDto,
+    AddWorkerJsonDto,
+    UpdateDepartmentsJsonDto,
+} from './dtos/departments.dto';
 
 @Injectable()
 export class DepartmentsService {
@@ -17,9 +30,10 @@ export class DepartmentsService {
         private readonly departmentService: DepartmentService,
         private readonly departmentPhotosService: DepartmentPhotosService,
         private readonly imageServer: ImageServerService,
+        private readonly workerService: WorkerService,
     ) {}
     async add(user: UserParamsDto, input: AddDepartmentsJsonDto) {
-        if (!input.Salon || !input.ServiceType || !input.Workers) {
+        if (!input.Salon || !input.ServiceType) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR426),
@@ -27,28 +41,19 @@ export class DepartmentsService {
             );
         }
 
-        const data: Prisma.DepartmentCreateInput = {
-            // Workers: {
-            //     create: {
-            //         FirstName: input.Workers.FirstName,
-            //         LastName: input.Workers.LastName,
-            //         Phone: input.Workers.Phone,
+        const departmentId = generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 6,
+        });
 
-            //         WorkTime: {
-            //             create: {
-            //                 MorningStartAt: input.WorkTime.MorningStartAt,
-            //                 MorningEndAt: input.WorkTime.MorningEndAt,
-            //                 ShiftStart: input.WorkTime.ShiftStart,
-            //                 ShiftEnd: input.WorkTime.ShiftEnd,
-            //                 NightStartAt: input.WorkTime.NightStartAt,
-            //                 NightEndAt: input.WorkTime.NightEndAt,
-            //             },
-            //         },
-            //     },
-            // },
+        const data: Prisma.DepartmentCreateInput = {
             Salon: input.Salon,
             ServiceType: input.ServiceType,
             CompanyUser: { connect: { Id: user.Id } },
+            DepartmentID: departmentId,
         };
 
         await this.departmentService.create(data);
@@ -80,21 +85,21 @@ export class DepartmentsService {
         };
     }
 
-    async updateDepartments(user: UserParamsDto,input: UpdateDepartmentsJsonDto){
-
-        const data : Prisma.DepartmentUpdateInput={
+    async updateDepartments(
+        user: UserParamsDto,
+        input: UpdateDepartmentsJsonDto,
+    ) {
+        const data: Prisma.DepartmentUpdateInput = {
             CompanyUser: {
-                connect:{Id:user.Id}
-            }
+                connect: { Id: user.Id },
+            },
+        };
 
-        }
+        const where: Prisma.DepartmentWhereUniqueInput = {
+            Id: user.Id,
+        };
 
-        const where : Prisma.DepartmentWhereUniqueInput={
-            Id:user.Id
-        }
-
-
-        await this.departmentService.update({data, where})
+        await this.departmentService.update({ data, where });
 
         return {
             Data: ResponseMessage.TR207,
@@ -123,14 +128,10 @@ export class DepartmentsService {
 
         // İmage resize
         const reImage = await sharp(file.buffer)
-            .resize(
-                1200,
-                630,
-                {
-                    fit: sharp.fit.inside,
-                    withoutEnlargement: true,
-                },
-            )
+            .resize(1200, 630, {
+                fit: sharp.fit.inside,
+                withoutEnlargement: true,
+            })
             .toBuffer();
         file['buffer'] = reImage;
         console.log('reimage', reImage);
@@ -171,4 +172,31 @@ export class DepartmentsService {
 
     //     return responseServer
     // }
+
+    // async addService(){
+
+    // }
+
+    async addworker(user: UserParamsDto, input: AddWorkerJsonDto) {
+        const data: Prisma.WorkerCreateInput = {
+            Department: { connect: { Id: input.DepartmentId } },
+            FirstName: input.FirstName,
+            LastName: input.LastName,
+            Phone: input.Phone,
+            Services: {
+                connect: {},
+            },
+        };
+
+        const response = await this.workerService.create(data);
+        return null;
+    }
+
+    async updateworker() {
+        return null;
+    }
+
+    async deleteworker() {
+        return null;
+    }
 }

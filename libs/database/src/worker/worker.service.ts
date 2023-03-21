@@ -91,7 +91,7 @@ export class WorkerService {
                 DepartmentId: true,
                 Roles: true,
                 WorkTime: true,
-                Services:true
+                Services: true,
             },
         });
 
@@ -207,13 +207,12 @@ export class WorkerService {
         //         updatedUser.Phone,
         //     );
 
-
         const updatedUser = await this.prisma.worker.update({
             data: {
                 ...data,
             },
             where: {
-                Id:where.Id
+                Id: where.Id,
             },
         });
 

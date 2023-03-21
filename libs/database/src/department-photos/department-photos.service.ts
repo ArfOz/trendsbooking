@@ -39,7 +39,9 @@ export class DepartmentPhotosService {
         });
     }
 
-    async create(data: Prisma.DepartmentPhotosCreateInput): Promise<DepartmentPhotos> {
+    async create(
+        data: Prisma.DepartmentPhotosCreateInput,
+    ): Promise<DepartmentPhotos> {
         return this.prisma.departmentPhotos.create({ data });
     }
 

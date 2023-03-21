@@ -33,10 +33,10 @@
   "TR423": "Kullanıcı tipi belli değil",
   "TR424": "Yetki alanı dışı!!!",
   "TR425": "Kullanıcının rolü yok!!!",
-  "TR426": "Salon, servis türü ve çalışanlar zorunludur.",
+  "TR426": "Salon tipi ve servis türü zorunludur.",
   "TR427": "Ad, Soyad ve Telefon Numarası zorunludur",
   "TR428": "Çalışan IDsi yok...",
   "TR429": "Böyle bir şubeniz bulunmamaktadır.",
   "TR430": "Böyle bir çalışanınız bulunmamaktadır.",
-  "TR431" : "Doğum tarihi, Ülke, Ad, Soyad, Cinsiyet, Şifreü Telefon Numarası veya Kullanıcı adından en az biri zorunludur."
+  "TR431": "Doğum tarihi, Ülke, Ad, Soyad, Cinsiyet, Şifreü Telefon Numarası veya Kullanıcı adından en az biri zorunludur."
 }

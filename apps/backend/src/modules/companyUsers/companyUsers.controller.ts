@@ -43,7 +43,6 @@ export class CompanyUsersController {
         return this.companyUsersService.verifyCode(verifyCode);
     }
 
-
     // Refreshtoken endpoint
 
     @AllowUnauthorizedRequest()

@@ -5,7 +5,6 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ServicesService {
-
     constructor(
         private prisma: PrismaService,
         private readonly keypairService: KeypairService,
@@ -40,7 +39,6 @@ export class ServicesService {
                         Phone: true,
                         Id: true,
                         WorkTime: true,
-                       
                     },
                 },
                 Id: true,
@@ -63,12 +61,9 @@ export class ServicesService {
         });
     }
 
-    async delete(
-        where: Prisma.DepartmentWhereUniqueInput,
-    ): Promise<Services> {
+    async delete(where: Prisma.DepartmentWhereUniqueInput): Promise<Services> {
         return this.prisma.services.delete({
             where,
         });
     }
-
 }
