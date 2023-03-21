@@ -22,38 +22,37 @@ export class DepartmentService {
         });
     }
 
-    // async find(params: {
-    //     skip?: number;
-    //     take?: number;
-    //     cursor?: Prisma.DepartmentWhereUniqueInput;
-    //     where?: Prisma.DepartmentWhereInput;
-    //     orderBy?: Prisma.DepartmentOrderByWithRelationInput;
-    // }) {
-    //     const { skip, take, cursor, where, orderBy } = params;
-    //     return this.prisma.department.findMany({
-    //         skip,
-    //         take,
-    //         cursor,
-    //         where,
-    //         orderBy,
-    //         select: {
-    //             Salon: true,
-    //             ServiceType: true,
-    //             ServiceTimes:true,
-    //             Workers: {
-    //                 select: {
-    //                     FirstName: true,
-    //                     LastName: true,
-    //                     Phone: true,
-    //                     Id: true,
-    //                     WorkTime: true,
+    async find(params: {
+        skip?: number;
+        take?: number;
+        cursor?: Prisma.DepartmentWhereUniqueInput;
+        where?: Prisma.DepartmentWhereInput;
+        orderBy?: Prisma.DepartmentOrderByWithRelationInput;
+    }) {
+        const { skip, take, cursor, where, orderBy } = params;
+        return this.prisma.department.findMany({
+            skip,
+            take,
+            cursor,
+            where,
+            orderBy,
+            select: {
+                Salon: true,
+                ServiceType: true,
+                Workers: {
+                    select: {
+                        FirstName: true,
+                        LastName: true,
+                        Phone: true,
+                        Id: true,
+                        WorkTime: true,
                        
-    //                 },
-    //             },
-    //             Id: true,
-    //         },
-    //     });
-    // }
+                    },
+                },
+                Id: true,
+            },
+        });
+    }
 
     async create(data: Prisma.DepartmentCreateInput): Promise<Department> {
         return this.prisma.department.create({ data });

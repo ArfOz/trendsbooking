@@ -28,23 +28,24 @@ export class DepartmentsService {
         }
 
         const data: Prisma.DepartmentCreateInput = {
-            Workers: {
-                create: {
-                    FirstName: input.Workers.FirstName,
-                    LastName: input.Workers.LastName,
-                    Phone: input.Workers.Phone,
-                    WorkTime: {
-                        create: {
-                            MorningStartAt: input.WorkTime.MorningStartAt,
-                            MorningEndAt: input.WorkTime.MorningEndAt,
-                            ShiftStart: input.WorkTime.ShiftStart,
-                            ShiftEnd: input.WorkTime.ShiftEnd,
-                            NightStartAt: input.WorkTime.NightStartAt,
-                            NightEndAt: input.WorkTime.NightEndAt,
-                        },
-                    },
-                },
-            },
+            // Workers: {
+            //     create: {
+            //         FirstName: input.Workers.FirstName,
+            //         LastName: input.Workers.LastName,
+            //         Phone: input.Workers.Phone,
+
+            //         WorkTime: {
+            //             create: {
+            //                 MorningStartAt: input.WorkTime.MorningStartAt,
+            //                 MorningEndAt: input.WorkTime.MorningEndAt,
+            //                 ShiftStart: input.WorkTime.ShiftStart,
+            //                 ShiftEnd: input.WorkTime.ShiftEnd,
+            //                 NightStartAt: input.WorkTime.NightStartAt,
+            //                 NightEndAt: input.WorkTime.NightEndAt,
+            //             },
+            //         },
+            //     },
+            // },
             Salon: input.Salon,
             ServiceType: input.ServiceType,
             CompanyUser: { connect: { Id: user.Id } },
@@ -79,28 +80,27 @@ export class DepartmentsService {
         };
     }
 
-    // async updateDepartments(user: UserParamsDto,input: UpdateDepartmentsJsonDto){
+    async updateDepartments(user: UserParamsDto,input: UpdateDepartmentsJsonDto){
 
-    //     const data : Prisma.DepartmentUpdateInput={
-    //         CompanyUser: {
-    //             connect:{Id:user.Id}
-    //         },
-    //         ServiceTimes:input.ServiceTimes
+        const data : Prisma.DepartmentUpdateInput={
+            CompanyUser: {
+                connect:{Id:user.Id}
+            }
 
-    //     }
+        }
 
-    //     const where : Prisma.DepartmentWhereUniqueInput={
-    //         Id:user.Id
-    //     }
+        const where : Prisma.DepartmentWhereUniqueInput={
+            Id:user.Id
+        }
 
 
-    //     await this.departmentService.update({data, where})
+        await this.departmentService.update({data, where})
 
-    //     return {
-    //         Data: ResponseMessage.TR207,
-    //         Success: true,
-    //     };
-    // }
+        return {
+            Data: ResponseMessage.TR207,
+            Success: true,
+        };
+    }
 
     async addphotos(
         user: UserParamsDto,
