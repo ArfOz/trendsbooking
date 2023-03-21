@@ -79,28 +79,28 @@ export class DepartmentsService {
         };
     }
 
-    async updateDepartments(user: UserParamsDto,input: UpdateDepartmentsJsonDto){
+    // async updateDepartments(user: UserParamsDto,input: UpdateDepartmentsJsonDto){
 
-        const data : Prisma.DepartmentUpdateInput={
-            CompanyUser: {
-                connect:{Id:user.Id}
-            },
-            ServiceTimes:input.ServiceTimes
+    //     const data : Prisma.DepartmentUpdateInput={
+    //         CompanyUser: {
+    //             connect:{Id:user.Id}
+    //         },
+    //         ServiceTimes:input.ServiceTimes
 
-        }
+    //     }
 
-        const where : Prisma.DepartmentWhereUniqueInput={
-            Id:user.Id
-        }
+    //     const where : Prisma.DepartmentWhereUniqueInput={
+    //         Id:user.Id
+    //     }
 
 
-        await this.departmentService.update({data, where})
+    //     await this.departmentService.update({data, where})
 
-        return {
-            Data: ResponseMessage.TR207,
-            Success: true,
-        };
-    }
+    //     return {
+    //         Data: ResponseMessage.TR207,
+    //         Success: true,
+    //     };
+    // }
 
     async addphotos(
         user: UserParamsDto,
