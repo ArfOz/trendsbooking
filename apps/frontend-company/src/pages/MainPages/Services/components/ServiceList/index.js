@@ -17,6 +17,7 @@ import FormGroup from '@mui/material/FormGroup';
 import './styles.css';
 import { makeStyles } from '@mui/styles';
 
+
 function createData(name, time, price, worker, prim) {
     return { name, time, price, worker, prim };
 }
@@ -38,6 +39,7 @@ const useRowStyles = makeStyles({
 });
 
 export default function BasicTable(props) {
+  
     const [open, setOpen] = React.useState(false);
     const classes = useRowStyles();
     return (
@@ -249,7 +251,7 @@ export default function BasicTable(props) {
                                                         {row.prim}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        <Button variant="outlined">
+                                                        <Button variant="outlined" sx={{}}>
                                                             Düzenle
                                                         </Button>
                                                     </TableCell>
@@ -274,13 +276,16 @@ export default function BasicTable(props) {
                                     )}
                                 </IconButton>
                             </TableCell>
-                            <TableCell align="left"> <Typography
+                            <TableCell align="left">
+                                {' '}
+                                <Typography
                                     variant="h6"
                                     gutterBottom
                                     component="div"
                                 >
                                     Cilt Bakımı
-                                </Typography></TableCell>
+                                </Typography>
+                            </TableCell>
                         </TableRow>
 
                         <TableRow>
@@ -360,6 +365,7 @@ export default function BasicTable(props) {
                         </TableRow>
                     </TableBody>
                 </Table>
+
             </TableContainer>
         </Box>
     );
