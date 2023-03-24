@@ -42,7 +42,6 @@ export default function BasicTable(props) {
     const classes = useRowStyles();
     return (
         <Box>
-            {' '}
             <TableContainer component={Paper}>
                 <Table aria-label="collapsible table">
                     <TableHead>
