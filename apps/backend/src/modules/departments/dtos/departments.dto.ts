@@ -27,6 +27,12 @@ enum WorkerRoles {
     Admin = 'Admin',
 }
 
+enum ServiceGender {
+    Male = 'Male',
+    Female = 'Female',
+    Unisex = 'Unisex',
+}
+
 export class WorkTime {
     @ApiProperty()
     @IsNotEmpty()
@@ -170,4 +176,41 @@ export class AddWorkerJsonDto {
     @IsOptional()
     @IsString()
     Services: any;
+}
+
+export class AddServiceJsonDto {
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceType: ServiceTypeEnum;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceName: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceTimes: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceGender: ServiceGender;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Price: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Prim: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    Department?: number;
 }

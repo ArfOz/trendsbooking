@@ -145,7 +145,7 @@ export class WorkerService {
         return user;
     }
 
-    async create(data: Prisma.WorkerCreateInput) {
+    async create(data: Prisma.WorkerCreateManyInput) {
         try {
             const createdUser = await this.prisma.worker.create({
                 select: {

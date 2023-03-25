@@ -32,6 +32,7 @@ import {
 import { UserParamsDto } from './../users/dtos/user-response.dto';
 import {
     AddDepartmentsJsonDto,
+    AddServiceJsonDto,
     AddWorkerJsonDto,
     DepartmentDetailsJsonDto,
     DepartmentIdParamsDto,
@@ -65,6 +66,15 @@ export class DepartmentController {
         @Body() input: UpdateDepartmentsJsonDto,
     ) {
         return this.departmentsService.updateDepartments(user, input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('addservice')
+    async addService(
+        @UserParam() user: UserParamsDto,
+        @Body() input: AddServiceJsonDto,
+    ) {
+        return this.departmentsService.addService(user, input);
     }
 
     @RolesRequired(['Provider'])

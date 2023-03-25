@@ -14,12 +14,14 @@ import {
     DepartmentService,
     DepartmentPhotosService,
     WorkerService,
+    ServicesService,
 } from '@database';
 
 // DTO area
 import { UserParamsDto } from '../users/dtos';
 import {
     AddDepartmentsJsonDto,
+    AddServiceJsonDto,
     AddWorkerJsonDto,
     UpdateDepartmentsJsonDto,
 } from './dtos/departments.dto';
@@ -31,6 +33,7 @@ export class DepartmentsService {
         private readonly departmentPhotosService: DepartmentPhotosService,
         private readonly imageServer: ImageServerService,
         private readonly workerService: WorkerService,
+        private readonly serviceService: ServicesService,
     ) {}
     async add(user: UserParamsDto, input: AddDepartmentsJsonDto) {
         if (!input.Salon || !input.ServiceType) {
@@ -173,22 +176,30 @@ export class DepartmentsService {
     //     return responseServer
     // }
 
-    // async addService(){
-
-    // }
-
-    async addworker(user: UserParamsDto, input: AddWorkerJsonDto) {
-        const data: Prisma.WorkerCreateInput = {
-            Department: { connect: { Id: input.DepartmentId } },
-            FirstName: input.FirstName,
-            LastName: input.LastName,
-            Phone: input.Phone,
-            Services: {
-                connect: {},
-            },
+    async addService(user: UserParamsDto, input: AddServiceJsonDto) {
+        const data: Prisma.ServicesCreateInput = {
+            Price: input.Price,
+            Prim: input.Prim,
+            ServiceGender: input.ServiceGender,
+            ServiceName: input.ServiceName,
+            ServiceTimes: input.ServiceTimes,
+            ServiceType: input.ServiceType,
         };
 
-        const response = await this.workerService.create(data);
+        const response = await this.serviceService.create(data);
+        return response;
+    }
+
+    async addworker(user: UserParamsDto, input: AddWorkerJsonDto) {
+        //     const data: Prisma.WorkerCreateManyInput = {
+        //         DepartmentId: input.DepartmentId,
+        //         FirstName: input.FirstName,
+        //         LastName: input.LastName,
+        //         Phone: input.Phone,
+        //         ServiceId:
+        // };
+
+        //     const response = await this.workerService.create(data);
         return null;
     }
 

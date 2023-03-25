@@ -32,15 +32,15 @@ export class ServicesService {
             orderBy,
             select: {
                 ServiceType: true,
-                Workers: {
-                    select: {
-                        FirstName: true,
-                        LastName: true,
-                        Phone: true,
-                        Id: true,
-                        WorkTime: true,
-                    },
-                },
+                // Workers: {
+                //     select: {
+                //         FirstName: true,
+                //         LastName: true,
+                //         Phone: true,
+                //         Id: true,
+                //         WorkTime: true,
+                //     },
+                // },
                 Id: true,
             },
         });

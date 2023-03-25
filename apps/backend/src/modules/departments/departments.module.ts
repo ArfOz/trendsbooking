@@ -1,3 +1,4 @@
+import { ServicesService } from './../../../../../libs/database/src/services/services.service';
 import { Module } from '@nestjs/common';
 
 import { DepartmentController } from './departments.controller';
@@ -21,6 +22,7 @@ import {
         DepartmentPhotosService,
         ImageServerService,
         WorkerService,
+        ServicesService,
     ],
     controllers: [DepartmentController],
 })
