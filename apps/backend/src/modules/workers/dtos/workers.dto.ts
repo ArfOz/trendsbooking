@@ -1,10 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger/dist';
-import { IsNotEmpty, IsString, IsNumber, IsObject, IsOptional } from 'class-validator';
-
+import {
+    IsNotEmpty,
+    IsString,
+    IsNumber,
+    IsObject,
+    IsOptional,
+    IsArray,
+} from 'class-validator';
 
 export enum WorkerRoles {
     Admin = 'Admin',
-    Normal = 'Normal'
+    Normal = 'Normal',
 }
 export class WorkTime {
     @ApiProperty()
@@ -67,7 +73,7 @@ export class WorkersAddJsonDto {
     @ApiProperty()
     @IsOptional()
     @IsObject()
-    Services?: object
+    Services?: object;
 }
 
 export class WorkersGetJsonDto {
@@ -77,41 +83,46 @@ export class WorkersGetJsonDto {
     WorkerId: number;
 }
 
-export class WorkersUpdateJsonDto {
-
+export class Service {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    WorkerId?: number
+    ServiceId?: number | null;
+}
+export class WorkersUpdateJsonDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    WorkerId?: number;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    FirstName?: string
+    FirstName?: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    LastName?: string
+    LastName?: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Phone?: string
-    
-    // Burası daha sonra düzenlenmeliÖnemli
+    Phone?: string;
+
+    // Burası daha sonra düzenlenmeli Önemli
     @ApiProperty()
     @IsOptional()
     @IsObject()
-    WorkTime?: WorkTime
+    WorkTime?: WorkTime;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Roles?: WorkerRoles
+    Roles?: WorkerRoles;
 
     @ApiProperty()
     @IsOptional()
-    @IsObject()
-    Services?: object
+    @IsArray()
+    Services?: Service;
 }

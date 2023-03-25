@@ -85,7 +85,11 @@ export class WorkersService {
                     NightEndAt: input.WorkTime.NightEndAt,
                 },
             },
-            Services: input.Services,
+            ServiceWorker: {
+                createMany: {
+                    data: [input.Services],
+                },
+            },
         };
 
         // await this.workerService.create(data);
@@ -162,7 +166,6 @@ export class WorkersService {
             LastName: input.LastName,
             Phone: input.Phone,
             Roles: input.Roles,
-            Services: input.Services,
             WorkTime: {
                 update: {
                     where: {

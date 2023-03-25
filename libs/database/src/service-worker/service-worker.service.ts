@@ -1,17 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Services } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { KeypairService } from '@shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
-export class ServicesService {
-    constructor(
-        private prisma: PrismaService,
-        private readonly keypairService: KeypairService,
-    ) {}
+export class ServiceWorkerService {
+    constructor(private prisma: PrismaService) {}
 
-    async get(where: Prisma.ServicesWhereUniqueInput) {
-        return this.prisma.services.findUnique({
+    async get(where: Prisma.ServiceWorkerWhereUniqueInput) {
+        return this.prisma.serviceWorker.findUnique({
             where,
         });
     }
@@ -19,19 +16,19 @@ export class ServicesService {
     async find(params: {
         skip?: number;
         take?: number;
-        cursor?: Prisma.ServicesWhereUniqueInput;
-        where?: Prisma.ServicesWhereInput;
-        orderBy?: Prisma.ServicesOrderByWithRelationInput;
+        cursor?: Prisma.ServiceWorkerWhereUniqueInput;
+        where?: Prisma.ServiceWorkerWhereInput;
+        orderBy?: Prisma.ServiceWorkerOrderByWithRelationInput;
     }) {
         const { skip, take, cursor, where, orderBy } = params;
-        return this.prisma.services.findMany({
+        return this.prisma.serviceWorker.findMany({
             skip,
             take,
             cursor,
             where,
             orderBy,
             select: {
-                ServiceType: true,
+                // ServiceType: true,
                 // Workers: {
                 //     select: {
                 //         FirstName: true,
@@ -46,22 +43,22 @@ export class ServicesService {
         });
     }
 
-    async create(data: Prisma.ServicesCreateInput): Promise<Services> {
-        return this.prisma.services.create({ data });
+    async create(data: Prisma.ServiceWorkerCreateInput) {
+        return this.prisma.serviceWorker.create({ data });
     }
 
     async update(params: {
-        where: Prisma.ServicesWhereUniqueInput;
-        data: Prisma.ServicesUpdateInput;
-    }): Promise<Services> {
+        where: Prisma.ServiceWorkerWhereUniqueInput;
+        data: Prisma.ServiceWorkerUpdateInput;
+    }) {
         const { where, data } = params;
-        return this.prisma.services.update({
+        return this.prisma.serviceWorker.update({
             data,
             where,
         });
     }
 
-    async delete(where: Prisma.ServicesWhereUniqueInput): Promise<Services> {
+    async delete(where: Prisma.ServiceWorkerWhereUniqueInput) {
         return this.prisma.services.delete({
             where,
         });

@@ -153,29 +153,29 @@ export class AddWorkerJsonDto {
     DepartmentId: number;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     FirstName: string;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     LastName: string;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     Phone: string;
 
     @ApiProperty()
-    @IsOptional()
-    @IsString()
-    Roles: WorkerRoles;
+    @IsNotEmpty()
+    @IsObject()
+    WorkTime: WorkTime;
 
     @ApiProperty()
     @IsOptional()
-    @IsString()
-    Services: any;
+    @IsObject()
+    Services?: object;
 }
 
 export class AddServiceJsonDto {

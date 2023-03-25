@@ -15,6 +15,7 @@ import {
     DepartmentPhotosService,
     WorkerService,
     ServicesService,
+    ServiceWorkerService,
 } from '@database';
 
 // DTO area
@@ -34,6 +35,7 @@ export class DepartmentsService {
         private readonly imageServer: ImageServerService,
         private readonly workerService: WorkerService,
         private readonly serviceService: ServicesService,
+        private readonly serviceWorkerService: ServiceWorkerService,
     ) {}
     async add(user: UserParamsDto, input: AddDepartmentsJsonDto) {
         if (!input.Salon || !input.ServiceType) {
@@ -191,16 +193,44 @@ export class DepartmentsService {
     }
 
     async addworker(user: UserParamsDto, input: AddWorkerJsonDto) {
-        //     const data: Prisma.WorkerCreateManyInput = {
-        //         DepartmentId: input.DepartmentId,
-        //         FirstName: input.FirstName,
-        //         LastName: input.LastName,
-        //         Phone: input.Phone,
-        //         ServiceId:
-        // };
+        if (!input.FirstName || !input.LastName || !input.Phone) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR427),
+                427,
+            );
+        }
 
-        //     const response = await this.workerService.create(data);
-        return null;
+        const data: Prisma.WorkerCreateInput = {
+            FirstName: input.FirstName,
+            LastName: input.LastName,
+            Phone: input.Phone,
+            Department: { connect: { Id: input.DepartmentId } },
+            WorkTime: {
+                create: {
+                    MorningStartAt: input?.WorkTime?.MorningStartAt || '',
+                    MorningEndAt: input?.WorkTime?.MorningEndAt || '',
+                    ShiftStart: input?.WorkTime?.ShiftStart || '',
+                    ShiftEnd: input?.WorkTime?.ShiftEnd || '',
+                    NightStartAt: input?.WorkTime?.NightStartAt || '',
+                    NightEndAt: input?.WorkTime?.NightEndAt || '',
+                },
+            },
+            ServiceWorker: {
+                createMany: {
+                    data: input?.Services,
+                },
+            },
+        };
+
+        await this.workerService.create(data);
+
+        // await this.workerService.create(data);
+
+        return {
+            Data: ResponseMessage.TR205,
+            Success: true,
+        };
     }
 
     async updateworker() {

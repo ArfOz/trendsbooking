@@ -91,7 +91,6 @@ export class WorkerService {
                 DepartmentId: true,
                 Roles: true,
                 WorkTime: true,
-                Services: true,
             },
         });
 
@@ -145,15 +144,9 @@ export class WorkerService {
         return user;
     }
 
-    async create(data: Prisma.WorkerCreateManyInput) {
+    async create(data: Prisma.WorkerCreateInput) {
         try {
             const createdUser = await this.prisma.worker.create({
-                select: {
-                    Phone: true,
-                    FirstName: true,
-                    LastName: true,
-                    Id: true,
-                },
                 data,
             });
 
