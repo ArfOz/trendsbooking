@@ -36,6 +36,11 @@ enum ServiceGender {
 export class WorkTime {
     @ApiProperty()
     @IsNotEmpty()
+    @IsNumber()
+    Id: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
     @IsString()
     MorningStartAt: string;
 
@@ -213,4 +218,46 @@ export class AddServiceJsonDto {
     @IsOptional()
     @IsNumber()
     Department?: number;
+}
+
+export class UpdateWorkerJsonDto {
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    WorkerId?: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    FirstName?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    LastName?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Phone?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    DepartmentId?: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Roles?: WorkerRoles;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    WorkTime?: WorkTime;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    ServiceWorkerId?: number;
 }

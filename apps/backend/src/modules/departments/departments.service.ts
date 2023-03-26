@@ -25,6 +25,7 @@ import {
     AddServiceJsonDto,
     AddWorkerJsonDto,
     UpdateDepartmentsJsonDto,
+    UpdateWorkerJsonDto,
 } from './dtos/departments.dto';
 
 @Injectable()
@@ -225,16 +226,45 @@ export class DepartmentsService {
 
         await this.workerService.create(data);
 
-        // await this.workerService.create(data);
-
         return {
             Data: ResponseMessage.TR205,
             Success: true,
         };
     }
 
-    async updateworker() {
-        return null;
+    async updateworker(user: UserParamsDto, input: UpdateWorkerJsonDto) {
+        console.log('burası');
+        const where: Prisma.WorkerWhereUniqueInput = {
+            Id: input.WorkerId,
+        };
+
+        // Burada service worker ile serviceworkertablosundan id alınıp update e eklenecek.
+
+        const data: Prisma.WorkerUpdateInput = {
+            FirstName: input?.FirstName,
+            LastName: input?.LastName,
+            Phone: input?.Phone,
+            Department: {
+                connect: {
+                    Id: input?.DepartmentId,
+                },
+            },
+            Roles: input.Roles,
+            // ServiceWorker:{
+            //     upsert:{
+            //         update:{
+
+            //         }
+            //     }
+            // }
+        };
+        const response = await this.workerService.update({ where, data });
+
+        console.log('res', response);
+        return {
+            Data: ResponseMessage.TR208,
+            Success: true,
+        };
     }
 
     async deleteworker() {

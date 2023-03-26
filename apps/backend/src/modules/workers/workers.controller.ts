@@ -2,7 +2,11 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AllowUnauthorizedRequest, RolesRequired, UserParam } from '@shared';
 import { UserParamsDto } from '../users/dtos';
 import { WorkersService } from './workers.service';
-import { WorkersAddJsonDto, WorkersGetJsonDto, WorkersUpdateJsonDto } from './dtos/workers.dto';
+import {
+    WorkersAddJsonDto,
+    WorkersGetJsonDto,
+    WorkersUpdateJsonDto,
+} from './dtos/workers.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Workers')

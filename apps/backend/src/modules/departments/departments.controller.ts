@@ -37,6 +37,7 @@ import {
     DepartmentDetailsJsonDto,
     DepartmentIdParamsDto,
     UpdateDepartmentsJsonDto,
+    UpdateWorkerJsonDto,
 } from './dtos/departments.dto';
 
 @ApiTags('Departments')
@@ -47,6 +48,7 @@ export class DepartmentController {
     @AllowUnauthorizedRequest()
     @Get('test')
     getLoggedCompanyUser() {
+        console.log('test sayfası');
         return 'test departments page';
     }
 
@@ -85,11 +87,15 @@ export class DepartmentController {
     ) {
         return this.departmentsService.addworker(user, input);
     }
-    // @RolesRequired(['Provider'])
-    // @Post('updateworker')
-    // async updateWorker() {
-    //     return this.updateWorker();
-    // }
+
+    @RolesRequired(['Provider'])
+    @Post('updateworker')
+    async updateWorker(
+        @UserParam() user: UserParamsDto,
+        @Body() input: UpdateWorkerJsonDto,
+    ) {
+        return this.departmentsService.updateworker(user, input);
+    }
 
     // @RolesRequired(['Provider'])
     // @Post('deleteworker')
