@@ -6,11 +6,10 @@ import {
     Select,
     MenuItem,
     Button,
+    Box,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React, { useState } from 'react';
-
-import { Form } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -65,9 +64,13 @@ const ServiceModal = ({ open, onClose, onAddService }) => {
 
     return (
         <Modal open={open} onClose={onClose} className={classes.modal}>
-            <Form onSubmit={handleSubmit} className={classes.form}>
+            <Box
+                component="form"
+                onSubmit={handleSubmit}
+                className={classes.form}
+            >
                 <TextField
-                    label="Service Name"
+                    label="Servis Adı"
                     variant="outlined"
                     className={classes.textField}
                     value={serviceName}
@@ -122,7 +125,7 @@ const ServiceModal = ({ open, onClose, onAddService }) => {
                 >
                     Hizmet Ekle
                 </Button>
-            </Form>
+            </Box>
         </Modal>
     );
 };
