@@ -39,6 +39,7 @@ import {
     UpdateDepartmentsJsonDto,
     UpdateWorkerJsonDto,
 } from './dtos/departments.dto';
+import { WorkersGetJsonDto } from '../workers/dtos/workers.dto';
 
 @ApiTags('Departments')
 @Controller('departments')
@@ -97,11 +98,14 @@ export class DepartmentController {
         return this.departmentsService.updateworker(user, input);
     }
 
-    // @RolesRequired(['Provider'])
-    // @Post('deleteworker')
-    // async deleteWorker() {
-    //     return this.deleteWorker();
-    // }
+    @RolesRequired(['Provider'])
+    @Post('deleteworker')
+    async deleteWorker(
+        @UserParam() user: UserParamsDto,
+        @Body() input: WorkersGetJsonDto,
+    ) {
+        return this.departmentsService.deleteworker(user, input);
+    }
 
     @RolesRequired(['Provider'])
     @Post('getdetails')

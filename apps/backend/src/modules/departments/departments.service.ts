@@ -27,6 +27,7 @@ import {
     UpdateDepartmentsJsonDto,
     UpdateWorkerJsonDto,
 } from './dtos/departments.dto';
+import { WorkersGetJsonDto } from '../workers/dtos/workers.dto';
 
 @Injectable()
 export class DepartmentsService {
@@ -252,7 +253,7 @@ export class DepartmentsService {
             Roles: input.Roles,
         };
 
-        const response = await this.workerService.update({ where, data });
+        let response = await this.workerService.update({ where, data });
 
         await this.serviceWorkerService.deleteMany({
             where: {
@@ -261,7 +262,7 @@ export class DepartmentsService {
         });
 
         if (input.Services) {
-            await this.workerService.update({
+            response = await this.workerService.update({
                 where: {
                     Id: input.WorkerId,
                 },
@@ -275,19 +276,37 @@ export class DepartmentsService {
             });
         }
 
-        // const newService = await this.serviceWorkerService.updateMany(
-        //     dataServiceWroker,
-        //     whereServiceWorker,
-        // );
-
-        // console.log('res', response, newService);
         return {
             Data: ResponseMessage.TR208,
             Success: true,
+            Worker: response,
         };
     }
 
-    async deleteworker() {
-        return null;
+    async deleteworker(user: UserParamsDto, input: WorkersGetJsonDto) {
+        const whereWorker: Prisma.WorkerWhereInput = {
+            Id: input.WorkerId,
+            Department: {
+                CompanyUserId: user.Id,
+            },
+        };
+        const data = await this.workerService.find({ where: whereWorker });
+
+        if (!data || data.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR430),
+                430,
+            );
+        }
+        const where: Prisma.WorkerWhereUniqueInput = {
+            Id: input.WorkerId,
+        };
+
+        await this.workerService.delete(where);
+        return {
+            Data: ResponseMessage.TR209,
+            Success: true,
+        };
     }
 }

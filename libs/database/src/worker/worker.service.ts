@@ -207,14 +207,40 @@ export class WorkerService {
             where: {
                 Id: where.Id,
             },
+            select: {
+                FirstName: true,
+                LastName: true,
+                Id: true,
+                Phone: true,
+                Roles: true,
+                ServiceWorker: {
+                    select: {
+                        Services: {
+                            select: {
+                                ServiceType: true,
+                                ServiceName: true,
+                                ServiceTimes: true,
+                                ServiceGender: true,
+                                Price: true,
+                                Prim: true,
+                            },
+                        },
+                    },
+                },
+                WorkTime: true,
+                Department: true,
+                DepartmentId: true,
+            },
         });
 
         return updatedUser;
     }
 
-    async delete(where: Prisma.WorkerWhereUniqueInput): Promise<Worker> {
-        return this.prisma.worker.delete({
+    async delete(where: Prisma.WorkerWhereUniqueInput) {
+        const response = await this.prisma.worker.delete({
             where,
         });
+        console.log('asdasd', response);
+        return response;
     }
 }
