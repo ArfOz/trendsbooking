@@ -250,17 +250,37 @@ export class DepartmentsService {
                 },
             },
             Roles: input.Roles,
-            // ServiceWorker:{
-            //     upsert:{
-            //         update:{
-
-            //         }
-            //     }
-            // }
         };
+
         const response = await this.workerService.update({ where, data });
 
-        console.log('res', response);
+        await this.serviceWorkerService.deleteMany({
+            where: {
+                WorkerId: input.WorkerId,
+            },
+        });
+
+        if (input.Services) {
+            await this.workerService.update({
+                where: {
+                    Id: input.WorkerId,
+                },
+                data: {
+                    ServiceWorker: {
+                        createMany: {
+                            data: input.Services,
+                        },
+                    },
+                },
+            });
+        }
+
+        // const newService = await this.serviceWorkerService.updateMany(
+        //     dataServiceWroker,
+        //     whereServiceWorker,
+        // );
+
+        // console.log('res', response, newService);
         return {
             Data: ResponseMessage.TR208,
             Success: true,

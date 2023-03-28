@@ -220,6 +220,13 @@ export class AddServiceJsonDto {
     Department?: number;
 }
 
+export class Services {
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    ServiceId: number;
+}
+
 export class UpdateWorkerJsonDto {
     @ApiProperty()
     @IsOptional()
@@ -256,6 +263,10 @@ export class UpdateWorkerJsonDto {
     @IsObject()
     WorkTime?: WorkTime;
 
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    Services: Services;
     @ApiProperty()
     @IsOptional()
     @IsNumber()

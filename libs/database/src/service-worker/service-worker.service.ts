@@ -47,6 +47,10 @@ export class ServiceWorkerService {
         return this.prisma.serviceWorker.create({ data });
     }
 
+    async createMany(data: Prisma.ServiceWorkerCreateManyInput) {
+        return this.prisma.serviceWorker.createMany({ data });
+    }
+
     async update(params: {
         where: Prisma.ServiceWorkerWhereUniqueInput;
         data: Prisma.ServiceWorkerUpdateInput;
@@ -58,9 +62,14 @@ export class ServiceWorkerService {
         });
     }
 
-    async delete(where: Prisma.ServiceWorkerWhereUniqueInput) {
-        return this.prisma.services.delete({
-            where,
-        });
+    async deleteMany(where: Prisma.ServiceWorkerDeleteManyArgs) {
+        return this.prisma.serviceWorker.deleteMany(where);
     }
+
+    // async updateMany(
+    //     data: Prisma.ServiceWorkerUncheckedUpdateManyInput,
+    //     where?: Prisma.ServiceWorkerWhereInput,
+    // ) {
+    //     return this.prisma.serviceWorker.upsert({ data, where });
+    // }
 }
