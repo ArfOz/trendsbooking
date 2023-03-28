@@ -195,6 +195,21 @@ export class DepartmentsService {
     }
 
     async addworker(user: UserParamsDto, input: AddWorkerJsonDto) {
+        const departmentData: Prisma.DepartmentWhereInput = {
+            Id: input.DepartmentId,
+            CompanyUserId: user.Id,
+        };
+        const department = await this.departmentService.find({
+            where: departmentData,
+        });
+
+        if (!department || department.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
         if (!input.FirstName || !input.LastName || !input.Phone) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -234,7 +249,6 @@ export class DepartmentsService {
     }
 
     async updateworker(user: UserParamsDto, input: UpdateWorkerJsonDto) {
-        console.log('burası');
         const where: Prisma.WorkerWhereUniqueInput = {
             Id: input.WorkerId,
         };
