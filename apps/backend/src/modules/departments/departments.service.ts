@@ -249,11 +249,24 @@ export class DepartmentsService {
     }
 
     async updateworker(user: UserParamsDto, input: UpdateWorkerJsonDto) {
+        const departmentData: Prisma.DepartmentWhereInput = {
+            Id: input.DepartmentId,
+            CompanyUserId: user.Id,
+        };
+        const department = await this.departmentService.find({
+            where: departmentData,
+        });
+
+        if (!department || department.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
         const where: Prisma.WorkerWhereUniqueInput = {
             Id: input.WorkerId,
         };
-
-        // Burada service worker ile serviceworkertablosundan id alınıp update e eklenecek.
 
         const data: Prisma.WorkerUpdateInput = {
             FirstName: input?.FirstName,
