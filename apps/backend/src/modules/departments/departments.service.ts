@@ -16,6 +16,7 @@ import {
     WorkerService,
     ServicesService,
     ServiceWorkerService,
+    CompanyUserService,
 } from '@database';
 
 // DTO area
@@ -181,6 +182,32 @@ export class DepartmentsService {
     // }
 
     async addService(user: UserParamsDto, input: AddServiceJsonDto) {
+        if (!input.DepartmentId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR432),
+                432,
+            );
+        }
+
+        const companyDepartment: Prisma.DepartmentWhereInput = {
+            CompanyUserId: user.Id,
+            Id: input.DepartmentId,
+        };
+
+        const company = await this.departmentService.find({
+            where: companyDepartment,
+        });
+
+        console.log('response', company);
+
+        if (!company || company.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
         const data: Prisma.ServicesCreateInput = {
             Price: input.Price,
             Prim: input.Prim,
@@ -188,6 +215,11 @@ export class DepartmentsService {
             ServiceName: input.ServiceName,
             ServiceTimes: input.ServiceTimes,
             ServiceType: input.ServiceType,
+            Department: {
+                connect: {
+                    Id: input.DepartmentId,
+                },
+            },
         };
 
         const response = await this.serviceService.create(data);

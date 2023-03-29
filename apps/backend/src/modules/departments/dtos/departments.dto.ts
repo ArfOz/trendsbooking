@@ -217,7 +217,7 @@ export class AddServiceJsonDto {
     @ApiProperty()
     @IsOptional()
     @IsNumber()
-    Department?: number;
+    DepartmentId?: number;
 }
 
 export class Services {
