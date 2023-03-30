@@ -25,6 +25,7 @@ import {
     AddDepartmentsJsonDto,
     AddServiceJsonDto,
     AddWorkerJsonDto,
+    DeleteServiceJsonDto,
     UpdateDepartmentsJsonDto,
     UpdateServiceJsonDto,
     UpdateWorkerJsonDto,
@@ -270,6 +271,45 @@ export class DepartmentsService {
         };
 
         const response = await this.serviceService.update({ data, where });
+        return {
+            Data: response,
+            Success: true,
+        };
+    }
+
+    async deleteService(user: UserParamsDto, input: DeleteServiceJsonDto) {
+        if (!input.DepartmentId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR432),
+                432,
+            );
+        }
+
+        const whereUser: Prisma.DepartmentWhereInput = {
+            Id: input.DepartmentId,
+            CompanyUserId: {
+                equals: user.Id,
+            },
+        };
+        const companyDepartment = await this.departmentService.find({
+            where: whereUser,
+        });
+
+        if (!companyDepartment || companyDepartment.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
+
+        const where: Prisma.ServicesWhereUniqueInput = {
+            Id: input.ServiceId,
+        };
+        const response = await this.serviceService.delete(where);
+
+        console.log('asdasdasd', response);
         return {
             Data: response,
             Success: true,

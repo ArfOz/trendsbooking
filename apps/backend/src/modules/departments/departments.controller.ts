@@ -34,6 +34,7 @@ import {
     AddDepartmentsJsonDto,
     AddServiceJsonDto,
     AddWorkerJsonDto,
+    DeleteServiceJsonDto,
     DepartmentDetailsJsonDto,
     DepartmentIdParamsDto,
     UpdateDepartmentsJsonDto,
@@ -88,6 +89,15 @@ export class DepartmentController {
         @Body() input: UpdateServiceJsonDto,
     ) {
         return this.departmentsService.updateService(user, input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('deleteservice')
+    async deleteService(
+        @UserParam() user: UserParamsDto,
+        @Body() input: DeleteServiceJsonDto,
+    ) {
+        return this.departmentsService.deleteService(user, input);
     }
 
     @RolesRequired(['Provider'])

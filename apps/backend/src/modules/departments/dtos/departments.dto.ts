@@ -314,3 +314,15 @@ export class UpdateServiceJsonDto {
     @IsNumber()
     ServiceId: number;
 }
+
+export class DeleteServiceJsonDto {
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    DepartmentId?: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    ServiceId: number;
+}
