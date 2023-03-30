@@ -234,6 +234,24 @@ export class DepartmentsService {
             );
         }
 
+        const whereUser: Prisma.DepartmentWhereInput = {
+            Id: input.DepartmentId,
+            CompanyUserId: {
+                equals: user.Id,
+            },
+        };
+        const companyDepartment = await this.departmentService.find({
+            where: whereUser,
+        });
+
+        if (!companyDepartment || companyDepartment.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
+
         const where: Prisma.ServicesWhereUniqueInput = {
             Id: input.ServiceId,
         };
