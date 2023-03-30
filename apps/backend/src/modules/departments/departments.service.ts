@@ -26,6 +26,7 @@ import {
     AddServiceJsonDto,
     AddWorkerJsonDto,
     UpdateDepartmentsJsonDto,
+    UpdateServiceJsonDto,
     UpdateWorkerJsonDto,
 } from './dtos/departments.dto';
 import { WorkersGetJsonDto } from '../workers/dtos/workers.dto';
@@ -199,8 +200,6 @@ export class DepartmentsService {
             where: companyDepartment,
         });
 
-        console.log('response', company);
-
         if (!company || company.length < 1) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -224,6 +223,39 @@ export class DepartmentsService {
 
         const response = await this.serviceService.create(data);
         return response;
+    }
+
+    async updateService(user: UserParamsDto, input: UpdateServiceJsonDto) {
+        if (!input.DepartmentId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR432),
+                432,
+            );
+        }
+
+        const where: Prisma.ServicesWhereUniqueInput = {
+            Id: input.ServiceId,
+        };
+        const data: Prisma.ServicesUpdateInput = {
+            Department: {
+                connect: {
+                    Id: input.DepartmentId,
+                },
+            },
+            Price: input?.Price,
+            Prim: input?.Prim,
+            ServiceGender: input?.ServiceGender,
+            ServiceName: input?.ServiceName,
+            ServiceTimes: input?.ServiceTimes,
+            ServiceType: input.ServiceType,
+        };
+
+        const response = await this.serviceService.update({ data, where });
+        return {
+            Data: response,
+            Success: true,
+        };
     }
 
     async addworker(user: UserParamsDto, input: AddWorkerJsonDto) {

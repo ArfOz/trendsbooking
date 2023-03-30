@@ -272,3 +272,45 @@ export class UpdateWorkerJsonDto {
     @IsNumber()
     ServiceWorkerId?: number;
 }
+
+export class UpdateServiceJsonDto {
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceType?: ServiceTypeEnum;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceName?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceTimes?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceGender?: ServiceGender;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Price?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Prim?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    DepartmentId?: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    ServiceId: number;
+}

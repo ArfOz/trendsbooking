@@ -37,6 +37,7 @@ import {
     DepartmentDetailsJsonDto,
     DepartmentIdParamsDto,
     UpdateDepartmentsJsonDto,
+    UpdateServiceJsonDto,
     UpdateWorkerJsonDto,
 } from './dtos/departments.dto';
 import { WorkersGetJsonDto } from '../workers/dtos/workers.dto';
@@ -78,6 +79,15 @@ export class DepartmentController {
         @Body() input: AddServiceJsonDto,
     ) {
         return this.departmentsService.addService(user, input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('updateservice')
+    async updateService(
+        @UserParam() user: UserParamsDto,
+        @Body() input: UpdateServiceJsonDto,
+    ) {
+        return this.departmentsService.updateService(user, input);
     }
 
     @RolesRequired(['Provider'])
