@@ -23,7 +23,7 @@ const Randevu = () => {
                     height: '100%',
                     width: '100%',
                     backgroundColor: '#F3F1F7',
-                    border: '3px solid purple',
+                    
                 }}
             >
                 <Navbar />
@@ -49,6 +49,7 @@ const Randevu = () => {
                             background: '#FFFFFF',
                             borderRadius: '12px',
                             position: 'relative',
+                            
                         }}
                     >
                         {/* Sol kutu */}

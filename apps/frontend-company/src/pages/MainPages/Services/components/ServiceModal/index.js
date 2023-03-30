@@ -8,39 +8,39 @@ import {
     Button,
     Box,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+// import { makeStyles } from '@mui/styles';
 import React, { useState } from 'react';
 
-const useStyles = makeStyles((theme) => ({
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        padding: theme.spacing(2),
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
-        borderRadius: theme.shape.borderRadius,
-        outline: 'none',
-        width: 400,
-        maxWidth: '90%',
-    },
-    textField: {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-    },
-    formControl: {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        minWidth: 120,
-    },
-    button: {
-        marginTop: theme.spacing(2),
-    },
-}));
+// const useStyles = makeStyles((theme) => ({
+//     modal: {
+//         display: 'flex',
+//         alignItems: 'center',
+//         justifyContent: 'center',
+//     },
+//     form: {
+//         display: 'flex',
+//         flexDirection: 'column',
+//         padding: theme.spacing(2),
+//         backgroundColor: theme.palette.background.paper,
+//         boxShadow: theme.shadows[5],
+//         borderRadius: theme.shape.borderRadius,
+//         outline: 'none',
+//         width: 400,
+//         maxWidth: '90%',
+//     },
+//     textField: {
+//         marginTop: theme.spacing(2),
+//         marginBottom: theme.spacing(2),
+//     },
+//     formControl: {
+//         marginTop: theme.spacing(2),
+//         marginBottom: theme.spacing(2),
+//         minWidth: 120,
+//     },
+//     button: {
+//         marginTop: theme.spacing(2),
+//     },
+// }));
 
 const ServiceModal = ({ open, onClose, onAddService }) => {
     const classes = useStyles();
