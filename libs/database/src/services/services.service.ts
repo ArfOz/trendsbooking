@@ -66,4 +66,10 @@ export class ServicesService {
             where,
         });
     }
+
+    async deleteMany(where: Prisma.ServicesWhereInput) {
+        return this.prisma.services.deleteMany({
+            where,
+        });
+    }
 }

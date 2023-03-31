@@ -304,10 +304,21 @@ export class DepartmentsService {
             );
         }
 
-        const where: Prisma.ServicesWhereUniqueInput = {
+        // const where: Prisma.ServicesWhereUniqueInput = {
+        //     Id: input.ServiceId,
+        // };
+        // const response = await this.serviceService.delete(where);
+
+        const where: Prisma.ServicesWhereInput = {
             Id: input.ServiceId,
+            ServiceWorker: {
+                every: {
+                    ServiceId: input.ServiceId,
+                },
+            },
         };
-        const response = await this.serviceService.delete(where);
+
+        const response = await this.serviceService.deleteMany(where);
 
         console.log('asdasdasd', response);
         return {
