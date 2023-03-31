@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+
+
 export const denemeFunc = async (setDeneme) => {
     setDeneme('deneme function.js');
 };
@@ -26,3 +28,20 @@ export const postRegister = (data, setError, setResponse) => {
             setError(error.response.data.details.toString());
         });
 };
+
+export const createService = async (name, time, price, worker,prim) => {
+  try {
+    const response = await axios.post("url-to-api-endpoint", {
+      name,
+      time,
+      price,
+      worker,
+      prim
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+

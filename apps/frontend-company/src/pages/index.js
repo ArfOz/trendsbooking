@@ -20,6 +20,6 @@ export {
     Dashboard,
     Randevu,
     NotFound404,
-    // Services,
+    Services,
     Calısanlar,
 };

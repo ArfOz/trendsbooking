@@ -15,7 +15,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 
 import './styles.css';
-// import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@mui/styles';
 
 
 function createData(name, time, price, worker, prim) {
@@ -30,16 +30,16 @@ const rows = [
     createData('Saç Şekil', 60, 80, 'TREDNSWORKER', 40),
 ];
 
-// const useRowStyles = makeStyles({
-//     root: {
-//         '& > *': {
-//             borderBottom: 'unset',
-//         },
-//     },
-// });
+const useRowStyles = makeStyles({
+    root: {
+        '& > *': {
+            borderBottom: 'unset',
+        },
+    },
+});
 
 export default function BasicTable(props) {
-  
+
     const [open, setOpen] = React.useState(false);
     const classes = useRowStyles();
     return (

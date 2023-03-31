@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { createContext, useContext, useState } from 'react';
 
 const authContext = createContext();
+const serviceContext = createContext();
 
 export function ProvideAuth({ children }) {
     const auth = useProvideAuth();
@@ -11,6 +12,10 @@ export function ProvideAuth({ children }) {
 export const useAuth = () => {
     return useContext(authContext);
 };
+
+export const useService = () => {
+  return useContext(serviceContext)
+}
 
 function useProvideAuth() {
     const [loginUser, setLoginUser] = useState();
@@ -122,6 +127,34 @@ function useProvideAuth() {
                 setIsLoading(false);
             });
     }
+
+    function postServices(data) {
+      setRegisterErrors(null);
+      setIsLoading(true);
+      const options = {
+          method: 'POST',
+          url: 'http://localhost:3300/api/companyusers/services',
+          headers: {
+              'Content-Type': 'application/json',
+              accept: 'application/json',
+          },
+          data: data,
+      };
+
+      axios
+          .request(options)
+          .then(function (response) {
+              console.log(response);
+              setRegisterUser(response.data);
+              setIsLoading(false);
+          })
+          .catch(function (error) {
+              setIsLoading(false);
+              console.log('error', error);
+              setRegisterErrors(error);
+          });
+  }
+
     return {
         registerUser,
         loginUser,
@@ -136,5 +169,6 @@ function useProvideAuth() {
         sendCodeData,
         sendCodeErrors,
         verifyCodeErrors,
+        postServices
     };
 }
