@@ -134,6 +134,11 @@ export class UpdateDepartmentsJsonDto {
     @IsObject()
     ServiceTimes?: object;
 
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    DepartmentId: number;
+
     // Photos?: DepartmentPhotosUpdateManyWithoutDepartmentNestedInput
 }
 

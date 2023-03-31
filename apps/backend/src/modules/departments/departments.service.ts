@@ -99,14 +99,39 @@ export class DepartmentsService {
         user: UserParamsDto,
         input: UpdateDepartmentsJsonDto,
     ) {
+        if (!input.DepartmentId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR432),
+                432,
+            );
+        }
+
+        const companyDepartment = await this.departmentService.find({
+            where: {
+                CompanyUserId: user.Id,
+                Id: input.DepartmentId,
+            },
+        });
+        if (!companyDepartment || companyDepartment.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
+
+        console.log('asdasdasd', companyDepartment);
         const data: Prisma.DepartmentUpdateInput = {
             CompanyUser: {
                 connect: { Id: user.Id },
             },
+            Salon: input.Salon,
+            ServiceType: input.ServiceType,
         };
 
         const where: Prisma.DepartmentWhereUniqueInput = {
-            Id: user.Id,
+            Id: input.DepartmentId,
         };
 
         await this.departmentService.update({ data, where });
@@ -304,11 +329,6 @@ export class DepartmentsService {
             );
         }
 
-        // const where: Prisma.ServicesWhereUniqueInput = {
-        //     Id: input.ServiceId,
-        // };
-        // const response = await this.serviceService.delete(where);
-
         const where: Prisma.ServicesWhereInput = {
             Id: input.ServiceId,
             ServiceWorker: {
@@ -318,11 +338,10 @@ export class DepartmentsService {
             },
         };
 
-        const response = await this.serviceService.deleteMany(where);
+        await this.serviceService.deleteMany(where);
 
-        console.log('asdasdasd', response);
         return {
-            Data: response,
+            Data: ResponseMessage.TR210,
             Success: true,
         };
     }
