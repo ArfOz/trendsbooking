@@ -1,4 +1,3 @@
-
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import generalConfig from '../../config/general.config';
@@ -26,7 +25,7 @@ export class ImageServerService {
         const fileName: string = uuidv4();
 
         const fileType: string = file.originalname.substring(
-            file.originalname.lastIndexOf('.')+1,
+            file.originalname.lastIndexOf('.') + 1,
             file.originalname.length,
         );
 
@@ -45,5 +44,20 @@ export class ImageServerService {
             fileName,
             fileType,
         };
+    }
+
+    async getPhoto() {
+        const config = {
+            host: this.generalCfg.sftpHost,
+            port: this.generalCfg.sftpPort,
+            username: this.generalCfg.sftpUsername,
+            password: this.generalCfg.sftpPassword,
+        };
+
+        const filePath = `/root/photos/departments/ff12ceb2-c7e0-472d-8913-80df1a47f292.jpg`;
+        await sftp.connect(config);
+
+        await sftp.get(filePath).then((res) => console.log('asdasda', res));
+        return true;
     }
 }

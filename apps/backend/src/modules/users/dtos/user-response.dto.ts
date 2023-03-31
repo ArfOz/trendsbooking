@@ -192,7 +192,7 @@ export class VerifyCodeDTO {
     Token: string;
 }
 
-export class UserProfileUpdateDto{
+export class UserProfileUpdateDto {
     // @ApiProperty()
     // @IsNotEmpty()
     // @IsEmail()
@@ -201,42 +201,42 @@ export class UserProfileUpdateDto{
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
-    Password?: string
+    Password?: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
-    Username?: string
+    Username?: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
-    FirstName?: string
+    FirstName?: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
-    LastName?: string
+    LastName?: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
-    Country?: string
+    Country?: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
-    Phone?: string
+    Phone?: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
-    Gender?:  Genders
+    Gender?: Genders;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
-    BirthDate?: string
+    BirthDate?: string;
 }
 
 export class CreateServiceUserJsonDto {

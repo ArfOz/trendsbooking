@@ -147,12 +147,6 @@ export class WorkerService {
     async create(data: Prisma.WorkerCreateInput) {
         try {
             const createdUser = await this.prisma.worker.create({
-                select: {
-                    Phone: true,
-                    FirstName: true,
-                    LastName: true,
-                    Id: true,
-                },
                 data,
             });
 
@@ -206,13 +200,47 @@ export class WorkerService {
         //         updatedUser.Phone,
         //     );
 
-        return null;
-        // return updatedUser;
+        const updatedUser = await this.prisma.worker.update({
+            data: {
+                ...data,
+            },
+            where: {
+                Id: where.Id,
+            },
+            select: {
+                FirstName: true,
+                LastName: true,
+                Id: true,
+                Phone: true,
+                Roles: true,
+                ServiceWorker: {
+                    select: {
+                        Services: {
+                            select: {
+                                ServiceType: true,
+                                ServiceName: true,
+                                ServiceTimes: true,
+                                ServiceGender: true,
+                                Price: true,
+                                Prim: true,
+                            },
+                        },
+                    },
+                },
+                WorkTime: true,
+                Department: true,
+                DepartmentId: true,
+            },
+        });
+
+        return updatedUser;
     }
 
-    async delete(where: Prisma.WorkerWhereUniqueInput): Promise<Worker> {
-        return this.prisma.worker.delete({
+    async delete(where: Prisma.WorkerWhereUniqueInput) {
+        const response = await this.prisma.worker.delete({
             where,
         });
+        console.log('asdasd', response);
+        return response;
     }
 }

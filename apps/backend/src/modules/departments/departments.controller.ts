@@ -32,9 +32,16 @@ import {
 import { UserParamsDto } from './../users/dtos/user-response.dto';
 import {
     AddDepartmentsJsonDto,
+    AddServiceJsonDto,
+    AddWorkerJsonDto,
+    DeleteServiceJsonDto,
     DepartmentDetailsJsonDto,
     DepartmentIdParamsDto,
+    UpdateDepartmentsJsonDto,
+    UpdateServiceJsonDto,
+    UpdateWorkerJsonDto,
 } from './dtos/departments.dto';
+import { WorkersGetJsonDto } from '../workers/dtos/workers.dto';
 
 @ApiTags('Departments')
 @Controller('departments')
@@ -44,6 +51,7 @@ export class DepartmentController {
     @AllowUnauthorizedRequest()
     @Get('test')
     getLoggedCompanyUser() {
+        console.log('test sayfası');
         return 'test departments page';
     }
 
@@ -57,6 +65,69 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @Post('updatedepartment')
+    async update(
+        @UserParam() user: UserParamsDto,
+        @Body() input: UpdateDepartmentsJsonDto,
+    ) {
+        return this.departmentsService.updateDepartments(user, input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('addservice')
+    async addService(
+        @UserParam() user: UserParamsDto,
+        @Body() input: AddServiceJsonDto,
+    ) {
+        return this.departmentsService.addService(user, input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('updateservice')
+    async updateService(
+        @UserParam() user: UserParamsDto,
+        @Body() input: UpdateServiceJsonDto,
+    ) {
+        return this.departmentsService.updateService(user, input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('deleteservice')
+    async deleteService(
+        @UserParam() user: UserParamsDto,
+        @Body() input: DeleteServiceJsonDto,
+    ) {
+        return this.departmentsService.deleteService(user, input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('addworker')
+    async addWorker(
+        @UserParam() user: UserParamsDto,
+        @Body() input: AddWorkerJsonDto,
+    ) {
+        return this.departmentsService.addworker(user, input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('updateworker')
+    async updateWorker(
+        @UserParam() user: UserParamsDto,
+        @Body() input: UpdateWorkerJsonDto,
+    ) {
+        return this.departmentsService.updateworker(user, input);
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('deleteworker')
+    async deleteWorker(
+        @UserParam() user: UserParamsDto,
+        @Body() input: WorkersGetJsonDto,
+    ) {
+        return this.departmentsService.deleteworker(user, input);
+    }
+
+    @RolesRequired(['Provider'])
     @Post('getdetails')
     async getWorkers(
         @UserParam() user: UserParamsDto,
@@ -65,38 +136,47 @@ export class DepartmentController {
         return this.departmentsService.getdetails(user, input.Id);
     }
 
-    // Resim kalitesi düşürülecek.
-    // @AllowUnauthorizedRequest()
-    @RolesRequired(['Provider'])
-    @Post('addphotos')
-    @UseInterceptors(FileInterceptor('file'))
-    @ApiBody({
-        required: true,
-        type: 'multipart/form-data',
-        schema: {
-            type: 'object',
-            properties: {
-                file: {
-                    type: 'string',
-                    format: 'binary',
-                },
-            },
-        },
-    })
-    @ApiConsumes('multipart/form-data')
-    async addPhotos(
-        @UserParam() user: UserParamsDto,
-        @Body() data: DepartmentIdParamsDto,
-        @UploadedFile() file: Express.Multer.File,
-    ) {
-        const response = await this.departmentsService.addphotos(
-            user,
-            parseInt(data.DepartmentId),
-            file,
-        );
+    // // Resim kalitesi düşürülecek.
+    // // @AllowUnauthorizedRequest()
+    // @RolesRequired(['Provider'])
+    // @Post('addphotos')
+    // @UseInterceptors(FileInterceptor('file'))
+    // @ApiBody({
+    //     required: true,
+    //     type: 'multipart/form-data',
+    //     schema: {
+    //         type: 'object',
+    //         properties: {
+    //             file: {
+    //                 type: 'string',
+    //                 format: 'binary',
+    //             },
+    //         },
+    //     },
+    // })
+    // @ApiConsumes('multipart/form-data')
+    // async addPhotos(
+    //     @UserParam() user: UserParamsDto,
+    //     @Body() data: DepartmentIdParamsDto,
+    //     @UploadedFile() file: Express.Multer.File,
+    // ) {
+    //     const response = await this.departmentsService.addphotos(
+    //         user,
+    //         parseInt(data.DepartmentId),
+    //         file,
+    //     );
 
-        // return `<html><body><img src="data:${response.data.MimeType};base64,${response.data.ImageBuffer}" /></body></html>`;
+    //     // return `<html><body><img src="data:${response.data.MimeType};base64,${response.data.ImageBuffer}" /></body></html>`;
 
-        return response;
-    }
+    //     return response;
+    // }
+
+    // @RolesRequired(['Provider'])
+    // @Get('getphotos')
+    // async getPhotos(){
+
+    //     const response = await this.departmentsService.getphoto(
+    //     );
+
+    // }
 }

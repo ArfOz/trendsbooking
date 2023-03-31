@@ -22,7 +22,23 @@ enum ServiceTypeEnum {
     Others = 'Others',
 }
 
+enum WorkerRoles {
+    Normal = 'Normal',
+    Admin = 'Admin',
+}
+
+enum ServiceGender {
+    Male = 'Male',
+    Female = 'Female',
+    Unisex = 'Unisex',
+}
+
 export class WorkTime {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    Id: number;
+
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
@@ -92,6 +108,40 @@ export class AddDepartmentsJsonDto {
     WorkTime: WorkTime;
 }
 
+export class UpdateDepartmentsJsonDto {
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    Workers: WorkerCreateJsonDto;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Salon: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    ServiceType: ServiceTypeEnum;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsObject()
+    WorkTime: WorkTime;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    ServiceTimes?: object;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    DepartmentId: number;
+
+    // Photos?: DepartmentPhotosUpdateManyWithoutDepartmentNestedInput
+}
+
 export class DepartmentDetailsJsonDto {
     @ApiProperty()
     @IsOptional()
@@ -99,9 +149,185 @@ export class DepartmentDetailsJsonDto {
     Id: number;
 }
 
-export class DepartmentIdParamsDto{
+export class DepartmentIdParamsDto {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    DepartmentId: string
+    DepartmentId: string;
+}
+
+export class AddWorkerJsonDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    DepartmentId: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    FirstName: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    LastName: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Phone: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsObject()
+    WorkTime: WorkTime;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    Services?: object;
+}
+
+export class AddServiceJsonDto {
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceType: ServiceTypeEnum;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceName: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceTimes: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceGender: ServiceGender;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Price: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Prim: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    DepartmentId?: number;
+}
+
+export class Services {
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    ServiceId: number;
+}
+
+export class UpdateWorkerJsonDto {
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    WorkerId?: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    FirstName?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    LastName?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Phone?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    DepartmentId?: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Roles?: WorkerRoles;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    WorkTime?: WorkTime;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    Services: Services;
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    ServiceWorkerId?: number;
+}
+
+export class UpdateServiceJsonDto {
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceType?: ServiceTypeEnum;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceName?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceTimes?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceGender?: ServiceGender;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Price?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Prim?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    DepartmentId?: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    ServiceId: number;
+}
+
+export class DeleteServiceJsonDto {
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    DepartmentId?: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    ServiceId: number;
 }

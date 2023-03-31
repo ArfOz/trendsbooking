@@ -109,7 +109,6 @@ model Department {
   /// @HideField({output:true})
   Id            Int                @id @default(autoincrement())
   ///Çalışanlar
-  Workers       Worker[]
   ///Salon Tipi
   Salon         String
   ///Whic type of service
@@ -117,6 +116,30 @@ model Department {
   CompanyUser   CompanyUser?       @relation(fields: [CompanyUserId], references: [Id])
   CompanyUserId Int?
   Photos        DepartmentPhotos[]
+  Services      Services[]
+  Workers       Worker[]
+  DepartmentID  String?
+}
+
+model Services {
+  Id            Int             @id @default(autoincrement())
+  ServiceType   ServiceType
+  ServiceName   String
+  ServiceTimes  String
+  ServiceGender ServiceGender
+  Price         String
+  Prim          String
+  Department    Department?     @relation(fields: [DepartmentId], references: [Id])
+  DepartmentId  Int?
+  ServiceWorker ServiceWorker[]
+}
+
+model ServiceWorker {
+  Id        Int       @id @default(autoincrement())
+  Services  Services? @relation(fields: [ServiceId], references: [Id])
+  ServiceId Int?
+  Worker    Worker?   @relation(fields: [WorkerId], references: [Id])
+  WorkerId  Int?
 }
 
 model Worker {
@@ -129,11 +152,11 @@ model Worker {
   /// For ex:544672654964  !Important it is string
   Phone        String
   Department   Department @relation(fields: [DepartmentId], references: [Id])
-  DepartmentId Int
+  DepartmentId Int // WorkTime     WorkTime[]
 
-  WorkTime WorkTime[]
-
-  Roles WorkerRoles @default(Normal)
+  Roles         WorkerRoles     @default(Normal)
+  WorkTime      WorkTime[]
+  ServiceWorker ServiceWorker[]
 }
 
 model UserToken {
@@ -195,18 +218,18 @@ model WorkTime {
   NightStartAt   String
   NightEndAt     String
 
-  Worker   Worker @relation(fields: [WorkerId], references: [Id])
+  Worker   Worker @relation(fields: [WorkerId], references: [Id], onDelete: Cascade)
   /// @HideField({input:true})
   WorkerId Int
 }
 
 model DepartmentPhotos {
-  Id        Int    @id @default(autoincrement())
-  ImageName String
+  Id              Int         @id @default(autoincrement())
+  ImageName       String
   ImageType       String
   ImageServerName String
-  Department   Department? @relation(fields: [DepartmentId], references: [Id])
-  DepartmentId Int?
+  Department      Department? @relation(fields: [DepartmentId], references: [Id])
+  DepartmentId    Int?
 }
 
 enum ExpiredReasonType {

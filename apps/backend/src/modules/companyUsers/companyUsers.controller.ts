@@ -43,6 +43,8 @@ export class CompanyUsersController {
         return this.companyUsersService.verifyCode(verifyCode);
     }
 
+    // Refreshtoken endpoint
+
     @AllowUnauthorizedRequest()
     @Post('sendcode')
     async sendEmailCode(@Body() sendCode: SendCodeDTO) {
