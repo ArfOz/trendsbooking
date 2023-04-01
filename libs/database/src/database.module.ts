@@ -9,6 +9,7 @@ import { WorkerModule } from './worker/worker.module';
 import { DepartmentPhotosModule } from './department-photos/department-photos.module';
 import { ServicesModule } from './services/services.module';
 import { ServiceWorkerModule } from './service-worker/service-worker.module';
+import { RandevuModule } from './randevu/randevu.module';
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import { ServiceWorkerModule } from './service-worker/service-worker.module';
         DepartmentPhotosModule,
         ServicesModule,
         ServiceWorkerModule,
+        RandevuModule,
     ],
     providers: [PrismaModule, UserModule, UserOtpCodeModule, DepartmentModule],
     exports: [PrismaModule, UserModule, UserOtpCodeModule, DepartmentModule],

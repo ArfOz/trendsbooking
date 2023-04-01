@@ -566,4 +566,8 @@ export class UsersService {
             Details: ResponseMessage.TR203,
         };
     }
+
+    // async createRandevu(user:){
+
+    // }
 }
