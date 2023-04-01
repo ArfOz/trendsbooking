@@ -132,6 +132,7 @@ model Services {
   Department    Department?     @relation(fields: [DepartmentId], references: [Id])
   DepartmentId  Int?
   ServiceWorker ServiceWorker[]
+  Randevu       Randevu[]
 }
 
 model ServiceWorker {
@@ -157,6 +158,18 @@ model Worker {
   Roles         WorkerRoles     @default(Normal)
   WorkTime      WorkTime[]
   ServiceWorker ServiceWorker[]
+  Randevu       Randevu[]
+}
+
+model Randevu {
+  /// @HideField({match:'@Input'})
+  Id        Int      @id @default(autoincrement())
+  Worker    Worker   @relation(fields: [WorkerId], references: [Id])
+  WorkerId  Int
+  Service   Services @relation(fields: [ServiceId], references: [Id])
+  ServiceId Int
+  StartTime DateTime
+  EndTime   DateTime
 }
 
 model UserToken {
