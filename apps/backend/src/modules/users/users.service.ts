@@ -39,7 +39,9 @@ import {
     ResponseUserProfileUserDTO,
     UserParamsDto,
     UserProfileUpdateDto,
+    RandevuCreateDto,
 } from './dtos';
+import { RandevuService } from '@database/randevu/randevu.service';
 
 @Injectable()
 export class UsersService {
@@ -54,6 +56,7 @@ export class UsersService {
         private readonly authService: AuthService,
         private readonly userOtpCodeService: UserOtpCodeService,
         private readonly mailUtilsService: MailUtilsService,
+        private readonly randevuService: RandevuService,
     ) {}
 
     async register(
@@ -567,7 +570,31 @@ export class UsersService {
         };
     }
 
-    // async createRandevu(user:){
+    async getservices(cred: UserParamsDto) {}
 
+    // async createRandevu(user: UserParamsDto, input: RandevuCreateDto) {
+    //     const data: Prisma.RandevuCreateInput = {
+    //         Worker: {
+    //             connect: {
+    //                 Id: input.Worker,
+    //             },
+    //         },
+    //         Service: {
+    //             connect: {
+    //                 Id: input.Service,
+    //             },
+    //         },
+    //         StartTime: input.StartTime,
+    //         EndTime: input.EndTime,
+    //     };
+    //     const response = await this.randevuService.create(data);
+    //     return response;
+    // }
+
+    // async cancelRandevu(user: UserParamsDto) {
+    //     return null;
+    // }
+    // async detailsRandevu(user: UserParamsDto) {
+    //     return null;
     // }
 }
