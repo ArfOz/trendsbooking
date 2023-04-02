@@ -1,4 +1,4 @@
-import { PrismaService } from '@database/prisma';
+import { PrismaService } from '@database';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Randevu } from '@prisma/client';
 

@@ -363,3 +363,25 @@ export class LoginUserDto {
     @IsString()
     Password: string;
 }
+
+export class RandevuCreateDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    Worker: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    Service: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    StartTime: Date | string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    EndTime: Date | string;
+}

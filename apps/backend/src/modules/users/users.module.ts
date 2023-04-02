@@ -15,6 +15,7 @@ import { MailUtilsModule } from '@mail-utils';
 // Config settings
 import generalConfig from '@shared/config/general.config';
 import authConfig from '@auth/config/auth.config';
+import { RandevuService } from '@database/randevu/randevu.service';
 
 @Module({
     imports: [
@@ -31,6 +32,7 @@ import authConfig from '@auth/config/auth.config';
         UsersService,
         AuthService,
         UserOtpCodeService,
+        RandevuService,
     ],
     controllers: [UsersController],
     exports: [UsersService],
