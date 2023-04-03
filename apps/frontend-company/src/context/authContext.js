@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { createContext, useContext, useState } from 'react';
 
 const authContext = createContext();
-const serviceContext = createContext();
+
 
 export function ProvideAuth({ children }) {
     const auth = useProvideAuth();
@@ -13,9 +13,7 @@ export const useAuth = () => {
     return useContext(authContext);
 };
 
-export const useService = () => {
-  return useContext(serviceContext)
-}
+
 
 function useProvideAuth() {
     const [loginUser, setLoginUser] = useState();
