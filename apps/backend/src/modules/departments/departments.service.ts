@@ -377,14 +377,7 @@ export class DepartmentsService {
             Department: { connect: { Id: input.DepartmentId } },
             WorkTime: {
                 createMany: {
-                    data: {
-                        MorningStartAt: input?.WorkTime?.MorningStartAt,
-                        MorningEndAt: input?.WorkTime?.MorningEndAt,
-                        ShiftStart: input?.WorkTime?.ShiftStart,
-                        ShiftEnd: input?.WorkTime?.ShiftEnd,
-                        NightStartAt: input?.WorkTime?.NightStartAt,
-                        NightEndAt: input?.WorkTime?.NightEndAt,
-                    },
+                    data: input?.WorkTime,
                 },
             },
             ServiceWorker: {

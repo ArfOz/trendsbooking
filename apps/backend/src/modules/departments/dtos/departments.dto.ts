@@ -68,6 +68,11 @@ export class WorkTime {
     @IsNotEmpty()
     @IsString()
     NightEndAt: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Days: number;
 }
 export class WorkerCreateJsonDto {
     @ApiProperty()
