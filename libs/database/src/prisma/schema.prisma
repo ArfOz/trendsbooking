@@ -224,6 +224,7 @@ model UserOTPCode {
 model WorkTime {
   /// @HideField({match:'@Input'})
   Id             Int    @id @default(autoincrement())
+  Days           Int?
   MorningStartAt String
   MorningEndAt   String
   ShiftStart     String

@@ -27,7 +27,12 @@ import {
     ForbiddenExceptionType,
     NotVerifiedException,
 } from '@shared';
-import { UserService, PrismaService, UserOtpCodeService } from '@database';
+import {
+    UserService,
+    PrismaService,
+    UserOtpCodeService,
+    ServicesService,
+} from '@database';
 import ResponseMessage from '@shared/enums/response-message.json';
 import {
     RegisterUserJsonDto,
@@ -57,6 +62,7 @@ export class UsersService {
         private readonly userOtpCodeService: UserOtpCodeService,
         private readonly mailUtilsService: MailUtilsService,
         private readonly randevuService: RandevuService,
+        private readonly serviceService: ServicesService,
     ) {}
 
     async register(
@@ -570,7 +576,40 @@ export class UsersService {
         };
     }
 
-    async getservices(cred: UserParamsDto) {}
+    // async getdepartment(cred: UserParamsDto) {
+
+    //     companyuser = Ceo (10 şube de olabilir,  1 de)
+
+    //     Ankara
+
+    //     Ankara
+
+    //     Dilan Polat Güzellik Salonu
+
+    //     Karizma Erkek Kuaföru (Ceo)
+
+    //     Departrmemt (Şube ) Konumu önemli
+
+    //     yakınımdaki şublere getir . (FE HARİTA  Geolocation)
+
+    //     WHERE :
+    //     where : Department.City == Ankara
+
+    //     const response = await this.serviceService.find({});
+    //     console.log('resss', response);
+    //     return null;
+    // }
+
+    // async getservices(cred: UserParamsDto) {
+    //     20 km uzağımdaki berber slaonları
+
+    //     Department
+
+    //     filtreleme where (department.filter(saç kesimi == true))
+    //     const response = await this.serviceService.find({});
+    //     console.log('resss', response);
+    //     return null;
+    // }
 
     // async createRandevu(user: UserParamsDto, input: RandevuCreateDto) {
     //     const data: Prisma.RandevuCreateInput = {

@@ -6,8 +6,8 @@ import { Prisma, Randevu } from '@prisma/client';
 export class RandevuService {
     constructor(private prisma: PrismaService) {}
 
-    async get(where: Prisma.DepartmentPhotosWhereUniqueInput) {
-        return this.prisma.departmentPhotos.findUnique({
+    async get(where: Prisma.RandevuWhereUniqueInput) {
+        return this.prisma.randevu.findUnique({
             where,
         });
     }

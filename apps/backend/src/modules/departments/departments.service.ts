@@ -376,13 +376,15 @@ export class DepartmentsService {
             Phone: input.Phone,
             Department: { connect: { Id: input.DepartmentId } },
             WorkTime: {
-                create: {
-                    MorningStartAt: input?.WorkTime?.MorningStartAt || '',
-                    MorningEndAt: input?.WorkTime?.MorningEndAt || '',
-                    ShiftStart: input?.WorkTime?.ShiftStart || '',
-                    ShiftEnd: input?.WorkTime?.ShiftEnd || '',
-                    NightStartAt: input?.WorkTime?.NightStartAt || '',
-                    NightEndAt: input?.WorkTime?.NightEndAt || '',
+                createMany: {
+                    data: {
+                        MorningStartAt: input?.WorkTime?.MorningStartAt,
+                        MorningEndAt: input?.WorkTime?.MorningEndAt,
+                        ShiftStart: input?.WorkTime?.ShiftStart,
+                        ShiftEnd: input?.WorkTime?.ShiftEnd,
+                        NightStartAt: input?.WorkTime?.NightStartAt,
+                        NightEndAt: input?.WorkTime?.NightEndAt,
+                    },
                 },
             },
             ServiceWorker: {

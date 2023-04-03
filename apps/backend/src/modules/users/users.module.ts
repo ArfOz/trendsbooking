@@ -7,6 +7,8 @@ import {
     PrismaService,
     UserService,
     UserOtpCodeService,
+    RandevuService,
+    ServicesService,
 } from '@database';
 import { UsersService } from './users.service';
 import { KeypairModule } from '@shared';
@@ -15,7 +17,6 @@ import { MailUtilsModule } from '@mail-utils';
 // Config settings
 import generalConfig from '@shared/config/general.config';
 import authConfig from '@auth/config/auth.config';
-import { RandevuService } from '@database/randevu/randevu.service';
 
 @Module({
     imports: [
@@ -33,6 +34,7 @@ import { RandevuService } from '@database/randevu/randevu.service';
         AuthService,
         UserOtpCodeService,
         RandevuService,
+        ServicesService,
     ],
     controllers: [UsersController],
     exports: [UsersService],
