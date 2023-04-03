@@ -11,8 +11,9 @@ import {
 import { style } from './style';
 
 import React, { useState } from 'react';
-import { createService } from './../../../../../function/function';
+
 import { ServiceType } from '@prisma/client';
+import { createService } from '../../../../../function/function';
 
 const initialState = {
     ServiceType: '',
@@ -36,19 +37,21 @@ const ServiceModal = ({ open, onClose }) => {
         });
     };
 
-    const handleSubmit = async (event, newService, setError, onClose) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log(newService);
 
         try {
-            const result = await createService();
+            const result = await createService(newService);
             console.log('Service created successfully: ' + result);
 
-            const newService = { ...initialState };
+            setNewService(initialState);
+            //const newService = { ...initialState };
 
             // do something with the new service object, such as adding it to a list of services or sending it to a server
-            console.log(newService);
         } catch (error) {
             console.error('Error creating service:', error);
+
             setError('Error creating service');
         }
     };
@@ -114,6 +117,7 @@ const ServiceModal = ({ open, onClose }) => {
                         name="ServiceName"
                         value={newService.ServiceName}
                         style={style.serviceName}
+                        onChange={handleChange}
                     />
                     <TextField
                         label="Hizmet Süresi"
@@ -121,6 +125,7 @@ const ServiceModal = ({ open, onClose }) => {
                         name="ServiceTimes"
                         value={newService.ServiceTimes}
                         style={style.serviceTime}
+                        onChange={handleChange}
                     />
                 </Box>
                 <Box
@@ -136,9 +141,10 @@ const ServiceModal = ({ open, onClose }) => {
                     <TextField
                         label="Hizmet Fiyatı"
                         variant="outlined"
-                        name="ServiceName"
+                        name="Price"
                         value={newService.Price}
                         style={style.servicePrice}
+                        onChange={handleChange}
                     />
                     <TextField
                         label="Hizmet Primi"
@@ -146,6 +152,7 @@ const ServiceModal = ({ open, onClose }) => {
                         name="Prim"
                         value={newService.Prim}
                         style={style.servicePrim}
+                        onChange={handleChange}
                     />
                 </Box>
                 <Box
@@ -165,10 +172,10 @@ const ServiceModal = ({ open, onClose }) => {
                             name="Worker"
                             onChange={handleChange}
                         >
-                            <MenuItem value="Haircut">Selim Yılmaz</MenuItem>
-                            <MenuItem value="Coloring">Ahmet Ersoy</MenuItem>
-                            <MenuItem value="Styling">Akif Aydın</MenuItem>
-                            <MenuItem value="Shave">Azra Demir</MenuItem>
+                            <MenuItem>Selim Yılmaz</MenuItem>
+                            <MenuItem>Ahmet Ersoy</MenuItem>
+                            <MenuItem>Akif Aydın</MenuItem>
+                            <MenuItem>Azra Demir</MenuItem>
                         </Select>
                     </FormControl>
                 </Box>
