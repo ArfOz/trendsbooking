@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-
-
 export const denemeFunc = async (setDeneme) => {
     setDeneme('deneme function.js');
 };
@@ -29,19 +27,26 @@ export const postRegister = (data, setError, setResponse) => {
         });
 };
 
-export const createService = async (name, time, price, worker,prim) => {
-  try {
-    const response = await axios.post("url-to-api-endpoint", {
-      name,
-      time,
-      price,
-      worker,
-      prim
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+export const createService = async (
+    ServiceName,
+    ServiceTimes,
+    Price,
+    Worker,
+    Prim,
+) => {
+    try {
+        const response = await axios.post(
+            'http://localhost:3300/api/departments/addservice',
+            {
+                ServiceName,
+                ServiceTimes,
+                Price,
+                Worker,
+                Prim,
+            },
+        );
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
 };
-
-

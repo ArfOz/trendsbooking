@@ -9,15 +9,17 @@ import {
     Box,
 } from '@mui/material';
 import { style } from './style';
-import { ServiceGender, ServiceType } from '@prisma/client';
+
 import React, { useState } from 'react';
+import { createService } from './../../../../../function/function';
+import { ServiceType } from '@prisma/client';
 
 const initialState = {
     ServiceType: '',
-    ServiceTime: '',
+    ServiceTimes: '',
     ServiceName: '',
-    ServicePrice: '',
-    ServicePrim: '',
+    Price: '',
+    Prim: '',
     ServiceGender: '',
     Worker: '',
 };
@@ -33,25 +35,21 @@ const ServiceModal = ({ open, onClose }) => {
         });
     };
 
-    const handleSubmit = (event) => {
-        setError('');
+    const handleSubmit = async (event, newService, setError, onClose) => {
         event.preventDefault();
-        // extract form data from event.target.elements
-        // const formData = {
-        //     serviceType: event.target.elements.ServiceType.value,
-        //     serviceTime: event.target.elements.ServiceTime.value,
-        //     serviceName: event.target.elements.ServiceName.value,
-        //     servicePrice: event.target.elements.ServicePrice.value,
-        //     servicePrim: event.target.elements.ServicePrim.value,
-        //     serviceGender: event.target.elements.ServiceGender.value,
-        //     worker: event.target.elements.Worker.value,
-        // };
 
-        // create a new service object by merging formData with initialData
-        const newService = { ...initialState };
+        try {
+            const result = await createService();
+            console.log('Service created successfully: ' + result);
 
-        // do something with the new service object, such as adding it to a list of services or sending it to a server
-        console.log(newService);
+            const newService = { ...initialState };
+
+            // do something with the new service object, such as adding it to a list of services or sending it to a server
+            console.log(newService);
+        } catch (error) {
+            console.error('Error creating service:', error);
+            setError('Error creating service');
+        }
     };
 
     return (
@@ -115,8 +113,8 @@ const ServiceModal = ({ open, onClose }) => {
                     <TextField
                         label="Hizmet Süresi"
                         variant="outlined"
-                        name="ServiceTime"
-                        value={newService.ServiceTime}
+                        name="ServiceTimes"
+                        value={newService.ServiceTimes}
                         style={style.serviceTime}
                     />
                 </Box>
@@ -134,14 +132,14 @@ const ServiceModal = ({ open, onClose }) => {
                         label="Hizmet Fiyatı"
                         variant="outlined"
                         name="ServiceName"
-                        value={newService.ServiceName}
+                        value={newService.Price}
                         style={style.servicePrice}
                     />
                     <TextField
                         label="Hizmet Primi"
                         variant="outlined"
-                        name="ServiceTime"
-                        value={newService.ServiceTime}
+                        name="Prim"
+                        value={newService.Prim}
                         style={style.servicePrim}
                     />
                 </Box>

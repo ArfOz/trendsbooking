@@ -17,9 +17,8 @@ import FormGroup from '@mui/material/FormGroup';
 import './styles.css';
 import { makeStyles } from '@mui/styles';
 
-
-function createData(name, time, price, worker, prim) {
-    return { name, time, price, worker, prim };
+function createData(ServiceName, ServiceTimes, Price, Worker, Prim) {
+    return { ServiceName, ServiceTimes, Price, Worker, Prim };
 }
 
 const rows = [
@@ -39,7 +38,6 @@ const useRowStyles = makeStyles({
 });
 
 export default function BasicTable(props) {
-
     const [open, setOpen] = React.useState(false);
     const classes = useRowStyles();
     return (
@@ -119,39 +117,57 @@ export default function BasicTable(props) {
                                         <TableBody>
                                             {rows.map((row) => (
                                                 <TableRow>
-                                                    <TableCell align="right">
-                                                        <FormGroup>
-                                                            <FormControlLabel
-                                                                control={
-                                                                    <Checkbox
-                                                                        sx={{
-                                                                            color: 'green',
-                                                                            border: '1px solid black',
-                                                                        }}
-                                                                    />
-                                                                }
-                                                            />
-                                                        </FormGroup>
+                                                    <TableCell align="left">
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    size="small"
+                                                                    color="secondary"
+                                                                />
+                                                            }
+                                                            label="Seç"
+                                                        />
                                                     </TableCell>
 
                                                     <TableCell align="right">
-                                                        {row.name}
+                                                        {row.ServiceName}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        {row.time}
+                                                        {row.ServiceTimes}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        {row.price}
+                                                        {row.Price}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        {row.worker}
+                                                        {row.Worker}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        {row.prim}
+                                                        {row.Prim}
                                                     </TableCell>
                                                     <TableCell align="right">
                                                         <Button variant="outlined">
                                                             Düzenle
+                                                        </Button>
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        <Button
+                                                            variant="contained"
+                                                            color="secondary"
+                                                            sx={{
+                                                                backgroundColor:
+                                                                    '#FAFCFF',
+                                                                textTransform:
+                                                                    'capitalize',
+                                                                '&:hover': {
+                                                                    backgroundColor:
+                                                                        '#FAFCFF',
+                                                                },
+                                                                borderRadius:
+                                                                    '10px',
+                                                                border: '1px solid #7D8398',
+                                                            }}
+                                                        >
+                                                            Sil
                                                         </Button>
                                                     </TableCell>
                                                 </TableRow>
@@ -251,7 +267,10 @@ export default function BasicTable(props) {
                                                         {row.prim}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        <Button variant="outlined" sx={{}}>
+                                                        <Button
+                                                            variant="outlined"
+                                                            sx={{}}
+                                                        >
                                                             Düzenle
                                                         </Button>
                                                     </TableCell>
@@ -365,7 +384,6 @@ export default function BasicTable(props) {
                         </TableRow>
                     </TableBody>
                 </Table>
-
             </TableContainer>
         </Box>
     );
