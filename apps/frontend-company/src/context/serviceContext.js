@@ -13,7 +13,7 @@ const ServiceContextProvider = ({ children }) => {
   }, []);
 
   const addService = (newService) => {
-    axios.post('/api/services', newService)
+    axios.post('http://localhost:3300/api/departments/addservice', newService)
       .then(response => setServices([...services, response.data]))
       .catch(error => console.log(error));
   };

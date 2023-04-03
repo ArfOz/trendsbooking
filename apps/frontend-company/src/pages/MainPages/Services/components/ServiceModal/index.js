@@ -29,6 +29,7 @@ const ServiceModal = ({ open, onClose }) => {
     const [newService, setNewService] = React.useState(initialState);
 
     const handleChange = (event) => {
+        console.log('deneme', event.target.value);
         setNewService({
             ...newService,
             [event.target.name]: event.target.value,
@@ -54,7 +55,11 @@ const ServiceModal = ({ open, onClose }) => {
 
     return (
         <Modal open={open} onClose={onClose} sx={style.modal}>
-            <Box component="form" onSubmit={handleSubmit} sx={style.form}>
+            <Box
+                component="form"
+                onSubmit={() => handleSubmit()}
+                sx={style.form}
+            >
                 <Box
                     sx={{
                         display: 'flex',
@@ -66,7 +71,7 @@ const ServiceModal = ({ open, onClose }) => {
                     }}
                 >
                     <FormControl variant="outlined" sx={style.serviceType}>
-                        <InputLabel>Servis Tipi</InputLabel>
+                        <InputLabel>Hizmet Tipi</InputLabel>
                         <Select
                             value={ServiceType}
                             label="Hizmet Türü"
@@ -80,7 +85,7 @@ const ServiceModal = ({ open, onClose }) => {
                         </Select>
                     </FormControl>
                     <FormControl variant="outlined" sx={style.serviceGender}>
-                        <InputLabel>Servis Cinsiyeti</InputLabel>
+                        <InputLabel>Hizmet Cinsiyeti</InputLabel>
                         <Select
                             value={newService.ServiceGender}
                             label="Service Gender"
