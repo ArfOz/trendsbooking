@@ -119,6 +119,7 @@ model Department {
   Services      Services[]
   Workers       Worker[]
   DepartmentID  String?
+  WorkTime      WorkTime[]
 }
 
 model Services {
@@ -232,9 +233,10 @@ model WorkTime {
   NightStartAt   String
   NightEndAt     String
 
-  Worker   Worker @relation(fields: [WorkerId], references: [Id], onDelete: Cascade)
-  /// @HideField({input:true})
-  WorkerId Int
+  Worker       Worker?     @relation(fields: [WorkerId], references: [Id])
+  WorkerId     Int?
+  Department   Department? @relation(fields: [DepartmentId], references: [Id])
+  DepartmentId Int?
 }
 
 model DepartmentPhotos {

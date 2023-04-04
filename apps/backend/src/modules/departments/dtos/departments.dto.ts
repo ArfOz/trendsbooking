@@ -36,11 +36,6 @@ enum ServiceGender {
 export class WorkTime {
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
-    Id: number;
-
-    @ApiProperty()
-    @IsNotEmpty()
     @IsString()
     MorningStartAt: string;
 

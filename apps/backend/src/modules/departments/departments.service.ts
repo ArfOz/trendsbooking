@@ -64,6 +64,11 @@ export class DepartmentsService {
             ServiceType: input.ServiceType,
             CompanyUser: { connect: { Id: user.Id } },
             DepartmentID: departmentId,
+            WorkTime: {
+                createMany: {
+                    data: input?.WorkTime,
+                },
+            },
         };
 
         await this.departmentService.create(data);
