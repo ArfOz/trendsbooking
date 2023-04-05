@@ -142,6 +142,18 @@ export class CompanyUserService {
             cursor,
             orderBy,
             where: searchWhere,
+            select: {
+                CbFirst: true,
+                Email: true,
+                FirstName: true,
+                LastName: true,
+                Id: true,
+                IsActive: true,
+                IsEmailVerified: true,
+                Phone: true,
+                TCKN: true,
+                Password: true,
+            },
         });
 
         if (user && user.Email) {
