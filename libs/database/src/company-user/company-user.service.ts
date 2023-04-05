@@ -21,8 +21,6 @@ export class CompanyUserService {
             const user = await this.prisma.companyUser.findUnique({
                 where,
                 select: {
-                    City: true,
-                    Country: true,
                     CreatedAt: true,
                     Departments: {
                         select: {
@@ -31,21 +29,14 @@ export class CompanyUserService {
                             Id: true,
                         },
                     },
-                    District: true,
                     Email: true,
                     FirstName: true,
-                    IBAN: true,
                     Id: true,
                     IsEmailVerified: true,
                     LastName: true,
-                    Neighborhood: true,
                     Phone: true,
                     Role: true,
-                    Salon: true,
-                    Sector: true,
                     Username: true,
-                    TaxNo: true,
-                    TaxAdmin: true,
                     TCKN: true,
                 },
             });
@@ -82,22 +73,14 @@ export class CompanyUserService {
             orderBy,
             select: {
                 CbFirst: true,
-                City: true,
-                Country: true,
-                District: true,
+
                 CreatedAt: true,
                 Email: true,
                 FirstName: true,
-                IBAN: true,
                 IsActive: true,
                 IsEmailVerified: true,
                 LastName: true,
-                Neighborhood: true,
                 Phone: true,
-                Salon: true,
-                Sector: true,
-                TaxAdmin: true,
-                TaxNo: true,
                 TCKN: true,
                 UpdatedAt: true,
                 Username: true,
@@ -191,7 +174,6 @@ export class CompanyUserService {
                 select: {
                     Email: true,
                     Phone: true,
-                    Country: true,
                     FirstName: true,
                     LastName: true,
                     Username: true,

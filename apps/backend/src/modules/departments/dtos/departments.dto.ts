@@ -95,17 +95,57 @@ export class AddDepartmentsJsonDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    Salon: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
     ServiceType: ServiceTypeEnum;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsObject()
     WorkTime: WorkTime;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    TaxNo: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    TaxAdmin: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    IBAN: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Sector?: ServiceGender;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Salon: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Country: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    City: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    District: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Neighborhood: string;
 }
 
 export class UpdateDepartmentsJsonDto {

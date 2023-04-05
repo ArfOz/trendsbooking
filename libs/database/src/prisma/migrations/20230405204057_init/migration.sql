@@ -53,15 +53,6 @@ CREATE TABLE "CompanyUser" (
     "Phone" TEXT NOT NULL,
     "TCKN" TEXT NOT NULL,
     "CbFirst" BOOLEAN NOT NULL DEFAULT false,
-    "TaxNo" TEXT NOT NULL,
-    "TaxAdmin" TEXT NOT NULL,
-    "IBAN" TEXT NOT NULL,
-    "Sector" "ServiceGender"[],
-    "Salon" TEXT NOT NULL,
-    "Country" TEXT NOT NULL,
-    "City" TEXT NOT NULL,
-    "District" TEXT NOT NULL,
-    "Neighborhood" TEXT NOT NULL,
     "IsActive" BOOLEAN NOT NULL,
     "CreatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "UpdatedAt" TIMESTAMP(3),
@@ -76,10 +67,18 @@ CREATE TABLE "CompanyUser" (
 -- CreateTable
 CREATE TABLE "Department" (
     "Id" SERIAL NOT NULL,
-    "Salon" TEXT NOT NULL,
-    "ServiceType" "ServiceType"[],
     "CompanyUserId" INTEGER,
+    "ServiceType" "ServiceType"[],
     "DepartmentID" TEXT,
+    "TaxNo" TEXT NOT NULL,
+    "TaxAdmin" TEXT NOT NULL,
+    "IBAN" TEXT NOT NULL,
+    "Sector" "ServiceGender"[],
+    "Salon" TEXT NOT NULL,
+    "Country" TEXT NOT NULL,
+    "City" TEXT NOT NULL,
+    "District" TEXT NOT NULL,
+    "Neighborhood" TEXT NOT NULL,
 
     CONSTRAINT "Department_pkey" PRIMARY KEY ("Id")
 );
@@ -99,6 +98,15 @@ CREATE TABLE "Services" (
 );
 
 -- CreateTable
+CREATE TABLE "ServiceWorker" (
+    "Id" SERIAL NOT NULL,
+    "ServiceId" INTEGER,
+    "WorkerId" INTEGER,
+
+    CONSTRAINT "ServiceWorker_pkey" PRIMARY KEY ("Id")
+);
+
+-- CreateTable
 CREATE TABLE "Worker" (
     "Id" SERIAL NOT NULL,
     "FirstName" TEXT NOT NULL,
@@ -108,6 +116,17 @@ CREATE TABLE "Worker" (
     "Roles" "WorkerRoles" NOT NULL DEFAULT 'Normal',
 
     CONSTRAINT "Worker_pkey" PRIMARY KEY ("Id")
+);
+
+-- CreateTable
+CREATE TABLE "Randevu" (
+    "Id" SERIAL NOT NULL,
+    "WorkerId" INTEGER NOT NULL,
+    "ServiceId" INTEGER NOT NULL,
+    "StartTime" TIMESTAMP(3) NOT NULL,
+    "EndTime" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Randevu_pkey" PRIMARY KEY ("Id")
 );
 
 -- CreateTable
@@ -144,13 +163,15 @@ CREATE TABLE "UserOTPCode" (
 -- CreateTable
 CREATE TABLE "WorkTime" (
     "Id" SERIAL NOT NULL,
+    "Days" INTEGER,
     "MorningStartAt" TEXT NOT NULL,
     "MorningEndAt" TEXT NOT NULL,
     "ShiftStart" TEXT NOT NULL,
     "ShiftEnd" TEXT NOT NULL,
     "NightStartAt" TEXT NOT NULL,
     "NightEndAt" TEXT NOT NULL,
-    "WorkerId" INTEGER NOT NULL,
+    "WorkerId" INTEGER,
+    "DepartmentId" INTEGER,
 
     CONSTRAINT "WorkTime_pkey" PRIMARY KEY ("Id")
 );
@@ -166,23 +187,11 @@ CREATE TABLE "DepartmentPhotos" (
     CONSTRAINT "DepartmentPhotos_pkey" PRIMARY KEY ("Id")
 );
 
--- CreateTable
-CREATE TABLE "_ServicesToWorker" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "User_Email_key" ON "User"("Email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "CompanyUser_Email_key" ON "CompanyUser"("Email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_ServicesToWorker_AB_unique" ON "_ServicesToWorker"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_ServicesToWorker_B_index" ON "_ServicesToWorker"("B");
 
 -- AddForeignKey
 ALTER TABLE "Department" ADD CONSTRAINT "Department_CompanyUserId_fkey" FOREIGN KEY ("CompanyUserId") REFERENCES "CompanyUser"("Id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -191,7 +200,19 @@ ALTER TABLE "Department" ADD CONSTRAINT "Department_CompanyUserId_fkey" FOREIGN 
 ALTER TABLE "Services" ADD CONSTRAINT "Services_DepartmentId_fkey" FOREIGN KEY ("DepartmentId") REFERENCES "Department"("Id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "ServiceWorker" ADD CONSTRAINT "ServiceWorker_ServiceId_fkey" FOREIGN KEY ("ServiceId") REFERENCES "Services"("Id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ServiceWorker" ADD CONSTRAINT "ServiceWorker_WorkerId_fkey" FOREIGN KEY ("WorkerId") REFERENCES "Worker"("Id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Worker" ADD CONSTRAINT "Worker_DepartmentId_fkey" FOREIGN KEY ("DepartmentId") REFERENCES "Department"("Id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Randevu" ADD CONSTRAINT "Randevu_WorkerId_fkey" FOREIGN KEY ("WorkerId") REFERENCES "Worker"("Id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Randevu" ADD CONSTRAINT "Randevu_ServiceId_fkey" FOREIGN KEY ("ServiceId") REFERENCES "Services"("Id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserToken" ADD CONSTRAINT "UserToken_UserId_fkey" FOREIGN KEY ("UserId") REFERENCES "User"("Id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -206,13 +227,10 @@ ALTER TABLE "UserOTPCode" ADD CONSTRAINT "UserOTPCode_UserId_fkey" FOREIGN KEY (
 ALTER TABLE "UserOTPCode" ADD CONSTRAINT "UserOTPCode_CompanyUserId_fkey" FOREIGN KEY ("CompanyUserId") REFERENCES "CompanyUser"("Id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "WorkTime" ADD CONSTRAINT "WorkTime_WorkerId_fkey" FOREIGN KEY ("WorkerId") REFERENCES "Worker"("Id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "WorkTime" ADD CONSTRAINT "WorkTime_WorkerId_fkey" FOREIGN KEY ("WorkerId") REFERENCES "Worker"("Id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WorkTime" ADD CONSTRAINT "WorkTime_DepartmentId_fkey" FOREIGN KEY ("DepartmentId") REFERENCES "Department"("Id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "DepartmentPhotos" ADD CONSTRAINT "DepartmentPhotos_DepartmentId_fkey" FOREIGN KEY ("DepartmentId") REFERENCES "Department"("Id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_ServicesToWorker" ADD CONSTRAINT "_ServicesToWorker_A_fkey" FOREIGN KEY ("A") REFERENCES "Services"("Id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_ServicesToWorker" ADD CONSTRAINT "_ServicesToWorker_B_fkey" FOREIGN KEY ("B") REFERENCES "Worker"("Id") ON DELETE CASCADE ON UPDATE CASCADE;

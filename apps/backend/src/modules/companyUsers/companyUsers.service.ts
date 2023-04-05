@@ -182,28 +182,31 @@ export class CompanyUsersService {
 
         // Create a new user
         const newUser = await this.companyUserService.create({
-            Email: input.Email,
             FirstName: input.FirstName,
             LastName: input.LastName,
-            Username: input.Username,
+            Email: input.Email,
+            Password: await bcrypt.hash(input.Password, 10),
             Phone: input.Phone,
+            Username: input.Username,
             CbFirst: input.CbFirst,
-            Country: input.Country,
             CreatedAt: new Date(),
             UpdatedAt: new Date(),
-            Password: await bcrypt.hash(input.Password, 10),
             PrivateKey: privKey,
             PublicKey: pubKey,
-            City: input.City,
-            District: input.District,
-            IBAN: input.IBAN,
-            Neighborhood: input.Neighborhood,
-            Salon: input.Salon,
-            TaxAdmin: input.TaxAdmin,
-            TaxNo: input.TaxNo,
             TCKN: input.TCKN,
-            Sector: input.Sector,
             IsActive: false,
+            Departments: {
+                create: {
+                    City: input.City,
+                    Country: input.Country,
+                    District: input.District,
+                    Neighborhood: input.Neighborhood,
+                    IBAN: input.IBAN,
+                    Salon: input.Salon,
+                    TaxAdmin: input.TaxAdmin,
+                    TaxNo: input.TaxNo,
+                },
+            },
         });
 
         // Verification code

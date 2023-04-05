@@ -60,6 +60,14 @@ export class DepartmentsService {
         });
 
         const data: Prisma.DepartmentCreateInput = {
+            Country: input.Country,
+            City: input.City,
+            District: input.District,
+            IBAN: input.IBAN,
+            Neighborhood: input.Neighborhood,
+            TaxAdmin: input.TaxAdmin,
+            TaxNo: input.TaxNo,
+            Sector: input.Sector,
             Salon: input.Salon,
             ServiceType: input.ServiceType,
             CompanyUser: { connect: { Id: user.Id } },
