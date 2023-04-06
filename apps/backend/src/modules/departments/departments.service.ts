@@ -393,6 +393,7 @@ export class DepartmentsService {
                     data: input?.WorkTime,
                 },
             },
+            Roles: input.Roles,
             ServiceWorker: {
                 createMany: {
                     data: input?.Services,

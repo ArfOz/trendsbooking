@@ -226,6 +226,11 @@ export class AddWorkerJsonDto {
     @IsOptional()
     @IsObject()
     Services?: object;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Roles?: WorkerRoles;
 }
 
 export class AddServiceJsonDto {

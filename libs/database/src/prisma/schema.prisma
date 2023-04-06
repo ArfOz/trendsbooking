@@ -151,6 +151,10 @@ model Worker {
   LastName     String
   /// For ex:544672654964  !Important it is string
   Phone        String
+  /// for ex: arif@test.com this have to be unique
+  Email        String?    @unique
+  /// @HideField({output:true})
+  Password     String?
   Department   Department @relation(fields: [DepartmentId], references: [Id])
   DepartmentId Int // WorkTime     WorkTime[]
 
