@@ -1,23 +1,95 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 // Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
-import { WorkerService } from '@database';
+import { PrismaService, WorkerService } from '@database';
 import { BadRequestException, BadRequestExceptionType } from '@shared';
 
 // DTOs area
 import { UserParamsDto } from '../users/dtos';
 import {
+    WorkerLoginDto,
     WorkersAddJsonDto,
     WorkersGetJsonDto,
     WorkersUpdateJsonDto,
 } from './dtos/workers.dto';
+import { AuthService } from '@auth';
 
 @Injectable()
 export class WorkersService {
-    constructor(private readonly workerService: WorkerService) {}
+    constructor(
+        private readonly workerService: WorkerService,
+        private readonly authService: AuthService,
+        private readonly prismaService: PrismaService,
+    ) {}
 
+    async login(cred: WorkerLoginDto) {
+        const worker = await this.workerService.findFirst({
+            where: {
+                Email: cred.Email,
+            },
+        });
+
+        if (!worker) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+                406,
+            );
+        }
+
+        // Burası randevu açıldığında düzenlenecek. Admin tarafından onaylanana kadar randevu alamayacak.
+        // if (!companyUser.IsActive) {
+        //     throw new NotVerifiedException(
+        //         VerifyCodeExceptionType.NOT_VERIFIED,
+        //         new Error(ResponseMessage.TR420),
+        //         404,
+        //     );
+        // }
+        if (worker && (await bcrypt.compare(cred.Password, worker.Password))) {
+            const {
+                AccessToken,
+                RefreshToken,
+                ExpiresAccessToken,
+                ExpiresRefreshToken,
+            } = await this.authService.generateAccessAndRefreshToken(worker);
+
+            await this.prismaService.userToken.create({
+                data: {
+                    AccessToken: AccessToken,
+                    RefreshToken: RefreshToken,
+                    Worker: {
+                        connect: {
+                            Id: worker.Id,
+                        },
+                    },
+                    ExpiresIn: ExpiresAccessToken,
+                    ExpiresInRefresh: ExpiresRefreshToken,
+                },
+            });
+            delete worker.Password;
+            delete worker.Id;
+
+            // Response varsa Success
+            return {
+                AccessToken,
+                RefreshToken,
+                ExpireTime: ExpiresAccessToken,
+                ExpireTimeRefresh: ExpiresRefreshToken,
+                User: worker,
+                Success: true,
+            };
+        }
+
+        throw new BadRequestException(
+            BadRequestExceptionType.BAD_REQUEST,
+            new Error(ResponseMessage.TR403),
+            403,
+        );
+        return null;
+    }
     async getDetails(user: UserParamsDto, workerId: number) {
         if (!workerId) {
             throw new BadRequestException(
@@ -47,59 +119,6 @@ export class WorkersService {
             Data: data,
         };
     }
-    async addWorker(user: UserParamsDto, input: WorkersAddJsonDto) {
-        if (!input.FirstName || !input.LastName || !input.Phone) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR427),
-                427,
-            );
-        }
-        const response = await this.workerService.find({
-            where: {
-                DepartmentId: input.DepartmentId,
-                Department: { CompanyUserId: user.Id },
-            },
-        });
-
-        if (!response || response.length < 1) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR429),
-                429,
-            );
-        }
-
-        const data: Prisma.WorkerCreateInput = {
-            FirstName: input.FirstName,
-            LastName: input.LastName,
-            Phone: input.Phone,
-            Department: { connect: { Id: input.DepartmentId } },
-            WorkTime: {
-                create: {
-                    MorningStartAt: input.WorkTime.MorningStartAt,
-                    MorningEndAt: input.WorkTime.MorningEndAt,
-                    ShiftStart: input.WorkTime.ShiftStart,
-                    ShiftEnd: input.WorkTime.ShiftEnd,
-                    NightStartAt: input.WorkTime.NightStartAt,
-                    NightEndAt: input.WorkTime.NightEndAt,
-                },
-            },
-            ServiceWorker: {
-                createMany: {
-                    data: [input.Services],
-                },
-            },
-        };
-
-        // await this.workerService.create(data);
-
-        return {
-            Data: ResponseMessage.TR205,
-            Success: true,
-        };
-    }
-
     async deleteWorker(user: UserParamsDto, input: WorkersGetJsonDto) {
         if (!input.WorkerId) {
             throw new BadRequestException(

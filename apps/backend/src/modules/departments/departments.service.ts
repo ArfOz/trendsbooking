@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Prisma, DepartmentPhotos } from '@prisma/client';
 import sharp from 'sharp';
 import { generate } from 'generate-password';
+import * as bcrypt from 'bcrypt';
 
 // Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
@@ -9,6 +10,7 @@ import {
     BadRequestExceptionType,
     BadRequestException,
     ImageServerService,
+    KeypairService,
 } from '@shared';
 import {
     DepartmentService,
@@ -31,16 +33,21 @@ import {
     UpdateWorkerJsonDto,
 } from './dtos/departments.dto';
 import { WorkersGetJsonDto } from '../workers/dtos/workers.dto';
+import generalConfig from '@shared/config/general.config';
+import { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class DepartmentsService {
     constructor(
+        @Inject(generalConfig.KEY)
+        private readonly generalCfg: ConfigType<typeof generalConfig>,
         private readonly departmentService: DepartmentService,
         private readonly departmentPhotosService: DepartmentPhotosService,
         private readonly imageServer: ImageServerService,
         private readonly workerService: WorkerService,
         private readonly serviceService: ServicesService,
         private readonly serviceWorkerService: ServiceWorkerService,
+        private readonly keypairService: KeypairService,
     ) {}
     async add(user: UserParamsDto, input: AddDepartmentsJsonDto) {
         if (!input.Salon || !input.ServiceType) {
@@ -134,7 +141,6 @@ export class DepartmentsService {
             );
         }
 
-        console.log('asdasdasd', companyDepartment);
         const data: Prisma.DepartmentUpdateInput = {
             CompanyUser: {
                 connect: { Id: user.Id },
@@ -383,11 +389,42 @@ export class DepartmentsService {
             );
         }
 
+        const worker = await this.workerService.get({
+            Email: input.Email,
+        });
+
+        if (worker) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR430),
+                430,
+            );
+        }
+
+        // Generate a public/private key pair
+        const keys = this.keypairService.generateKey();
+
+        // Encrypt the public and private keys
+        const pubKey = this.keypairService.encryptData(
+            this.generalCfg.publicKey,
+            this.generalCfg.privateKey,
+            keys.publicKey,
+        );
+        const privKey = this.keypairService.encryptData(
+            this.generalCfg.publicKey,
+            this.generalCfg.privateKey,
+            keys.secretKey,
+        );
+
         const data: Prisma.WorkerCreateInput = {
             FirstName: input.FirstName,
             LastName: input.LastName,
             Phone: input.Phone,
             Department: { connect: { Id: input.DepartmentId } },
+            Email: input.Email,
+            Password: await bcrypt.hash(input.Password, 10),
+            PrivateKey: privKey,
+            PublicKey: pubKey,
             WorkTime: {
                 createMany: {
                     data: input?.WorkTime,

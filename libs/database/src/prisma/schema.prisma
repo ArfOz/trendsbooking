@@ -144,21 +144,25 @@ model ServiceWorker {
 
 model Worker {
   /// @HideField({output:true})
-  Id           Int        @id @default(autoincrement())
+  Id            Int             @id @default(autoincrement())
   /// for ex: Arif, Ozkan, Ahmet
-  FirstName    String
+  FirstName     String
   /// for ex: lastname or surname
-  LastName     String
+  LastName      String
   /// For ex:544672654964  !Important it is string
-  Phone        String
+  Phone         String
   /// for ex: arif@test.com this have to be unique
-  Email        String?    @unique
+  Email         String?         @unique
   /// @HideField({output:true})
-  Password     String?
-  Department   Department @relation(fields: [DepartmentId], references: [Id])
-  DepartmentId Int // WorkTime     WorkTime[]
-
-  Roles         WorkerRoles     @default(Normal)
+  Password      String?
+  /// @HideField({ input: true, output: true })
+  PrivateKey    String?
+  /// @HideField({ input: true, output: true })
+  PublicKey     String?
+  Department    Department      @relation(fields: [DepartmentId], references: [Id])
+  DepartmentId  Int // WorkTime     WorkTime[]
+  UserToken     UserToken[]
+  Roles         WorkerRoles     @default(Basic)
   WorkTime      WorkTime[]
   ServiceWorker ServiceWorker[]
   Randevu       Randevu[]
@@ -186,6 +190,10 @@ model UserToken {
   CompanyUser      CompanyUser?       @relation(fields: [CompanyUserId], references: [Id])
   /// @HideField({input:true})
   CompanyUserId    Int?
+  /// Companyuser Token
+  Worker           Worker?            @relation(fields: [WorkerId], references: [Id])
+  /// @HideField({input:true})
+  WorkerId         Int?
   /// @HideField()
   AccessToken      String
   RefreshToken     String
@@ -295,5 +303,5 @@ enum ServiceType {
 
 enum WorkerRoles {
   Admin
-  Normal
+  Basic
 }

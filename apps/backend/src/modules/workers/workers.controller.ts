@@ -3,6 +3,7 @@ import { AllowUnauthorizedRequest, RolesRequired, UserParam } from '@shared';
 import { UserParamsDto } from '../users/dtos';
 import { WorkersService } from './workers.service';
 import {
+    WorkerLoginDto,
     WorkersAddJsonDto,
     WorkersGetJsonDto,
     WorkersUpdateJsonDto,
@@ -20,6 +21,11 @@ export class WorkersController {
         return 'test departments page';
     }
 
+    @AllowUnauthorizedRequest()
+    @Post('login')
+    async login(@Body() data: WorkerLoginDto) {
+        return this.workersService.login(data);
+    }
     @RolesRequired(['Provider'])
     @Post('getdetails')
     async getDetails(
@@ -27,15 +33,6 @@ export class WorkersController {
         @Body() input: WorkersGetJsonDto,
     ) {
         return this.workersService.getDetails(user, input.WorkerId);
-    }
-
-    @RolesRequired(['Provider'])
-    @Post('addworkers')
-    async addworker(
-        @UserParam() user: UserParamsDto,
-        @Body() input: WorkersAddJsonDto,
-    ) {
-        return this.workersService.addWorker(user, input);
     }
 
     @RolesRequired(['Provider'])

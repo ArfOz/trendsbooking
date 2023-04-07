@@ -23,7 +23,7 @@ enum ServiceTypeEnum {
 }
 
 enum WorkerRoles {
-    Normal = 'Normal',
+    Basic = 'Basic',
     Admin = 'Admin',
 }
 
@@ -231,6 +231,16 @@ export class AddWorkerJsonDto {
     @IsNotEmpty()
     @IsString()
     Roles?: WorkerRoles;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Email?: string | null;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Password?: string | null;
 }
 
 export class AddServiceJsonDto {

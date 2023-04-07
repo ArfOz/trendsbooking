@@ -212,7 +212,11 @@ export class WorkerService {
                 LastName: true,
                 Id: true,
                 Phone: true,
+                Email: true,
+                Password: true,
                 Roles: true,
+                PrivateKey: true,
+                PublicKey: true,
                 ServiceWorker: {
                     select: {
                         Services: {

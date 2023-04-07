@@ -6,11 +6,12 @@ import {
     IsObject,
     IsOptional,
     IsArray,
+    IsEmail,
 } from 'class-validator';
 
 export enum WorkerRoles {
+    Basic = 'Basic',
     Admin = 'Admin',
-    Normal = 'Normal',
 }
 export class WorkTime {
     @ApiProperty()
@@ -125,4 +126,16 @@ export class WorkersUpdateJsonDto {
     @IsOptional()
     @IsArray()
     Services?: Service;
+}
+
+export class WorkerLoginDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsEmail()
+    Email: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Password: string;
 }
