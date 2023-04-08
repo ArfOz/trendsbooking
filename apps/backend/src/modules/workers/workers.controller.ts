@@ -24,9 +24,10 @@ export class WorkersController {
     @AllowUnauthorizedRequest()
     @Post('login')
     async login(@Body() data: WorkerLoginDto) {
+        console.log('geldi');
         return this.workersService.login(data);
     }
-    @RolesRequired(['Provider'])
+    @RolesRequired(['Admin', 'Basic'] || ['Provider'])
     @Post('getdetails')
     async getDetails(
         @UserParam() user: UserParamsDto,

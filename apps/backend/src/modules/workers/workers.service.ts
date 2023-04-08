@@ -26,11 +26,13 @@ export class WorkersService {
     ) {}
 
     async login(cred: WorkerLoginDto) {
+        console.log('00000000000000');
         const worker = await this.workerService.findFirst({
             where: {
                 Email: cred.Email,
             },
         });
+        console.log('workererrr', worker);
 
         if (!worker) {
             throw new BadRequestException(
@@ -39,6 +41,7 @@ export class WorkersService {
                 406,
             );
         }
+        console.log('workererrr', worker);
 
         // Burası randevu açıldığında düzenlenecek. Admin tarafından onaylanana kadar randevu alamayacak.
         // if (!companyUser.IsActive) {
@@ -98,14 +101,24 @@ export class WorkersService {
                 428,
             );
         }
-        const data = await this.workerService.find({
-            where: {
-                Id: workerId,
-                Department: {
-                    CompanyUserId: user.Id,
+        console.log('user', user);
+        let data;
+
+        if (user.Role === 'Basic') {
+            data = await this.workerService.find({
+                where: {
+                    Id: user.Id,
                 },
-            },
-        });
+            });
+        } else if (user.Role === 'Admin' || user.Role === 'Provider')
+            data = await this.workerService.find({
+                where: {
+                    Id: workerId,
+                    Department: {
+                        CompanyUserId: user.Id,
+                    },
+                },
+            });
 
         if (!data || data.length < 1) {
             throw new BadRequestException(

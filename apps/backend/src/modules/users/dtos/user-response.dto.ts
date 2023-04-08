@@ -71,6 +71,11 @@ export class UserParamsDto {
     @IsOptional()
     @IsString()
     Phone: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Role: string;
 }
 export class ResponseLoginUserDTO {
     @ApiProperty()

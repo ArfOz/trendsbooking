@@ -118,12 +118,12 @@ export class WorkerService {
         //     searchWhere.Email = encryptedEmail;
         // }
 
-        if (where.Phone) {
-            encryptedPhone = this.keypairService.encryptWithAppKeys(
-                where.Phone,
-            );
-            searchWhere.Phone = encryptedPhone;
-        }
+        // if (where.Phone) {
+        //     encryptedPhone = this.keypairService.encryptWithAppKeys(
+        //         where.Phone,
+        //     );
+        //     searchWhere.Phone = encryptedPhone;
+        // }
 
         const user = await this.prisma.worker.findFirst({
             skip,
@@ -137,9 +137,9 @@ export class WorkerService {
         //     user.Email = this.keypairService.decryptWithAppKeys(user.Email);
         // }
 
-        if (user && user.Phone) {
-            user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
-        }
+        // if (user && user.Phone) {
+        //     user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
+        // }
 
         return user;
     }
@@ -244,7 +244,6 @@ export class WorkerService {
         const response = await this.prisma.worker.delete({
             where,
         });
-        console.log('asdasd', response);
         return response;
     }
 }

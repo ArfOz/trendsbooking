@@ -389,15 +389,17 @@ export class DepartmentsService {
             );
         }
 
-        const worker = await this.workerService.get({
-            Email: input.Email,
+        const worker = await this.workerService.find({
+            where: {
+                Email: input.Email,
+            },
         });
 
-        if (worker) {
+        if (worker || worker.length) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR430),
-                430,
+                new Error(ResponseMessage.TR433),
+                433,
             );
         }
 
@@ -425,12 +427,12 @@ export class DepartmentsService {
             Password: await bcrypt.hash(input.Password, 10),
             PrivateKey: privKey,
             PublicKey: pubKey,
+            Roles: input.Roles,
             WorkTime: {
                 createMany: {
                     data: input?.WorkTime,
                 },
             },
-            Roles: input.Roles,
             ServiceWorker: {
                 createMany: {
                     data: input?.Services,
