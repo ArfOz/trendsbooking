@@ -9,12 +9,16 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, Button, IconButton, Typography } from '@mui/material';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
 
 import './styles.css';
+import { makeStyles } from '@mui/styles';
 
-function createData(name, time, price, worker, prim) {
-    return { name, time, price, worker, prim };
+function createData(ServiceName, ServiceTimes, Price, Worker, Prim) {
+    return { ServiceName, ServiceTimes, Price, Worker, Prim };
 }
 
 const rows = [
@@ -25,39 +29,59 @@ const rows = [
     createData('Saç Şekil', 60, 80, 'TREDNSWORKER', 40),
 ];
 
+const useRowStyles = makeStyles({
+    root: {
+        '& > *': {
+            borderBottom: 'unset',
+        },
+    },
+});
+
 export default function BasicTable(props) {
     const [open, setOpen] = React.useState(false);
-    const { row } = props;
+    const classes = useRowStyles();
     return (
         <Box>
-            {' '}
-            <Typography variant="h6" gutterBottom component="div">
-                Hizmetler
-            </Typography>
             <TableContainer component={Paper}>
                 <Table aria-label="collapsible table">
                     <TableHead>
-                        <TableRow>
-                            <TableCell />
-                            <TableCell align="left">Saç Bakımı</TableCell>{' '}
+                        <TableRow className={classes.root}>
+                            <TableCell align="left">
+                                {' '}
+                                <Typography
+                                    variant="h5"
+                                    gutterBottom
+                                    component="div"
+                                >
+                                    Hizmetler
+                                </Typography>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <TableRow>
+                        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
                             <TableCell>
                                 <IconButton
                                     aria-label="expand row"
-                                    size="small"
+                                    size="large"
                                     onClick={() => setOpen(!open)}
                                 >
                                     {open ? (
-                                        <KeyboardArrowUpIcon />
+                                        <KeyboardArrowUpIcon color="info" />
                                     ) : (
-                                        <KeyboardArrowDownIcon />
+                                        <KeyboardArrowDownIcon color="info" />
                                     )}
                                 </IconButton>
                             </TableCell>
-                            <TableCell align="left">Kaş Bakımı</TableCell>
+                            <TableCell align="left">
+                                <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    component="div"
+                                >
+                                    Kaş Bakımı
+                                </Typography>
+                            </TableCell>
                         </TableRow>
 
                         <TableRow>
@@ -72,8 +96,127 @@ export default function BasicTable(props) {
                                     <Table>
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell />
-                                                <TableCell>
+                                                <TableCell>Seç</TableCell>
+                                                <TableCell align="right">
+                                                    Hizmet Adı
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    Süre
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    Fiyat
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    Çalışan
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    Prim
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {rows.map((row) => (
+                                                <TableRow>
+                                                    <TableCell align="left">
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    size="small"
+                                                                    color="secondary"
+                                                                />
+                                                            }
+                                                            label="Seç"
+                                                        />
+                                                    </TableCell>
+
+                                                    <TableCell align="right">
+                                                        {row.ServiceName}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {row.ServiceTimes}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {row.Price}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {row.Worker}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {row.Prim}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        <Button variant="outlined">
+                                                            Düzenle
+                                                        </Button>
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        <Button
+                                                            variant="contained"
+                                                            color="secondary"
+                                                            sx={{
+                                                                backgroundColor:
+                                                                    '#FAFCFF',
+                                                                textTransform:
+                                                                    'capitalize',
+                                                                '&:hover': {
+                                                                    backgroundColor:
+                                                                        '#FAFCFF',
+                                                                },
+                                                                borderRadius:
+                                                                    '10px',
+                                                                border: '1px solid #7D8398',
+                                                            }}
+                                                        >
+                                                            Sil
+                                                        </Button>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </Collapse>
+                            </TableCell>
+                        </TableRow>
+                        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                            <TableCell>
+                                <IconButton
+                                    aria-label="expand row"
+                                    size="large"
+                                    onClick={() => setOpen(!open)}
+                                >
+                                    {open ? (
+                                        <KeyboardArrowUpIcon color="info" />
+                                    ) : (
+                                        <KeyboardArrowDownIcon color="info" />
+                                    )}
+                                </IconButton>
+                            </TableCell>
+                            <TableCell align="left">
+                                {' '}
+                                <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    component="div"
+                                >
+                                    Saç Bakımı
+                                </Typography>
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow>
+                            <TableCell
+                                style={{ paddingBottom: 0, paddingTop: 0 }}
+                            >
+                                <Collapse
+                                    in={open}
+                                    timeout="auto"
+                                    unmountOnExit
+                                >
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Seç</TableCell>
+                                                <TableCell align="right">
                                                     Hizmet Adı
                                                 </TableCell>
                                                 <TableCell align="right">
@@ -94,6 +237,21 @@ export default function BasicTable(props) {
                                             {rows.map((row) => (
                                                 <TableRow>
                                                     <TableCell align="right">
+                                                        <FormGroup>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        sx={{
+                                                                            color: 'green',
+                                                                            border: '1px solid black',
+                                                                        }}
+                                                                    />
+                                                                }
+                                                            />
+                                                        </FormGroup>
+                                                    </TableCell>
+
+                                                    <TableCell align="right">
                                                         {row.name}
                                                     </TableCell>
                                                     <TableCell align="right">
@@ -107,6 +265,115 @@ export default function BasicTable(props) {
                                                     </TableCell>
                                                     <TableCell align="right">
                                                         {row.prim}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        <Button
+                                                            variant="outlined"
+                                                            sx={{}}
+                                                        >
+                                                            Düzenle
+                                                        </Button>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </Collapse>
+                            </TableCell>
+                        </TableRow>
+                        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                            <TableCell>
+                                <IconButton
+                                    aria-label="expand row"
+                                    size="large"
+                                    onClick={() => setOpen(!open)}
+                                >
+                                    {open ? (
+                                        <KeyboardArrowUpIcon color="info" />
+                                    ) : (
+                                        <KeyboardArrowDownIcon color="info" />
+                                    )}
+                                </IconButton>
+                            </TableCell>
+                            <TableCell align="left">
+                                {' '}
+                                <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    component="div"
+                                >
+                                    Cilt Bakımı
+                                </Typography>
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow>
+                            <TableCell
+                                style={{ paddingBottom: 0, paddingTop: 0 }}
+                            >
+                                <Collapse
+                                    in={open}
+                                    timeout="auto"
+                                    unmountOnExit
+                                >
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Seç</TableCell>
+                                                <TableCell align="right">
+                                                    Hizmet Adı
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    Süre
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    Fiyat
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    Çalışan
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    Prim
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {rows.map((row) => (
+                                                <TableRow>
+                                                    <TableCell align="right">
+                                                        <FormGroup>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        sx={{
+                                                                            color: 'green',
+                                                                            border: '1px solid black',
+                                                                        }}
+                                                                    />
+                                                                }
+                                                            />
+                                                        </FormGroup>
+                                                    </TableCell>
+
+                                                    <TableCell align="right">
+                                                        {row.name}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {row.time}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {row.price}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {row.worker}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {row.prim}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        <Button variant="outlined">
+                                                            Düzenle
+                                                        </Button>
                                                     </TableCell>
                                                 </TableRow>
                                             ))}

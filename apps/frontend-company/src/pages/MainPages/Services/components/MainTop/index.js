@@ -2,8 +2,10 @@ import React from 'react';
 import { Box, Button } from '@mui/material';
 import { Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
+import ServiceModal from '../ServiceModal';
 
 function MainTop() {
+  const [modalOpen, setModalOpen] = React.useState(false);
     return (
         <Box
             sx={{
@@ -32,7 +34,12 @@ function MainTop() {
                 <Button variant="outlined" startIcon={<DownloadIcon />} sx={{m: 4}}>
                     İndir
                 </Button>
-                <Button variant="contained" sx={{m: 4}}>Yeni Hizmet</Button>
+                <Button onClick={() => setModalOpen(true)} variant="contained" sx={{m: 4}}>Yeni Hizmet</Button>
+
+                <ServiceModal
+                    open={modalOpen}
+                    onClose={() => setModalOpen(false)}
+                />
             </Box>
         </Box>
     );
