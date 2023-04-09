@@ -12,17 +12,16 @@ import { style } from './style';
 
 import React, { useState } from 'react';
 
-import { ServiceType } from '@prisma/client';
 import { createService } from '../../../../../function/function';
 
 const initialState = {
-    ServiceType: '',
-    ServiceTimes: '',
-    ServiceName: '',
-    Price: '',
-    Prim: '',
-    ServiceGender: '',
-    Worker: '',
+    serviceType: '',
+    serviceTimes: '',
+    serviceName: '',
+    price: '',
+    prim: '',
+    serviceGender: '',
+    worker: '',
 };
 
 const ServiceModal = ({ open, onClose }) => {
@@ -30,7 +29,10 @@ const ServiceModal = ({ open, onClose }) => {
     const [newService, setNewService] = React.useState(initialState);
 
     const handleChange = (event) => {
-        console.log('deneme', event.target.value);
+        //const { name, value } = event.target;
+        console.log('name', event.target.name);
+        console.log('value', event.target.value);
+
         setNewService({
             ...newService,
             [event.target.name]: event.target.value,
@@ -39,7 +41,8 @@ const ServiceModal = ({ open, onClose }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(newService);
+        alert('Submit', event.target.name);
+        console.log('post', newService);
 
         try {
             const result = await createService(newService);
@@ -47,8 +50,6 @@ const ServiceModal = ({ open, onClose }) => {
 
             setNewService(initialState);
             //const newService = { ...initialState };
-
-            // do something with the new service object, such as adding it to a list of services or sending it to a server
         } catch (error) {
             console.error('Error creating service:', error);
 
@@ -58,11 +59,7 @@ const ServiceModal = ({ open, onClose }) => {
 
     return (
         <Modal open={open} onClose={onClose} sx={style.modal}>
-            <Box
-                component="form"
-                onSubmit={() => handleSubmit()}
-                sx={style.form}
-            >
+            <Box component="form" onSubmit={handleSubmit} sx={style.form}>
                 <Box
                     sx={{
                         display: 'flex',
@@ -76,9 +73,9 @@ const ServiceModal = ({ open, onClose }) => {
                     <FormControl variant="outlined" sx={style.serviceType}>
                         <InputLabel>Hizmet Tipi</InputLabel>
                         <Select
-                            value={ServiceType}
+                            value={newService.serviceType}
                             label="Hizmet Türü"
-                            name="ServiceType"
+                            name="serviceType"
                             onChange={handleChange}
                         >
                             <MenuItem value="Haircut">Saç Kesimi</MenuItem>
@@ -90,9 +87,9 @@ const ServiceModal = ({ open, onClose }) => {
                     <FormControl variant="outlined" sx={style.serviceGender}>
                         <InputLabel>Hizmet Cinsiyeti</InputLabel>
                         <Select
-                            value={newService.ServiceGender}
+                            value={newService.serviceGender}
                             label="Service Gender"
-                            name="ServiceGender"
+                            name="serviceGender"
                             onChange={handleChange}
                         >
                             <MenuItem value="Male">Erkek</MenuItem>
@@ -114,16 +111,16 @@ const ServiceModal = ({ open, onClose }) => {
                     <TextField
                         label="Hizmet Adı"
                         variant="outlined"
-                        name="ServiceName"
-                        value={newService.ServiceName}
+                        name="serviceName"
+                        value={newService.serviceName}
                         style={style.serviceName}
                         onChange={handleChange}
                     />
                     <TextField
                         label="Hizmet Süresi"
                         variant="outlined"
-                        name="ServiceTimes"
-                        value={newService.ServiceTimes}
+                        name="serviceTimes"
+                        value={newService.serviceTimes}
                         style={style.serviceTime}
                         onChange={handleChange}
                     />
@@ -141,16 +138,16 @@ const ServiceModal = ({ open, onClose }) => {
                     <TextField
                         label="Hizmet Fiyatı"
                         variant="outlined"
-                        name="Price"
-                        value={newService.Price}
+                        name="price"
+                        value={newService.price}
                         style={style.servicePrice}
                         onChange={handleChange}
                     />
                     <TextField
                         label="Hizmet Primi"
                         variant="outlined"
-                        name="Prim"
-                        value={newService.Prim}
+                        name="prim"
+                        value={newService.prim}
                         style={style.servicePrim}
                         onChange={handleChange}
                     />
@@ -164,20 +161,14 @@ const ServiceModal = ({ open, onClose }) => {
                         mr: 2,
                     }}
                 >
-                    <FormControl variant="outlined" sx={style.serviceType}>
-                        <InputLabel>Çalışan</InputLabel>
-                        <Select
-                            value={newService.Worker}
-                            label="Worker"
-                            name="Worker"
-                            onChange={handleChange}
-                        >
-                            <MenuItem>Selim Yılmaz</MenuItem>
-                            <MenuItem>Ahmet Ersoy</MenuItem>
-                            <MenuItem>Akif Aydın</MenuItem>
-                            <MenuItem>Azra Demir</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <TextField
+                        label="Çalışan"
+                        variant="outlined"
+                        name="worker"
+                        value={newService.worker}
+                        style={style.servicePrim}
+                        onChange={handleChange}
+                    />
                 </Box>
                 <Box
                     sx={{
