@@ -427,7 +427,7 @@ export class DepartmentsService {
             Password: await bcrypt.hash(input.Password, 10),
             PrivateKey: privKey,
             PublicKey: pubKey,
-            Roles: input.Roles,
+            Role: input.Roles,
             WorkTime: {
                 createMany: {
                     data: input?.WorkTime,
@@ -477,7 +477,7 @@ export class DepartmentsService {
                     Id: input?.DepartmentId,
                 },
             },
-            Roles: input.Roles,
+            Role: input.Roles,
         };
 
         let response = await this.workerService.update({ where, data });

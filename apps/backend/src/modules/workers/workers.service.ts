@@ -197,7 +197,7 @@ export class WorkersService {
             FirstName: input.FirstName,
             LastName: input.LastName,
             Phone: input.Phone,
-            Roles: input.Roles,
+            Role: input.Roles,
             WorkTime: {
                 update: {
                     where: {

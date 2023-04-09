@@ -162,7 +162,7 @@ model Worker {
   Department    Department      @relation(fields: [DepartmentId], references: [Id])
   DepartmentId  Int // WorkTime     WorkTime[]
   UserToken     UserToken[]
-  Roles         WorkerRoles     @default(Basic)
+  Role          WorkerRole      @default(Basic)
   WorkTime      WorkTime[]
   ServiceWorker ServiceWorker[]
   Randevu       Randevu[]
@@ -285,7 +285,6 @@ enum OTPType {
 enum UserRole {
   Normal
   Provider
-  Admin
 }
 
 enum ServiceType {
@@ -301,7 +300,7 @@ enum ServiceType {
   Others
 }
 
-enum WorkerRoles {
+enum WorkerRole {
   Admin
   Basic
 }

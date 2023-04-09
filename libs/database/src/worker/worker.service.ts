@@ -89,7 +89,7 @@ export class WorkerService {
                 LastName: true,
                 Phone: true,
                 DepartmentId: true,
-                Roles: true,
+                Role: true,
                 WorkTime: true,
             },
         });
@@ -146,11 +146,34 @@ export class WorkerService {
 
     async create(data: Prisma.WorkerCreateInput) {
         try {
-            const createdUser = await this.prisma.worker.create({
-                data,
+            let encryptedEmail;
+            let encryptedPhone;
+
+            if (data.Email)
+                encryptedEmail = this.keypairService.encryptWithAppKeys(
+                    data.Email,
+                );
+            if (data.Phone)
+                encryptedPhone = this.keypairService.encryptWithAppKeys(
+                    data.Phone,
+                );
+
+            const createdWorker = await this.prisma.worker.create({
+                data: { ...data, Email: encryptedEmail, Phone: encryptedPhone },
+                select: {
+                    Email: true,
+                    Phone: true,
+                    FirstName: true,
+                    LastName: true,
+                    Id: true,
+                    Role: true,
+                },
             });
 
-            return createdUser;
+            if (data.Email) createdWorker.Email = data.Email;
+            if (data.Phone) createdWorker.Phone = data.Phone;
+
+            return createdWorker;
         } catch (error) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -214,7 +237,7 @@ export class WorkerService {
                 Phone: true,
                 Email: true,
                 Password: true,
-                Roles: true,
+                Role: true,
                 PrivateKey: true,
                 PublicKey: true,
                 ServiceWorker: {
