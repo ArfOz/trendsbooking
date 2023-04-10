@@ -12,7 +12,7 @@ export class TrendsException extends HttpException {
         code?: number,
         statusCode?: number,
     ) {
-        statusCode = statusCode || HttpStatus.FORBIDDEN
+        statusCode = statusCode || HttpStatus.FORBIDDEN;
         super(
             { error: message, details: details.message, code: code },
             statusCode,

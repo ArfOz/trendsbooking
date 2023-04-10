@@ -8,6 +8,10 @@
   "TR204": "Şubeniz başarılı bir şekilde eklenmiştir.",
   "TR205": "Şubenize çalışan eklenmiştir.",
   "TR206": "Profiliniz başarılı bir şekilde güncellenmiştir.",
+  "TR207": "Şubenize ait bilgiler başarılı bir şekilde güncellenmiştir.",
+  "TR208": "Çalışanınıza ait bilgiler güncellenmiştir.",
+  "TR209": "Şubenize ait çalışan başarıyla silinmiştir.",
+  "TR210": "Şubenize ait hizmet başarılar silinmiştir.",
 
   "TR403": "Parola veya Email adresi yanlış.",
   "TR404": "Lütfen hesabınızı etkinleştiriniz.",
@@ -32,10 +36,11 @@
   "TR423": "Kullanıcı tipi belli değil",
   "TR424": "Yetki alanı dışı!!!",
   "TR425": "Kullanıcının rolü yok!!!",
-  "TR426": "Salon, servis türü ve çalışanlar zorunludur.",
+  "TR426": "Salon tipi ve servis türü zorunludur.",
   "TR427": "Ad, Soyad ve Telefon Numarası zorunludur",
   "TR428": "Çalışan IDsi yok...",
   "TR429": "Böyle bir şubeniz bulunmamaktadır.",
   "TR430": "Böyle bir çalışanınız bulunmamaktadır.",
-  "TR431" : "Doğum tarihi, Ülke, Ad, Soyad, Cinsiyet, Şifreü Telefon Numarası veya Kullanıcı adından en az biri zorunludur."
+  "TR431": "Doğum tarihi, Ülke, Ad, Soyad, Cinsiyet, Şifreü Telefon Numarası veya Kullanıcı adından en az biri zorunludur.",
+  "TR432": "Şube ID'si zorunludur."
 }

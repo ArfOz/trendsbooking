@@ -1,7 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import {
-    VerifyCodeExceptionType,
-} from './../enums/exception.type';
+import { VerifyCodeExceptionType } from './../enums/exception.type';
 import { NotFoundException } from './not-found.exception';
 
 export class OtpCodeNotFoundException extends NotFoundException {

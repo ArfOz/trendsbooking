@@ -3,6 +3,8 @@
   "useTabs": false,
   "trailingComma": "all",
   "endOfLine": "auto",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
   "overrides": [
     {
       "files": ["*.js", "*.ts", "*.jsx", "*.tsx", "*.mjs", "*.cjs"],
@@ -13,4 +15,5 @@
       "options": { "tabWidth": 2 }
     }
   ]
+
 }

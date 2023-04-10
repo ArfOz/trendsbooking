@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { createServices } from './function';
 
 export const denemeFunc = async (setDeneme) => {
     setDeneme('deneme function.js');
@@ -26,7 +27,6 @@ export const postRegister = (data, setError, setResponse) => {
             setError(error.response.data.details.toString());
         });
 };
-
 
 
 //
