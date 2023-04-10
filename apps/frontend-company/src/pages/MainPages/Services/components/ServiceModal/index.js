@@ -12,16 +12,17 @@ import { style } from './style';
 
 import React, { useState } from 'react';
 
-import { createService } from '../../../../../function/function';
+import { createServices, denemeFunc } from '../../../../../function/function';
 
 const initialState = {
-    serviceType: '',
-    serviceTimes: '',
-    serviceName: '',
-    price: '',
-    prim: '',
-    serviceGender: '',
-    worker: '',
+    DepartmentId: 1,
+    ServiceType: '',
+    ServiceTimes: '',
+    ServiceName: '',
+    Price: '',
+    Prim: '',
+    ServiceGender: '',
+    Worker: '',
 };
 
 const ServiceModal = ({ open, onClose }) => {
@@ -45,7 +46,7 @@ const ServiceModal = ({ open, onClose }) => {
         console.log('post', newService);
 
         try {
-            const result = await createService(newService);
+            const result = await createServices(newService);
             console.log('Service created successfully: ' + result);
 
             setNewService(initialState);
@@ -73,9 +74,9 @@ const ServiceModal = ({ open, onClose }) => {
                     <FormControl variant="outlined" sx={style.serviceType}>
                         <InputLabel>Hizmet Tipi</InputLabel>
                         <Select
-                            value={newService.serviceType}
+                            value={newService.ServiceType}
                             label="Hizmet Türü"
-                            name="serviceType"
+                            name="ServiceType"
                             onChange={handleChange}
                         >
                             <MenuItem value="Haircut">Saç Kesimi</MenuItem>
@@ -87,9 +88,9 @@ const ServiceModal = ({ open, onClose }) => {
                     <FormControl variant="outlined" sx={style.serviceGender}>
                         <InputLabel>Hizmet Cinsiyeti</InputLabel>
                         <Select
-                            value={newService.serviceGender}
-                            label="Service Gender"
-                            name="serviceGender"
+                            value={newService.ServiceGender}
+                            label="Hizmet Cinsiyeti"
+                            name="ServiceGender"
                             onChange={handleChange}
                         >
                             <MenuItem value="Male">Erkek</MenuItem>
@@ -111,16 +112,16 @@ const ServiceModal = ({ open, onClose }) => {
                     <TextField
                         label="Hizmet Adı"
                         variant="outlined"
-                        name="serviceName"
-                        value={newService.serviceName}
+                        name="ServiceName"
+                        value={newService.ServiceName}
                         style={style.serviceName}
                         onChange={handleChange}
                     />
                     <TextField
                         label="Hizmet Süresi"
                         variant="outlined"
-                        name="serviceTimes"
-                        value={newService.serviceTimes}
+                        name="ServiceTimes"
+                        value={newService.ServiceTimes}
                         style={style.serviceTime}
                         onChange={handleChange}
                     />
@@ -138,7 +139,7 @@ const ServiceModal = ({ open, onClose }) => {
                     <TextField
                         label="Hizmet Fiyatı"
                         variant="outlined"
-                        name="price"
+                        name="Price"
                         value={newService.price}
                         style={style.servicePrice}
                         onChange={handleChange}
@@ -146,7 +147,7 @@ const ServiceModal = ({ open, onClose }) => {
                     <TextField
                         label="Hizmet Primi"
                         variant="outlined"
-                        name="prim"
+                        name="Prim"
                         value={newService.prim}
                         style={style.servicePrim}
                         onChange={handleChange}
@@ -155,7 +156,6 @@ const ServiceModal = ({ open, onClose }) => {
                 <Box
                     sx={{
                         display: 'flex',
-
                         mt: 8,
                         ml: 2,
                         mr: 2,
@@ -164,7 +164,7 @@ const ServiceModal = ({ open, onClose }) => {
                     <TextField
                         label="Çalışan"
                         variant="outlined"
-                        name="worker"
+                        name="Worker"
                         value={newService.worker}
                         style={style.servicePrim}
                         onChange={handleChange}
