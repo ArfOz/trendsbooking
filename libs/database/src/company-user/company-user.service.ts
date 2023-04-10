@@ -196,7 +196,7 @@ export class CompanyUserService {
                     LastName: true,
                     Username: true,
                     Id: true,
-                    Role:true
+                    Role: true,
                 },
             });
 

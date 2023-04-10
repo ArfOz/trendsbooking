@@ -2,6 +2,8 @@ export * from './company-user';
 export * from './department';
 export * from './department-photos';
 export * from './prisma';
+export * from './service-worker';
+export * from './services';
 export * from './user';
 export * from './user-otp-code';
 export * from './worker';

@@ -46,6 +46,12 @@ export class DepartmentService {
                         Phone: true,
                         Id: true,
                         WorkTime: true,
+                        DepartmentId: true,
+                        ServiceWorker: {
+                            select: {
+                                Services: true,
+                            },
+                        },
                     },
                 },
                 Id: true,

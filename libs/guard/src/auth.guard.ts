@@ -195,7 +195,7 @@ export class AuthGuard implements CanActivate {
             throw new UserNotExistException(
                 UnauthorizedExceptionType.USER_NOT_REGISTERED,
                 new Error(ResponseMessage.TR415),
-                415
+                415,
             );
         }
         // Admin de eklenecek.
@@ -279,7 +279,7 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException(
                 UnauthorizedExceptionType.NO_AUTHORIZATION_TOKEN,
                 new Error('Token yok!'),
-                500
+                500,
             );
         }
         const auth =
