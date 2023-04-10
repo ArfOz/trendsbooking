@@ -1,4 +1,4 @@
-import { UserRole, Worker } from '@prisma/client';
+import { UserRole, WorkerRole } from '@prisma/client';
 // noinspection JSMethodCanBeStatic
 import {
     CanActivate,
@@ -28,6 +28,9 @@ import { ExpiredReasonType } from '@prisma/client';
 import ResponseMessage from '@shared/enums/response-message.json';
 import { UserPayloadDto, UserType } from '@auth';
 
+const Roles = { ...UserRole, ...WorkerRole };
+
+type Role = keyof typeof Roles;
 export interface req extends Request {
     user: string; // or any other type
 }
@@ -70,7 +73,7 @@ export class AuthGuard implements CanActivate {
             context.getHandler(),
         );
 
-        const rolesRequired = this.reflector.get<UserRole[]>(
+        const rolesRequired = this.reflector.get<Role[]>(
             'rolesRequired',
             context.getHandler(),
         );
@@ -83,7 +86,7 @@ export class AuthGuard implements CanActivate {
     private async validateRequest(
         req,
         staticTokenRequired: boolean,
-        rolesRequired?: UserRole[],
+        rolesRequired?: Role[],
     ): Promise<boolean> {
         // Get token from headers
         const token = this.getBearerToken(
@@ -217,7 +220,7 @@ export class AuthGuard implements CanActivate {
                     422,
                 );
         }
-        console.log('userrrr', user);
+        console.log('userrrr', user, rolesRequired);
 
         if (!user) {
             throw new UserNotExistException(

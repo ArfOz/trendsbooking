@@ -27,7 +27,7 @@ export class WorkersController {
         console.log('geldi');
         return this.workersService.login(data);
     }
-    @RolesRequired(['Provider'] || ['Admin', 'Basic'])
+    @RolesRequired(['Admin', 'Basic', 'Provider'])
     @Post('getdetails')
     async getDetails(
         @UserParam() user: UserParamsDto,

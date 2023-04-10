@@ -101,7 +101,6 @@ export class WorkersService {
                 428,
             );
         }
-        console.log('user', user);
         let data;
 
         if (user.Role === 'Basic') {
