@@ -26,13 +26,9 @@ export class WorkersService {
     ) {}
 
     async login(cred: WorkerLoginDto) {
-        console.log('00000000000000');
-        const worker = await this.workerService.findFirst({
-            where: {
-                Email: cred.Email,
-            },
+        const worker = await this.workerService.findUnique({
+            Email: cred.Email,
         });
-        console.log('workererrr', worker);
 
         if (!worker) {
             throw new BadRequestException(
@@ -41,7 +37,6 @@ export class WorkersService {
                 406,
             );
         }
-        console.log('workererrr', worker);
 
         // Burası randevu açıldığında düzenlenecek. Admin tarafından onaylanana kadar randevu alamayacak.
         // if (!companyUser.IsActive) {
@@ -73,7 +68,6 @@ export class WorkersService {
                 },
             });
             delete worker.Password;
-            delete worker.Id;
 
             // Response varsa Success
             return {
@@ -103,14 +97,23 @@ export class WorkersService {
         }
         let data;
 
-        if (user.Role === 'Basic') {
-            data = await this.workerService.find({
+        console.log('user data', user);
+
+        if (user.Role === 'WorkerBasic') {
+            if (user.Id !== workerId) {
+                throw new BadRequestException(
+                    BadRequestExceptionType.BAD_REQUEST,
+                    new Error(ResponseMessage.TR424),
+                    424,
+                );
+            }
+            data = await this.workerService.findFirst({
                 where: {
                     Id: user.Id,
                 },
             });
-        } else if (user.Role === 'Admin' || user.Role === 'Provider')
-            data = await this.workerService.find({
+        } else if (user.Role === 'Provider') {
+            data = await this.workerService.findFirst({
                 where: {
                     Id: workerId,
                     Department: {
@@ -118,6 +121,14 @@ export class WorkersService {
                     },
                 },
             });
+        } else if (user.Role === 'WorkerAdmin') {
+            data = await this.workerService.findFirst({
+                where: {
+                    Id: workerId,
+                    DepartmentId: user.DepartmentId,
+                },
+            });
+        }
 
         if (!data || data.length < 1) {
             throw new BadRequestException(
@@ -140,12 +151,29 @@ export class WorkersService {
             );
         }
 
-        const response = await this.workerService.find({
-            where: {
-                Id: input.WorkerId,
-                Department: { CompanyUserId: user.Id },
-            },
-        });
+        let response;
+        if (user.Role === 'Admin') {
+            response = await this.workerService.findMany({
+                where: {
+                    Id: input.WorkerId,
+                    Department: {
+                        Workers: {
+                            every: {
+                                Id: user.Id,
+                            },
+                        },
+                    },
+                },
+            });
+        }
+        // } else if (user.Role === 'Provider') {
+        //     response = await this.workerService.find({
+        //         where: {
+        //             Id: input.WorkerId,
+        //             Department: { CompanyUserId: user.Id },
+        //         },
+        //     });
+        // }
 
         if (!response || response.length < 1) {
             throw new BadRequestException(
@@ -154,12 +182,14 @@ export class WorkersService {
                 429,
             );
         }
-        const data = await this.workerService.delete({
-            Id: input.WorkerId,
-        });
+
+        console.log('asdasd', response);
+        // const data = await this.workerService.delete({
+        //     Id: input.WorkerId,
+        // });
         return {
             Success: true,
-            Data: data,
+            Data: 'data',
         };
     }
 
@@ -172,7 +202,7 @@ export class WorkersService {
             );
         }
 
-        const worker = await this.workerService.find({
+        const worker = await this.workerService.findMany({
             where: {
                 Id: input.WorkerId,
                 Department: {

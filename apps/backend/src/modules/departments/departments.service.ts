@@ -389,19 +389,23 @@ export class DepartmentsService {
             );
         }
 
-        const worker = await this.workerService.find({
+        const worker = await this.workerService.findMany({
             where: {
                 Email: input.Email,
             },
         });
 
-        if (worker || worker.length) {
+        console.log('asdasdas', worker, worker.length, Boolean(worker));
+
+        if (worker.length > 0) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR433),
                 433,
             );
         }
+
+        console.log('buraya geldi');
 
         // Generate a public/private key pair
         const keys = this.keypairService.generateKey();
@@ -517,7 +521,7 @@ export class DepartmentsService {
                 CompanyUserId: user.Id,
             },
         };
-        const data = await this.workerService.find({ where: whereWorker });
+        const data = await this.workerService.findMany({ where: whereWorker });
 
         if (!data || data.length < 1) {
             throw new BadRequestException(

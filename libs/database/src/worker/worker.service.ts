@@ -14,50 +14,36 @@ export class WorkerService {
         private readonly keypairService: KeypairService,
     ) {}
 
-    async get(where: Prisma.WorkerWhereUniqueInput) {
+    async findUnique(where: Prisma.WorkerWhereUniqueInput) {
         try {
+            if (where && where.Email) {
+                where.Email = this.keypairService.encryptWithAppKeys(
+                    where.Email,
+                );
+            }
+
+            console.log('asdasd', where);
             const user = await this.prisma.worker.findUnique({
                 where,
-                // select: {
-                //     City:true,
-                //     Country: true,
-                //     CreatedAt:true,
-                //     Departments:{
-                //         select:{
-                //             Salon:true,
-                //             ServiceType:true,
-                //             Id:true
-                //         }
-                //     },
-                //     District:true,
-                //     Email: true,
-                //     FirstName: true,
-                //     IBAN:true,
-                //     Id: true,
-                //     IsEmailVerified:true,
-                //     LastName: true,
-                //     Neighborhood:true,
-                //     Phone: true,
-                //     Role:true,
-                //     Salon:true,
-                //     Sector:true,
-                //     Username: true,
-                //     TaxNo:true,
-                //     TaxAdmin:true,
-                //     TCKN:true,
-
-                // },
+                select: {
+                    Id: true,
+                    FirstName: true,
+                    LastName: true,
+                    Email: true,
+                    Phone: true,
+                    Role: true,
+                    Password: true,
+                },
             });
 
-            // if (user && user.Email) {
-            //     user.Email = this.keypairService.decryptWithAppKeys(user.Email);
-            // }
+            if (user && user.Email) {
+                user.Email = this.keypairService.decryptWithAppKeys(user.Email);
+            }
 
-            // if (user && user.Phone) {
-            //     user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
-            // }
+            if (user && user.Phone) {
+                user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
+            }
 
-            delete user.Id;
             return user;
         } catch (error) {
             throw new BadRequestException(
@@ -68,7 +54,7 @@ export class WorkerService {
         }
     }
 
-    async find(params: {
+    async findMany(params: {
         skip?: number;
         take?: number;
         cursor?: Prisma.WorkerWhereUniqueInput;
@@ -88,11 +74,24 @@ export class WorkerService {
                 FirstName: true,
                 LastName: true,
                 Phone: true,
+                Email: true,
                 DepartmentId: true,
                 Role: true,
                 WorkTime: true,
             },
         });
+
+        // if (companyUsers && companyUsers.Email) {
+        //     companyUsers.Email = this.keypairService.decryptWithAppKeys(
+        //         companyUsers.Email,
+        //     );
+        // }
+
+        // if (companyUsers && companyUsers.Phone) {
+        //     companyUsers.Phone = this.keypairService.decryptWithAppKeys(
+        //         companyUsers.Phone,
+        //     );
+        // }
 
         return companyUsers;
     }
@@ -111,12 +110,12 @@ export class WorkerService {
         let encryptedEmail;
         let encryptedPhone;
 
-        // if (where.Email) {
-        //     encryptedEmail = this.keypairService.encryptWithAppKeys(
-        //         where.Email,
-        //     );
-        //     searchWhere.Email = encryptedEmail;
-        // }
+        if (where.Email) {
+            encryptedEmail = this.keypairService.encryptWithAppKeys(
+                where.Email,
+            );
+            searchWhere.Email = encryptedEmail;
+        }
 
         // if (where.Phone) {
         //     encryptedPhone = this.keypairService.encryptWithAppKeys(
@@ -131,15 +130,24 @@ export class WorkerService {
             cursor,
             orderBy,
             where: searchWhere,
+            select: {
+                Id: true,
+                DepartmentId: true,
+                Email: true,
+                FirstName: true,
+                LastName: true,
+                Phone: true,
+                Role: true,
+            },
         });
 
-        // if (user && user.Email) {
-        //     user.Email = this.keypairService.decryptWithAppKeys(user.Email);
-        // }
+        if (user && user.Email) {
+            user.Email = this.keypairService.decryptWithAppKeys(user.Email);
+        }
 
-        // if (user && user.Phone) {
-        //     user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
-        // }
+        if (user && user.Phone) {
+            user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
+        }
 
         return user;
     }

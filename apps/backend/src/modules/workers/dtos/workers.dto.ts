@@ -10,8 +10,8 @@ import {
 } from 'class-validator';
 
 export enum WorkerRoles {
-    Basic = 'Basic',
-    Admin = 'Admin',
+    WorkerBasic = 'WorkerBasic',
+    WorkerAdmin = 'WorkerAdmin',
 }
 export class WorkTime {
     @ApiProperty()

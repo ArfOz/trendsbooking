@@ -16,8 +16,13 @@ export class CompanyUserService {
         private readonly keypairService: KeypairService,
     ) {}
 
-    async get(where: Prisma.CompanyUserWhereUniqueInput) {
+    async findUnique(where: Prisma.CompanyUserWhereUniqueInput) {
         try {
+            if (where && where.Email) {
+                where.Email = this.keypairService.encryptWithAppKeys(
+                    where.Email,
+                );
+            }
             const user = await this.prisma.companyUser.findUnique({
                 where,
                 select: {
@@ -38,6 +43,7 @@ export class CompanyUserService {
                     Role: true,
                     Username: true,
                     TCKN: true,
+                    Password: true,
                 },
             });
 
@@ -49,7 +55,6 @@ export class CompanyUserService {
                 user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
             }
 
-            delete user.Id;
             return user;
         } catch (error) {
             console.log(error);

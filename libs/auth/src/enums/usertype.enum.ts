@@ -1,6 +1,6 @@
 export enum UserType {
-    Basic = 'Basic',
-    Admin = 'Admin',
+    WorkerBasic = 'WorkerBasic',
+    WorkerAdmin = 'WorkerAdmin',
     Provider = 'Provider',
     Normal = 'Normal',
 }

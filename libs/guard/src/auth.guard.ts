@@ -111,8 +111,6 @@ export class AuthGuard implements CanActivate {
                 417,
             );
         }
-
-        console.log('asdas', userPayload);
         // Burada role göre token var mı yok mu bakılacak
         let exist;
         switch (userPayload.Role) {
@@ -131,14 +129,14 @@ export class AuthGuard implements CanActivate {
                 });
                 break;
 
-            case UserType.Admin:
+            case UserType.WorkerAdmin:
                 exist = await this.prisma.userToken.findFirst({
                     where: { WorkerId: userPayload.Id, AccessToken: token },
                 });
 
                 break;
 
-            case UserType.Basic:
+            case UserType.WorkerBasic:
                 exist = await this.prisma.userToken.findFirst({
                     where: { WorkerId: userPayload.Id, AccessToken: token },
                 });
@@ -202,13 +200,13 @@ export class AuthGuard implements CanActivate {
                 });
                 break;
 
-            case UserType.Admin:
+            case UserType.WorkerAdmin:
                 user = await this.prisma.worker.findUnique({
                     where: { Id: userPayload.Id },
                 });
                 break;
 
-            case UserType.Basic:
+            case UserType.WorkerBasic:
                 user = await this.prisma.worker.findUnique({
                     where: { Id: userPayload.Id },
                 });
@@ -220,8 +218,6 @@ export class AuthGuard implements CanActivate {
                     422,
                 );
         }
-        console.log('userrrr', user, rolesRequired);
-
         if (!user) {
             throw new UserNotExistException(
                 UnauthorizedExceptionType.USER_NOT_REGISTERED,

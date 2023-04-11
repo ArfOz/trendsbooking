@@ -269,6 +269,10 @@ export class UserService {
             user.Email = this.keypairService.decryptWithAppKeys(user.Email);
         }
 
+        if (user && user.Phone) {
+            user.Phone = this.keypairService.decryptWithAppKeys(user.Phone);
+        }
+
         return user;
     }
 }

@@ -265,7 +265,7 @@ export class CompanyUsersService {
                 'email' in payload &&
                 data.Code
             ) {
-                const companyUser = await this.companyUserService.get({
+                const companyUser = await this.companyUserService.findUnique({
                     Id: payload.Id,
                 });
 
@@ -421,10 +421,8 @@ export class CompanyUsersService {
     }
 
     async login(cred: LoginUserDto): Promise<ResponseLoginCompanyUserDTO> {
-        const companyUser = await this.companyUserService.findFirst({
-            where: {
-                Email: cred.Email,
-            },
+        const companyUser = await this.companyUserService.findUnique({
+            Email: cred.Email,
         });
 
         if (!companyUser) {
@@ -583,6 +581,6 @@ export class CompanyUsersService {
     async profile(
         user: CompanyUserParamsDto, // : Promise<ResponseCompanyUserProfileUserDTO>
     ) {
-        return await this.companyUserService.get({ Id: user.Id });
+        return await this.companyUserService.findUnique({ Id: user.Id });
     }
 }
