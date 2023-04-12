@@ -85,7 +85,6 @@ export class WorkersService {
             new Error(ResponseMessage.TR403),
             403,
         );
-        return null;
     }
     async getDetails(user: UserParamsDto, workerId: number) {
         if (!workerId) {
@@ -142,6 +141,95 @@ export class WorkersService {
             Data: data,
         };
     }
+
+    async updateWorker(user: UserParamsDto, input: WorkersUpdateJsonDto) {
+        if (!input.WorkerId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR428),
+                428,
+            );
+        }
+
+        console.log('user', user);
+
+        const data: Prisma.WorkerUpdateInput = {
+            Email: input.Email,
+            FirstName: input.FirstName,
+            LastName: input.LastName,
+            Password: input.Password,
+            Phone: input.Password,
+            WorkTime: {
+                updateMany: {
+                    where: {
+                        WorkerId: input.WorkerId,
+                    },
+                    data: input.WorkTime,
+                },
+            },
+        };
+
+        let response;
+
+        if (user.Role === 'WorkerBasic') {
+            if (user.Id !== input.WorkerId) {
+                throw new BadRequestException(
+                    BadRequestExceptionType.BAD_REQUEST,
+                    new Error(ResponseMessage.TR424),
+                    424,
+                );
+            }
+            response = await this.workerService.update({
+                where: {
+                    Id: input.WorkerId,
+                },
+                data,
+            });
+        } else if (user.Role === 'Provider') {
+            response = await this.workerService.updateMany({
+                where: {
+                    Id: input.WorkerId,
+                    Department: {
+                        CompanyUserId: user.Id,
+                    },
+                },
+                data,
+            });
+        } else if (user.Role === 'WorkerAdmin') {
+            response = await this.workerService.updateMany({
+                where: {
+                    Id: input.WorkerId,
+                    DepartmentId: user.DepartmentId,
+                },
+                data,
+            });
+        }
+        // const worker = await this.workerService.findMany({
+        //     where: {
+        //         Id: input.WorkerId,
+        //         Department: {
+        //             CompanyUserId: user.Id,
+        //         },
+        //     },
+        // });
+
+        // if (!worker || worker.length < 1) {
+        //     throw new BadRequestException(
+        //         BadRequestExceptionType.BAD_REQUEST,
+        //         new Error(ResponseMessage.TR430),
+        //         430,
+        //     );
+        // }
+
+        // const where: Prisma.WorkerWhereUniqueInput = {
+        //     Id: input.WorkerId,
+        // };
+
+        return {
+            Success: true,
+            Data: response,
+        };
+    }
     async deleteWorker(user: UserParamsDto, input: WorkersGetJsonDto) {
         if (!input.WorkerId) {
             throw new BadRequestException(
@@ -182,65 +270,12 @@ export class WorkersService {
                 429,
             );
         }
-
-        console.log('asdasd', response);
         // const data = await this.workerService.delete({
         //     Id: input.WorkerId,
         // });
         return {
             Success: true,
             Data: 'data',
-        };
-    }
-
-    async updateWorker(user: UserParamsDto, input: WorkersUpdateJsonDto) {
-        if (!input.WorkerId) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR428),
-                428,
-            );
-        }
-
-        const worker = await this.workerService.findMany({
-            where: {
-                Id: input.WorkerId,
-                Department: {
-                    CompanyUserId: user.Id,
-                },
-            },
-        });
-
-        if (!worker || worker.length < 1) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR430),
-                430,
-            );
-        }
-
-        const where: Prisma.WorkerWhereUniqueInput = {
-            Id: input.WorkerId,
-        };
-        const data: Prisma.WorkerUpdateInput = {
-            FirstName: input.FirstName,
-            LastName: input.LastName,
-            Phone: input.Phone,
-            Role: input.Roles,
-            WorkTime: {
-                update: {
-                    where: {
-                        Id: worker[0].WorkTime[0].Id,
-                    },
-                    data: input.WorkTime,
-                },
-            },
-        };
-        const updatedData = await this.workerService.update({ where, data });
-
-        return {
-            Success: true,
-            Data: updatedData,
         };
     }
 }

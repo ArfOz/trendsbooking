@@ -13,6 +13,11 @@ export enum WorkerRoles {
     WorkerBasic = 'WorkerBasic',
     WorkerAdmin = 'WorkerAdmin',
 }
+
+export enum WorkerRole {
+    WorkerBasic = 'WorkerBasic',
+    WorkerAdmin = 'WorkerAdmin',
+}
 export class WorkTime {
     @ApiProperty()
     @IsNotEmpty()
@@ -43,6 +48,11 @@ export class WorkTime {
     @IsNotEmpty()
     @IsString()
     NightEndAt: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Days: number;
 }
 
 export class WorkersAddJsonDto {
@@ -97,35 +107,42 @@ export class WorkersUpdateJsonDto {
     WorkerId?: number;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     FirstName?: string;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     LastName?: string;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     Phone?: string;
 
-    // Burası daha sonra düzenlenmeli Önemli
-    @ApiProperty()
-    @IsOptional()
-    @IsObject()
-    WorkTime?: WorkTime;
-
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Roles?: WorkerRoles;
+    Email?: string;
 
     @ApiProperty()
-    @IsOptional()
-    @IsArray()
-    Services?: Service;
+    @IsNotEmpty()
+    @IsString()
+    Password?: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Role?: WorkerRole;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    WorkTime?: WorkTime;
+
+    // ServiceWorker?: ServiceWorkerUpdateManyWithoutWorkerNestedInput;
+    // Randevu?: RandevuUpdateManyWithoutWorkerNestedInput;
 }
 
 export class WorkerLoginDto {

@@ -394,9 +394,6 @@ export class DepartmentsService {
                 Email: input.Email,
             },
         });
-
-        console.log('asdasdas', worker, worker.length, Boolean(worker));
-
         if (worker.length > 0) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -404,8 +401,6 @@ export class DepartmentsService {
                 433,
             );
         }
-
-        console.log('buraya geldi');
 
         // Generate a public/private key pair
         const keys = this.keypairService.generateKey();

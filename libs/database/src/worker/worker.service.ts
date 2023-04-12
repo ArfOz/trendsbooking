@@ -21,8 +21,6 @@ export class WorkerService {
                     where.Email,
                 );
             }
-
-            console.log('asdasd', where);
             const user = await this.prisma.worker.findUnique({
                 where,
                 select: {
@@ -269,6 +267,15 @@ export class WorkerService {
         });
 
         return updatedUser;
+    }
+
+    async updateMany(params: {
+        data: Prisma.WorkerUpdateManyMutationInput;
+        where: Prisma.WorkerWhereInput;
+    }) {
+        const { where, data } = params;
+        const response = await this.prisma.worker.updateMany({ data, where });
+        return response;
     }
 
     async delete(where: Prisma.WorkerWhereUniqueInput) {
