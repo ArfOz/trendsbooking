@@ -388,6 +388,17 @@ export class DepartmentsService {
                 427,
             );
         }
+        const exist = await this.workerService.findUnique({
+            Email: input.Email,
+        });
+
+        if (exist) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR434),
+                434,
+            );
+        }
 
         const worker = await this.workerService.findMany({
             where: {
