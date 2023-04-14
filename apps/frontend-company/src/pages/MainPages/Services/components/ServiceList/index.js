@@ -115,8 +115,8 @@ export default function BasicTable(props) {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {rows.map((row) => (
-                                                <TableRow>
+                                            {rows.map((row, index) => (
+                                                <TableRow key={index}>
                                                     <TableCell align="left">
                                                         <FormControlLabel
                                                             control={
@@ -234,8 +234,8 @@ export default function BasicTable(props) {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {rows.map((row) => (
-                                                <TableRow>
+                                            {rows.map((row, index) => (
+                                                <TableRow key={index}>
                                                     <TableCell align="right">
                                                         <FormGroup>
                                                             <FormControlLabel
@@ -338,8 +338,8 @@ export default function BasicTable(props) {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {rows.map((row) => (
-                                                <TableRow>
+                                            {rows.map((row, index) => (
+                                                <TableRow key={index}>
                                                     <TableCell align="right">
                                                         <FormGroup>
                                                             <FormControlLabel
