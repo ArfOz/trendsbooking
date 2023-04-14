@@ -30,6 +30,9 @@ const theme = createTheme({
         grey:{
           main:"#9A9A9A",
         },
+        blue:{
+          main:"#3B82F6",
+        },
         third:{
           main:"#6F8D97",
 
