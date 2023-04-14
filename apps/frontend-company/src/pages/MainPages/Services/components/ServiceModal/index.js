@@ -11,8 +11,7 @@ import {
 import { style } from './style';
 
 import React, { useState } from 'react';
-
-import { createServices, denemeFunc } from '../../../../../function/function';
+import { createServices } from './../../../../../function/function';
 
 const initialState = {
     DepartmentId: 1,
@@ -79,10 +78,18 @@ const ServiceModal = ({ open, onClose }) => {
                             name="ServiceType"
                             onChange={handleChange}
                         >
-                            <MenuItem value="Haircut">Saç Kesimi</MenuItem>
-                            <MenuItem value="Coloring">Saç Boyama</MenuItem>
-                            <MenuItem value="Styling">Saç Styling</MenuItem>
-                            <MenuItem value="Shave">Saç Yıkama</MenuItem>
+                            <MenuItem value="Hair">Saç </MenuItem>
+                            <MenuItem value="Nail">Tırnak</MenuItem>
+                            <MenuItem value="Makeup">Makyaj</MenuItem>
+                            <MenuItem value="Massage">Masaj</MenuItem>
+                            <MenuItem value="Wax">Wax Stil</MenuItem>
+                            <MenuItem value="Solarium">Solaryum</MenuItem>
+                            <MenuItem value="Skincare">Cilt Bakımı</MenuItem>
+                            <MenuItem value="LaserHairRemowal">
+                                Lazer Saç Kesim
+                            </MenuItem>
+                            <MenuItem value="Tattoo">Tattoo</MenuItem>
+                            <MenuItem value="Others">Diğer</MenuItem>
                         </Select>
                     </FormControl>
                     <FormControl variant="outlined" sx={style.serviceGender}>
