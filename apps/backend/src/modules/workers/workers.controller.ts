@@ -3,6 +3,7 @@ import { AllowUnauthorizedRequest, RolesRequired, UserParam } from '@shared';
 import { UserParamsDto } from '../users/dtos';
 import { WorkersService } from './workers.service';
 import {
+    WorkerLoginDto,
     WorkersAddJsonDto,
     WorkersGetJsonDto,
     WorkersUpdateJsonDto,
@@ -20,7 +21,12 @@ export class WorkersController {
         return 'test departments page';
     }
 
-    @RolesRequired(['Provider'])
+    @AllowUnauthorizedRequest()
+    @Post('login')
+    async login(@Body() data: WorkerLoginDto) {
+        return this.workersService.login(data);
+    }
+    @RolesRequired(['WorkerAdmin', 'WorkerBasic', 'Provider'])
     @Post('getdetails')
     async getDetails(
         @UserParam() user: UserParamsDto,
@@ -29,16 +35,7 @@ export class WorkersController {
         return this.workersService.getDetails(user, input.WorkerId);
     }
 
-    @RolesRequired(['Provider'])
-    @Post('addworkers')
-    async addworker(
-        @UserParam() user: UserParamsDto,
-        @Body() input: WorkersAddJsonDto,
-    ) {
-        return this.workersService.addWorker(user, input);
-    }
-
-    @RolesRequired(['Provider'])
+    @RolesRequired(['Provider', 'WorkerAdmin', 'WorkerBasic'])
     @Post('updateworker')
     async updateworker(
         @UserParam() user: UserParamsDto,
@@ -47,7 +44,7 @@ export class WorkersController {
         return this.workersService.updateWorker(user, input);
     }
 
-    @RolesRequired(['Provider'])
+    @RolesRequired(['Provider', 'WorkerAdmin'])
     @Post('deleteworker')
     async deleteworker(
         @UserParam() user: UserParamsDto,

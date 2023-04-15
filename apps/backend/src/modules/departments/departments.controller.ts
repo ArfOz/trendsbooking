@@ -51,7 +51,6 @@ export class DepartmentController {
     @AllowUnauthorizedRequest()
     @Get('test')
     getLoggedCompanyUser() {
-        console.log('test sayfası');
         return 'test departments page';
     }
 

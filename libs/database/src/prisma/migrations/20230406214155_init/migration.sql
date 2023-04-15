@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "UserToken" ADD COLUMN     "WorkerId" INTEGER,
+ALTER COLUMN "AccessToken" DROP NOT NULL,
+ALTER COLUMN "RefreshToken" DROP NOT NULL;
+
+-- AddForeignKey
+ALTER TABLE "UserToken" ADD CONSTRAINT "UserToken_WorkerId_fkey" FOREIGN KEY ("WorkerId") REFERENCES "Worker"("Id") ON DELETE SET NULL ON UPDATE CASCADE;

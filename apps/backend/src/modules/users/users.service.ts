@@ -27,7 +27,12 @@ import {
     ForbiddenExceptionType,
     NotVerifiedException,
 } from '@shared';
-import { UserService, PrismaService, UserOtpCodeService } from '@database';
+import {
+    UserService,
+    PrismaService,
+    UserOtpCodeService,
+    ServicesService,
+} from '@database';
 import ResponseMessage from '@shared/enums/response-message.json';
 import {
     RegisterUserJsonDto,
@@ -39,7 +44,9 @@ import {
     ResponseUserProfileUserDTO,
     UserParamsDto,
     UserProfileUpdateDto,
+    RandevuCreateDto,
 } from './dtos';
+import { RandevuService } from '@database/randevu/randevu.service';
 
 @Injectable()
 export class UsersService {
@@ -54,6 +61,8 @@ export class UsersService {
         private readonly authService: AuthService,
         private readonly userOtpCodeService: UserOtpCodeService,
         private readonly mailUtilsService: MailUtilsService,
+        private readonly randevuService: RandevuService,
+        private readonly serviceService: ServicesService,
     ) {}
 
     async register(
@@ -566,4 +575,65 @@ export class UsersService {
             Details: ResponseMessage.TR203,
         };
     }
+
+    // async getdepartment(cred: UserParamsDto) {
+
+    //     companyuser = Ceo (10 şube de olabilir,  1 de)
+
+    //     Ankara
+
+    //     Ankara
+
+    //     Dilan Polat Güzellik Salonu
+
+    //     Karizma Erkek Kuaföru (Ceo)
+
+    //     Departrmemt (Şube ) Konumu önemli
+
+    //     yakınımdaki şublere getir . (FE HARİTA  Geolocation)
+
+    //     WHERE :
+    //     where : Department.City == Ankara
+
+    //     const response = await this.serviceService.find({});
+    //     console.log('resss', response);
+    //     return null;
+    // }
+
+    // async getservices(cred: UserParamsDto) {
+    //     20 km uzağımdaki berber slaonları
+
+    //     Department
+
+    //     filtreleme where (department.filter(saç kesimi == true))
+    //     const response = await this.serviceService.find({});
+    //     console.log('resss', response);
+    //     return null;
+    // }
+
+    // async createRandevu(user: UserParamsDto, input: RandevuCreateDto) {
+    //     const data: Prisma.RandevuCreateInput = {
+    //         Worker: {
+    //             connect: {
+    //                 Id: input.Worker,
+    //             },
+    //         },
+    //         Service: {
+    //             connect: {
+    //                 Id: input.Service,
+    //             },
+    //         },
+    //         StartTime: input.StartTime,
+    //         EndTime: input.EndTime,
+    //     };
+    //     const response = await this.randevuService.create(data);
+    //     return response;
+    // }
+
+    // async cancelRandevu(user: UserParamsDto) {
+    //     return null;
+    // }
+    // async detailsRandevu(user: UserParamsDto) {
+    //     return null;
+    // }
 }

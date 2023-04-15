@@ -1,8 +1,10 @@
-import { UserRole } from '@prisma/client';
+import { UserRole, WorkerRole } from '@prisma/client';
 import { applyDecorators, SetMetadata } from '@nestjs/common';
 import { ApiBearerAuth, ApiForbiddenResponse } from '@nestjs/swagger';
 
-export function RolesRequired(roles: UserRole[]): MethodDecorator {
+const Roles = { ...UserRole, ...WorkerRole };
+
+export function RolesRequired(roles: (keyof typeof Roles)[]): MethodDecorator {
     return applyDecorators(
         SetMetadata('rolesRequired', roles),
         ApiBearerAuth(),
