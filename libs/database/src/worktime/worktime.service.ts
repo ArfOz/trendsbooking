@@ -124,10 +124,10 @@ export class WorkTimeService {
         }
     }
 
-    async createMany(data: Prisma.WorkTimeCreateManyInput) {
+    async createMany(worktime: Prisma.WorkTimeCreateManyInput) {
         try {
             const createdWorkTime = await this.prisma.workTime.createMany({
-                data,
+                data: worktime,
             });
 
             return createdWorkTime;

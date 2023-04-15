@@ -177,6 +177,9 @@ export class WorkersService {
                     deleteMany: {
                         WorkerId: input.WorkerId,
                     },
+                    createMany: {
+                        data: input.WorkTime,
+                    },
                 },
             };
         }
@@ -210,14 +213,6 @@ export class WorkersService {
             data,
         });
 
-        const worktime: Prisma.WorkTimeCreateManyInput = {
-            ...input.WorkTime,
-        };
-
-        const worktimes = await this.workTimeService.create(worktime);
-
-        console.log('worktimes', worktimes);
-
         return {
             Success: true,
             Data: response,
@@ -233,42 +228,37 @@ export class WorkersService {
         }
 
         let response;
-        if (user.Role === 'Admin') {
+        if (user.Role === 'WorkerAdmin') {
             response = await this.workerService.findMany({
                 where: {
                     Id: input.WorkerId,
-                    Department: {
-                        Workers: {
-                            every: {
-                                Id: user.Id,
-                            },
-                        },
-                    },
+                    DepartmentId: user.DepartmentId,
+                },
+            });
+        } else if (user.Role === 'Provider') {
+            response = await this.workerService.findMany({
+                where: {
+                    Id: input.WorkerId,
+                    Department: { CompanyUserId: user.Id },
                 },
             });
         }
-        // } else if (user.Role === 'Provider') {
-        //     response = await this.workerService.find({
-        //         where: {
-        //             Id: input.WorkerId,
-        //             Department: { CompanyUserId: user.Id },
-        //         },
-        //     });
-        // }
+
+        console.log('resss', response);
 
         if (!response || response.length < 1) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR429),
-                429,
+                new Error(ResponseMessage.TR430),
+                430,
             );
         }
-        // const data = await this.workerService.delete({
-        //     Id: input.WorkerId,
-        // });
+        const data = await this.workerService.delete({
+            Id: input.WorkerId,
+        });
         return {
             Success: true,
-            Data: 'data',
+            Data: ResponseMessage.TR209,
         };
     }
 }
