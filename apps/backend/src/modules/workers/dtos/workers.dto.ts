@@ -22,6 +22,11 @@ export class WorkTime {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
+    Id: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
     MorningStartAt: string;
 
     @ApiProperty()

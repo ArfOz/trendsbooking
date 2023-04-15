@@ -136,6 +136,18 @@ export class WorkerService {
                 LastName: true,
                 Phone: true,
                 Role: true,
+                WorkTime: {
+                    select: {
+                        Id: true,
+                        Days: true,
+                        MorningStartAt: true,
+                        MorningEndAt: true,
+                        ShiftStart: true,
+                        ShiftEnd: true,
+                        NightStartAt: true,
+                        NightEndAt: true,
+                    },
+                },
             },
         });
 
@@ -234,7 +246,7 @@ export class WorkerService {
                 ...data,
             },
             where: {
-                Id: where.Id,
+                ...where,
             },
             select: {
                 FirstName: true,
@@ -275,6 +287,7 @@ export class WorkerService {
     }) {
         const { where, data } = params;
         const response = await this.prisma.worker.updateMany({ data, where });
+
         return response;
     }
 

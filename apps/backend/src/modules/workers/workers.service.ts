@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, UserRole, WorkerRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 // Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
-import { PrismaService, WorkerService } from '@database';
+import { PrismaService, WorkerService, WorkTimeService } from '@database';
 import { BadRequestException, BadRequestExceptionType } from '@shared';
 
 // DTOs area
@@ -16,6 +16,11 @@ import {
     WorkersUpdateJsonDto,
 } from './dtos/workers.dto';
 import { AuthService } from '@auth';
+import {} from '@database';
+
+const Roles = { ...UserRole, ...WorkerRole };
+
+type Role = keyof typeof Roles;
 
 @Injectable()
 export class WorkersService {
@@ -23,6 +28,7 @@ export class WorkersService {
         private readonly workerService: WorkerService,
         private readonly authService: AuthService,
         private readonly prismaService: PrismaService,
+        private readonly workTimeService: WorkTimeService,
     ) {}
 
     async login(cred: WorkerLoginDto) {
@@ -96,8 +102,6 @@ export class WorkersService {
         }
         let data;
 
-        console.log('user data', user);
-
         if (user.Role === 'WorkerBasic') {
             if (user.Id !== workerId) {
                 throw new BadRequestException(
@@ -151,79 +155,68 @@ export class WorkersService {
             );
         }
 
-        console.log('user', user);
+        if (user.Role == Roles.WorkerBasic && user.Id !== input.WorkerId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR424),
+                424,
+            );
+        }
 
-        const data: Prisma.WorkerUpdateInput = {
+        let data: Prisma.WorkerUpdateInput = {
             Email: input.Email,
             FirstName: input.FirstName,
             LastName: input.LastName,
             Password: input.Password,
             Phone: input.Password,
-            WorkTime: {
-                updateMany: {
-                    where: {
+        };
+        if (input.WorkTime) {
+            data = {
+                ...data,
+                WorkTime: {
+                    deleteMany: {
                         WorkerId: input.WorkerId,
                     },
-                    data: input.WorkTime,
                 },
-            },
+            };
+        }
+
+        const where: Prisma.WorkerWhereInput = {
+            Id: input.WorkerId,
+            Department:
+                user.Role === Roles.Provider
+                    ? { CompanyUserId: user.Id }
+                    : undefined,
+            DepartmentId:
+                user.Role === Roles.WorkerAdmin ? user.DepartmentId : undefined,
         };
 
-        let response;
+        const authorizatior = await this.workerService.findMany({
+            where,
+        });
 
-        if (user.Role === 'WorkerBasic') {
-            if (user.Id !== input.WorkerId) {
-                throw new BadRequestException(
-                    BadRequestExceptionType.BAD_REQUEST,
-                    new Error(ResponseMessage.TR424),
-                    424,
-                );
-            }
-            response = await this.workerService.update({
-                where: {
-                    Id: input.WorkerId,
-                },
-                data,
-            });
-        } else if (user.Role === 'Provider') {
-            response = await this.workerService.updateMany({
-                where: {
-                    Id: input.WorkerId,
-                    Department: {
-                        CompanyUserId: user.Id,
-                    },
-                },
-                data,
-            });
-        } else if (user.Role === 'WorkerAdmin') {
-            response = await this.workerService.updateMany({
-                where: {
-                    Id: input.WorkerId,
-                    DepartmentId: user.DepartmentId,
-                },
-                data,
-            });
+        if (!authorizatior || authorizatior.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR424),
+                424,
+            );
         }
-        // const worker = await this.workerService.findMany({
-        //     where: {
-        //         Id: input.WorkerId,
-        //         Department: {
-        //             CompanyUserId: user.Id,
-        //         },
-        //     },
-        // });
 
-        // if (!worker || worker.length < 1) {
-        //     throw new BadRequestException(
-        //         BadRequestExceptionType.BAD_REQUEST,
-        //         new Error(ResponseMessage.TR430),
-        //         430,
-        //     );
-        // }
+        const response = await this.workerService.update({
+            where: {
+                Id: input.WorkerId,
+            },
+            data,
+        });
 
-        // const where: Prisma.WorkerWhereUniqueInput = {
-        //     Id: input.WorkerId,
-        // };
+        const worktime: Prisma.WorkTimeCreateManyInput = {
+            ...input.WorkTime,
+        };
+
+        const worktimes = await this.workTimeService.create(worktime);
+
+        console.log('worktimes', worktimes);
 
         return {
             Success: true,

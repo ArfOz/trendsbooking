@@ -492,13 +492,12 @@ export class DepartmentsService {
 
         let response = await this.workerService.update({ where, data });
 
-        await this.serviceWorkerService.deleteMany({
-            where: {
-                WorkerId: input.WorkerId,
-            },
-        });
-
         if (input.Services) {
+            await this.serviceWorkerService.deleteMany({
+                where: {
+                    WorkerId: input.WorkerId,
+                },
+            });
             response = await this.workerService.update({
                 where: {
                     Id: input.WorkerId,

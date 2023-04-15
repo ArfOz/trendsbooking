@@ -10,6 +10,7 @@ import { DepartmentPhotosModule } from './department-photos/department-photos.mo
 import { ServicesModule } from './services/services.module';
 import { ServiceWorkerModule } from './service-worker/service-worker.module';
 import { RandevuModule } from './randevu/randevu.module';
+import { WorktimeModule } from './worktime/worktime.module';
 
 @Module({
     imports: [
@@ -24,6 +25,7 @@ import { RandevuModule } from './randevu/randevu.module';
         ServicesModule,
         ServiceWorkerModule,
         RandevuModule,
+        WorktimeModule,
     ],
     providers: [PrismaModule, UserModule, UserOtpCodeModule, DepartmentModule],
     exports: [PrismaModule, UserModule, UserOtpCodeModule, DepartmentModule],
