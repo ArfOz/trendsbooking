@@ -38,6 +38,7 @@ import ResponseMessage from '@shared/enums/response-message.json';
 
 // DTO area
 import {
+    CompanyUserForgottenPasswordDto,
     CompanyUserPassChangeDto,
     LoginUserDto,
     SendCodeDTO,
@@ -494,7 +495,14 @@ export class CompanyUsersService {
         );
     }
 
-    async changePass(cred: CompanyUserPassChangeDto) {
+    async changePassword(user: UserParamsDto, cred: CompanyUserPassChangeDto) {
+        if (!(await bcrypt.compare(cred.OldPassword, user.Password))) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR403),
+                403,
+            );
+        }
         if (!cred.Email || !cred.NewPassword || !cred.OldPassword) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -502,11 +510,11 @@ export class CompanyUsersService {
                 436,
             );
         }
-        const worker = await this.companyUserService.findUnique({
+        const companyUser = await this.companyUserService.findUnique({
             Email: cred.Email,
         });
 
-        if (!worker) {
+        if (!companyUser) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR406),
@@ -515,12 +523,12 @@ export class CompanyUsersService {
         }
 
         if (
-            worker &&
-            (await bcrypt.compare(cred.OldPassword, worker.Password))
+            companyUser &&
+            (await bcrypt.compare(cred.OldPassword, companyUser.Password))
         ) {
             await this.companyUserService.update({
                 where: {
-                    Id: worker.Id,
+                    Id: companyUser.Id,
                 },
                 data: {
                     Password: await bcrypt.hash(cred.NewPassword, 10),
@@ -539,6 +547,75 @@ export class CompanyUsersService {
             new Error(ResponseMessage.TR403),
             403,
         );
+    }
+
+    async forgotPassword(data: CompanyUserForgottenPasswordDto) {
+        if (!data.Email) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR421),
+                421,
+            );
+        }
+        const companyUser = await this.companyUserService.findUnique({
+            Email: data.Email,
+        });
+
+        if (!companyUser) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+                406,
+            );
+        }
+
+        // Verification code
+        const code = generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 4,
+        });
+
+        await this.userOtpCodeService.create({
+            CompanyUser: {
+                connect: {
+                    Id: companyUser.Id,
+                },
+            },
+            Code: code,
+            ExpiredAt: new Date(
+                Date.now() +
+                    parseInt(this.authCfg.codeValidationTime, 10) * 60 * 1000,
+            ),
+            Type: OTPType.VerifyEmail,
+        });
+
+        const options: SendEmailDto = {
+            to: data.Email,
+            html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
+            subject: "Trendsbooking'e hoşheldiniz",
+        };
+
+        await this.mailUtilsService.sendEmail(options);
+
+        const payload = {
+            mode: MailModeType.VerifyEmail,
+            email: data.Email,
+            Id: companyUser.Id,
+        };
+
+        const token = jwt.sign(payload, this.authCfg.jwt_secret, {
+            expiresIn: `${this.authCfg.codeValidationTime}m`,
+        });
+
+        return {
+            Email: companyUser.Email,
+            Data: ResponseMessage.TR212,
+            Token: token,
+            Success: true,
+        };
     }
 
     async companies(data) {

@@ -411,3 +411,10 @@ export class RandevuCreateDto {
     @IsString()
     EndTime: Date | string;
 }
+
+export class CompanyUserForgottenPasswordDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsEmail()
+    Email: string;
+}
