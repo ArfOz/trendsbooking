@@ -374,6 +374,22 @@ export class LoginUserDto {
     Password: string;
 }
 
+export class CompanyUserPassChangeDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsEmail()
+    Email: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    OldPassword: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    NewPassword: string;
+}
 export class RandevuCreateDto {
     @ApiProperty()
     @IsNotEmpty()

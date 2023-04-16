@@ -38,6 +38,7 @@ import ResponseMessage from '@shared/enums/response-message.json';
 
 // DTO area
 import {
+    CompanyUserPassChangeDto,
     LoginUserDto,
     SendCodeDTO,
     UserParamsDto,
@@ -482,6 +483,53 @@ export class CompanyUsersService {
                 ExpireTime: ExpiresAccessToken,
                 ExpireTimeRefresh: ExpiresRefreshToken,
                 User: companyUser,
+                Success: true,
+            };
+        }
+
+        throw new BadRequestException(
+            BadRequestExceptionType.BAD_REQUEST,
+            new Error(ResponseMessage.TR403),
+            403,
+        );
+    }
+
+    async changePass(cred: CompanyUserPassChangeDto) {
+        if (!cred.Email || !cred.NewPassword || !cred.OldPassword) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR436),
+                436,
+            );
+        }
+        const worker = await this.companyUserService.findUnique({
+            Email: cred.Email,
+        });
+
+        if (!worker) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+                406,
+            );
+        }
+
+        if (
+            worker &&
+            (await bcrypt.compare(cred.OldPassword, worker.Password))
+        ) {
+            await this.companyUserService.update({
+                where: {
+                    Id: worker.Id,
+                },
+                data: {
+                    Password: await bcrypt.hash(cred.NewPassword, 10),
+                },
+            });
+
+            // Response varsa Success
+            return {
+                Data: ResponseMessage.TR211,
                 Success: true,
             };
         }

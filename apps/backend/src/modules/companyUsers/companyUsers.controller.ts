@@ -7,6 +7,7 @@ import {
     RolesRequired,
 } from '@shared';
 import {
+    CompanyUserPassChangeDto,
     LoginUserDto,
     SendCodeDTO,
     UserParamsDto,
@@ -55,6 +56,12 @@ export class CompanyUsersController {
     @Post('login')
     async login(@Body() data: LoginUserDto) {
         return this.companyUsersService.login(data);
+    }
+
+    @AllowUnauthorizedRequest()
+    @Post('changepassword')
+    async updatePassword(@Body() data: CompanyUserPassChangeDto) {
+        return this.companyUsersService.changePass(data);
     }
 
     @StaticTokenRequired()
