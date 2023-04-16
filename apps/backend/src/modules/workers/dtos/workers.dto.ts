@@ -156,3 +156,20 @@ export class WorkerLoginDto {
     @IsString()
     Password: string;
 }
+
+export class WorkerPassChangeDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsEmail()
+    Email: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    OldPassword: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    NewPassword: string;
+}

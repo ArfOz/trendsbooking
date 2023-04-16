@@ -438,6 +438,7 @@ export class DepartmentsService {
             PrivateKey: privKey,
             PublicKey: pubKey,
             Role: input.Roles,
+            FirstPass: true,
             WorkTime: {
                 createMany: {
                     data: input?.WorkTime,
