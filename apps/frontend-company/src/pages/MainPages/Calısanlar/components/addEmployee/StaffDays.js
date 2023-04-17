@@ -64,16 +64,21 @@ function StaffDays() {
                     }
                     sx={{
                         background: '#FFFFFF',
-                        border: 'primary',
+                        border: 'none',
                         boxShadow: 'none',
-                        width: '100%',
+                        width: '100%',                    
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
+                       
+                     
                         '&:hover': {
                             backgroundColor: '#FFFF',
+                            border: 'none',
+                        boxShadow: 'none',
                         },
-                        m: 0.99,
+                       m:0.99
+                      
                     }}
                 >
                     <Typography

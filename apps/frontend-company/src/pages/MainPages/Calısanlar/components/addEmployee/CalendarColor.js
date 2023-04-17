@@ -44,17 +44,20 @@ function CalendarColor() {
                     sx={{
                         background: '#FFFFFF',
                         border: 'none',
-                        boxShadow: '0none',
-                        width: '100%',
-
+                        boxShadow: 'none',
+                        width: '100%',                    
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-
+                       
+                     
                         '&:hover': {
                             backgroundColor: '#FFFF',
+                            border: 'none',
+                        boxShadow: 'none',
                         },
-                        m: 0.99,
+                       m:0.99
+                      
                     }}
                 >
                     <Typography
@@ -87,20 +90,25 @@ function CalendarColor() {
             >
                 <Button
                     variant="contained"
+                    
                     sx={{
+                  
                         background: '#FFFFFF',
                         border: 'none',
-                        boxShadow: '0none',
-                        width: '40%',
-
+                        boxShadow: 'none',
+                        width: '100%',                    
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-
+                       
+                     
                         '&:hover': {
                             backgroundColor: '#FFFF',
+                            border: 'none',
+                        boxShadow: 'none',
                         },
-                        m: 0.99,
+                       m:0.99
+                      
                     }}
                 >
                     <Typography
@@ -122,7 +130,7 @@ function CalendarColor() {
                     variant="contained"
                     color="green"
                     sx={{
-                        width: '60%',
+                        width: '80%',
                         height: '6vh',
                         ml: 2,
                     }}

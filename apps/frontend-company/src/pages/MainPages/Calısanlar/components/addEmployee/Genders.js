@@ -46,9 +46,8 @@ function Genders() {
                 sx={{
                     background: '#FFFFFF',
                     border: 'none',
-                    boxShadow: '0none',
-                    width: '100%',
-                    
+                    boxShadow: 'none',
+                    width: '100%',                    
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
@@ -56,6 +55,8 @@ function Genders() {
                  
                     '&:hover': {
                         backgroundColor: '#FFFF',
+                        border: 'none',
+                    boxShadow: 'none',
                     },
                    m:0.99
                   
@@ -102,9 +103,8 @@ function Genders() {
                 sx={{
                     background: '#FFFFFF',
                     border: 'none',
-                    boxShadow: '0none',
-                    width: '100%',
-                  
+                    boxShadow: 'none',
+                    width: '100%',                    
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
@@ -112,6 +112,8 @@ function Genders() {
                  
                     '&:hover': {
                         backgroundColor: '#FFFF',
+                        border: 'none',
+                    boxShadow: 'none',
                     },
                    m:0.99
                   
