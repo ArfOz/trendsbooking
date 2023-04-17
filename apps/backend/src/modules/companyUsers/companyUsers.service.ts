@@ -182,28 +182,31 @@ export class CompanyUsersService {
 
         // Create a new user
         const newUser = await this.companyUserService.create({
-            Email: input.Email,
             FirstName: input.FirstName,
             LastName: input.LastName,
-            Username: input.Username,
+            Email: input.Email,
+            Password: await bcrypt.hash(input.Password, 10),
             Phone: input.Phone,
+            Username: input.Username,
             CbFirst: input.CbFirst,
-            Country: input.Country,
             CreatedAt: new Date(),
             UpdatedAt: new Date(),
-            Password: await bcrypt.hash(input.Password, 10),
             PrivateKey: privKey,
             PublicKey: pubKey,
-            City: input.City,
-            District: input.District,
-            IBAN: input.IBAN,
-            Neighborhood: input.Neighborhood,
-            Salon: input.Salon,
-            TaxAdmin: input.TaxAdmin,
-            TaxNo: input.TaxNo,
             TCKN: input.TCKN,
-            Sector: input.Sector,
             IsActive: false,
+            Departments: {
+                create: {
+                    City: input.City,
+                    Country: input.Country,
+                    District: input.District,
+                    Neighborhood: input.Neighborhood,
+                    IBAN: input.IBAN,
+                    Salon: input.Salon,
+                    TaxAdmin: input.TaxAdmin,
+                    TaxNo: input.TaxNo,
+                },
+            },
         });
 
         // Verification code
@@ -262,7 +265,7 @@ export class CompanyUsersService {
                 'email' in payload &&
                 data.Code
             ) {
-                const companyUser = await this.companyUserService.get({
+                const companyUser = await this.companyUserService.findUnique({
                     Id: payload.Id,
                 });
 
@@ -418,10 +421,8 @@ export class CompanyUsersService {
     }
 
     async login(cred: LoginUserDto): Promise<ResponseLoginCompanyUserDTO> {
-        const companyUser = await this.companyUserService.findFirst({
-            where: {
-                Email: cred.Email,
-            },
+        const companyUser = await this.companyUserService.findUnique({
+            Email: cred.Email,
         });
 
         if (!companyUser) {
@@ -580,6 +581,6 @@ export class CompanyUsersService {
     async profile(
         user: CompanyUserParamsDto, // : Promise<ResponseCompanyUserProfileUserDTO>
     ) {
-        return await this.companyUserService.get({ Id: user.Id });
+        return await this.companyUserService.findUnique({ Id: user.Id });
     }
 }

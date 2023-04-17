@@ -23,8 +23,8 @@ enum ServiceTypeEnum {
 }
 
 enum WorkerRoles {
-    Normal = 'Normal',
-    Admin = 'Admin',
+    WorkerBasic = 'WorkerBasic',
+    WorkerAdmin = 'WorkerAdmin',
 }
 
 enum ServiceGender {
@@ -34,11 +34,6 @@ enum ServiceGender {
 }
 
 export class WorkTime {
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsNumber()
-    Id: number;
-
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
@@ -68,6 +63,11 @@ export class WorkTime {
     @IsNotEmpty()
     @IsString()
     NightEndAt: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Days: number;
 }
 export class WorkerCreateJsonDto {
     @ApiProperty()
@@ -95,17 +95,57 @@ export class AddDepartmentsJsonDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    Salon: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
     ServiceType: ServiceTypeEnum;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsObject()
     WorkTime: WorkTime;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    TaxNo: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    TaxAdmin: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    IBAN: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Sector?: ServiceGender;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Salon: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Country: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    City: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    District: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Neighborhood: string;
 }
 
 export class UpdateDepartmentsJsonDto {
@@ -186,6 +226,21 @@ export class AddWorkerJsonDto {
     @IsOptional()
     @IsObject()
     Services?: object;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Roles?: WorkerRoles;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Email?: string | null;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Password?: string | null;
 }
 
 export class AddServiceJsonDto {

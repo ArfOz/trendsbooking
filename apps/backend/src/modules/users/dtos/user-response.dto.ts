@@ -71,6 +71,16 @@ export class UserParamsDto {
     @IsOptional()
     @IsString()
     Phone: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Role: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    DepartmentId?: number;
 }
 export class ResponseLoginUserDTO {
     @ApiProperty()
@@ -362,4 +372,26 @@ export class LoginUserDto {
     @IsNotEmpty()
     @IsString()
     Password: string;
+}
+
+export class RandevuCreateDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    Worker: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    Service: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    StartTime: Date | string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    EndTime: Date | string;
 }

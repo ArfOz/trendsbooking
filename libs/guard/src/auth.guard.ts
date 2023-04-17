@@ -1,4 +1,4 @@
-import { UserRole } from '@prisma/client';
+import { UserRole, WorkerRole } from '@prisma/client';
 // noinspection JSMethodCanBeStatic
 import {
     CanActivate,
@@ -28,6 +28,9 @@ import { ExpiredReasonType } from '@prisma/client';
 import ResponseMessage from '@shared/enums/response-message.json';
 import { UserPayloadDto, UserType } from '@auth';
 
+const Roles = { ...UserRole, ...WorkerRole };
+
+type Role = keyof typeof Roles;
 export interface req extends Request {
     user: string; // or any other type
 }
@@ -70,7 +73,7 @@ export class AuthGuard implements CanActivate {
             context.getHandler(),
         );
 
-        const rolesRequired = this.reflector.get<UserRole[]>(
+        const rolesRequired = this.reflector.get<Role[]>(
             'rolesRequired',
             context.getHandler(),
         );
@@ -83,7 +86,7 @@ export class AuthGuard implements CanActivate {
     private async validateRequest(
         req,
         staticTokenRequired: boolean,
-        rolesRequired?: UserRole[],
+        rolesRequired?: Role[],
     ): Promise<boolean> {
         // Get token from headers
         const token = this.getBearerToken(
@@ -124,13 +127,26 @@ export class AuthGuard implements CanActivate {
                 exist = await this.prisma.userToken.findFirst({
                     where: { UserId: userPayload.Id, AccessToken: token },
                 });
+                break;
+
+            case UserType.WorkerAdmin:
+                exist = await this.prisma.userToken.findFirst({
+                    where: { WorkerId: userPayload.Id, AccessToken: token },
+                });
+
+                break;
+
+            case UserType.WorkerBasic:
+                exist = await this.prisma.userToken.findFirst({
+                    where: { WorkerId: userPayload.Id, AccessToken: token },
+                });
 
                 break;
             default:
                 throw new TrendsException(
                     UnauthorizedExceptionType.NO_USER_ROLE,
                     new Error(ResponseMessage.TR425),
-                    422,
+                    425,
                 );
         }
 
@@ -183,6 +199,18 @@ export class AuthGuard implements CanActivate {
                     where: { Id: userPayload.Id },
                 });
                 break;
+
+            case UserType.WorkerAdmin:
+                user = await this.prisma.worker.findUnique({
+                    where: { Id: userPayload.Id },
+                });
+                break;
+
+            case UserType.WorkerBasic:
+                user = await this.prisma.worker.findUnique({
+                    where: { Id: userPayload.Id },
+                });
+                break;
             default:
                 throw new TrendsException(
                     UnauthorizedExceptionType.NO_USER_ROLE,
@@ -190,7 +218,6 @@ export class AuthGuard implements CanActivate {
                     422,
                 );
         }
-
         if (!user) {
             throw new UserNotExistException(
                 UnauthorizedExceptionType.USER_NOT_REGISTERED,

@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Prisma, DepartmentPhotos } from '@prisma/client';
 import sharp from 'sharp';
 import { generate } from 'generate-password';
+import * as bcrypt from 'bcrypt';
 
 // Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
@@ -9,6 +10,7 @@ import {
     BadRequestExceptionType,
     BadRequestException,
     ImageServerService,
+    KeypairService,
 } from '@shared';
 import {
     DepartmentService,
@@ -31,16 +33,21 @@ import {
     UpdateWorkerJsonDto,
 } from './dtos/departments.dto';
 import { WorkersGetJsonDto } from '../workers/dtos/workers.dto';
+import generalConfig from '@shared/config/general.config';
+import { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class DepartmentsService {
     constructor(
+        @Inject(generalConfig.KEY)
+        private readonly generalCfg: ConfigType<typeof generalConfig>,
         private readonly departmentService: DepartmentService,
         private readonly departmentPhotosService: DepartmentPhotosService,
         private readonly imageServer: ImageServerService,
         private readonly workerService: WorkerService,
         private readonly serviceService: ServicesService,
         private readonly serviceWorkerService: ServiceWorkerService,
+        private readonly keypairService: KeypairService,
     ) {}
     async add(user: UserParamsDto, input: AddDepartmentsJsonDto) {
         if (!input.Salon || !input.ServiceType) {
@@ -60,10 +67,23 @@ export class DepartmentsService {
         });
 
         const data: Prisma.DepartmentCreateInput = {
+            Country: input.Country,
+            City: input.City,
+            District: input.District,
+            IBAN: input.IBAN,
+            Neighborhood: input.Neighborhood,
+            TaxAdmin: input.TaxAdmin,
+            TaxNo: input.TaxNo,
+            Sector: input.Sector,
             Salon: input.Salon,
             ServiceType: input.ServiceType,
             CompanyUser: { connect: { Id: user.Id } },
             DepartmentID: departmentId,
+            WorkTime: {
+                createMany: {
+                    data: input?.WorkTime,
+                },
+            },
         };
 
         await this.departmentService.create(data);
@@ -121,7 +141,6 @@ export class DepartmentsService {
             );
         }
 
-        console.log('asdasdasd', companyDepartment);
         const data: Prisma.DepartmentUpdateInput = {
             CompanyUser: {
                 connect: { Id: user.Id },
@@ -369,20 +388,59 @@ export class DepartmentsService {
                 427,
             );
         }
+        const exist = await this.workerService.findUnique({
+            Email: input.Email,
+        });
+
+        if (exist) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR434),
+                434,
+            );
+        }
+
+        const worker = await this.workerService.findMany({
+            where: {
+                Email: input.Email,
+            },
+        });
+        if (worker.length > 0) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR433),
+                433,
+            );
+        }
+
+        // Generate a public/private key pair
+        const keys = this.keypairService.generateKey();
+
+        // Encrypt the public and private keys
+        const pubKey = this.keypairService.encryptData(
+            this.generalCfg.publicKey,
+            this.generalCfg.privateKey,
+            keys.publicKey,
+        );
+        const privKey = this.keypairService.encryptData(
+            this.generalCfg.publicKey,
+            this.generalCfg.privateKey,
+            keys.secretKey,
+        );
 
         const data: Prisma.WorkerCreateInput = {
             FirstName: input.FirstName,
             LastName: input.LastName,
             Phone: input.Phone,
             Department: { connect: { Id: input.DepartmentId } },
+            Email: input.Email,
+            Password: await bcrypt.hash(input.Password, 10),
+            PrivateKey: privKey,
+            PublicKey: pubKey,
+            Role: input.Roles,
             WorkTime: {
-                create: {
-                    MorningStartAt: input?.WorkTime?.MorningStartAt || '',
-                    MorningEndAt: input?.WorkTime?.MorningEndAt || '',
-                    ShiftStart: input?.WorkTime?.ShiftStart || '',
-                    ShiftEnd: input?.WorkTime?.ShiftEnd || '',
-                    NightStartAt: input?.WorkTime?.NightStartAt || '',
-                    NightEndAt: input?.WorkTime?.NightEndAt || '',
+                createMany: {
+                    data: input?.WorkTime,
                 },
             },
             ServiceWorker: {
@@ -429,18 +487,17 @@ export class DepartmentsService {
                     Id: input?.DepartmentId,
                 },
             },
-            Roles: input.Roles,
+            Role: input.Roles,
         };
 
         let response = await this.workerService.update({ where, data });
 
-        await this.serviceWorkerService.deleteMany({
-            where: {
-                WorkerId: input.WorkerId,
-            },
-        });
-
         if (input.Services) {
+            await this.serviceWorkerService.deleteMany({
+                where: {
+                    WorkerId: input.WorkerId,
+                },
+            });
             response = await this.workerService.update({
                 where: {
                     Id: input.WorkerId,
@@ -469,7 +526,7 @@ export class DepartmentsService {
                 CompanyUserId: user.Id,
             },
         };
-        const data = await this.workerService.find({ where: whereWorker });
+        const data = await this.workerService.findMany({ where: whereWorker });
 
         if (!data || data.length < 1) {
             throw new BadRequestException(

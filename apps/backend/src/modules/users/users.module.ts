@@ -7,6 +7,8 @@ import {
     PrismaService,
     UserService,
     UserOtpCodeService,
+    RandevuService,
+    ServicesService,
 } from '@database';
 import { UsersService } from './users.service';
 import { KeypairModule } from '@shared';
@@ -31,6 +33,8 @@ import authConfig from '@auth/config/auth.config';
         UsersService,
         AuthService,
         UserOtpCodeService,
+        RandevuService,
+        ServicesService,
     ],
     controllers: [UsersController],
     exports: [UsersService],

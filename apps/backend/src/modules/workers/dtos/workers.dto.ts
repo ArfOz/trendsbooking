@@ -6,11 +6,17 @@ import {
     IsObject,
     IsOptional,
     IsArray,
+    IsEmail,
 } from 'class-validator';
 
 export enum WorkerRoles {
-    Admin = 'Admin',
-    Normal = 'Normal',
+    WorkerBasic = 'WorkerBasic',
+    WorkerAdmin = 'WorkerAdmin',
+}
+
+export enum WorkerRole {
+    WorkerBasic = 'WorkerBasic',
+    WorkerAdmin = 'WorkerAdmin',
 }
 export class WorkTime {
     @ApiProperty()
@@ -42,6 +48,11 @@ export class WorkTime {
     @IsNotEmpty()
     @IsString()
     NightEndAt: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Days: number;
 }
 
 export class WorkersAddJsonDto {
@@ -96,33 +107,52 @@ export class WorkersUpdateJsonDto {
     WorkerId?: number;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     FirstName?: string;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     LastName?: string;
 
     @ApiProperty()
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     Phone?: string;
 
-    // Burası daha sonra düzenlenmeli Önemli
-    @ApiProperty()
-    @IsOptional()
-    @IsObject()
-    WorkTime?: WorkTime;
-
     @ApiProperty()
     @IsOptional()
     @IsString()
-    Roles?: WorkerRoles;
+    Email?: string;
 
     @ApiProperty()
-    @IsOptional()
-    @IsArray()
-    Services?: Service;
+    @IsNotEmpty()
+    @IsString()
+    Password?: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Role?: WorkerRole;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    WorkTime?: WorkTime;
+
+    // ServiceWorker?: ServiceWorkerUpdateManyWithoutWorkerNestedInput;
+    // Randevu?: RandevuUpdateManyWithoutWorkerNestedInput;
+}
+
+export class WorkerLoginDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsEmail()
+    Email: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Password: string;
 }
