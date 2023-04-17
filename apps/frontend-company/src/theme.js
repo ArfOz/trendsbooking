@@ -12,7 +12,7 @@ const theme = createTheme({
         primary:{
             main:"#F65936",
             main2:"#1b5e20",
-          
+
         },
         secondary: {
             main: "#ffffff",
@@ -38,23 +38,23 @@ const theme = createTheme({
           main:"#0C323E",
         }
     },
-      
+
     components:{
         MuiButton:{
           defaultProps:{
             size:"large",
-            disableElevation: true,
+            //disableElevation: true,
             disableFocusRipple:true,
             disableRipple:true,
-                    
+
           }
         },
         MuiFab:{
           defaultProps:{
-            disableElevation: true,
+            //disableElevation: true,
             disableFocusRipple:true,
             disableRipple:true,
-                    
+
           }
         },
         MuiCheckbox: {
@@ -69,8 +69,8 @@ const theme = createTheme({
           },
         },
       },
-   
-     
+
+
 }
 
 )

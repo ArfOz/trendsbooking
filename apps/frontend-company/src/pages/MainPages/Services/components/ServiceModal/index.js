@@ -44,6 +44,11 @@ const ServiceModal = ({ open, onClose }) => {
         alert('Submit', event.target.name);
         console.log('post', newService);
 
+        setNewService({
+          ...newService,
+          Token:localStorage.getItem?.Token
+      });
+
         try {
             const result = await createServices(newService);
             console.log('Service created successfully: ' + result);

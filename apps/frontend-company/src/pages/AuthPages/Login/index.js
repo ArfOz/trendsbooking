@@ -146,7 +146,7 @@ const Login = () => {
             window.location.reload(true);
         }
     }, [auth.verifyCodeData, auth.loginUser]);
-
+    console.log(auth.loginErrors);
     return (
         <AuthLayout>
             <Box sx={{ backgroundColor: 'white' }}>
@@ -176,7 +176,7 @@ const Login = () => {
                                 sx={
                                     // burası email verification ile değişecek
                                     !(
-                                        auth.loginErrors?.response.data.details.toString() ===
+                                        auth.loginErrors?.response.data.details?.toString() ===
                                         'Lütfen hesabınızı etkinleştiriniz.'
                                     )
                                         ? boxStyle.leftside
@@ -302,7 +302,7 @@ const Login = () => {
                             display={
                                 // burası email verification ile değişecek
                                 // auth.loginUser?.Success ? 'flex' : 'none'
-                                auth.loginErrors?.response.data.details.toString() ===
+                                auth.loginErrors?.response.data.details?.toString() ===
                                 'Lütfen hesabınızı etkinleştiriniz.'
                                     ? 'flex'
                                     : 'none'
