@@ -36,6 +36,19 @@ function StaffDays() {
         console.log('İzin Bitiş Tarihi:', endDate);
     };
 
+    const CustomInput = ({ value, onClick }) => (
+        <TextField
+            value={value}
+            onClick={onClick}
+            variant="outlined"
+            sx={{
+                m: 1,
+
+                '& .MuiOutlinedInput-root': { border: 'none' },
+            }} // Stil değişikliği burada yapılır
+        />
+    );
+
     return (
         <>
             <Box
@@ -47,9 +60,10 @@ function StaffDays() {
                     borderRadius: '8.19802px',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
+                    alignItems: 'flex-start',
                     justifyContent: 'center',
                     mt: 3,
+                
                 }}
             >
                 <Button
@@ -66,19 +80,17 @@ function StaffDays() {
                         background: '#FFFFFF',
                         border: 'none',
                         boxShadow: 'none',
-                        width: '100%',                    
+                        width: '99.3%',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                       
-                     
+
                         '&:hover': {
                             backgroundColor: '#FFFF',
                             border: 'none',
-                        boxShadow: 'none',
+                            boxShadow: 'none',
                         },
-                       m:0.99
-                      
+                        m: 0.99,
                     }}
                 >
                     <Typography
@@ -98,60 +110,80 @@ function StaffDays() {
                 </Button>
 
                 {showCheckboxes && (
-                    <form
+                    <Box
+                        component="form"
                         onSubmit={handleFormSubmit}
-                        style={{
+                        sx={{
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'center',
-                            width: '95%',
-                            border: '1px solid red',
+                            width: '95%',                            
+                            m: 2,
+                            ml:4,
                         }}
                     >
-                    
-                            <DatePicker
-                                selected={startDate}
-                                onChange={handleStartDateChange}
-                                dateFormat="dd/MM/yyyy"
-                                placeholderText="İzin Başlangıç Tarihi"
-                                style={{
-                                    width: '48%',
-                                    background: '#FFFFFF',
-                                    border: '1.36634px solid #9A9A9A',
-                                    boxShadow: '0px 0px 21.8614px rgba(234, 76, 137, 0.06)',
-                                    borderRadius: '8.19802px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                  }}
-                                
-                            />
-                    
-
+                        <DatePicker
+                            selected={startDate}
+                            onChange={handleStartDateChange}
+                            dateFormat="dd/MM/yyyy"
+                            placeholderText="İzin Başlangıç Tarihi"
+                            customInput={
+                                <TextField
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{
+                                        border: 'none',
+                                        width: '70%',
+                                    }}
+                                />
+                            }
+                        />
                         <DatePicker
                             selected={endDate}
                             onChange={handleEndDateChange}
                             dateFormat="dd/MM/yyyy"
-                            className="form-control mt-2"
                             placeholderText="İzin Bitiş Tarihi"
+                            customInput={
+                                <TextField
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{
+                                        border: 'none',
+                                        width: '70%',
+                                    }}
+                                />
+                            }
                         />
+
                         <Button
                             type="submit"
                             variant="contained"
                             color="primary"
                             sx={{
-                                mt: 2,
-                                background: '#EA4C89',
-                                color: '#FFFFFF',
-                                borderRadius: '4.0989px',
-                                '&:hover': {
-                                    backgroundColor: '#EA4C89',
-                                },
+                                borderRadius: '5px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '30%',
+                               
+                                backgroundColor: '#F75936',
+                                '&:hover': { backgroundColor: '#F74600' },
                             }}
                         >
-                            Kaydet
+                            <Typography
+                                variant="body2"
+                                fontFamily="'Roboto', sans-serif"
+                                fontWeight={500}
+                                fontStyle="normal"
+                                sx={{
+                                    color: '#FFFFFF',
+                                    textTransform: 'capitalize',
+                                }}
+                            >
+                                Kaydet
+                            </Typography>
                         </Button>
-                    </form>
+                    </Box>
                 )}
             </Box>
         </>
