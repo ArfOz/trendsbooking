@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+//import DatePicker from 'react-datepicker';
+//import 'react-datepicker/dist/react-datepicker.css';
 
 function StaffDays() {
     const [showCheckboxes, setShowCheckboxes] = useState(false);
@@ -103,33 +103,8 @@ function StaffDays() {
                             border: '1px solid red',
                         }}
                     >
-                    
-                            <DatePicker
-                                selected={startDate}
-                                onChange={handleStartDateChange}
-                                dateFormat="dd/MM/yyyy"
-                                placeholderText="İzin Başlangıç Tarihi"
-                                style={{
-                                    width: '48%',
-                                    background: '#FFFFFF',
-                                    border: '1.36634px solid #9A9A9A',
-                                    boxShadow: '0px 0px 21.8614px rgba(234, 76, 137, 0.06)',
-                                    borderRadius: '8.19802px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                  }}
-                                
-                            />
-                    
 
-                        <DatePicker
-                            selected={endDate}
-                            onChange={handleEndDateChange}
-                            dateFormat="dd/MM/yyyy"
-                            className="form-control mt-2"
-                            placeholderText="İzin Bitiş Tarihi"
-                        />
+                            {/* npm  */}
                         <Button
                             type="submit"
                             variant="contained"

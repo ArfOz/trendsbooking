@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { createService } from './function';
 
 export const denemeFunc = async (setDeneme) => {
     setDeneme('deneme function.js');
@@ -65,14 +66,36 @@ export const postRegister = (data, setError, setResponse) => {
 //   }
 // };
 
-export const createServices = async (newService) => {
-    try {
-        const response = await axios.post(
-            'http://localhost:3300/api/departments/addservice',
-            newService,
-        );
-        return response.data;
-    } catch (error) {
-        console.error(error);
-    }
+// export const createServices = async (newService) => {
+//     try {
+//         const response = await axios.post(
+//             'http://localhost:3300/api/departments/addservice',
+//             newService,
+
+//         );
+//         return response.data;
+//     } catch (error) {
+//         console.error(error);
+//     }
+// };
+
+export const createServices = async (newService, token) => {
+    const options = {
+        method: 'POST',
+        url: 'http://localhost:3300/api/departments/addservice',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        data: newService,
+    };
+
+    axios
+        .request(options)
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log('error', error);
+        });
 };

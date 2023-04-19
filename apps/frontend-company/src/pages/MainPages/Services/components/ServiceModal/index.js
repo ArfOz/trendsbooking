@@ -45,9 +45,9 @@ const ServiceModal = ({ open, onClose }) => {
         console.log('post', newService);
 
         setNewService({
-          ...newService,
-          Token:localStorage.getItem?.Token
-      });
+            ...newService,
+            Token: localStorage.getItem('loginUserCompany.AccessToken'),
+        });
 
         try {
             const result = await createServices(newService);
