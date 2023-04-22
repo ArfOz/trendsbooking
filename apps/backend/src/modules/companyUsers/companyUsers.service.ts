@@ -1,5 +1,5 @@
 // Npm Packages
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { generate } from 'generate-password';
 import * as jwt from 'jsonwebtoken';
@@ -352,6 +352,57 @@ export class CompanyUsersService {
                 400,
             );
         }
+    }
+
+    async refreshUserToken(refreshToken: string) {
+        console.log('geldi');
+        const { AccessToken, RefreshToken, User } =
+            await this.authService.refreshToken(refreshToken, true);
+        const expireTime = new Date(
+            Date.now() + parseInt(this.authCfg.jwt_expired, 10) * 60 * 1000,
+        );
+        const expiretimeRefresh = new Date(
+            Date.now() +
+                parseInt(this.authCfg.jwt_refresh_expired, 10) * 60 * 1000,
+        );
+
+        console.log('reffdddd', refreshToken);
+
+        const userToken = await this.prismaService.userToken.findFirst({
+            where: {
+                CompanyUserId: User.Id,
+                RefreshToken: refreshToken,
+            },
+            include: {
+                User: true,
+            },
+        });
+        if (!userToken) {
+            throw new HttpException(ResponseMessage.TR405, 401);
+        }
+
+        await this.prismaService.userToken.update({
+            data: {
+                AccessToken: AccessToken,
+                RefreshToken: RefreshToken,
+                ExpiresIn: expireTime,
+                ExpiresInRefresh: expiretimeRefresh,
+                ExpiredReason: ExpiredReasonType.TokenRefreshed,
+                CreatedAt: new Date(),
+            },
+            where: { Id: userToken.Id },
+        });
+        delete User.Password;
+        delete User.Id;
+
+        return {
+            AccessToken,
+            RefreshToken,
+            ExpireTime: expireTime,
+            ExpireTimeRefresh: expiretimeRefresh,
+            User,
+            Success: true,
+        };
     }
 
     async sendEmailCode(data: SendCodeDTO) {

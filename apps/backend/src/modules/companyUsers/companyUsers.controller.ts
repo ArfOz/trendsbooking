@@ -45,7 +45,11 @@ export class CompanyUsersController {
         return this.companyUsersService.verifyCode(verifyCode);
     }
 
-    // Refreshtoken endpoint
+    @AllowUnauthorizedRequest()
+    @Post('refreshusertoken')
+    async refreshUserToken(@Body('RefreshToken') refreshToken: string) {
+        return this.companyUsersService.refreshUserToken(refreshToken);
+    }
 
     @AllowUnauthorizedRequest()
     @Post('sendcode')

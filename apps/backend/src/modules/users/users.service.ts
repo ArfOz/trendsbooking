@@ -333,7 +333,7 @@ export class UsersService {
 
     async refreshUserToken(refreshToken: string) {
         const { AccessToken, RefreshToken, User } =
-            await this.authService.refreshToken(refreshToken);
+            await this.authService.refreshToken(refreshToken, false);
         const expireTime = new Date(
             Date.now() + parseInt(this.authCfg.jwt_expired, 10) * 60 * 1000,
         );

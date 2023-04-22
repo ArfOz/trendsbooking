@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
-import { ExpiredReasonType } from '@prisma/client';
+import { ExpiredReasonType, Prisma, User } from '@prisma/client';
 
 // Modules export
 import {
@@ -9,7 +9,12 @@ import {
     TrendsException,
     NotFoundExceptionType,
 } from '@shared';
-import { UserOtpCodeService, UserService, PrismaService } from '@database';
+import {
+    UserOtpCodeService,
+    UserService,
+    PrismaService,
+    CompanyUserService,
+} from '@database';
 import { SendEmailDto, MailUtilsService } from '@mail-utils';
 import { MailModeType } from './enums/mailmode.enum';
 // Config settings
@@ -27,11 +32,15 @@ export class AuthService {
         private readonly authCfg: ConfigType<typeof authConfig>,
         private readonly prismaService: PrismaService,
         private readonly userService: UserService,
+        private readonly companyUserService: CompanyUserService,
         private readonly mailUtilsService: MailUtilsService,
         private readonly userOtpCodeService: UserOtpCodeService,
     ) {}
 
-    async refreshToken(token: string): Promise<{
+    async refreshToken(
+        token: string,
+        companyUser: boolean,
+    ): Promise<{
         AccessToken: string;
         RefreshToken: string;
         User: any;
@@ -41,15 +50,24 @@ export class AuthService {
             this.authCfg.jwt_secret_refresh!,
         ) as UserPayloadDto;
 
+        let where: Prisma.UserTokenWhereInput = {
+            RefreshToken: token,
+        };
+
+        console.log(userPayload);
+        where = companyUser
+            ? { ...where, CompanyUserId: userPayload.Id }
+            : { ...where, UserId: userPayload.Id };
+
         const userToken = await this.prismaService.userToken.findFirst({
-            where: {
-                UserId: userPayload.Id,
-                RefreshToken: token,
-            },
+            where,
             include: {
                 User: true,
+                CompanyUser: true,
             },
         });
+
+        console.log('userToken', userToken);
 
         if (!userToken) {
             throw new TrendsException(
@@ -58,7 +76,7 @@ export class AuthService {
                 400,
             );
         }
-        await this.prismaService.userToken.update({
+        const update: Prisma.UserTokenUpdateArgs = {
             where: {
                 Id: userToken.Id,
             },
@@ -66,11 +84,17 @@ export class AuthService {
                 ExpiresIn: new Date(),
                 ExpiredReason: ExpiredReasonType.TokenRefreshed,
             },
-        });
+        };
 
-        const user = await this.userService.get({
-            Id: userPayload.Id,
-        });
+        await this.prismaService.userToken.update(update);
+
+        const user = companyUser
+            ? await this.companyUserService.findUnique({
+                  Id: userPayload.Id,
+              })
+            : await this.userService.get({
+                  Id: userPayload.Id,
+              });
 
         // const userLoginHistory = await this.prismaService.userLoginHistory.findFirst({
         //     where: {
