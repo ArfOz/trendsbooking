@@ -54,7 +54,6 @@ export class AuthService {
             RefreshToken: token,
         };
 
-        console.log(userPayload);
         where = companyUser
             ? { ...where, CompanyUserId: userPayload.Id }
             : { ...where, UserId: userPayload.Id };
@@ -66,8 +65,6 @@ export class AuthService {
                 CompanyUser: true,
             },
         });
-
-        console.log('userToken', userToken);
 
         if (!userToken) {
             throw new TrendsException(
