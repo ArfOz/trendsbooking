@@ -179,6 +179,7 @@ model Randevu {
   ServiceId Int
   StartTime DateTime
   EndTime   DateTime
+  // User eklenecek
 }
 
 model UserToken {
@@ -283,6 +284,7 @@ enum ServiceGender {
 enum OTPType {
   VerifyPhone
   VerifyEmail
+  ResetPassword
 }
 
 enum UserRole {

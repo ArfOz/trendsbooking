@@ -67,12 +67,6 @@ export class CompanyUsersController {
         return this.companyUsersService.changePassword(user, data);
     }
 
-    @AllowUnauthorizedRequest()
-    @Post('forgotpassword')
-    async forgotPassword(@Body() data: CompanyUserForgottenPasswordDto) {
-        return this.companyUsersService.forgotPassword(data);
-    }
-
     @StaticTokenRequired()
     @Get('companies')
     async companies(@Body() data: GetCompaniesWhereFilter) {
@@ -83,6 +77,12 @@ export class CompanyUsersController {
     @Post('activate')
     async activate(@Body() data: ActivateCompanyUserDto) {
         return this.companyUsersService.activate(data);
+    }
+
+    @AllowUnauthorizedRequest()
+    @Post('forgotpassword')
+    async forgotPassword(@Body() data: CompanyUserForgottenPasswordDto) {
+        return this.companyUsersService.forgotPassword(data);
     }
 
     @RolesRequired(['Provider'])
