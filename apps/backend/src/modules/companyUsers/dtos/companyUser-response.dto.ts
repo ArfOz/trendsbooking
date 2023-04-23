@@ -161,7 +161,7 @@ export class CreateCompanyUserJsonDto {
     @IsString()
     IBAN: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: ServiceGenders })
     @IsNotEmpty()
     @IsString()
     Sector: ServiceGenders;
@@ -328,7 +328,7 @@ export class GetCompaniesWhereFilter {
     @IsOptional()
     IBAN?: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: Genders })
     @IsString()
     @IsOptional()
     Sector?: Genders;

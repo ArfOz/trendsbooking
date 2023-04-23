@@ -355,7 +355,6 @@ export class CompanyUsersService {
     }
 
     async refreshUserToken(refreshToken: string) {
-        console.log('geldi');
         const { AccessToken, RefreshToken, User } =
             await this.authService.refreshToken(refreshToken, true);
         const expireTime = new Date(
@@ -418,7 +417,7 @@ export class CompanyUsersService {
             );
         }
         if (
-            data.MailModeType === OTPType.VerifyEmail &&
+            data.MailReason === OTPType.VerifyEmail &&
             companyUser.IsEmailVerified
         ) {
             throw new AlreadyExistsException(
@@ -438,7 +437,7 @@ export class CompanyUsersService {
 
         let subject;
 
-        switch (data.MailModeType) {
+        switch (data.MailReason) {
             case MailModeType.VerifyEmail:
                 subject = "Trendsbooking'e hoşheldiniz";
                 break;
@@ -464,7 +463,7 @@ export class CompanyUsersService {
         await this.mailUtilsService.sendEmail(options);
 
         const payload = {
-            mode: data.MailModeType,
+            mode: data.MailReason,
             email: data.Email,
             Id: companyUser.Id,
         };
@@ -484,7 +483,7 @@ export class CompanyUsersService {
                 Date.now() +
                     parseInt(this.authCfg.codeValidationTime, 10) * 60 * 1000,
             ),
-            Type: data.MailModeType,
+            Type: data.MailReason,
         });
 
         return {

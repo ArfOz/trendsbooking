@@ -398,6 +398,7 @@ export class UsersService {
                         406,
                     );
                 }
+                console.log('payload', payload);
 
                 const otpCode = await this.userOtpCodeService.find({
                     where: {
@@ -423,6 +424,8 @@ export class UsersService {
                     );
                 }
 
+                console.log('otppp', otpCode);
+
                 // if (otpCode[0].Attempts >= 5) {
                 //     throw new BadRequestException(
                 //         BadRequestExceptionType.BAD_REQUEST,
@@ -432,12 +435,14 @@ export class UsersService {
 
                 user = await this.userService.update({
                     where: {
-                        Id: payload.Id,
+                        Email: payload.email,
                     },
                     data: {
                         IsEmailVerified: true,
                     },
                 });
+
+                console.log('user', user);
                 await this.userOtpCodeService.update({
                     where: {
                         Id: otpCode[0].Id,
@@ -489,6 +494,14 @@ export class UsersService {
                 410,
             );
         }
+
+        if (!(data.MailReason in MailModeType) || !data.Email) {
+            throw new AlreadyExistsException(
+                VerifyCodeExceptionType.VERIFIED,
+                new Error(ResponseMessage.TR438),
+                438,
+            );
+        }
         // Verification code
         const code = generate({
             numbers: true,
@@ -520,9 +533,10 @@ export class UsersService {
 
         await this.mailUtilsService.sendEmail(options);
 
+        console.log('user', user);
         const payload = {
             mode: MailModeType.VerifyEmail,
-            email: data.Email,
+            email: user.Email,
             Id: user.Id,
         };
 

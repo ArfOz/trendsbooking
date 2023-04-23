@@ -17,7 +17,7 @@ export enum Genders {
 }
 
 export enum MailModeType {
-    VerifyPhone = 'VerifyPhone',
+    // VerifyPhone = 'VerifyPhone',
     VerifyEmail = 'VerifyEmail',
     ResetPassword = 'ResetPassword',
     EmailChange = 'EmailChange',
@@ -191,10 +191,10 @@ export class ResponseUserProfileUserDTO {
 }
 
 export class SendCodeDTO {
-    @ApiProperty()
-    @IsEmail()
+    @ApiProperty({ enum: MailModeType })
+    @IsString()
     @IsNotEmpty()
-    MailModeType: MailModeType;
+    MailReason: MailModeType;
 
     @ApiProperty()
     @IsEmail()
