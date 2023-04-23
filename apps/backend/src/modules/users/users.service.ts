@@ -424,7 +424,7 @@ export class UsersService {
                     );
                 }
 
-                console.log('otppp', otpCode);
+                console.log('otppp', otpCode, payload.email);
 
                 // if (otpCode[0].Attempts >= 5) {
                 //     throw new BadRequestException(
@@ -546,7 +546,7 @@ export class UsersService {
 
         return {
             Email: user.Email,
-            Data: ResponseMessage.TR202,
+            Data: ResponseMessage.TR212,
             Token: token,
             Success: true,
         };

@@ -165,21 +165,25 @@ export class UserService {
             let encryptedDataPhone;
 
             let newData: Prisma.UserUpdateInput = { ...data };
-            if (where.Email) {
+
+            where.Email = this.keypairService.encryptWithAppKeys(where.Email);
+            if (data.Email) {
                 encryptedDataEmail = this.keypairService.encryptWithAppKeys(
-                    isString(data.Email) ? data.Email : data.Email.set,
+                    isString(data.Email) ? data.Email : data?.Email?.set,
                 );
                 newData = {
                     ...data,
                     Email: encryptedDataEmail,
                 };
                 console.log('encrypt', encryptedDataEmail);
-                where.Email = encryptedDataEmail;
+                data.Email = encryptedDataEmail;
             }
+
+            console.log('prismaupdateuser', where, data);
 
             if (data.Phone) {
                 encryptedDataPhone = this.keypairService.encryptWithAppKeys(
-                    isString(data.Phone) ? data.Phone : data.Phone.set,
+                    isString(data.Phone) ? data?.Phone : data?.Phone?.set,
                 );
 
                 newData = {
@@ -187,7 +191,7 @@ export class UserService {
                     Phone: encryptedDataPhone,
                 };
             }
-            console.log(newData);
+            console.log('naberrrrrrrrrrrrrrrrrrrrrrr', newData, where);
 
             const updatedUser = await this.prisma.user.update({
                 data: {
@@ -198,15 +202,15 @@ export class UserService {
                 },
             });
 
-            // if (updatedUser.Email)
-            //     updatedUser.Email = this.keypairService.decryptWithAppKeys(
-            //         updatedUser.Email,
-            //     );
+            if (updatedUser.Email)
+                updatedUser.Email = this.keypairService.decryptWithAppKeys(
+                    updatedUser.Email,
+                );
 
-            // if (updatedUser.Phone)
-            //     updatedUser.Phone = this.keypairService.decryptWithAppKeys(
-            //         updatedUser.Phone,
-            //     );
+            if (updatedUser.Phone)
+                updatedUser.Phone = this.keypairService.decryptWithAppKeys(
+                    updatedUser.Phone,
+                );
 
             return updatedUser;
         } catch (error) {
