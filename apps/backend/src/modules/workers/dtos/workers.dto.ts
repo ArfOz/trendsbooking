@@ -14,10 +14,6 @@ export enum WorkerRoles {
     WorkerAdmin = 'WorkerAdmin',
 }
 
-export enum WorkerRole {
-    WorkerBasic = 'WorkerBasic',
-    WorkerAdmin = 'WorkerAdmin',
-}
 export class WorkTime {
     @ApiProperty()
     @IsNotEmpty()
@@ -131,10 +127,10 @@ export class WorkersUpdateJsonDto {
     @IsString()
     Password?: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: WorkerRoles })
     @IsNotEmpty()
     @IsString()
-    Role?: WorkerRole;
+    Role?: WorkerRoles;
 
     @ApiProperty()
     @IsNotEmpty()

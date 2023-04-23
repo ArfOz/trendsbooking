@@ -92,7 +92,7 @@ export class AddDepartmentsJsonDto {
     @IsObject()
     Workers: WorkerCreateJsonDto;
 
-    @ApiProperty()
+    @ApiProperty({ enum: ServiceTypeEnum })
     @IsNotEmpty()
     @IsString()
     ServiceType: ServiceTypeEnum;
@@ -117,7 +117,7 @@ export class AddDepartmentsJsonDto {
     @IsString()
     IBAN: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: ServiceGender })
     @IsNotEmpty()
     @IsString()
     Sector?: ServiceGender;
@@ -159,7 +159,7 @@ export class UpdateDepartmentsJsonDto {
     @IsString()
     Salon: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: ServiceTypeEnum })
     @IsNotEmpty()
     @IsString()
     ServiceType: ServiceTypeEnum;
@@ -227,7 +227,7 @@ export class AddWorkerJsonDto {
     @IsObject()
     Services?: object;
 
-    @ApiProperty()
+    @ApiProperty({ enum: WorkerRoles })
     @IsNotEmpty()
     @IsString()
     Roles?: WorkerRoles;
@@ -244,7 +244,7 @@ export class AddWorkerJsonDto {
 }
 
 export class AddServiceJsonDto {
-    @ApiProperty()
+    @ApiProperty({ enum: ServiceTypeEnum })
     @IsOptional()
     @IsString()
     ServiceType: ServiceTypeEnum;
@@ -259,7 +259,7 @@ export class AddServiceJsonDto {
     @IsString()
     ServiceTimes: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: ServiceGender })
     @IsOptional()
     @IsString()
     ServiceGender: ServiceGender;
@@ -313,7 +313,7 @@ export class UpdateWorkerJsonDto {
     @IsNumber()
     DepartmentId?: number;
 
-    @ApiProperty()
+    @ApiProperty({ enum: WorkerRoles })
     @IsOptional()
     @IsString()
     Roles?: WorkerRoles;
@@ -327,6 +327,7 @@ export class UpdateWorkerJsonDto {
     @IsOptional()
     @IsObject()
     Services: Services;
+
     @ApiProperty()
     @IsOptional()
     @IsNumber()
@@ -334,7 +335,7 @@ export class UpdateWorkerJsonDto {
 }
 
 export class UpdateServiceJsonDto {
-    @ApiProperty()
+    @ApiProperty({ enum: ServiceTypeEnum })
     @IsOptional()
     @IsString()
     ServiceType?: ServiceTypeEnum;
@@ -349,7 +350,7 @@ export class UpdateServiceJsonDto {
     @IsString()
     ServiceTimes?: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: ServiceGender })
     @IsOptional()
     @IsString()
     ServiceGender?: ServiceGender;
