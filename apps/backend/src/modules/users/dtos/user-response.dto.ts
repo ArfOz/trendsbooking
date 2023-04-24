@@ -212,6 +212,11 @@ export class VerifyCodeDTO {
     @IsString()
     @IsNotEmpty()
     Token: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    NewPassword: string;
 }
 
 export class UserProfileUpdateDto {

@@ -1,4 +1,3 @@
-import { IsEmail } from 'class-validator';
 // Npm packages
 
 import { Injectable, Inject, HttpException } from '@nestjs/common';
@@ -381,6 +380,13 @@ export class UsersService {
 
     async verifyCode(data: VerifyCodeDTO) {
         try {
+            if (!data.Code || !data.NewPassword || !data.Token) {
+                throw new AlreadyExistsException(
+                    VerifyCodeExceptionType.VERIFIED,
+                    new Error(ResponseMessage.TR440),
+                    440,
+                );
+            }
             const payload = jwt.verify(data.Token, this.authCfg.jwt_secret);
             if (
                 typeof payload === 'object' &&
@@ -433,16 +439,32 @@ export class UsersService {
                 //     );
                 // }
 
-                user = await this.userService.update({
-                    where: {
-                        Email: payload.email,
-                    },
-                    data: {
-                        IsEmailVerified: true,
-                    },
-                });
+                if (otpCode[0].Type === OTPType.ResetPassword) {
+                    user = await this.userService.update({
+                        where: {
+                            Email: payload.email,
+                        },
+                        data: {
+                            Password: await bcrypt.hash(data.NewPassword, 10),
+                        },
+                    });
+                } else if (otpCode[0].Type === OTPType.VerifyEmail) {
+                    user = await this.userService.update({
+                        where: {
+                            Email: payload.email,
+                        },
+                        data: {
+                            IsEmailVerified: true,
+                        },
+                    });
+                } else {
+                    throw new OtpCodeNotFoundException(
+                        VerifyCodeExceptionType.CODE_NOT_FOUND,
+                        new Error(ResponseMessage.TR439),
+                        439,
+                    );
+                }
 
-                console.log('user', user);
                 await this.userOtpCodeService.update({
                     where: {
                         Id: otpCode[0].Id,
@@ -487,7 +509,7 @@ export class UsersService {
                 409,
             );
         }
-        if (user.IsEmailVerified) {
+        if (user.IsEmailVerified && data.MailReason === OTPType.VerifyEmail) {
             throw new AlreadyExistsException(
                 VerifyCodeExceptionType.VERIFIED,
                 new Error(ResponseMessage.TR410),
@@ -511,6 +533,42 @@ export class UsersService {
             length: 4,
         });
 
+        let subject;
+        switch (data.MailReason) {
+            case MailModeType.VerifyEmail:
+                subject = "Trendsbooking'e hoşheldiniz";
+                break;
+
+            case MailModeType.ResetPassword:
+                subject = 'Trendsbooking Şifre Sıfırlama İsteğiniz';
+                break;
+
+            default:
+                throw new AlreadyExistsException(
+                    AlreadyExistsExceptionType.NOT_EXIST,
+                    new Error(ResponseMessage.TR437),
+                    437,
+                );
+        }
+
+        const options: SendEmailDto = {
+            to: data.Email,
+            html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
+            subject,
+        };
+
+        await this.mailUtilsService.sendEmail(options);
+
+        const payload = {
+            mode: data.MailReason,
+            email: data.Email,
+            Id: user.Id,
+        };
+
+        const token = jwt.sign(payload, this.authCfg.jwt_secret, {
+            expiresIn: `${this.authCfg.codeValidationTime}m`,
+        });
+
         await this.userOtpCodeService.create({
             User: {
                 connect: {
@@ -525,31 +583,16 @@ export class UsersService {
             Type: OTPType.VerifyEmail,
         });
 
-        const options: SendEmailDto = {
-            to: data.Email,
-            html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
-            subject: "Trendsbooking'e hoşheldiniz",
-        };
-
-        await this.mailUtilsService.sendEmail(options);
-
-        console.log('user', user);
-        const payload = {
-            mode: MailModeType.VerifyEmail,
-            email: user.Email,
-            Id: user.Id,
-        };
-
-        const token = jwt.sign(payload, this.authCfg.jwt_secret, {
-            expiresIn: `${this.authCfg.codeValidationTime}m`,
-        });
-
         return {
             Email: user.Email,
             Data: ResponseMessage.TR212,
             Token: token,
             Success: true,
         };
+    }
+
+    async forgotPassword() {
+        return null;
     }
 
     async logout(cred: UserParamsDto) {

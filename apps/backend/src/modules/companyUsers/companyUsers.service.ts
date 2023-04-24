@@ -426,6 +426,14 @@ export class CompanyUsersService {
                 410,
             );
         }
+
+        if (!(data.MailReason in MailModeType) || !data.Email) {
+            throw new AlreadyExistsException(
+                VerifyCodeExceptionType.VERIFIED,
+                new Error(ResponseMessage.TR438),
+                438,
+            );
+        }
         // Verification code
         const code = generate({
             numbers: true,
