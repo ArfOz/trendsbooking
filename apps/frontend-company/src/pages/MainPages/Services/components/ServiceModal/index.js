@@ -22,6 +22,7 @@ const initialState = {
     Prim: '',
     ServiceGender: '',
     Worker: '',
+    Token: JSON.parse(localStorage.getItem('loginUserCompany'))?.AccessToken
 };
 
 const ServiceModal = ({ open, onClose }) => {
@@ -38,16 +39,18 @@ const ServiceModal = ({ open, onClose }) => {
             [event.target.name]: event.target.value,
         });
     };
+    
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         alert('Submit', event.target.name);
         console.log('post', newService);
 
-        setNewService({
-            ...newService,
-            Token: localStorage.getItem('loginUserCompany.AccessToken'),
-        });
+        // setNewService({
+        //     ...newService,
+        //     Token: JSON.parse(localStorage.getItem('loginUserCompany')).AccessToken,
+        // });
+        console.log('newService :>> ', newService);
 
         try {
             const result = await createServices(newService);
