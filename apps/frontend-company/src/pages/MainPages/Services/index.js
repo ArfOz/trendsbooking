@@ -7,10 +7,7 @@ import Footer from '../../../components/Footer';
 
 import { Navbar } from './components';
 import BasicTable from './components/ServiceList';
-
-
-
-
+import CustomizedTabs from './components/GenderTabs/CustomizedTabs';
 
 const Services = () => {
     return (
@@ -24,7 +21,8 @@ const Services = () => {
             >
                 <Navbar />
                 <MainTop />
-                <BasicTable/>
+                <CustomizedTabs />
+                <BasicTable />
                 <Footer />
             </Box>
         </MainLayout>
