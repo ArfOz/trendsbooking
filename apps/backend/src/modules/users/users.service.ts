@@ -424,7 +424,7 @@ export class UsersService {
                 const otpCode = await this.userOtpCodeService.find({
                     where: {
                         UserId: payload.Id,
-                        Type: OTPType.VerifyEmail,
+                        Type: payload.mode,
                         // For test cancelled manually
                         // Code: data.Code,
                         IsDeleted: false,
@@ -489,9 +489,14 @@ export class UsersService {
                     },
                 });
 
+                const responseMessage =
+                    payload.mode === OTPType.VerifyEmail
+                        ? ResponseMessage.TR201
+                        : ResponseMessage.TR211;
+
                 return {
                     Email: user.Email,
-                    Data: ResponseMessage.TR201,
+                    Data: responseMessage,
                     Success: true,
                 };
             }
@@ -508,8 +513,7 @@ export class UsersService {
 
             throw new TrendsException(
                 error.response.error,
-                error.response,
-                error.response.details,
+                new Error(error.response.details),
                 error.response.code,
             );
         }
