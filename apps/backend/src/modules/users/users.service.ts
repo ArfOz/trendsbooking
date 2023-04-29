@@ -423,7 +423,7 @@ export class UsersService {
 
                 const otpCode = await this.userOtpCodeService.find({
                     where: {
-                        UserId: payload.Id,
+                        UserId: 10,
                         Type: payload.mode,
                         // For test cancelled manually
                         // Code: data.Code,
@@ -444,8 +444,6 @@ export class UsersService {
                         407,
                     );
                 }
-
-                console.log('otppp', otpCode, payload.email);
 
                 // if (otpCode[0].Attempts >= 5) {
                 //     throw new BadRequestException(
@@ -508,8 +506,6 @@ export class UsersService {
                     400,
                 );
             }
-
-            console.log('errrrr', error.response);
 
             throw new TrendsException(
                 error.response.error,

@@ -10,6 +10,6 @@ export class NotFoundException extends TrendsException {
         status?: number,
     ) {
         status = status || HttpStatus.NOT_FOUND;
-        super(type, details, status, code);
+        super(type, details, code, status);
     }
 }
