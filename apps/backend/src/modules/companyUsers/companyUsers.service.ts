@@ -348,7 +348,7 @@ export class CompanyUsersService {
 
             throw new TrendsException(
                 TokenExceptionType.EXPIRED_TOKEN,
-                new Error(error),
+                new Error(error.message),
                 400,
             );
         }

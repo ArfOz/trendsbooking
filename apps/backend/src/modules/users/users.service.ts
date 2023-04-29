@@ -380,14 +380,29 @@ export class UsersService {
 
     async verifyCode(data: VerifyCodeDTO) {
         try {
-            if (!data.Code || !data.NewPassword || !data.Token) {
+            if (!data.Code || !data.Token) {
+                console.log('aha burada', ResponseMessage.TR404);
                 throw new AlreadyExistsException(
-                    VerifyCodeExceptionType.VERIFIED,
-                    new Error(ResponseMessage.TR440),
-                    440,
+                    VerifyCodeExceptionType.NOT_VERIFIED,
+                    new Error(ResponseMessage.TR404),
+                    404,
                 );
             }
+
+            console.log('data');
             const payload = jwt.verify(data.Token, this.authCfg.jwt_secret);
+
+            if (
+                payload['mode'] === OTPType.ResetPassword &&
+                !data.NewPassword
+            ) {
+                console.log('burada');
+                throw new BadRequestException(
+                    BadRequestExceptionType.BAD_REQUEST,
+                    new Error(ResponseMessage.TR441),
+                    441,
+                );
+            }
             if (
                 typeof payload === 'object' &&
                 'email' in payload &&
@@ -489,10 +504,13 @@ export class UsersService {
                 );
             }
 
+            console.log('errrrr', error.response);
+
             throw new TrendsException(
-                TokenExceptionType.EXPIRED_TOKEN,
-                new Error(error),
-                400,
+                error.response.error,
+                error.response,
+                error.response.details,
+                error.response.code,
             );
         }
     }
@@ -501,6 +519,8 @@ export class UsersService {
         const user = await this.userService.findFirst({
             where: { Email: data.Email },
         });
+
+        console.log('userrrrrrrr', user);
 
         if (!user) {
             throw new AlreadyExistsException(
@@ -580,7 +600,7 @@ export class UsersService {
                 Date.now() +
                     parseInt(this.authCfg.codeValidationTime, 10) * 60 * 1000,
             ),
-            Type: OTPType.VerifyEmail,
+            Type: data.MailReason,
         });
 
         return {
@@ -589,10 +609,6 @@ export class UsersService {
             Token: token,
             Success: true,
         };
-    }
-
-    async forgotPassword() {
-        return null;
     }
 
     async logout(cred: UserParamsDto) {

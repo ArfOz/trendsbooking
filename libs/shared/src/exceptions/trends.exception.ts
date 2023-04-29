@@ -13,6 +13,7 @@ export class TrendsException extends HttpException {
         statusCode?: number,
     ) {
         statusCode = statusCode || HttpStatus.FORBIDDEN;
+        console.log('arif', message, details.message, code, statusCode);
         super(
             { error: message, details: details.message, code: code },
             statusCode,
