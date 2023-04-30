@@ -14,7 +14,7 @@ import React, { useState } from 'react';
 import { createServices } from './../../../../../function/function';
 
 const initialState = {
-    DepartmentId: 1,
+    DepartmentId: 8,
     ServiceType: '',
     ServiceTimes: '',
     ServiceName: '',
@@ -22,7 +22,6 @@ const initialState = {
     Prim: '',
     ServiceGender: '',
     Worker: '',
-    Token: JSON.parse(localStorage.getItem('loginUserCompany'))?.AccessToken
 };
 
 const ServiceModal = ({ open, onClose }) => {
@@ -53,7 +52,7 @@ const ServiceModal = ({ open, onClose }) => {
         console.log('newService :>> ', newService);
 
         try {
-            const result = await createServices(newService);
+            const result = await createServices(newService, JSON.parse(localStorage.getItem('loginUserCompany'))?.AccessToken);
             console.log('Service created successfully: ' + result);
 
             setNewService(initialState);
