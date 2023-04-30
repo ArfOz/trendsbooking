@@ -89,7 +89,7 @@ export class AuthService {
             ? await this.companyUserService.findUnique({
                   Id: userPayload.Id,
               })
-            : await this.userService.get({
+            : await this.userService.findUnique({
                   Id: userPayload.Id,
               });
 

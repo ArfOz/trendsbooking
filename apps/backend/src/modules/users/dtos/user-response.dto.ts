@@ -398,7 +398,7 @@ export class LoginUserDto {
     Password: string;
 }
 
-export class CompanyUserPassChangeDto {
+export class UserPassChangeDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
@@ -431,7 +431,7 @@ export class RandevuCreateDto {
     EndTime: Date | string;
 }
 
-export class CompanyUserForgottenPasswordDto {
+export class UserForgottenPasswordDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()

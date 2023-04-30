@@ -385,3 +385,31 @@ export class ActivateCompanyUserDto {
     @IsNotEmpty()
     Email: string;
 }
+export class CompanyUserForgottenPasswordDto {
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Code: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Token: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Password: string;
+}
+
+export class CompanyUserPassChangeDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    OldPassword: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    NewPassword: string;
+}

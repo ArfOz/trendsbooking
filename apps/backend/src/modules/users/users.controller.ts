@@ -6,6 +6,7 @@ import {
     LoginUserDto,
     UserProfileUpdateDto,
     UserRefreshTokenDTO,
+    UserPassChangeDto,
 } from './dtos';
 import { UserParam } from '@shared';
 
@@ -35,6 +36,14 @@ export class UsersController {
     @Post('login')
     async login(@Body() data: LoginUserDto) {
         return this.usersService.loginUser(data);
+    }
+
+    @Post('changepassword')
+    async updatePassword(
+        @UserParam() user: UserParamsDto,
+        @Body() data: UserPassChangeDto,
+    ) {
+        return this.usersService.changePassword(user, data);
     }
 
     @RolesRequired(['Normal'])

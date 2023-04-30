@@ -38,8 +38,6 @@ import ResponseMessage from '@shared/enums/response-message.json';
 
 // DTO area
 import {
-    CompanyUserForgottenPasswordDto,
-    CompanyUserPassChangeDto,
     LoginUserDto,
     SendCodeDTO,
     UserParamsDto,
@@ -48,7 +46,9 @@ import {
 
 import {
     ActivateCompanyUserDto,
+    CompanyUserForgottenPasswordDto,
     CompanyUserParamsDto,
+    CompanyUserPassChangeDto,
     CreateCompanyUserJsonDto,
     ResponseLoginCompanyUserDTO,
 } from './dtos/companyUser-response.dto';
@@ -638,6 +638,8 @@ export class CompanyUsersService {
         const companyUser = await this.companyUserService.findUnique({
             Id: user.Id,
         });
+
+        console.log('companyuser', companyUser);
 
         if (!companyUser) {
             throw new BadRequestException(

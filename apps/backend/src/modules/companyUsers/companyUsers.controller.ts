@@ -7,8 +7,6 @@ import {
     RolesRequired,
 } from '@shared';
 import {
-    CompanyUserForgottenPasswordDto,
-    CompanyUserPassChangeDto,
     LoginUserDto,
     SendCodeDTO,
     UserParamsDto,
@@ -19,6 +17,8 @@ import {
     ActivateCompanyUserDto,
     CreateCompanyUserJsonDto,
     GetCompaniesWhereFilter,
+    CompanyUserPassChangeDto,
+    CompanyUserForgottenPasswordDto,
 } from './dtos';
 // import { CreateCompanyUserJsonDto } from './dtos';
 
