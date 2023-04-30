@@ -247,7 +247,7 @@ export class UserProfileUpdateDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsEmail()
+    @IsString()
     Country?: string;
 
     @ApiProperty()
@@ -255,7 +255,7 @@ export class UserProfileUpdateDto {
     @IsEmail()
     Phone?: string;
 
-    @ApiProperty()
+    @ApiProperty({ example: [Genders.Male, Genders.Female, Genders.NottoSay] })
     @IsNotEmpty()
     @IsEmail()
     Gender?: Genders;
