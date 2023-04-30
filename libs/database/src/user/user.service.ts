@@ -179,8 +179,6 @@ export class UserService {
                 data.Email = encryptedDataEmail;
             }
 
-            console.log('prismaupdateuser', where, data);
-
             if (data.Phone) {
                 encryptedDataPhone = this.keypairService.encryptWithAppKeys(
                     isString(data.Phone) ? data?.Phone : data?.Phone?.set,
@@ -191,11 +189,11 @@ export class UserService {
                     Phone: encryptedDataPhone,
                 };
             }
-            console.log('naberrrrrrrrrrrrrrrrrrrrrrr', newData, where);
-
             const updatedUser = await this.prisma.user.update({
                 data: {
-                    ...newData,
+                    ...data,
+                    Email: encryptedDataEmail,
+                    Phone: encryptedDataPhone,
                 },
                 where: {
                     Email: where.Email,

@@ -333,6 +333,8 @@ export class CompanyUsersService {
 
                 let companyUpdatedUser;
 
+                console.log('update companyuser öncesi');
+
                 if (otpCode[0].Type === OTPType.ResetPassword) {
                     companyUpdatedUser = await this.companyUserService.update({
                         where: {
@@ -387,6 +389,8 @@ export class CompanyUsersService {
                     400,
                 );
             }
+
+            console.log('errrrr', error);
 
             throw new TrendsException(
                 error.response.Error,
@@ -459,8 +463,8 @@ export class CompanyUsersService {
             );
         }
         if (
-            data.MailReason === OTPType.VerifyEmail &&
-            companyUser.IsEmailVerified
+            companyUser.IsEmailVerified &&
+            data.MailReason === OTPType.VerifyEmail
         ) {
             throw new AlreadyExistsException(
                 VerifyCodeExceptionType.VERIFIED,
