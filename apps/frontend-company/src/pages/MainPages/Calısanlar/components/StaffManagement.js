@@ -1,45 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import {
-    Box,
-    Button,
-    FormControl,
-    FormHelperText,
-    IconButton,
-    InputAdornment,
-    InputLabel,
-    OutlinedInput,
-    Popover,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Box, Button, Dialog, DialogContent, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import FilledInput from '@mui/material/FilledInput';
-import Input from '@mui/material/Input';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+
+import EditEmployee from './addEmployee/EditEmployee';
+
+import FirstLastName from './addEmployee/FirstLastName';
+import PhoneEmail from './addEmployee/PhoneEmail';
+import Password from './addEmployee/Password';
+import Genders from './addEmployee/Genders';
+import WorkingHours from './addEmployee/WorkingHours';
+import VestingSettings from './addEmployee/VestingSettings';
+import StaffDays from './addEmployee/StaffDays';
+import CalendarColor from './addEmployee/CalendarColor';
+import AddDeleteButton from './addEmployee/AddDeleteButton';
 
 function StaffManagement() {
-    // popover a ait box örneği için
-    const [showPassword, setShowPassword] = React.useState(false);
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const [open, setOpen] = useState(false);
 
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
-    // popover a ait box örneği için
-    const [anchorEl, setAnchorEl] = React.useState(null);
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+    const handleButtonClick = () => {
+        setOpen(true);
     };
 
     const handleClose = () => {
-        setAnchorEl(null);
+        setOpen(false);
     };
 
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
+  
+
     return (
         <>
             <Box
@@ -105,8 +94,7 @@ function StaffManagement() {
                         İndir
                     </Button>
                     <Button
-                        aria-describedby={id}
-                        onClick={handleClick}
+                        onClick={handleButtonClick}
                         variant="contained"
                         color="primary"
                         sx={{
@@ -118,283 +106,66 @@ function StaffManagement() {
                     >
                         Yeni Çalışan
                     </Button>
-                    <Popover
-                        id={id}
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        anchorReference="anchorPosition"
-                        anchorPosition={{ top: 600, left: 800 }}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        transformOrigin={{
-                            vertical: 'center',
-                            horizontal: 'center',
-                        }}
-                    >
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                            <div>
-                                <TextField
-                                    label="With normal TextField"
-                                    id="outlined-start-adornment"
-                                    sx={{ m: 1, width: '25ch' }}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                kg
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                                <FormControl
-                                    sx={{ m: 1, width: '25ch' }}
-                                    variant="outlined"
-                                >
-                                    <OutlinedInput
-                                        id="outlined-adornment-weight"
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                kg
-                                            </InputAdornment>
-                                        }
-                                        aria-describedby="outlined-weight-helper-text"
-                                        inputProps={{
-                                            'aria-label': 'weight',
-                                        }}
-                                    />
-                                    <FormHelperText id="outlined-weight-helper-text">
-                                        Weight
-                                    </FormHelperText>
-                                </FormControl>
-                                <FormControl
-                                    sx={{ m: 1, width: '25ch' }}
-                                    variant="outlined"
-                                >
-                                    <InputLabel htmlFor="outlined-adornment-password">
-                                        Password
-                                    </InputLabel>
-                                    <OutlinedInput
-                                        id="outlined-adornment-password"
-                                        type={
-                                            showPassword ? 'text' : 'password'
-                                        }
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={
-                                                        handleClickShowPassword
-                                                    }
-                                                    onMouseDown={
-                                                        handleMouseDownPassword
-                                                    }
-                                                    edge="end"
-                                                >
-                                                    {showPassword ? (
-                                                        <VisibilityOff />
-                                                    ) : (
-                                                        <Visibility />
-                                                    )}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                        label="Password"
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth sx={{ m: 1 }}>
-                                    <InputLabel htmlFor="outlined-adornment-amount">
-                                        Amount
-                                    </InputLabel>
-                                    <OutlinedInput
-                                        id="outlined-adornment-amount"
-                                        startAdornment={
-                                            <InputAdornment position="start">
-                                                $
-                                            </InputAdornment>
-                                        }
-                                        label="Amount"
-                                    />
-                                </FormControl>
-                            </div>
-                            <div>
-                                <TextField
-                                    label="With normal TextField"
-                                    id="filled-start-adornment"
-                                    sx={{ m: 1, width: '25ch' }}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                kg
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    variant="filled"
-                                />
-                                <FormControl
-                                    sx={{ m: 1, width: '25ch' }}
-                                    variant="filled"
-                                >
-                                    <FilledInput
-                                        id="filled-adornment-weight"
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                kg
-                                            </InputAdornment>
-                                        }
-                                        aria-describedby="filled-weight-helper-text"
-                                        inputProps={{
-                                            'aria-label': 'weight',
-                                        }}
-                                    />
-                                    <FormHelperText id="filled-weight-helper-text">
-                                        Weight
-                                    </FormHelperText>
-                                </FormControl>
-                                <FormControl
-                                    sx={{ m: 1, width: '25ch' }}
-                                    variant="filled"
-                                >
-                                    <InputLabel htmlFor="filled-adornment-password">
-                                        Password
-                                    </InputLabel>
-                                    <FilledInput
-                                        id="filled-adornment-password"
-                                        type={
-                                            showPassword ? 'text' : 'password'
-                                        }
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={
-                                                        handleClickShowPassword
-                                                    }
-                                                    onMouseDown={
-                                                        handleMouseDownPassword
-                                                    }
-                                                    edge="end"
-                                                >
-                                                    {showPassword ? (
-                                                        <VisibilityOff />
-                                                    ) : (
-                                                        <Visibility />
-                                                    )}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                    />
-                                </FormControl>
-                                <FormControl
-                                    fullWidth
-                                    sx={{ m: 1 }}
-                                    variant="filled"
-                                >
-                                    <InputLabel htmlFor="filled-adornment-amount">
-                                        Amount
-                                    </InputLabel>
-                                    <FilledInput
-                                        id="filled-adornment-amount"
-                                        startAdornment={
-                                            <InputAdornment position="start">
-                                                $
-                                            </InputAdornment>
-                                        }
-                                    />
-                                </FormControl>
-                            </div>
-                            <div>
-                                <TextField
-                                    label="With normal TextField"
-                                    id="standard-start-adornment"
-                                    sx={{ m: 1, width: '25ch' }}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                kg
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    variant="standard"
-                                />
-                                <FormControl
-                                    variant="standard"
-                                    sx={{ m: 1, mt: 3, width: '25ch' }}
-                                >
-                                    <Input
-                                        id="standard-adornment-weight"
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                kg
-                                            </InputAdornment>
-                                        }
-                                        aria-describedby="standard-weight-helper-text"
-                                        inputProps={{
-                                            'aria-label': 'weight',
-                                        }}
-                                    />
-                                    <FormHelperText id="standard-weight-helper-text">
-                                        Weight
-                                    </FormHelperText>
-                                </FormControl>
-                                <FormControl
-                                    sx={{ m: 1, width: '25ch' }}
-                                    variant="standard"
-                                >
-                                    <InputLabel htmlFor="standard-adornment-password">
-                                        Password
-                                    </InputLabel>
-                                    <Input
-                                        id="standard-adornment-password"
-                                        type={
-                                            showPassword ? 'text' : 'password'
-                                        }
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={
-                                                        handleClickShowPassword
-                                                    }
-                                                    onMouseDown={
-                                                        handleMouseDownPassword
-                                                    }
-                                                >
-                                                    {showPassword ? (
-                                                        <VisibilityOff />
-                                                    ) : (
-                                                        <Visibility />
-                                                    )}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                    />
-                                </FormControl>
-                                <FormControl
-                                    fullWidth
-                                    sx={{ m: 1 }}
-                                    variant="standard"
-                                >
-                                    <InputLabel htmlFor="standard-adornment-amount">
-                                        Amount
-                                    </InputLabel>
-                                    <Input
-                                        id="standard-adornment-amount"
-                                        startAdornment={
-                                            <InputAdornment position="start">
-                                                $
-                                            </InputAdornment>
-                                        }
-                                    />
-                                </FormControl>
-                            </div>
-                        </Box>
-                    </Popover>
                 </Box>
             </Box>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                maxWidth="xl"
+                fullWidth
+                sx={{ height: '100vh' }}
+            >
+                <DialogContent>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            width: '100%',
+                            height: '100%',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'flex-start',
+                                width: '95%',
+                            }}
+                        >
+                            <EditEmployee />
+                            <Button
+                                onClick={handleClose}
+                                variant="contained"
+                                color="secondary"
+                                endIcon={<HighlightOffIcon color="grey" />}
+                                sx={{
+                                    textTransform: 'capitalize',
+                                    '&:hover': {
+                                        backgroundColor: 'white',
+                                    },
+                                    color: '#9A9A9A',
+                                }}
+                            >
+                                Kapat
+                            </Button>
+                        </Box>
+
+                        <FirstLastName />
+                        <PhoneEmail/>
+                        <Password/>
+                        <Genders/>
+                        <WorkingHours/>
+                        <VestingSettings/>
+                        <StaffDays/>
+                        <CalendarColor/>
+                        <AddDeleteButton/>
+                    
+                    </Box>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }
-
 export default StaffManagement;

@@ -42,24 +42,19 @@ export default function BasicTable(props) {
     const classes = useRowStyles();
     return (
         <Box>
-            <TableContainer component={Paper}>
+            <TableContainer
+                component={Paper}
+                sx={{
+                    width: '95%',
+                    m: 'auto',
+                    mb: 1,
+                    mt: 3,
+                    borderRadius: '8px',
+                }}
+            >
                 <Table aria-label="collapsible table">
-                    <TableHead>
-                        <TableRow className={classes.root}>
-                            <TableCell align="left">
-                                {' '}
-                                <Typography
-                                    variant="h5"
-                                    gutterBottom
-                                    component="div"
-                                >
-                                    Hizmetler
-                                </Typography>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
                     <TableBody>
-                        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                        <TableRow hover>
                             <TableCell>
                                 <IconButton
                                     aria-label="expand row"
@@ -73,7 +68,7 @@ export default function BasicTable(props) {
                                     )}
                                 </IconButton>
                             </TableCell>
-                            <TableCell align="left">
+                            <TableCell align="left" component="th" scope="row">
                                 <Typography
                                     variant="h6"
                                     gutterBottom
@@ -115,8 +110,8 @@ export default function BasicTable(props) {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {rows.map((row) => (
-                                                <TableRow>
+                                            {rows.map((row, index) => (
+                                                <TableRow key={index}>
                                                     <TableCell align="left">
                                                         <FormControlLabel
                                                             control={
@@ -142,8 +137,19 @@ export default function BasicTable(props) {
                                                         {row.Worker}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        {row.Prim}
+                                                        <Button
+                                                            variant="contained"
+                                                            sx={{
+                                                                borderRadius:
+                                                                    '40px',
+                                                                width: '71px',
+                                                                height: '24px',
+                                                            }}
+                                                        >
+                                                            20
+                                                        </Button>
                                                     </TableCell>
+
                                                     <TableCell align="right">
                                                         <Button variant="outlined">
                                                             Düzenle
@@ -177,7 +183,7 @@ export default function BasicTable(props) {
                                 </Collapse>
                             </TableCell>
                         </TableRow>
-                        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                        <TableRow hover>
                             <TableCell>
                                 <IconButton
                                     aria-label="expand row"
@@ -234,17 +240,15 @@ export default function BasicTable(props) {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {rows.map((row) => (
-                                                <TableRow>
+                                            {rows.map((row, index) => (
+                                                <TableRow key={index}>
                                                     <TableCell align="right">
                                                         <FormGroup>
                                                             <FormControlLabel
                                                                 control={
                                                                     <Checkbox
-                                                                        sx={{
-                                                                            color: 'green',
-                                                                            border: '1px solid black',
-                                                                        }}
+                                                                        size="small"
+                                                                        color="secondary"
                                                                     />
                                                                 }
                                                             />
@@ -264,7 +268,17 @@ export default function BasicTable(props) {
                                                         {row.worker}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        {row.prim}
+                                                        <Button
+                                                            variant="contained"
+                                                            sx={{
+                                                                borderRadius:
+                                                                    '40px',
+                                                                width: '71px',
+                                                                height: '24px',
+                                                            }}
+                                                        >
+                                                            20
+                                                        </Button>
                                                     </TableCell>
                                                     <TableCell align="right">
                                                         <Button
@@ -338,17 +352,15 @@ export default function BasicTable(props) {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {rows.map((row) => (
-                                                <TableRow>
+                                            {rows.map((row, index) => (
+                                                <TableRow key={index}>
                                                     <TableCell align="right">
                                                         <FormGroup>
                                                             <FormControlLabel
                                                                 control={
                                                                     <Checkbox
-                                                                        sx={{
-                                                                            color: 'green',
-                                                                            border: '1px solid black',
-                                                                        }}
+                                                                        size="small"
+                                                                        color="secondary"
                                                                     />
                                                                 }
                                                             />
@@ -368,7 +380,17 @@ export default function BasicTable(props) {
                                                         {row.worker}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        {row.prim}
+                                                        <Button
+                                                            variant="contained"
+                                                            sx={{
+                                                                borderRadius:
+                                                                    '40px',
+                                                                width: '71px',
+                                                                height: '24px',
+                                                            }}
+                                                        >
+                                                            20
+                                                        </Button>
                                                     </TableCell>
                                                     <TableCell align="right">
                                                         <Button variant="outlined">

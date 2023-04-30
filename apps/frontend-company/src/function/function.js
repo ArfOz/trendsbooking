@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createServices } from './function';
+import { createService } from './function';
 
 export const denemeFunc = async (setDeneme) => {
     setDeneme('deneme function.js');
@@ -28,19 +28,21 @@ export const postRegister = (data, setError, setResponse) => {
         });
 };
 
-
 //
 
 // Create service function
-export const createService = async (newService) => {
-  try {
-    const response = await axios.post('https://localhost:3300/api/departments/addservice', newService);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating service:', error);
-    throw error;
-  }
-};
+// export const createService = async (newService) => {
+//     try {
+//         const response = await axios.post(
+//             'http://localhost:3300/api/departments/addservice',
+//             newService,
+//         );
+//         return response.data;
+//     } catch (error) {
+//         console.error('Error creating service:', error);
+//         throw error;
+//     }
+// };
 
 // // Delete service function
 // const deleteService = async (serviceId) => {
@@ -64,33 +66,36 @@ export const createService = async (newService) => {
 //   }
 // };
 
-
-
-
-
-
-
-
-// export const createServices = async (
-//     ServiceName,
-//     ServiceTimes,
-//     Price,
-//     Worker,
-//     Prim,
-// ) => {
+// export const createServices = async (newService) => {
 //     try {
 //         const response = await axios.post(
 //             'http://localhost:3300/api/departments/addservice',
-//             {
-//                 ServiceName,
-//                 ServiceTimes,
-//                 Price,
-//                 Worker,
-//                 Prim,
-//             },
+//             newService,
+
 //         );
 //         return response.data;
 //     } catch (error) {
 //         console.error(error);
 //     }
 // };
+
+export const createServices = async (newService, token) => {
+    const options = {
+        method: 'POST',
+        url: 'http://localhost:3300/api/departments/addservice',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        data: newService,
+    };
+
+    axios
+        .request(options)
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log('error', error);
+        });
+};
