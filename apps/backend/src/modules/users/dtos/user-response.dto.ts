@@ -16,6 +16,13 @@ export enum Genders {
     NottoSay = 'NottoSay',
 }
 
+export enum MailModeType {
+    // VerifyPhone = 'VerifyPhone',
+    VerifyEmail = 'VerifyEmail',
+    ResetPassword = 'ResetPassword',
+    EmailChange = 'EmailChange',
+}
+
 export class UserParamsDto {
     @ApiProperty()
     @IsNotEmpty()
@@ -184,6 +191,11 @@ export class ResponseUserProfileUserDTO {
 }
 
 export class SendCodeDTO {
+    @ApiProperty({ enum: MailModeType })
+    @IsString()
+    @IsNotEmpty()
+    MailReason: MailModeType;
+
     @ApiProperty()
     @IsEmail()
     @IsNotEmpty()
@@ -200,6 +212,11 @@ export class VerifyCodeDTO {
     @IsString()
     @IsNotEmpty()
     Token: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    NewPassword: string;
 }
 
 export class UserProfileUpdateDto {
@@ -374,6 +391,17 @@ export class LoginUserDto {
     Password: string;
 }
 
+export class CompanyUserPassChangeDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    OldPassword: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    NewPassword: string;
+}
 export class RandevuCreateDto {
     @ApiProperty()
     @IsNotEmpty()
@@ -394,4 +422,21 @@ export class RandevuCreateDto {
     @IsNotEmpty()
     @IsString()
     EndTime: Date | string;
+}
+
+export class CompanyUserForgottenPasswordDto {
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Code: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    Token: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Password: string;
 }

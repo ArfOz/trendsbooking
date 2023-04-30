@@ -155,6 +155,8 @@ model Worker {
   Email         String?         @unique
   /// @HideField({output:true})
   Password      String?
+  /// First Password will be changed
+  FirstPass     Boolean?
   /// @HideField({ input: true, output: true })
   PrivateKey    String?
   /// @HideField({ input: true, output: true })
@@ -177,6 +179,7 @@ model Randevu {
   ServiceId Int
   StartTime DateTime
   EndTime   DateTime
+  // User eklenecek
 }
 
 model UserToken {
@@ -242,7 +245,7 @@ model WorkTime {
   ShiftEnd       String
   NightStartAt   String
   NightEndAt     String
-  Holiday        Boolean
+  Holiday        String?
 
   Worker       Worker?     @relation(fields: [WorkerId], references: [Id])
   WorkerId     Int?
@@ -281,6 +284,7 @@ enum ServiceGender {
 enum OTPType {
   VerifyPhone
   VerifyEmail
+  ResetPassword
 }
 
 enum UserRole {

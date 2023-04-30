@@ -1,4 +1,3 @@
-import generalConfig from '@shared/config/general.config';
 import { UsersModule } from './modules/users/users.module';
 import { CompanyUsersModule } from './modules/companyUsers/companyUsers.module';
 import { DatabaseModule } from '@database';
@@ -8,13 +7,15 @@ import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { DepartmentsModule } from './modules/departments/departments.module';
 import { WorkersModule } from './modules/workers/workers.module';
+import authConfig from '@auth/config/auth.config';
+import generalConfig from '@shared/config/general.config';
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             envFilePath: ['.env'],
             isGlobal: true,
-            load: [generalConfig],
+            load: [generalConfig, authConfig],
         }),
         DatabaseModule,
         UsersModule,

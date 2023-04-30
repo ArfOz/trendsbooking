@@ -4,6 +4,7 @@ import { UserParamsDto } from '../users/dtos';
 import { WorkersService } from './workers.service';
 import {
     WorkerLoginDto,
+    WorkerPassChangeDto,
     WorkersAddJsonDto,
     WorkersGetJsonDto,
     WorkersUpdateJsonDto,
@@ -26,7 +27,13 @@ export class WorkersController {
     async login(@Body() data: WorkerLoginDto) {
         return this.workersService.login(data);
     }
-    @RolesRequired(['WorkerAdmin', 'WorkerBasic', 'Provider'])
+
+    @AllowUnauthorizedRequest()
+    @Post('changepassword')
+    async updatePassword(@Body() data: WorkerPassChangeDto) {
+        return this.workersService.changePass(data);
+    }
+    @RolesRequired(['Provider', 'WorkerAdmin', 'WorkerBasic'])
     @Post('getdetails')
     async getDetails(
         @UserParam() user: UserParamsDto,

@@ -7,6 +7,8 @@ import {
     RolesRequired,
 } from '@shared';
 import {
+    CompanyUserForgottenPasswordDto,
+    CompanyUserPassChangeDto,
     LoginUserDto,
     SendCodeDTO,
     UserParamsDto,
@@ -43,7 +45,11 @@ export class CompanyUsersController {
         return this.companyUsersService.verifyCode(verifyCode);
     }
 
-    // Refreshtoken endpoint
+    @AllowUnauthorizedRequest()
+    @Post('refreshtoken')
+    async refreshUserToken(@Body('RefreshToken') refreshToken: string) {
+        return this.companyUsersService.refreshUserToken(refreshToken);
+    }
 
     @AllowUnauthorizedRequest()
     @Post('sendcode')
@@ -57,6 +63,14 @@ export class CompanyUsersController {
         return this.companyUsersService.login(data);
     }
 
+    @Post('changepassword')
+    async updatePassword(
+        @UserParam() user: UserParamsDto,
+        @Body() data: CompanyUserPassChangeDto,
+    ) {
+        return this.companyUsersService.changePassword(user, data);
+    }
+
     @StaticTokenRequired()
     @Get('companies')
     async companies(@Body() data: GetCompaniesWhereFilter) {
@@ -67,6 +81,12 @@ export class CompanyUsersController {
     @Post('activate')
     async activate(@Body() data: ActivateCompanyUserDto) {
         return this.companyUsersService.activate(data);
+    }
+
+    @AllowUnauthorizedRequest()
+    @Post('forgotpassword')
+    async forgotPassword(@Body() data: CompanyUserForgottenPasswordDto) {
+        return this.companyUsersService.forgotPassword(data);
     }
 
     @RolesRequired(['Provider'])

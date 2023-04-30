@@ -31,6 +31,7 @@ export class WorkerService {
                     Phone: true,
                     Role: true,
                     Password: true,
+                    FirstPass: true,
                 },
             });
 
@@ -204,7 +205,7 @@ export class WorkerService {
     async update(params: {
         where: Prisma.WorkerWhereUniqueInput;
         data: Prisma.WorkerUpdateInput;
-    }): Promise<Worker> {
+    }) {
         const { where, data } = params;
 
         // let encryptedDataEmail;

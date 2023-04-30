@@ -1,4 +1,3 @@
-import { IsEmail } from 'class-validator';
 // Npm packages
 
 import { Injectable, Inject, HttpException } from '@nestjs/common';
@@ -333,7 +332,7 @@ export class UsersService {
 
     async refreshUserToken(refreshToken: string) {
         const { AccessToken, RefreshToken, User } =
-            await this.authService.refreshToken(refreshToken);
+            await this.authService.refreshToken(refreshToken, false);
         const expireTime = new Date(
             Date.now() + parseInt(this.authCfg.jwt_expired, 10) * 60 * 1000,
         );
@@ -381,7 +380,26 @@ export class UsersService {
 
     async verifyCode(data: VerifyCodeDTO) {
         try {
+            if (!data.Code || !data.Token) {
+                throw new AlreadyExistsException(
+                    VerifyCodeExceptionType.NOT_VERIFIED,
+                    new Error(ResponseMessage.TR404),
+                    404,
+                );
+            }
+
             const payload = jwt.verify(data.Token, this.authCfg.jwt_secret);
+
+            if (
+                payload['mode'] === OTPType.ResetPassword &&
+                !data.NewPassword
+            ) {
+                throw new BadRequestException(
+                    BadRequestExceptionType.BAD_REQUEST,
+                    new Error(ResponseMessage.TR441),
+                    441,
+                );
+            }
             if (
                 typeof payload === 'object' &&
                 'email' in payload &&
@@ -402,7 +420,7 @@ export class UsersService {
                 const otpCode = await this.userOtpCodeService.find({
                     where: {
                         UserId: payload.Id,
-                        Type: OTPType.VerifyEmail,
+                        Type: payload.mode,
                         // For test cancelled manually
                         // Code: data.Code,
                         IsDeleted: false,
@@ -430,14 +448,32 @@ export class UsersService {
                 //     );
                 // }
 
-                user = await this.userService.update({
-                    where: {
-                        Id: payload.Id,
-                    },
-                    data: {
-                        IsEmailVerified: true,
-                    },
-                });
+                if (otpCode[0].Type === OTPType.ResetPassword) {
+                    user = await this.userService.update({
+                        where: {
+                            Email: payload.email,
+                        },
+                        data: {
+                            Password: await bcrypt.hash(data.NewPassword, 10),
+                        },
+                    });
+                } else if (otpCode[0].Type === OTPType.VerifyEmail) {
+                    user = await this.userService.update({
+                        where: {
+                            Email: payload.email,
+                        },
+                        data: {
+                            IsEmailVerified: true,
+                        },
+                    });
+                } else {
+                    throw new OtpCodeNotFoundException(
+                        VerifyCodeExceptionType.CODE_NOT_FOUND,
+                        new Error(ResponseMessage.TR439),
+                        439,
+                    );
+                }
+
                 await this.userOtpCodeService.update({
                     where: {
                         Id: otpCode[0].Id,
@@ -447,9 +483,14 @@ export class UsersService {
                     },
                 });
 
+                const responseMessage =
+                    payload.mode === OTPType.VerifyEmail
+                        ? ResponseMessage.TR201
+                        : ResponseMessage.TR211;
+
                 return {
                     Email: user.Email,
-                    Data: ResponseMessage.TR201,
+                    Data: responseMessage,
                     Success: true,
                 };
             }
@@ -461,11 +502,10 @@ export class UsersService {
                     400,
                 );
             }
-
             throw new TrendsException(
-                TokenExceptionType.EXPIRED_TOKEN,
-                new Error(error),
-                400,
+                error.response.Error,
+                new Error(error.response.Details),
+                error.response.Code,
             );
         }
     }
@@ -482,11 +522,19 @@ export class UsersService {
                 409,
             );
         }
-        if (user.IsEmailVerified) {
+        if (user.IsEmailVerified && data.MailReason === OTPType.VerifyEmail) {
             throw new AlreadyExistsException(
                 VerifyCodeExceptionType.VERIFIED,
                 new Error(ResponseMessage.TR410),
                 410,
+            );
+        }
+
+        if (!(data.MailReason in MailModeType) || !data.Email) {
+            throw new AlreadyExistsException(
+                VerifyCodeExceptionType.VERIFIED,
+                new Error(ResponseMessage.TR438),
+                438,
             );
         }
         // Verification code
@@ -496,6 +544,42 @@ export class UsersService {
             uppercase: false,
             lowercase: false,
             length: 4,
+        });
+
+        let subject;
+        switch (data.MailReason) {
+            case MailModeType.VerifyEmail:
+                subject = "Trendsbooking'e hoşheldiniz";
+                break;
+
+            case MailModeType.ResetPassword:
+                subject = 'Trendsbooking Şifre Sıfırlama İsteğiniz';
+                break;
+
+            default:
+                throw new AlreadyExistsException(
+                    AlreadyExistsExceptionType.NOT_EXIST,
+                    new Error(ResponseMessage.TR437),
+                    437,
+                );
+        }
+
+        const options: SendEmailDto = {
+            to: data.Email,
+            html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
+            subject,
+        };
+
+        await this.mailUtilsService.sendEmail(options);
+
+        const payload = {
+            mode: data.MailReason,
+            email: data.Email,
+            Id: user.Id,
+        };
+
+        const token = jwt.sign(payload, this.authCfg.jwt_secret, {
+            expiresIn: `${this.authCfg.codeValidationTime}m`,
         });
 
         await this.userOtpCodeService.create({
@@ -509,30 +593,12 @@ export class UsersService {
                 Date.now() +
                     parseInt(this.authCfg.codeValidationTime, 10) * 60 * 1000,
             ),
-            Type: OTPType.VerifyEmail,
-        });
-
-        const options: SendEmailDto = {
-            to: data.Email,
-            html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
-            subject: "Trendsbooking'e hoşheldiniz",
-        };
-
-        await this.mailUtilsService.sendEmail(options);
-
-        const payload = {
-            mode: MailModeType.VerifyEmail,
-            email: data.Email,
-            Id: user.Id,
-        };
-
-        const token = jwt.sign(payload, this.authCfg.jwt_secret, {
-            expiresIn: `${this.authCfg.codeValidationTime}m`,
+            Type: data.MailReason,
         });
 
         return {
             Email: user.Email,
-            Data: ResponseMessage.TR202,
+            Data: ResponseMessage.TR212,
             Token: token,
             Success: true,
         };

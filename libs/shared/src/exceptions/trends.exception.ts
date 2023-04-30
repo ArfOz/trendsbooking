@@ -14,7 +14,7 @@ export class TrendsException extends HttpException {
     ) {
         statusCode = statusCode || HttpStatus.FORBIDDEN;
         super(
-            { error: message, details: details.message, code: code },
+            { Error: message, Details: details.message, Code: code },
             statusCode,
         );
     }

@@ -22,7 +22,7 @@ import { MailUtilsModule } from '@mail-utils';
         MailUtilsModule,
         UserModule,
         UserOtpCodeModule,
-        // CompanyUserModule
+        CompanyUserModule,
     ],
     exports: [AuthService],
     providers: [AuthService, MailUtilsService],
