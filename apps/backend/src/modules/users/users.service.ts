@@ -1,3 +1,4 @@
+import { UserRefreshTokenDTO } from './dtos/user-response.dto';
 // Npm packages
 
 import { Injectable, Inject, HttpException } from '@nestjs/common';
@@ -330,9 +331,11 @@ export class UsersService {
         };
     }
 
-    async refreshUserToken(refreshToken: string) {
+    async refreshUserToken(data: UserRefreshTokenDTO) {
+        console.log('daaaa', data.RefreshToken);
         const { AccessToken, RefreshToken, User } =
-            await this.authService.refreshToken(refreshToken, false);
+            await this.authService.refreshToken(data.RefreshToken, false);
+
         const expireTime = new Date(
             Date.now() + parseInt(this.authCfg.jwt_expired, 10) * 60 * 1000,
         );
@@ -344,7 +347,7 @@ export class UsersService {
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
                 UserId: User.Id,
-                RefreshToken: refreshToken,
+                RefreshToken: data.RefreshToken,
             },
             include: {
                 User: true,

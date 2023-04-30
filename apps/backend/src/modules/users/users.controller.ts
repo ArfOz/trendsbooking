@@ -5,6 +5,7 @@ import {
     UserParamsDto,
     LoginUserDto,
     UserProfileUpdateDto,
+    UserRefreshTokenDTO,
 } from './dtos';
 import { UserParam } from '@shared';
 
@@ -53,9 +54,8 @@ export class UsersController {
     }
 
     @RolesRequired(['Normal'])
-    @AllowUnauthorizedRequest()
     @Post('refreshtoken')
-    async refreshUserToken(@Body('RefreshToken') refreshToken: string) {
+    async refreshUserToken(@Body() refreshToken: UserRefreshTokenDTO) {
         return this.usersService.refreshUserToken(refreshToken);
     }
 

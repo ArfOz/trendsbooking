@@ -69,8 +69,8 @@ export class AuthService {
         if (!userToken) {
             throw new TrendsException(
                 NotFoundExceptionType.NOT_FOUND,
-                new Error(ResponseMessage.TR406),
-                400,
+                new Error(ResponseMessage.TR417),
+                417,
             );
         }
         const update: Prisma.UserTokenUpdateArgs = {

@@ -411,8 +411,6 @@ export class CompanyUsersService {
                 parseInt(this.authCfg.jwt_refresh_expired, 10) * 60 * 1000,
         );
 
-        console.log('reffdddd', refreshToken);
-
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
                 CompanyUserId: User.Id,

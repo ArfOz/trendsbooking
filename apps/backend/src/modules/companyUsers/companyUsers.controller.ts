@@ -45,7 +45,7 @@ export class CompanyUsersController {
         return this.companyUsersService.verifyCode(verifyCode);
     }
 
-    @AllowUnauthorizedRequest()
+    @RolesRequired(['Provider'])
     @Post('refreshtoken')
     async refreshUserToken(@Body('RefreshToken') refreshToken: string) {
         return this.companyUsersService.refreshUserToken(refreshToken);

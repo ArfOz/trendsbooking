@@ -89,6 +89,13 @@ export class UserParamsDto {
     @IsString()
     DepartmentId?: number;
 }
+
+export class UserRefreshTokenDTO {
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    RefreshToken: string;
+}
 export class ResponseLoginUserDTO {
     @ApiProperty()
     @IsString()
