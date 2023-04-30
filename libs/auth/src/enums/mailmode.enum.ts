@@ -1,5 +1,5 @@
 export enum MailModeType {
-    VerifyEmail = 'verifyEmail',
-    ResetPassword = 'resetPassword',
-    EmailChange = 'emailChange',
+    VerifyEmail = 'VerifyEmail',
+    ResetPassword = 'ResetPassword',
+    EmailChange = 'EmailChange',
 }

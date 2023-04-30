@@ -209,16 +209,30 @@ export class CompanyUserService {
         let encryptedDataEmail;
         let encryptedDataPhone;
 
+        let newData: Prisma.UserUpdateInput = { ...data };
+
+        where.Email = this.keypairService.encryptWithAppKeys(where.Email);
         if (data.Email) {
             encryptedDataEmail = this.keypairService.encryptWithAppKeys(
-                isString(data.Email) ? data.Email : data.Email.set,
+                isString(data.Email) ? data.Email : data?.Email?.set,
             );
+            newData = {
+                ...data,
+                Email: encryptedDataEmail,
+            };
+            console.log('encrypt', encryptedDataEmail);
+            data.Email = encryptedDataEmail;
         }
 
         if (data.Phone) {
             encryptedDataPhone = this.keypairService.encryptWithAppKeys(
-                isString(data.Phone) ? data.Phone : data.Phone.set,
+                isString(data.Phone) ? data?.Phone : data?.Phone?.set,
             );
+
+            newData = {
+                ...data,
+                Phone: encryptedDataPhone,
+            };
         }
 
         const updatedUser = await this.prisma.companyUser.update({
@@ -227,7 +241,9 @@ export class CompanyUserService {
                 Email: encryptedDataEmail,
                 Phone: encryptedDataPhone,
             },
-            where,
+            where: {
+                Email: where.Email,
+            },
         });
 
         if (updatedUser.Email)

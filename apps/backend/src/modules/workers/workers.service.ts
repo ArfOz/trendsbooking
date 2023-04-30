@@ -11,6 +11,7 @@ import { BadRequestException, BadRequestExceptionType } from '@shared';
 import { UserParamsDto } from '../users/dtos';
 import {
     WorkerLoginDto,
+    WorkerPassChangeDto,
     WorkersAddJsonDto,
     WorkersGetJsonDto,
     WorkersUpdateJsonDto,
@@ -52,6 +53,14 @@ export class WorkersService {
         //         404,
         //     );
         // }
+
+        if (worker.FirstPass) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR435),
+                435,
+            );
+        }
         if (worker && (await bcrypt.compare(cred.Password, worker.Password))) {
             const {
                 AccessToken,
@@ -82,6 +91,54 @@ export class WorkersService {
                 ExpireTime: ExpiresAccessToken,
                 ExpireTimeRefresh: ExpiresRefreshToken,
                 User: worker,
+                Success: true,
+            };
+        }
+
+        throw new BadRequestException(
+            BadRequestExceptionType.BAD_REQUEST,
+            new Error(ResponseMessage.TR403),
+            403,
+        );
+    }
+
+    async changePass(cred: WorkerPassChangeDto) {
+        if (!cred.Email || !cred.NewPassword || !cred.OldPassword) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR436),
+                436,
+            );
+        }
+        const worker = await this.workerService.findUnique({
+            Email: cred.Email,
+        });
+
+        if (!worker) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+                406,
+            );
+        }
+
+        if (
+            worker &&
+            (await bcrypt.compare(cred.OldPassword, worker.Password))
+        ) {
+            await this.workerService.update({
+                where: {
+                    Id: worker.Id,
+                },
+                data: {
+                    Password: await bcrypt.hash(cred.NewPassword, 10),
+                    FirstPass: false,
+                },
+            });
+
+            // Response varsa Success
+            return {
+                Data: ResponseMessage.TR211,
                 Success: true,
             };
         }
@@ -244,8 +301,6 @@ export class WorkersService {
             });
         }
 
-        console.log('resss', response);
-
         if (!response || response.length < 1) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -253,7 +308,7 @@ export class WorkersService {
                 430,
             );
         }
-        const data = await this.workerService.delete({
+        await this.workerService.delete({
             Id: input.WorkerId,
         });
         return {

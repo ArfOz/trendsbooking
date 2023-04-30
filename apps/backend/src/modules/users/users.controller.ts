@@ -54,7 +54,7 @@ export class UsersController {
 
     @RolesRequired(['Normal'])
     @AllowUnauthorizedRequest()
-    @Post('refreshusertoken')
+    @Post('refreshtoken')
     async refreshUserToken(@Body('RefreshToken') refreshToken: string) {
         return this.usersService.refreshUserToken(refreshToken);
     }

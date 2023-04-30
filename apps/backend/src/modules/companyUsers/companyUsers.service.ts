@@ -1,5 +1,5 @@
 // Npm Packages
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { generate } from 'generate-password';
 import * as jwt from 'jsonwebtoken';
@@ -38,6 +38,8 @@ import ResponseMessage from '@shared/enums/response-message.json';
 
 // DTO area
 import {
+    CompanyUserForgottenPasswordDto,
+    CompanyUserPassChangeDto,
     LoginUserDto,
     SendCodeDTO,
     UserParamsDto,
@@ -259,7 +261,26 @@ export class CompanyUsersService {
 
     async verifyCode(data: VerifyCodeDTO) {
         try {
+            if (!data.Code || !data.Token) {
+                throw new AlreadyExistsException(
+                    VerifyCodeExceptionType.NOT_VERIFIED,
+                    new Error(ResponseMessage.TR404),
+                    404,
+                );
+            }
+
             const payload = jwt.verify(data.Token, this.authCfg.jwt_secret);
+
+            if (
+                payload['mode'] === OTPType.ResetPassword &&
+                !data.NewPassword
+            ) {
+                throw new BadRequestException(
+                    BadRequestExceptionType.BAD_REQUEST,
+                    new Error(ResponseMessage.TR441),
+                    441,
+                );
+            }
             if (
                 typeof payload === 'object' &&
                 'email' in payload &&
@@ -280,7 +301,7 @@ export class CompanyUsersService {
                 const otpCode = await this.userOtpCodeService.find({
                     where: {
                         CompanyUserId: payload.Id,
-                        Type: OTPType.VerifyEmail,
+                        Type: payload.mode,
                         // For test cancelled manually
                         // Code: data.Code,
                         IsDeleted: false,
@@ -310,16 +331,36 @@ export class CompanyUsersService {
                 //     );
                 // }
 
-                const companyUpdatedUser = await this.companyUserService.update(
-                    {
+                let companyUpdatedUser;
+
+                console.log('update companyuser öncesi');
+
+                if (otpCode[0].Type === OTPType.ResetPassword) {
+                    companyUpdatedUser = await this.companyUserService.update({
                         where: {
-                            Id: payload.Id,
+                            Email: payload.email,
+                        },
+                        data: {
+                            Password: await bcrypt.hash(data.NewPassword, 10),
+                        },
+                    });
+                } else if (otpCode[0].Type === OTPType.VerifyEmail) {
+                    companyUpdatedUser = await this.companyUserService.update({
+                        where: {
+                            Email: payload.email,
                         },
                         data: {
                             IsEmailVerified: true,
                         },
-                    },
-                );
+                    });
+                } else {
+                    throw new OtpCodeNotFoundException(
+                        VerifyCodeExceptionType.CODE_NOT_FOUND,
+                        new Error(ResponseMessage.TR439),
+                        439,
+                    );
+                }
+
                 await this.userOtpCodeService.update({
                     where: {
                         Id: otpCode[0].Id,
@@ -329,9 +370,14 @@ export class CompanyUsersService {
                     },
                 });
 
+                const responseMessage =
+                    payload.mode === OTPType.VerifyEmail
+                        ? ResponseMessage.TR201
+                        : ResponseMessage.TR211;
+
                 return {
                     Email: companyUpdatedUser.Email,
-                    Data: ResponseMessage.TR201,
+                    Data: responseMessage,
                     Success: true,
                 };
             }
@@ -344,12 +390,64 @@ export class CompanyUsersService {
                 );
             }
 
+            console.log('errrrr', error);
+
             throw new TrendsException(
-                TokenExceptionType.EXPIRED_TOKEN,
-                new Error(error),
-                400,
+                error.response.Error,
+                new Error(error.response.Details),
+                error.response.Code,
             );
         }
+    }
+
+    async refreshUserToken(refreshToken: string) {
+        const { AccessToken, RefreshToken, User } =
+            await this.authService.refreshToken(refreshToken, true);
+        const expireTime = new Date(
+            Date.now() + parseInt(this.authCfg.jwt_expired, 10) * 60 * 1000,
+        );
+        const expiretimeRefresh = new Date(
+            Date.now() +
+                parseInt(this.authCfg.jwt_refresh_expired, 10) * 60 * 1000,
+        );
+
+        console.log('reffdddd', refreshToken);
+
+        const userToken = await this.prismaService.userToken.findFirst({
+            where: {
+                CompanyUserId: User.Id,
+                RefreshToken: refreshToken,
+            },
+            include: {
+                User: true,
+            },
+        });
+        if (!userToken) {
+            throw new HttpException(ResponseMessage.TR405, 401);
+        }
+
+        await this.prismaService.userToken.update({
+            data: {
+                AccessToken: AccessToken,
+                RefreshToken: RefreshToken,
+                ExpiresIn: expireTime,
+                ExpiresInRefresh: expiretimeRefresh,
+                ExpiredReason: ExpiredReasonType.TokenRefreshed,
+                CreatedAt: new Date(),
+            },
+            where: { Id: userToken.Id },
+        });
+        delete User.Password;
+        delete User.Id;
+
+        return {
+            AccessToken,
+            RefreshToken,
+            ExpireTime: expireTime,
+            ExpireTimeRefresh: expiretimeRefresh,
+            User,
+            Success: true,
+        };
     }
 
     async sendEmailCode(data: SendCodeDTO) {
@@ -364,11 +462,22 @@ export class CompanyUsersService {
                 409,
             );
         }
-        if (companyUser.IsEmailVerified) {
+        if (
+            companyUser.IsEmailVerified &&
+            data.MailReason === OTPType.VerifyEmail
+        ) {
             throw new AlreadyExistsException(
                 VerifyCodeExceptionType.VERIFIED,
                 new Error(ResponseMessage.TR410),
                 410,
+            );
+        }
+
+        if (!(data.MailReason in MailModeType) || !data.Email) {
+            throw new AlreadyExistsException(
+                VerifyCodeExceptionType.VERIFIED,
+                new Error(ResponseMessage.TR438),
+                438,
             );
         }
         // Verification code
@@ -378,6 +487,43 @@ export class CompanyUsersService {
             uppercase: false,
             lowercase: false,
             length: 4,
+        });
+
+        let subject;
+
+        switch (data.MailReason) {
+            case MailModeType.VerifyEmail:
+                subject = "Trendsbooking'e hoşheldiniz";
+                break;
+
+            case MailModeType.ResetPassword:
+                subject = 'Trendsbooking Şifre Sıfırlama İsteğiniz';
+                break;
+
+            default:
+                throw new AlreadyExistsException(
+                    AlreadyExistsExceptionType.NOT_EXIST,
+                    new Error(ResponseMessage.TR437),
+                    437,
+                );
+        }
+
+        const options: SendEmailDto = {
+            to: data.Email,
+            html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
+            subject,
+        };
+
+        await this.mailUtilsService.sendEmail(options);
+
+        const payload = {
+            mode: data.MailReason,
+            email: data.Email,
+            Id: companyUser.Id,
+        };
+
+        const token = jwt.sign(payload, this.authCfg.jwt_secret, {
+            expiresIn: `${this.authCfg.codeValidationTime}m`,
         });
 
         await this.userOtpCodeService.create({
@@ -391,25 +537,7 @@ export class CompanyUsersService {
                 Date.now() +
                     parseInt(this.authCfg.codeValidationTime, 10) * 60 * 1000,
             ),
-            Type: OTPType.VerifyEmail,
-        });
-
-        const options: SendEmailDto = {
-            to: data.Email,
-            html: `<h1>Doğrulama kodunuz: ${code}</h1>`,
-            subject: "Trendsbooking'e hoşheldiniz",
-        };
-
-        await this.mailUtilsService.sendEmail(options);
-
-        const payload = {
-            mode: MailModeType.VerifyEmail,
-            email: data.Email,
-            Id: companyUser.Id,
-        };
-
-        const token = jwt.sign(payload, this.authCfg.jwt_secret, {
-            expiresIn: `${this.authCfg.codeValidationTime}m`,
+            Type: data.MailReason,
         });
 
         return {
@@ -493,6 +621,61 @@ export class CompanyUsersService {
         );
     }
 
+    async changePassword(user: UserParamsDto, cred: CompanyUserPassChangeDto) {
+        if (!(await bcrypt.compare(cred.OldPassword, user.Password))) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR403),
+                403,
+            );
+        }
+        if (!cred.NewPassword || !cred.OldPassword) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR436),
+                436,
+            );
+        }
+
+        const companyUser = await this.companyUserService.findUnique({
+            Id: user.Id,
+        });
+
+        if (!companyUser) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+                406,
+            );
+        }
+
+        if (
+            companyUser &&
+            (await bcrypt.compare(cred.OldPassword, companyUser.Password))
+        ) {
+            await this.companyUserService.update({
+                where: {
+                    Id: companyUser.Id,
+                },
+                data: {
+                    Password: await bcrypt.hash(cred.NewPassword, 10),
+                },
+            });
+
+            // Response varsa Success
+            return {
+                Data: ResponseMessage.TR211,
+                Success: true,
+            };
+        }
+
+        throw new BadRequestException(
+            BadRequestExceptionType.BAD_REQUEST,
+            new Error(ResponseMessage.TR403),
+            403,
+        );
+    }
+
     async companies(data) {
         const companies = await this.companyUserService.find({ where: data });
         return { companies, Success: true };
@@ -539,6 +722,103 @@ export class CompanyUsersService {
             Data: `${data.Email} hesabı aktif edilmiştir.`,
             Success: true,
         };
+    }
+
+    async forgotPassword(data: CompanyUserForgottenPasswordDto) {
+        try {
+            const payload = jwt.verify(data.Token, this.authCfg.jwt_secret);
+
+            console.log('daaaaa', data, payload);
+            if (
+                typeof payload === 'object' &&
+                'email' in payload &&
+                data.Code
+            ) {
+                const companyUser = await this.companyUserService.findUnique({
+                    Id: payload.Id,
+                });
+
+                if (!companyUser) {
+                    throw new NotFoundException(
+                        ForbiddenExceptionType.FORBIDDEN,
+                        new Error(ResponseMessage.TR406),
+                        406,
+                    );
+                }
+
+                const otpCode = await this.userOtpCodeService.find({
+                    where: {
+                        CompanyUserId: payload.Id,
+                        Type: OTPType.ResetPassword,
+                        // For test cancelled manually
+                        // Code: data.Code,
+                        IsDeleted: false,
+                        ExpiredAt: {
+                            gte: new Date(),
+                        },
+                    },
+                    orderBy: {
+                        CreatedAt: 'desc',
+                    },
+                    take: 1,
+                });
+
+                if (!otpCode || !otpCode.length) {
+                    throw new OtpCodeNotFoundException(
+                        VerifyCodeExceptionType.CODE_NOT_FOUND,
+                        new Error(ResponseMessage.TR407),
+                        407,
+                    );
+                }
+
+                // Burası ilerleyen zamanlarda yapılacak en fazla 5 defa denenebilecek.
+                // if (otpCode[0].Attempts >= 5) {
+                //     throw new BadRequestException(
+                //         BadRequestExceptionType.BAD_REQUEST,
+                //         new Error('Your trial count is over'),
+                //     );
+                // }
+
+                const companyUpdatedUser = await this.companyUserService.update(
+                    {
+                        where: {
+                            Id: payload.Id,
+                        },
+                        data: {
+                            Password: await bcrypt.hash(data.Password, 10),
+                        },
+                    },
+                );
+                await this.userOtpCodeService.update({
+                    where: {
+                        Id: otpCode[0].Id,
+                    },
+                    data: {
+                        IsDeleted: true,
+                    },
+                });
+
+                return {
+                    Email: companyUpdatedUser.Email,
+                    Data: ResponseMessage.TR211,
+                    Success: true,
+                };
+            }
+        } catch (error) {
+            if (error?.name === 'TokenExpiredError') {
+                throw new TrendsException(
+                    TokenExceptionType.EXPIRED_TOKEN,
+                    new Error(ResponseMessage.TR408),
+                    400,
+                );
+            }
+
+            throw new TrendsException(
+                TokenExceptionType.EXPIRED_TOKEN,
+                new Error(error),
+                400,
+            );
+        }
     }
 
     async logout(cred: UserParamsDto) {

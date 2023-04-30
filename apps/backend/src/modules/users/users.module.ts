@@ -9,6 +9,7 @@ import {
     UserOtpCodeService,
     RandevuService,
     ServicesService,
+    CompanyUserService,
 } from '@database';
 import { UsersService } from './users.service';
 import { KeypairModule } from '@shared';
@@ -35,6 +36,7 @@ import authConfig from '@auth/config/auth.config';
         UserOtpCodeService,
         RandevuService,
         ServicesService,
+        CompanyUserService,
     ],
     controllers: [UsersController],
     exports: [UsersService],
