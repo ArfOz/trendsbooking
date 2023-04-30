@@ -261,7 +261,26 @@ export class CompanyUsersService {
 
     async verifyCode(data: VerifyCodeDTO) {
         try {
+            if (!data.Code || !data.Token) {
+                throw new AlreadyExistsException(
+                    VerifyCodeExceptionType.NOT_VERIFIED,
+                    new Error(ResponseMessage.TR404),
+                    404,
+                );
+            }
+
             const payload = jwt.verify(data.Token, this.authCfg.jwt_secret);
+
+            if (
+                payload['mode'] === OTPType.ResetPassword &&
+                !data.NewPassword
+            ) {
+                throw new BadRequestException(
+                    BadRequestExceptionType.BAD_REQUEST,
+                    new Error(ResponseMessage.TR441),
+                    441,
+                );
+            }
             if (
                 typeof payload === 'object' &&
                 'email' in payload &&
@@ -282,7 +301,7 @@ export class CompanyUsersService {
                 const otpCode = await this.userOtpCodeService.find({
                     where: {
                         CompanyUserId: payload.Id,
-                        Type: OTPType.VerifyEmail,
+                        Type: payload.mode,
                         // For test cancelled manually
                         // Code: data.Code,
                         IsDeleted: false,
@@ -312,16 +331,34 @@ export class CompanyUsersService {
                 //     );
                 // }
 
-                const companyUpdatedUser = await this.companyUserService.update(
-                    {
+                let companyUpdatedUser;
+
+                if (otpCode[0].Type === OTPType.ResetPassword) {
+                    companyUpdatedUser = await this.companyUserService.update({
                         where: {
-                            Id: payload.Id,
+                            Email: payload.email,
+                        },
+                        data: {
+                            Password: await bcrypt.hash(data.NewPassword, 10),
+                        },
+                    });
+                } else if (otpCode[0].Type === OTPType.VerifyEmail) {
+                    companyUpdatedUser = await this.companyUserService.update({
+                        where: {
+                            Email: payload.email,
                         },
                         data: {
                             IsEmailVerified: true,
                         },
-                    },
-                );
+                    });
+                } else {
+                    throw new OtpCodeNotFoundException(
+                        VerifyCodeExceptionType.CODE_NOT_FOUND,
+                        new Error(ResponseMessage.TR439),
+                        439,
+                    );
+                }
+
                 await this.userOtpCodeService.update({
                     where: {
                         Id: otpCode[0].Id,
@@ -331,9 +368,14 @@ export class CompanyUsersService {
                     },
                 });
 
+                const responseMessage =
+                    payload.mode === OTPType.VerifyEmail
+                        ? ResponseMessage.TR201
+                        : ResponseMessage.TR211;
+
                 return {
                     Email: companyUpdatedUser.Email,
-                    Data: ResponseMessage.TR201,
+                    Data: responseMessage,
                     Success: true,
                 };
             }
@@ -347,9 +389,9 @@ export class CompanyUsersService {
             }
 
             throw new TrendsException(
-                TokenExceptionType.EXPIRED_TOKEN,
-                new Error(error.message),
-                400,
+                error.response.Error,
+                new Error(error.response.Details),
+                error.response.Code,
             );
         }
     }

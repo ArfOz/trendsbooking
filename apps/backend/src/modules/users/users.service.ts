@@ -381,7 +381,6 @@ export class UsersService {
     async verifyCode(data: VerifyCodeDTO) {
         try {
             if (!data.Code || !data.Token) {
-                console.log('aha burada', ResponseMessage.TR404);
                 throw new AlreadyExistsException(
                     VerifyCodeExceptionType.NOT_VERIFIED,
                     new Error(ResponseMessage.TR404),
@@ -389,14 +388,12 @@ export class UsersService {
                 );
             }
 
-            console.log('data');
             const payload = jwt.verify(data.Token, this.authCfg.jwt_secret);
 
             if (
                 payload['mode'] === OTPType.ResetPassword &&
                 !data.NewPassword
             ) {
-                console.log('burada');
                 throw new BadRequestException(
                     BadRequestExceptionType.BAD_REQUEST,
                     new Error(ResponseMessage.TR441),
@@ -419,11 +416,10 @@ export class UsersService {
                         406,
                     );
                 }
-                console.log('payload', payload);
 
                 const otpCode = await this.userOtpCodeService.find({
                     where: {
-                        UserId: 10,
+                        UserId: payload.Id,
                         Type: payload.mode,
                         // For test cancelled manually
                         // Code: data.Code,
@@ -506,11 +502,10 @@ export class UsersService {
                     400,
                 );
             }
-
             throw new TrendsException(
-                error.response.error,
-                new Error(error.response.details),
-                error.response.code,
+                error.response.Error,
+                new Error(error.response.Details),
+                error.response.Code,
             );
         }
     }
@@ -519,8 +514,6 @@ export class UsersService {
         const user = await this.userService.findFirst({
             where: { Email: data.Email },
         });
-
-        console.log('userrrrrrrr', user);
 
         if (!user) {
             throw new AlreadyExistsException(
