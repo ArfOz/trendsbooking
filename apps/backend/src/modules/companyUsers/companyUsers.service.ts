@@ -653,6 +653,7 @@ export class CompanyUsersService {
             companyUser &&
             (await bcrypt.compare(cred.OldPassword, companyUser.Password))
         ) {
+            console.log('ifin içerisine geldi', cred.NewPassword);
             await this.companyUserService.update({
                 where: {
                     Id: companyUser.Id,
