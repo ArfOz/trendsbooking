@@ -222,7 +222,7 @@ export default function Register() {
     useEffect(() => {
         if (registered) {
             console.log('auth.registerErrors :>> ', auth.registerErrors);
-            if (auth.registerErrors?.response.data.code == 411) {
+            if (auth.registerErrors?.response.data.Code == 411) {
                 setError('Lütfen sözleşmeyi okuyup kabul ediniz!!!');
             } else if (
                 auth.registerErrors?.response.data.details?.toString() ===
@@ -231,7 +231,7 @@ export default function Register() {
                 setError(
                     'Lütfen daha önce kayıt olmamış bir email ile giriş yapınız!!!',
                 );
-            } else if (auth.registerErrors?.response.data.code == 412) {
+            } else if (auth.registerErrors?.response.data.Code == 412) {
                 let initialValues = {
                     FirstName: 'Ad',
                     LastName: 'Soyad',
