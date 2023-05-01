@@ -13,6 +13,6 @@ export class AlreadyExistsException extends TrendsException {
         code: number,
     ) {
         const status = HttpStatus.CONFLICT;
-        super(type, details, status, code);
+        super(type, details, code, status);
     }
 }

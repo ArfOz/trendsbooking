@@ -11,6 +11,6 @@ export class UserNotExistException extends TrendsException {
         code: number,
     ) {
         const status = HttpStatus.UNAUTHORIZED;
-        super('User does not exist!', error, status, code);
+        super('User does not exist!', error, code, status);
     }
 }
