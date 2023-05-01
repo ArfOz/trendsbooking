@@ -182,6 +182,14 @@ export class CompanyUsersService {
 
         // delete response.Password;
 
+        const departmentId = generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 6,
+        });
+
         // Create a new user
         const newUser = await this.companyUserService.create({
             FirstName: input.FirstName,
@@ -207,6 +215,7 @@ export class CompanyUsersService {
                     Salon: input.Salon,
                     TaxAdmin: input.TaxAdmin,
                     TaxNo: input.TaxNo,
+                    DepartmentID: departmentId,
                 },
             },
         });
