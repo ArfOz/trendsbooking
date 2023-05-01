@@ -10,6 +10,6 @@ export class UnauthorizedException extends TrendsException {
         code: number,
     ) {
         const status = HttpStatus.UNAUTHORIZED;
-        super(type, error, status, code);
+        super(type, error, code, status);
     }
 }

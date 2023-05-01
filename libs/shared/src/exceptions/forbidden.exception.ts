@@ -10,6 +10,6 @@ export class ForbiddenException extends TrendsException {
         code: number,
     ) {
         const status = HttpStatus.FORBIDDEN;
-        super(type, error, status, code);
+        super(type, error, code, status);
     }
 }
