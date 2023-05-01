@@ -342,8 +342,6 @@ export class CompanyUsersService {
 
                 let companyUpdatedUser;
 
-                console.log('update companyuser öncesi');
-
                 if (otpCode[0].Type === OTPType.ResetPassword) {
                     companyUpdatedUser = await this.companyUserService.update({
                         where: {
@@ -648,8 +646,6 @@ export class CompanyUsersService {
             Id: user.Id,
         });
 
-        console.log('companyuser', companyUser);
-
         if (!companyUser) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -662,7 +658,6 @@ export class CompanyUsersService {
             companyUser &&
             (await bcrypt.compare(cred.OldPassword, companyUser.Password))
         ) {
-            console.log('ifin içerisine geldi', cred.NewPassword);
             await this.companyUserService.update({
                 where: {
                     Id: companyUser.Id,
