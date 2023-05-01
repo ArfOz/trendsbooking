@@ -83,12 +83,6 @@ export class CompanyUsersController {
         return this.companyUsersService.activate(data);
     }
 
-    @AllowUnauthorizedRequest()
-    @Post('forgotpassword')
-    async forgotPassword(@Body() data: CompanyUserForgottenPasswordDto) {
-        return this.companyUsersService.forgotPassword(data);
-    }
-
     @RolesRequired(['Provider'])
     @Get('profile')
     async profile(@UserParam() user: UserParamsDto) {
