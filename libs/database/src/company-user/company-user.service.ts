@@ -206,12 +206,15 @@ export class CompanyUserService {
     }): Promise<CompanyUser> {
         const { where, data } = params;
 
+        console.log('update içerisi');
         let encryptedDataEmail;
         let encryptedDataPhone;
 
-        let newData: Prisma.UserUpdateInput = { ...data };
+        let newData: Prisma.UserUpdateInput = data;
 
-        where.Email = this.keypairService.encryptWithAppKeys(where.Email);
+        if (where.Email) {
+            where.Email = this.keypairService.encryptWithAppKeys(where.Email);
+        }
         if (data.Email) {
             encryptedDataEmail = this.keypairService.encryptWithAppKeys(
                 isString(data.Email) ? data.Email : data?.Email?.set,
@@ -236,14 +239,8 @@ export class CompanyUserService {
         }
 
         const updatedUser = await this.prisma.companyUser.update({
-            data: {
-                ...data,
-                Email: encryptedDataEmail,
-                Phone: encryptedDataPhone,
-            },
-            where: {
-                Email: where.Email,
-            },
+            data: newData,
+            where,
         });
 
         if (updatedUser.Email)

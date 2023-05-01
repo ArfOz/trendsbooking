@@ -38,8 +38,6 @@ import ResponseMessage from '@shared/enums/response-message.json';
 
 // DTO area
 import {
-    CompanyUserForgottenPasswordDto,
-    CompanyUserPassChangeDto,
     LoginUserDto,
     SendCodeDTO,
     UserParamsDto,
@@ -48,7 +46,9 @@ import {
 
 import {
     ActivateCompanyUserDto,
+    CompanyUserForgottenPasswordDto,
     CompanyUserParamsDto,
+    CompanyUserPassChangeDto,
     CreateCompanyUserJsonDto,
     ResponseLoginCompanyUserDTO,
 } from './dtos/companyUser-response.dto';
@@ -182,6 +182,14 @@ export class CompanyUsersService {
 
         // delete response.Password;
 
+        const departmentId = generate({
+            numbers: true,
+            symbols: false,
+            uppercase: false,
+            lowercase: false,
+            length: 6,
+        });
+
         // Create a new user
         const newUser = await this.companyUserService.create({
             FirstName: input.FirstName,
@@ -207,6 +215,7 @@ export class CompanyUsersService {
                     Salon: input.Salon,
                     TaxAdmin: input.TaxAdmin,
                     TaxNo: input.TaxNo,
+                    DepartmentID: departmentId,
                 },
             },
         });
@@ -333,8 +342,6 @@ export class CompanyUsersService {
 
                 let companyUpdatedUser;
 
-                console.log('update companyuser öncesi');
-
                 if (otpCode[0].Type === OTPType.ResetPassword) {
                     companyUpdatedUser = await this.companyUserService.update({
                         where: {
@@ -410,8 +417,6 @@ export class CompanyUsersService {
             Date.now() +
                 parseInt(this.authCfg.jwt_refresh_expired, 10) * 60 * 1000,
         );
-
-        console.log('reffdddd', refreshToken);
 
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
@@ -722,103 +727,6 @@ export class CompanyUsersService {
             Data: `${data.Email} hesabı aktif edilmiştir.`,
             Success: true,
         };
-    }
-
-    async forgotPassword(data: CompanyUserForgottenPasswordDto) {
-        try {
-            const payload = jwt.verify(data.Token, this.authCfg.jwt_secret);
-
-            console.log('daaaaa', data, payload);
-            if (
-                typeof payload === 'object' &&
-                'email' in payload &&
-                data.Code
-            ) {
-                const companyUser = await this.companyUserService.findUnique({
-                    Id: payload.Id,
-                });
-
-                if (!companyUser) {
-                    throw new NotFoundException(
-                        ForbiddenExceptionType.FORBIDDEN,
-                        new Error(ResponseMessage.TR406),
-                        406,
-                    );
-                }
-
-                const otpCode = await this.userOtpCodeService.find({
-                    where: {
-                        CompanyUserId: payload.Id,
-                        Type: OTPType.ResetPassword,
-                        // For test cancelled manually
-                        // Code: data.Code,
-                        IsDeleted: false,
-                        ExpiredAt: {
-                            gte: new Date(),
-                        },
-                    },
-                    orderBy: {
-                        CreatedAt: 'desc',
-                    },
-                    take: 1,
-                });
-
-                if (!otpCode || !otpCode.length) {
-                    throw new OtpCodeNotFoundException(
-                        VerifyCodeExceptionType.CODE_NOT_FOUND,
-                        new Error(ResponseMessage.TR407),
-                        407,
-                    );
-                }
-
-                // Burası ilerleyen zamanlarda yapılacak en fazla 5 defa denenebilecek.
-                // if (otpCode[0].Attempts >= 5) {
-                //     throw new BadRequestException(
-                //         BadRequestExceptionType.BAD_REQUEST,
-                //         new Error('Your trial count is over'),
-                //     );
-                // }
-
-                const companyUpdatedUser = await this.companyUserService.update(
-                    {
-                        where: {
-                            Id: payload.Id,
-                        },
-                        data: {
-                            Password: await bcrypt.hash(data.Password, 10),
-                        },
-                    },
-                );
-                await this.userOtpCodeService.update({
-                    where: {
-                        Id: otpCode[0].Id,
-                    },
-                    data: {
-                        IsDeleted: true,
-                    },
-                });
-
-                return {
-                    Email: companyUpdatedUser.Email,
-                    Data: ResponseMessage.TR211,
-                    Success: true,
-                };
-            }
-        } catch (error) {
-            if (error?.name === 'TokenExpiredError') {
-                throw new TrendsException(
-                    TokenExceptionType.EXPIRED_TOKEN,
-                    new Error(ResponseMessage.TR408),
-                    400,
-                );
-            }
-
-            throw new TrendsException(
-                TokenExceptionType.EXPIRED_TOKEN,
-                new Error(error),
-                400,
-            );
-        }
     }
 
     async logout(cred: UserParamsDto) {

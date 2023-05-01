@@ -89,6 +89,13 @@ export class UserParamsDto {
     @IsString()
     DepartmentId?: number;
 }
+
+export class UserRefreshTokenDTO {
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    RefreshToken: string;
+}
 export class ResponseLoginUserDTO {
     @ApiProperty()
     @IsString()
@@ -247,7 +254,7 @@ export class UserProfileUpdateDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsEmail()
+    @IsString()
     Country?: string;
 
     @ApiProperty()
@@ -255,7 +262,7 @@ export class UserProfileUpdateDto {
     @IsEmail()
     Phone?: string;
 
-    @ApiProperty()
+    @ApiProperty({ example: [Genders.Male, Genders.Female, Genders.NottoSay] })
     @IsNotEmpty()
     @IsEmail()
     Gender?: Genders;
@@ -391,7 +398,7 @@ export class LoginUserDto {
     Password: string;
 }
 
-export class CompanyUserPassChangeDto {
+export class UserPassChangeDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
@@ -424,7 +431,7 @@ export class RandevuCreateDto {
     EndTime: Date | string;
 }
 
-export class CompanyUserForgottenPasswordDto {
+export class UserForgottenPasswordDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()

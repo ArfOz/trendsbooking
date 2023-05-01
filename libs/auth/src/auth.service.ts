@@ -69,8 +69,8 @@ export class AuthService {
         if (!userToken) {
             throw new TrendsException(
                 NotFoundExceptionType.NOT_FOUND,
-                new Error(ResponseMessage.TR406),
-                400,
+                new Error(ResponseMessage.TR417),
+                417,
             );
         }
         const update: Prisma.UserTokenUpdateArgs = {
@@ -89,7 +89,7 @@ export class AuthService {
             ? await this.companyUserService.findUnique({
                   Id: userPayload.Id,
               })
-            : await this.userService.get({
+            : await this.userService.findUnique({
                   Id: userPayload.Id,
               });
 

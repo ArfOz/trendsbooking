@@ -5,6 +5,8 @@ import {
     UserParamsDto,
     LoginUserDto,
     UserProfileUpdateDto,
+    UserRefreshTokenDTO,
+    UserPassChangeDto,
 } from './dtos';
 import { UserParam } from '@shared';
 
@@ -36,6 +38,14 @@ export class UsersController {
         return this.usersService.loginUser(data);
     }
 
+    @Post('changepassword')
+    async updatePassword(
+        @UserParam() user: UserParamsDto,
+        @Body() data: UserPassChangeDto,
+    ) {
+        return this.usersService.changePassword(user, data);
+    }
+
     @RolesRequired(['Normal'])
     @Get('profile')
     async profile(@UserParam() user: UserParamsDto) {
@@ -53,9 +63,8 @@ export class UsersController {
     }
 
     @RolesRequired(['Normal'])
-    @AllowUnauthorizedRequest()
     @Post('refreshtoken')
-    async refreshUserToken(@Body('RefreshToken') refreshToken: string) {
+    async refreshUserToken(@Body() refreshToken: UserRefreshTokenDTO) {
         return this.usersService.refreshUserToken(refreshToken);
     }
 

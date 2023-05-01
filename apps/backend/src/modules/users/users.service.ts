@@ -1,3 +1,7 @@
+import {
+    UserPassChangeDto,
+    UserRefreshTokenDTO,
+} from './dtos/user-response.dto';
 // Npm packages
 
 import { Injectable, Inject, HttpException } from '@nestjs/common';
@@ -295,8 +299,67 @@ export class UsersService {
         );
     }
 
+    async changePassword(user: UserParamsDto, cred: UserPassChangeDto) {
+        if (!(await bcrypt.compare(cred.OldPassword, user.Password))) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR403),
+                403,
+            );
+        }
+        if (!cred.NewPassword || !cred.OldPassword) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR436),
+                436,
+            );
+        }
+
+        console.log('user', user);
+
+        const userData = await this.userService.findUnique({
+            Id: user.Id,
+        });
+
+        console.log('userrrrrrrr', userData);
+        if (!userData) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+                406,
+            );
+        }
+
+        if (
+            userData &&
+            (await bcrypt.compare(cred.OldPassword, userData.Password))
+        ) {
+            console.log('geldi', cred.NewPassword);
+            await this.userService.update({
+                where: {
+                    Email: userData.Email,
+                },
+                data: {
+                    Password: await bcrypt.hash(cred.NewPassword, 10),
+                },
+            });
+
+            // Response varsa Success
+            return {
+                Data: ResponseMessage.TR211,
+                Success: true,
+            };
+        }
+
+        throw new BadRequestException(
+            BadRequestExceptionType.BAD_REQUEST,
+            new Error(ResponseMessage.TR403),
+            403,
+        );
+    }
+
     async profile(user: UserParamsDto): Promise<ResponseUserProfileUserDTO> {
-        return await this.userService.get({ Id: user.Id });
+        return await this.userService.findUnique({ Id: user.Id });
     }
 
     async updateProfile(user: UserParamsDto, data: UserProfileUpdateDto) {
@@ -330,9 +393,11 @@ export class UsersService {
         };
     }
 
-    async refreshUserToken(refreshToken: string) {
+    async refreshUserToken(data: UserRefreshTokenDTO) {
+        console.log('daaaa', data.RefreshToken);
         const { AccessToken, RefreshToken, User } =
-            await this.authService.refreshToken(refreshToken, false);
+            await this.authService.refreshToken(data.RefreshToken, false);
+
         const expireTime = new Date(
             Date.now() + parseInt(this.authCfg.jwt_expired, 10) * 60 * 1000,
         );
@@ -344,7 +409,7 @@ export class UsersService {
         const userToken = await this.prismaService.userToken.findFirst({
             where: {
                 UserId: User.Id,
-                RefreshToken: refreshToken,
+                RefreshToken: data.RefreshToken,
             },
             include: {
                 User: true,
@@ -405,7 +470,7 @@ export class UsersService {
                 'email' in payload &&
                 data.Code
             ) {
-                let user = await this.userService.get({
+                let user = await this.userService.findUnique({
                     Id: payload.Id,
                 });
 

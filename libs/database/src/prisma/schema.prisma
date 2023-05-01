@@ -98,6 +98,7 @@ model Department {
   ///Whic type of service
   ServiceType   ServiceType[]
   Workers       Worker[]
+  // Unique department Id'leri olacak
   DepartmentID  String?
   WorkTime      WorkTime[]
   /// Vergi numarası

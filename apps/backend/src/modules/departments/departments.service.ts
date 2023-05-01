@@ -50,7 +50,16 @@ export class DepartmentsService {
         private readonly keypairService: KeypairService,
     ) {}
     async add(user: UserParamsDto, input: AddDepartmentsJsonDto) {
-        if (!input.Salon || !input.ServiceType) {
+        if (
+            !input.Salon ||
+            !input.ServiceType ||
+            !input.TaxNo ||
+            !input.TaxAdmin ||
+            !input.IBAN ||
+            !input.City ||
+            !input.District ||
+            !input.Neighborhood
+        ) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR426),
@@ -67,7 +76,7 @@ export class DepartmentsService {
         });
 
         const data: Prisma.DepartmentCreateInput = {
-            Country: input.Country,
+            Country: input.Country || 'Türkiye',
             City: input.City,
             District: input.District,
             IBAN: input.IBAN,
@@ -76,15 +85,17 @@ export class DepartmentsService {
             TaxNo: input.TaxNo,
             Sector: input.Sector,
             Salon: input.Salon,
-            ServiceType: input.ServiceType,
             CompanyUser: { connect: { Id: user.Id } },
             DepartmentID: departmentId,
-            WorkTime: {
-                createMany: {
-                    data: input?.WorkTime,
-                },
-            },
         };
+
+        if (input.WorkTime) {
+            data.WorkTime = {
+                createMany: {
+                    data: input.WorkTime,
+                },
+            };
+        }
 
         await this.departmentService.create(data);
 

@@ -30,7 +30,7 @@ export class DepartmentService {
         orderBy?: Prisma.DepartmentOrderByWithRelationInput;
     }) {
         const { skip, take, cursor, where, orderBy } = params;
-        return this.prisma.department.findMany({
+        const response = await this.prisma.department.findMany({
             skip,
             take,
             cursor,
@@ -43,7 +43,7 @@ export class DepartmentService {
                     select: {
                         FirstName: true,
                         LastName: true,
-                        Phone: true,
+
                         Id: true,
                         WorkTime: true,
                         DepartmentId: true,
@@ -57,6 +57,8 @@ export class DepartmentService {
                 Id: true,
             },
         });
+
+        return response;
     }
 
     async create(data: Prisma.DepartmentCreateInput): Promise<Department> {
