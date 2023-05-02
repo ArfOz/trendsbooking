@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 import {
     AllowUnauthorizedRequest,
     StaticTokenRequired,
@@ -46,6 +46,10 @@ export class CompanyUsersController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('refreshtoken')
     async refreshUserToken(@Body('RefreshToken') refreshToken: string) {
         return this.companyUsersService.refreshUserToken(refreshToken);
@@ -63,6 +67,10 @@ export class CompanyUsersController {
         return this.companyUsersService.login(data);
     }
 
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('changepassword')
     async updatePassword(
         @UserParam() user: UserParamsDto,
@@ -72,24 +80,42 @@ export class CompanyUsersController {
     }
 
     @StaticTokenRequired()
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+        description: 'Static Token',
+    })
     @Get('companies')
     async companies(@Body() data: GetCompaniesWhereFilter) {
         return this.companyUsersService.companies(data);
     }
 
     @StaticTokenRequired()
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+        description: 'Static Token',
+    })
     @Post('activate')
     async activate(@Body() data: ActivateCompanyUserDto) {
         return this.companyUsersService.activate(data);
     }
 
     @RolesRequired(['Provider'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Get('profile')
     async profile(@UserParam() user: UserParamsDto) {
         return this.companyUsersService.profile(user);
     }
 
     @RolesRequired(['Provider'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Get('logout')
     async logout(@UserParam() user: UserParamsDto) {
         return this.companyUsersService.logout(user);

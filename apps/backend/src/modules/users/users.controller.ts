@@ -13,7 +13,7 @@ import { UserParam } from '@shared';
 import { UsersService } from './users.service';
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AllowUnauthorizedRequest, RolesRequired } from '@shared/decorators';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')
 @Controller('users')
@@ -38,6 +38,10 @@ export class UsersController {
         return this.usersService.loginUser(data);
     }
 
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('changepassword')
     async updatePassword(
         @UserParam() user: UserParamsDto,
@@ -46,6 +50,10 @@ export class UsersController {
         return this.usersService.changePassword(user, data);
     }
 
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @RolesRequired(['Normal'])
     @Get('profile')
     async profile(@UserParam() user: UserParamsDto) {
@@ -54,6 +62,10 @@ export class UsersController {
 
     // Email update işlemi sonra eklenecek orada mail kontrolü de olacak. Yani maile bildirim gidecek.
     @RolesRequired(['Normal'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('updateprofile')
     async updateProfile(
         @UserParam() user: UserParamsDto,
@@ -63,6 +75,10 @@ export class UsersController {
     }
 
     @RolesRequired(['Normal'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('refreshtoken')
     async refreshUserToken(@Body() refreshToken: UserRefreshTokenDTO) {
         return this.usersService.refreshUserToken(refreshToken);
@@ -81,6 +97,10 @@ export class UsersController {
     }
 
     @RolesRequired(['Normal'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Get('logout')
     async logout(@UserParam() user: UserParamsDto) {
         return this.usersService.logout(user);

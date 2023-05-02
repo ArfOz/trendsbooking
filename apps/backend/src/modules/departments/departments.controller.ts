@@ -12,7 +12,7 @@ import {
     UseInterceptors,
     ValidationError,
 } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { Express } from 'express';
 import { diskStorage, Multer } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -55,6 +55,10 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('add')
     async add(
         @UserParam() user: UserParamsDto,
@@ -64,6 +68,10 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('updatedepartment')
     async update(
         @UserParam() user: UserParamsDto,
@@ -73,6 +81,10 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('addservice')
     async addService(
         @UserParam() user: UserParamsDto,
@@ -82,6 +94,10 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('updateservice')
     async updateService(
         @UserParam() user: UserParamsDto,
@@ -91,6 +107,10 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('deleteservice')
     async deleteService(
         @UserParam() user: UserParamsDto,
@@ -100,6 +120,10 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('addworker')
     async addWorker(
         @UserParam() user: UserParamsDto,
@@ -109,6 +133,10 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('updateworker')
     async updateWorker(
         @UserParam() user: UserParamsDto,
@@ -118,6 +146,10 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('deleteworker')
     async deleteWorker(
         @UserParam() user: UserParamsDto,
@@ -127,6 +159,10 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('getdetails')
     async getWorkers(
         @UserParam() user: UserParamsDto,

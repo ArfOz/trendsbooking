@@ -9,7 +9,7 @@ import {
     WorkersGetJsonDto,
     WorkersUpdateJsonDto,
 } from './dtos/workers.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Workers')
 @Controller('workers')
@@ -28,12 +28,20 @@ export class WorkersController {
         return this.workersService.login(data);
     }
 
-    @AllowUnauthorizedRequest()
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('changepassword')
     async updatePassword(@Body() data: WorkerPassChangeDto) {
         return this.workersService.changePass(data);
     }
+
     @RolesRequired(['Provider', 'WorkerAdmin', 'WorkerBasic'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('getdetails')
     async getDetails(
         @UserParam() user: UserParamsDto,
@@ -43,6 +51,10 @@ export class WorkersController {
     }
 
     @RolesRequired(['Provider', 'WorkerAdmin', 'WorkerBasic'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('updateworker')
     async updateworker(
         @UserParam() user: UserParamsDto,
@@ -52,6 +64,10 @@ export class WorkersController {
     }
 
     @RolesRequired(['Provider', 'WorkerAdmin'])
+    @ApiHeader({
+        name: 'Bearer-Token',
+        required: true,
+    })
     @Post('deleteworker')
     async deleteworker(
         @UserParam() user: UserParamsDto,
