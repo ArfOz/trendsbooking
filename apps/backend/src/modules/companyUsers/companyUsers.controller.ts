@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
-import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiHeaders, ApiTags } from '@nestjs/swagger';
 import {
     AllowUnauthorizedRequest,
     StaticTokenRequired,
@@ -8,6 +8,7 @@ import {
 } from '@shared';
 import {
     LoginUserDto,
+    RefreshTokenCompanyUserDto,
     SendCodeDTO,
     UserParamsDto,
     VerifyCodeDTO,
@@ -46,13 +47,10 @@ export class CompanyUsersController {
     }
 
     @RolesRequired(['Provider'])
-    @ApiHeader({
-        name: 'Bearer-Token',
-        required: true,
-    })
+    @ApiBearerAuth('Authorization')
     @Post('refreshtoken')
-    async refreshUserToken(@Body('RefreshToken') refreshToken: string) {
-        return this.companyUsersService.refreshUserToken(refreshToken);
+    async refreshUserToken(@Body() data: RefreshTokenCompanyUserDto) {
+        return this.companyUsersService.refreshUserToken(data.RefreshToken);
     }
 
     @AllowUnauthorizedRequest()
@@ -67,55 +65,37 @@ export class CompanyUsersController {
         return this.companyUsersService.login(data);
     }
 
-    @ApiHeader({
-        name: 'Bearer-Token',
-        required: true,
-    })
     @Post('changepassword')
+    @ApiBearerAuth('Authorization')
     async updatePassword(
         @UserParam() user: UserParamsDto,
         @Body() data: CompanyUserPassChangeDto,
     ) {
         return this.companyUsersService.changePassword(user, data);
     }
-
     @StaticTokenRequired()
-    @ApiHeader({
-        name: 'Bearer-Token',
-        required: true,
-        description: 'Static Token',
-    })
+    @ApiBearerAuth('Authorization')
     @Get('companies')
     async companies(@Body() data: GetCompaniesWhereFilter) {
         return this.companyUsersService.companies(data);
     }
 
     @StaticTokenRequired()
-    @ApiHeader({
-        name: 'Bearer-Token',
-        required: true,
-        description: 'Static Token',
-    })
+    @ApiBearerAuth('Authorization')
     @Post('activate')
     async activate(@Body() data: ActivateCompanyUserDto) {
         return this.companyUsersService.activate(data);
     }
 
     @RolesRequired(['Provider'])
-    @ApiHeader({
-        name: 'Bearer-Token',
-        required: true,
-    })
+    @ApiBearerAuth('Authorization')
     @Get('profile')
     async profile(@UserParam() user: UserParamsDto) {
         return this.companyUsersService.profile(user);
     }
 
     @RolesRequired(['Provider'])
-    @ApiHeader({
-        name: 'Bearer-Token',
-        required: true,
-    })
+    @ApiBearerAuth('Authorization')
     @Get('logout')
     async logout(@UserParam() user: UserParamsDto) {
         return this.companyUsersService.logout(user);

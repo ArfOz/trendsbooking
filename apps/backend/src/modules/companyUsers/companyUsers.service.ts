@@ -408,6 +408,13 @@ export class CompanyUsersService {
     }
 
     async refreshUserToken(refreshToken: string) {
+        if (!refreshToken) {
+            throw new BadRequestException(
+                BadRequestExceptionType.MISSING_FILE,
+                new Error(ResponseMessage.TR442),
+                442,
+            );
+        }
         const { AccessToken, RefreshToken, User } =
             await this.authService.refreshToken(refreshToken, true);
         const expireTime = new Date(
@@ -769,6 +776,11 @@ export class CompanyUsersService {
     async profile(
         user: CompanyUserParamsDto, // : Promise<ResponseCompanyUserProfileUserDTO>
     ) {
-        return await this.companyUserService.findUnique({ Id: user.Id });
+        const response = await this.companyUserService.findUnique({
+            Id: user.Id,
+        });
+
+        delete response.Password;
+        return response;
     }
 }

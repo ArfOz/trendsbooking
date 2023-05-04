@@ -24,7 +24,7 @@
   "TR409": "Yanlış email adresi.",
   "TR410": "Hesabınız daha önce onaylanmış.",
   "TR411": "Lütfen Sözleşmeyi onaylayınız.",
-  "TR412": "Email adresi, şifre, Telefon numarası, Kullanıcı adı, Cinsiyet, Ad Soyad ve Doğum Tarihi zorunludur. ",
+  "TR412": "Email adresi, şifre, Telefon numarası, Kullanıcı adı, Cinsiyet, Ad Soyad, Doğum Tarihi ve Şube Bilgileri Zorunludur ",
   "TR413": "Bu kullanıcı daha önce kayıt olmuş.",
   "TR414": "Lütfen Sözleşmeyi Onaylayınız",
   "TR415": "Kullanıcı Bulunamadı.",
@@ -53,5 +53,6 @@
   "TR438": "Email ve email sebebi zorunludur.",
   "TR439": "Code veya token hatası...",
   "TR440": "Code, Token ve Yeni Şifre zorunludur",
-  "TR441": "Yeni şifre zorunludur."
+  "TR441": "Yeni şifre zorunludur.",
+  "TR442": "RefreshToken Zorunludur"
 }
