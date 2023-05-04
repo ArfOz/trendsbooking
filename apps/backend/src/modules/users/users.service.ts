@@ -315,13 +315,18 @@ export class UsersService {
             );
         }
 
-        console.log('user', user);
+        if (cred.NewPassword == cred.OldPassword) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR443),
+                443,
+            );
+        }
 
         const userData = await this.userService.findUnique({
             Id: user.Id,
         });
 
-        console.log('userrrrrrrr', userData);
         if (!userData) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -334,7 +339,6 @@ export class UsersService {
             userData &&
             (await bcrypt.compare(cred.OldPassword, userData.Password))
         ) {
-            console.log('geldi', cred.NewPassword);
             await this.userService.update({
                 where: {
                     Email: userData.Email,

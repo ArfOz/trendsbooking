@@ -649,6 +649,14 @@ export class CompanyUsersService {
             );
         }
 
+        if (cred.NewPassword == cred.OldPassword) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR443),
+                443,
+            );
+        }
+
         const companyUser = await this.companyUserService.findUnique({
             Id: user.Id,
         });
