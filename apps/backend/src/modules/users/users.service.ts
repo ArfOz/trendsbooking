@@ -359,7 +359,10 @@ export class UsersService {
     }
 
     async profile(user: UserParamsDto): Promise<ResponseUserProfileUserDTO> {
-        return await this.userService.findUnique({ Id: user.Id });
+        const response = await this.userService.findUnique({ Id: user.Id });
+
+        delete response.Password;
+        return response;
     }
 
     async updateProfile(user: UserParamsDto, data: UserProfileUpdateDto) {
@@ -379,15 +382,27 @@ export class UsersService {
                 431,
             );
         }
-        await this.userService.update({
+        const userData = await this.userService.findUnique({
+            Id: user.Id,
+        });
+
+        if (!userData) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+                406,
+            );
+        }
+        const response = await this.userService.update({
             where: {
-                Email: user.Email,
+                Email: userData.Email,
             },
             data,
         });
 
         return {
-            data: ResponseMessage.TR206,
+            Data: ResponseMessage.TR206,
+            UserData: response,
             Success: true,
             statusCode: 206,
         };
@@ -470,7 +485,7 @@ export class UsersService {
                 'email' in payload &&
                 data.Code
             ) {
-                let user = await this.userService.findUnique({
+                const user = await this.userService.findUnique({
                     Id: payload.Id,
                 });
 
@@ -513,8 +528,10 @@ export class UsersService {
                 //     );
                 // }
 
+                let updatedUser;
+
                 if (otpCode[0].Type === OTPType.ResetPassword) {
-                    user = await this.userService.update({
+                    updatedUser = await this.userService.update({
                         where: {
                             Email: payload.email,
                         },
@@ -523,7 +540,7 @@ export class UsersService {
                         },
                     });
                 } else if (otpCode[0].Type === OTPType.VerifyEmail) {
-                    user = await this.userService.update({
+                    updatedUser = await this.userService.update({
                         where: {
                             Email: payload.email,
                         },
@@ -554,7 +571,7 @@ export class UsersService {
                         : ResponseMessage.TR211;
 
                 return {
-                    Email: user.Email,
+                    Email: updatedUser.Email,
                     Data: responseMessage,
                     Success: true,
                 };
