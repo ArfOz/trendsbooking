@@ -50,6 +50,7 @@ model User {
   UserToken       UserToken[]
   /// - It is the UserRole and the default value is *Normal*.
   Role            UserRole      @default(Normal)
+  Randevu         Randevu[]
 }
 
 model CompanyUser {
@@ -180,7 +181,8 @@ model Randevu {
   ServiceId Int
   StartTime DateTime
   EndTime   DateTime
-  // User eklenecek
+  User      User     @relation(fields: [UserId], references: [Id])
+  UserId    Int
 }
 
 model UserToken {

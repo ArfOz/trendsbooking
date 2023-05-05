@@ -67,8 +67,8 @@ export class UsersController {
     @RolesRequired(['Normal'])
     @ApiBearerAuth('Authorization')
     @Post('refreshtoken')
-    async refreshUserToken(@Body() refreshToken: UserRefreshTokenDTO) {
-        return this.usersService.refreshUserToken(refreshToken);
+    async refreshUserToken(@Body() data: UserRefreshTokenDTO) {
+        return this.usersService.refreshUserToken(data);
     }
 
     @AllowUnauthorizedRequest()

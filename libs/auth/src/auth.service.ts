@@ -54,6 +54,8 @@ export class AuthService {
             RefreshToken: token,
         };
 
+        console.log('where refresh', userPayload);
+
         where = companyUser
             ? { ...where, CompanyUserId: userPayload.Id }
             : { ...where, UserId: userPayload.Id };
@@ -102,6 +104,7 @@ export class AuthService {
         //     },
         // });
 
+        console.log('refresh token user', user);
         const { AccessToken, RefreshToken } =
             await this.generateAccessAndRefreshToken(user);
 
@@ -149,6 +152,8 @@ export class AuthService {
                     1000 *
                     24,
         );
+
+        console.log('payload ', payload);
 
         const accessToken = jwt.sign(payload, this.authCfg.jwt_secret!, {
             expiresIn: `${this.authCfg.jwt_expired}m`,

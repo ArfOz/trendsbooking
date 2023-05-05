@@ -413,7 +413,13 @@ export class UsersService {
     }
 
     async refreshUserToken(data: UserRefreshTokenDTO) {
-        console.log('daaaa', data.RefreshToken);
+        if (!data.RefreshToken) {
+            throw new BadRequestException(
+                BadRequestExceptionType.MISSING_FILE,
+                new Error(ResponseMessage.TR442),
+                442,
+            );
+        }
         const { AccessToken, RefreshToken, User } =
             await this.authService.refreshToken(data.RefreshToken, false);
 
@@ -437,6 +443,8 @@ export class UsersService {
         if (!userToken) {
             throw new HttpException(ResponseMessage.TR405, 401);
         }
+
+        console.log('usertokennnnn', userToken);
 
         await this.prismaService.userToken.update({
             data: {
