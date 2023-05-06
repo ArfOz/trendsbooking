@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import { Box, Button } from '@mui/material';
 
 import { style } from './style';
@@ -11,7 +13,7 @@ function NavbarRight() {
         { title: 'Randevu Takvimi', path: '/randevu-takvimi' },
         { title: 'Adisyon', path: '/adisyon' },
         { title: 'Hizmet Yönetimi', path: '/hizmet-yonetimi' },
-        { title: 'Çalışanlar', path: '/calisanlar' },
+        { title: 'Çalışanlar', path: '/calısanlar' },
     ];
 
     return (
@@ -25,7 +27,12 @@ function NavbarRight() {
                             textTransform: 'capitalize',
                         }}
                     >
+                        <Link
+                        to={item.path}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                        >
                         {item.title}
+                        </Link>
                     </Button>
                 ))}
             </Box>

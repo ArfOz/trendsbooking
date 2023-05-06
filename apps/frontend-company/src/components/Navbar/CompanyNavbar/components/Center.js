@@ -1,8 +1,13 @@
 import React from 'react';
-
-import { Box, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Box, Button } from '@mui/material';
 
 function Center() {
+    const HomeAboutContact = [
+        { title: 'Home', path: '/dashboard' },
+        { title: 'About', path: '/calısanlar' },
+        { title: 'Contact', path: '/randevu' },
+    ];
     return (
         <>
             <Box
@@ -13,42 +18,25 @@ function Center() {
                     width: '20%',
                 }}
             >
-                <Typography
-                    sx={{
-                        fontFamily: 'Roboto',
-                        fontStyle: 'normal',
-                        fontWeight: '500',
-                        fontSize: '14px',
-                        lineHeight: '31px',
-                        color: '#9A9A9A',
-                    }}
-                >
-                    Home
-                </Typography>
-                <Typography
-                    sx={{
-                        fontFamily: 'Roboto',
-                        fontStyle: 'normal',
-                        fontWeight: '500',
-                        fontSize: '14px',
-                        lineHeight: '31px',
-                        color: '#9A9A9A',
-                    }}
-                >
-                    About
-                </Typography>
-                <Typography
-                    sx={{
-                        fontFamily: 'Roboto',
-                        fontStyle: 'normal',
-                        fontWeight: '500',
-                        fontSize: '14px',
-                        lineHeight: '31px',
-                        color: '#9A9A9A',
-                    }}
-                >
-                    Contact
-                </Typography>
+                {HomeAboutContact.map((item) => (
+                    <Button
+                        sx={{
+                            textTransform: 'capitalize',
+                            '&:hover': {
+                                backgroundColor: 'white',
+                                boxShadow: 'none',
+                            },
+                            color: '#9A9A9A',
+                        }}
+                    >
+                        <Link
+                            to={item.path}
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                        >
+                            {item.title}
+                        </Link>
+                    </Button>
+                ))}
             </Box>
         </>
     );

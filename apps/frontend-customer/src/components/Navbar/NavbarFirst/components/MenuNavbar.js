@@ -6,6 +6,8 @@ import { style } from "./style";
 
 const MenuNavbar = () => {
   const [open, setopen] = useState(false);
+ 
+                   
   return (
     <>
       <MenuIcon
@@ -32,9 +34,7 @@ const MenuNavbar = () => {
         <Box sx={style.menucountainer}>
           <Button
             sx={style.navbarbuttons}
-            onClick={() => {
-              alert("giriş yap sayfasına yönlenecek");
-            }}
+           
           >
             Giriş Yap
           </Button>

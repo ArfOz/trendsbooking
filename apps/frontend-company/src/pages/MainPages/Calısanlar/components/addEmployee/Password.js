@@ -42,9 +42,8 @@ function Password() {
                 sx={{
                     background: '#FFFFFF',
                     border: 'none',
-                    boxShadow: '0none',
-                    width: '100%',
-                    
+                    boxShadow: 'none',
+                    width: '100%',                    
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
@@ -52,6 +51,8 @@ function Password() {
                  
                     '&:hover': {
                         backgroundColor: '#FFFF',
+                        border: 'none',
+                    boxShadow: 'none',
                     },
                    m:0.99
                   
@@ -67,6 +68,7 @@ function Password() {
                         textAlign: 'center',
                         textTransform: 'capitalize',
                         color: '#9A9A9A',
+                       
                     }}
                 >
                     Rol Ata

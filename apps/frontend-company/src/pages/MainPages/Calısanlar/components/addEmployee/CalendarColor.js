@@ -44,7 +44,7 @@ function CalendarColor() {
                     sx={{
                         background: '#FFFFFF',
                         border: 'none',
-                        boxShadow: '0none',
+                        boxShadow: 'none',
                         width: '100%',
 
                         display: 'flex',
@@ -53,6 +53,8 @@ function CalendarColor() {
 
                         '&:hover': {
                             backgroundColor: '#FFFF',
+                            border: 'none',
+                            boxShadow: 'none',
                         },
                         m: 0.99,
                     }}
@@ -90,7 +92,7 @@ function CalendarColor() {
                     sx={{
                         background: '#FFFFFF',
                         border: 'none',
-                        boxShadow: '0none',
+                        boxShadow: 'none',
                         width: '40%',
 
                         display: 'flex',
@@ -99,6 +101,8 @@ function CalendarColor() {
 
                         '&:hover': {
                             backgroundColor: '#FFFF',
+                            border: 'none',
+                            boxShadow: 'none',
                         },
                         m: 0.99,
                     }}
@@ -118,15 +122,18 @@ function CalendarColor() {
                         Takvim Rengi
                     </Typography>
                 </Button>
-                <Button
-                    variant="contained"
-                    color="green"
+                <Box
+                    
                     sx={{
-                        width: '60%',
-                        height: '6vh',
-                        ml: 2,
+                        background: 'green',
+                        width: '50%',
+                        height: '7.5vh',
+                        borderRadius:'6px',
+                       
+                        
+                        
                     }}
-                ></Button>
+                ></Box>
             </Box>
         </Box>
     );

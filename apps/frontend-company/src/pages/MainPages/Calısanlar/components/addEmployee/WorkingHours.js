@@ -45,7 +45,7 @@ function WorkingHours() {
                     }
                     sx={{
                         background: '#FFFFFF',
-                        border: 'primary',
+                        border: 'none',
                         boxShadow: 'none',
                         width: '100%',
                         display: 'flex',
@@ -54,6 +54,8 @@ function WorkingHours() {
 
                         '&:hover': {
                             backgroundColor: '#FFFF',
+                            border: 'none',
+                        boxShadow: 'none',
                         },
                         m: 0.99,
                     }}

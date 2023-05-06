@@ -142,8 +142,10 @@ function StaffManagement() {
                                 endIcon={<HighlightOffIcon color="grey" />}
                                 sx={{
                                     textTransform: 'capitalize',
+                                    boxShadow:"none",
                                     '&:hover': {
                                         backgroundColor: 'white',
+                                        boxShadow:"none",
                                     },
                                     color: '#9A9A9A',
                                 }}

@@ -2,9 +2,8 @@ export const style = {
     container: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',       
-        width:'15%',
-      
+        alignItems: 'center',
+        width: '15%',
     },
     typography: {
         fontFamily: 'Roboto',
@@ -13,28 +12,14 @@ export const style = {
         fontSize: '35.6352px',
         lineHeight: '31px',
         color: '##07232C',
-        mt:2,
-        
+        mt: 2,
     },
-    Biz:{
-      fontFamily: 'Roboto',
+    Biz: {
+        fontFamily: 'Roboto',
         fontStyle: 'normal',
         fontWeight: '100',
         fontSize: '35.6352px',
         lineHeight: '31px',
         color: '##07232C',
-        
-  
-
-    },
-    navbarbuttons: {
-      fontWeight: "500",
-      fontSize: "14px",
-      lineHeight: "28px",
-      color: "#F75936",
-      boxShadow: "none",
-      textTransform: "capitalize",
-      width: "100%",
-      height: "100%",
     },
 };
