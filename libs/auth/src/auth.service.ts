@@ -150,8 +150,6 @@ export class AuthService {
                     24,
         );
 
-        console.log('payload ', payload);
-
         const accessToken = jwt.sign(payload, this.authCfg.jwt_secret!, {
             expiresIn: `${this.authCfg.jwt_expired}m`,
         });
