@@ -54,8 +54,6 @@ export class AuthService {
             RefreshToken: token,
         };
 
-        console.log('where refresh', userPayload);
-
         where = companyUser
             ? { ...where, CompanyUserId: userPayload.Id }
             : { ...where, UserId: userPayload.Id };
@@ -104,7 +102,6 @@ export class AuthService {
         //     },
         // });
 
-        console.log('refresh token user', user);
         const { AccessToken, RefreshToken } =
             await this.generateAccessAndRefreshToken(user);
 

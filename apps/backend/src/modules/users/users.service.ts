@@ -443,8 +443,6 @@ export class UsersService {
             throw new HttpException(ResponseMessage.TR405, 401);
         }
 
-        console.log('usertokennnnn', userToken);
-
         await this.userTokenService.update({
             data: {
                 AccessToken: AccessToken,
