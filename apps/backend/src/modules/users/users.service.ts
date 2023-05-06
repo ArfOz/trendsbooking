@@ -13,7 +13,7 @@ import * as bcrypt from 'bcrypt';
 // Import modules
 import { MailUtilsService, SendEmailDto } from '@mail-utils';
 import { MailModeType, AuthService, UserType } from '@auth';
-import { ExpiredReasonType, OTPType, Prisma } from '@prisma/client';
+import { ExpiredReasonType, OTPType } from '@prisma/client';
 import authConfig from '@auth/config/auth.config';
 import generalConfig from '@shared/config/general.config';
 import {
@@ -32,9 +32,9 @@ import {
 } from '@shared';
 import {
     UserService,
-    PrismaService,
     UserOtpCodeService,
     ServicesService,
+    UserTokenService,
 } from '@database';
 import ResponseMessage from '@shared/enums/response-message.json';
 import {
@@ -58,7 +58,7 @@ export class UsersService {
         private readonly generalCfg: ConfigType<typeof generalConfig>,
         @Inject(authConfig.KEY)
         private readonly authCfg: ConfigType<typeof authConfig>,
-        private readonly prismaService: PrismaService,
+        // private readonly prismaService: PrismaService,
         private readonly userService: UserService,
         private readonly keypairService: KeypairService,
         private readonly authService: AuthService,
@@ -66,6 +66,7 @@ export class UsersService {
         private readonly mailUtilsService: MailUtilsService,
         private readonly randevuService: RandevuService,
         private readonly serviceService: ServicesService,
+        private readonly userTokenService: UserTokenService,
     ) {}
 
     async register(
@@ -266,16 +267,14 @@ export class UsersService {
                 ExpiresRefreshToken,
             } = await this.authService.generateAccessAndRefreshToken(user);
 
-            await this.prismaService.userToken.create({
-                data: {
-                    AccessToken: AccessToken,
-                    RefreshToken: RefreshToken,
-                    User: {
-                        connect: { Id: user.Id },
-                    },
-                    ExpiresIn: ExpiresAccessToken,
-                    ExpiresInRefresh: ExpiresRefreshToken,
+            await this.userTokenService.create({
+                AccessToken: AccessToken,
+                RefreshToken: RefreshToken,
+                User: {
+                    connect: { Id: user.Id },
                 },
+                ExpiresIn: ExpiresAccessToken,
+                ExpiresInRefresh: ExpiresRefreshToken,
             });
             delete user.Password;
             delete user.Id;
@@ -431,7 +430,7 @@ export class UsersService {
                 parseInt(this.authCfg.jwt_refresh_expired, 10) * 60 * 1000,
         );
 
-        const userToken = await this.prismaService.userToken.findFirst({
+        const userToken = await this.userTokenService.findFirst({
             where: {
                 UserId: User.Id,
                 RefreshToken: data.RefreshToken,
@@ -446,7 +445,7 @@ export class UsersService {
 
         console.log('usertokennnnn', userToken);
 
-        await this.prismaService.userToken.update({
+        await this.userTokenService.update({
             data: {
                 AccessToken: AccessToken,
                 RefreshToken: RefreshToken,
@@ -713,14 +712,14 @@ export class UsersService {
             );
         }
 
-        const userToken = await this.prismaService.userToken.findFirst({
+        const userToken = await this.userTokenService.findFirst({
             where: {
                 UserId: cred.Id,
             },
             orderBy: { CreatedAt: 'desc' },
         });
 
-        await this.prismaService.userToken.update({
+        await this.userTokenService.update({
             where: {
                 Id: userToken.Id,
             },

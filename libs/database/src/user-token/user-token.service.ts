@@ -6,12 +6,16 @@ import { Prisma, UserToken } from '@prisma/client';
 export class UserTokenService {
     constructor(private prisma: PrismaService) {}
 
-    async get(
+    async findUnique(
         where: Prisma.UserTokenWhereUniqueInput,
     ): Promise<UserToken | undefined> {
         return this.prisma.userToken.findUnique({
             where,
         });
+    }
+
+    async findFirst(where: Prisma.UserTokenFindFirstArgs) {
+        return this.prisma.userToken.findFirst(where);
     }
 
     async find(params: {

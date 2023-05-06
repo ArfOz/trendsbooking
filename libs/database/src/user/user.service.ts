@@ -31,6 +31,7 @@ export class UserService {
                     Country: true,
                     Gender: true,
                     Password: true,
+                    Role: true,
                 },
             });
 

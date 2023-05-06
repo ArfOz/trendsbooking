@@ -1,3 +1,4 @@
+import { UserTokenService } from './../../../../../libs/database/src/user-token/user-token.service';
 import { ConfigModule } from '@nestjs/config';
 import { forwardRef, Module } from '@nestjs/common';
 
@@ -37,6 +38,7 @@ import authConfig from '@auth/config/auth.config';
         RandevuService,
         ServicesService,
         CompanyUserService,
+        UserTokenService,
     ],
     controllers: [UsersController],
     exports: [UsersService],
