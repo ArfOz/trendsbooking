@@ -58,7 +58,6 @@ export class UsersService {
         private readonly generalCfg: ConfigType<typeof generalConfig>,
         @Inject(authConfig.KEY)
         private readonly authCfg: ConfigType<typeof authConfig>,
-        // private readonly prismaService: PrismaService,
         private readonly userService: UserService,
         private readonly keypairService: KeypairService,
         private readonly authService: AuthService,

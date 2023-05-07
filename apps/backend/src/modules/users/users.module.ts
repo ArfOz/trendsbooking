@@ -1,4 +1,3 @@
-import { UserTokenService } from './../../../../../libs/database/src/user-token/user-token.service';
 import { ConfigModule } from '@nestjs/config';
 import { forwardRef, Module } from '@nestjs/common';
 
@@ -11,6 +10,7 @@ import {
     RandevuService,
     ServicesService,
     CompanyUserService,
+    UserTokenService,
 } from '@database';
 import { UsersService } from './users.service';
 import { KeypairModule } from '@shared';
