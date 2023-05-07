@@ -7,6 +7,7 @@ import {
     IsOptional,
     IsArray,
     IsEmail,
+    IsDateString,
 } from 'class-validator';
 
 export enum WorkerRoles {
@@ -49,6 +50,16 @@ export class WorkTime {
     @IsNotEmpty()
     @IsString()
     Days: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Holiday?: boolean | null;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsDateString()
+    Date?: Date | string | null;
 }
 
 export class WorkersAddJsonDto {

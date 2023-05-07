@@ -31,6 +31,7 @@ export class UserService {
                     Country: true,
                     Gender: true,
                     Password: true,
+                    Role: true,
                 },
             });
 
@@ -157,7 +158,7 @@ export class UserService {
     async update(params: {
         where: Prisma.UserWhereUniqueInput;
         data: Prisma.UserUpdateInput;
-    }): Promise<User> {
+    }) {
         try {
             const { where, data } = params;
 
@@ -175,7 +176,6 @@ export class UserService {
                     ...data,
                     Email: encryptedDataEmail,
                 };
-                console.log('encrypt', encryptedDataEmail);
                 data.Email = encryptedDataEmail;
             }
 
@@ -197,6 +197,21 @@ export class UserService {
                 },
                 where: {
                     Email: where.Email,
+                },
+                select: {
+                    Id: true,
+                    Email: true,
+                    FirstName: true,
+                    LastName: true,
+                    Username: true,
+                    BirthDate: true,
+                    Country: true,
+                    Gender: true,
+                    Phone: true,
+                    Role: true,
+                    CreatedAt: true,
+                    UpdatedAt: true,
+                    IsEmailVerified: true,
                 },
             });
 

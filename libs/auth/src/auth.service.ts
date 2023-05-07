@@ -45,7 +45,7 @@ export class AuthService {
         RefreshToken: string;
         User: any;
     }> {
-        const userPayload = jwt.verify(
+        const userPayload: UserPayloadDto = jwt.verify(
             token,
             this.authCfg.jwt_secret_refresh!,
         ) as UserPayloadDto;
@@ -132,7 +132,7 @@ export class AuthService {
         ExpiresAccessToken: Date;
         ExpiresRefreshToken: Date;
     }> {
-        const payload = {
+        const payload: UserPayloadDto = {
             Id: user.Id,
             Email: user.Email,
             Role: user.Role,

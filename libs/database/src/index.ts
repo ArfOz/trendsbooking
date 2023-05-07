@@ -7,6 +7,7 @@ export * from './service-worker';
 export * from './services';
 export * from './user';
 export * from './user-otp-code';
+export * from './user-token';
 export * from './worker';
 export * from './worktime';
 export * from './database.module';

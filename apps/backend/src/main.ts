@@ -29,6 +29,7 @@ async function bootstrap() {
         .setDescription('TrendsBooking Endpoints')
         .setVersion('1.0')
         .addTag('TrendsBooking Endpoints')
+        .addBearerAuth(undefined, 'Authorization')
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);
