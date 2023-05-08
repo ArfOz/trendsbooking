@@ -13,9 +13,10 @@ import { Box, Button, IconButton, Typography } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
-
+import { useEffect, useState } from 'react';
 import './styles.css';
 import { makeStyles } from '@mui/styles';
+import {getServices} from '../../../../../function/function';
 
 function createData(ServiceName, ServiceTimes, Price, Worker, Prim) {
     return { ServiceName, ServiceTimes, Price, Worker, Prim };
@@ -29,17 +30,20 @@ const rows = [
     createData('Saç Şekil', 60, 80, 'TREDNSWORKER', 40),
 ];
 
-const useRowStyles = makeStyles({
-    root: {
-        '& > *': {
-            borderBottom: 'unset',
-        },
-    },
-});
 
-export default function BasicTable(props) {
+
+export default function BasicTable() {
+    const [services, setServices] = useState([]);
     const [open, setOpen] = React.useState(false);
-    const classes = useRowStyles();
+
+    useEffect(() => {
+        async function getServicesData() {
+            const data = await getServices();
+            setServices(data);
+        }
+        getServicesData();
+    }, []);
+
     return (
         <Box>
             <TableContainer
