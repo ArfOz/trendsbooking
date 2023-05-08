@@ -7,6 +7,9 @@ import {
     UserProfileUpdateDto,
     UserRefreshTokenDTO,
     UserPassChangeDto,
+    RandevuCreateDto,
+    GetDepartmentsFilterDTO,
+    GetDepartmentsParamsDTO,
 } from './dtos';
 import { UserParam } from '@shared';
 
@@ -81,6 +84,22 @@ export class UsersController {
     @Post('sendcode')
     async sendEmailCode(@Body() sendCode: SendCodeDTO) {
         return this.usersService.sendEmailCode(sendCode);
+    }
+
+    @Post('addrandevu')
+    async addrandevu(
+        @UserParam() user: UserParamsDto,
+        @Body() data: RandevuCreateDto,
+    ) {
+        return this.usersService.createRandevu(user, data);
+    }
+
+    @Post('getdepartments')
+    async getDepartments(
+        @UserParam() user: UserParamsDto,
+        @Body() data: GetDepartmentsParamsDTO,
+    ) {
+        return this.usersService.getdepartments(user, data);
     }
 
     @RolesRequired(['Normal'])

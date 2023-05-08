@@ -39,6 +39,7 @@ export class DepartmentService {
             select: {
                 Salon: true,
                 ServiceType: true,
+                CompanyUserId: true,
                 Workers: {
                     select: {
                         FirstName: true,

@@ -16,13 +16,30 @@ export enum Genders {
     NottoSay = 'NottoSay',
 }
 
+export enum ServiceGender {
+    Male = 'Male',
+    Female = 'Female',
+    Unisex = 'Unisex',
+}
+
 export enum MailModeType {
     // VerifyPhone = 'VerifyPhone',
     VerifyEmail = 'VerifyEmail',
     ResetPassword = 'ResetPassword',
     EmailChange = 'EmailChange',
 }
-
+export enum ServiceType {
+    Hair = 'Hair',
+    Nail = 'Nail',
+    MakeUp = 'MakeUp',
+    Massage = 'Massage',
+    Wax = 'Wax',
+    Solarium = 'Solarium',
+    SkinCare = 'SkinCare',
+    LaserHairRemoval = 'LaserHairRemoval',
+    Tattoo = 'Tattoo',
+    Others = 'Others',
+}
 export class UserParamsDto {
     @ApiProperty()
     @IsNotEmpty()
@@ -404,6 +421,12 @@ export class LoginUserDto {
     Password: string;
 }
 
+// export class RandevuStatus {
+//     Waiting: 'Waiting';
+//     Aprroved: 'Aprroved';
+//     Canceled: 'Canceled';
+// }
+
 export class UserPassChangeDto {
     @ApiProperty()
     @IsNotEmpty()
@@ -452,4 +475,111 @@ export class UserForgottenPasswordDto {
     @IsOptional()
     @IsString()
     Password: string;
+}
+
+export class ServicesListRelationFilter {
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceType?: ServiceType;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceName?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceTimes?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceGender?: ServiceGender;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Price?: string;
+}
+
+export class GetDepartmentsFilterDTO {
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    Services?: ServicesListRelationFilter;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ServiceType?: ServiceType;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    DepartmentID?: string;
+
+    // Burada tarihe göre filtreleme de eklenecek
+    // @ApiProperty()
+    // @IsOptional()
+    // @IsString()
+    // WorkTime?: WorkTimeListRelationFilter;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Sector?: ServiceGender;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Salon?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Country?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    City?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    District?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Neighborhood?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    skip: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    take: number;
+}
+
+export class GetDepartmentsParamsDTO {
+    @ApiProperty()
+    @IsOptional()
+    @IsObject()
+    where: GetDepartmentsFilterDTO;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    skip: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsNumber()
+    take: number;
 }

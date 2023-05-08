@@ -1,7 +1,3 @@
-import {
-    UserPassChangeDto,
-    UserRefreshTokenDTO,
-} from './dtos/user-response.dto';
 // Npm packages
 
 import { Injectable, Inject, HttpException } from '@nestjs/common';
@@ -12,8 +8,13 @@ import * as bcrypt from 'bcrypt';
 
 // Import modules
 import { MailUtilsService, SendEmailDto } from '@mail-utils';
-import { MailModeType, AuthService, UserType } from '@auth';
-import { ExpiredReasonType, OTPType } from '@prisma/client';
+import { MailModeType, AuthService } from '@auth';
+import {
+    ExpiredReasonType,
+    OTPType,
+    Prisma,
+    RandevuStatus,
+} from '@prisma/client';
 import authConfig from '@auth/config/auth.config';
 import generalConfig from '@shared/config/general.config';
 import {
@@ -35,6 +36,7 @@ import {
     UserOtpCodeService,
     ServicesService,
     UserTokenService,
+    DepartmentService,
 } from '@database';
 import ResponseMessage from '@shared/enums/response-message.json';
 import {
@@ -49,6 +51,12 @@ import {
     UserProfileUpdateDto,
     RandevuCreateDto,
 } from './dtos';
+import {
+    GetDepartmentsFilterDTO,
+    GetDepartmentsParamsDTO,
+    UserPassChangeDto,
+    UserRefreshTokenDTO,
+} from './dtos/user-response.dto';
 import { RandevuService } from '@database/randevu/randevu.service';
 
 @Injectable()
@@ -66,6 +74,7 @@ export class UsersService {
         private readonly randevuService: RandevuService,
         private readonly serviceService: ServicesService,
         private readonly userTokenService: UserTokenService,
+        private readonly departmentsService: DepartmentService,
     ) {}
 
     async register(
@@ -694,6 +703,38 @@ export class UsersService {
         };
     }
 
+    async createRandevu(user: UserParamsDto, input: RandevuCreateDto) {
+        if (!input.Service || !input.Worker || !input.Service) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR444),
+                444,
+            );
+        }
+        const data: Prisma.RandevuCreateInput = {
+            Worker: {
+                connect: {
+                    Id: input.Worker,
+                },
+            },
+            Service: {
+                connect: {
+                    Id: input.Service,
+                },
+            },
+            User: {
+                connect: {
+                    Id: user.Id,
+                },
+            },
+            StartTime: input.StartTime,
+            EndTime: input.EndTime,
+            Status: RandevuStatus.Waiting,
+        };
+        const response = await this.randevuService.create(data);
+        return response;
+    }
+
     async logout(cred: UserParamsDto) {
         const user = await this.userService.findFirst({
             where: {
@@ -732,29 +773,35 @@ export class UsersService {
         };
     }
 
-    // async getdepartment(cred: UserParamsDto) {
+    async getdepartments(user: UserParamsDto, input: GetDepartmentsParamsDTO) {
+        let where: Prisma.DepartmentWhereInput;
+        if (input?.where?.Services) {
+            where = {
+                Services: {
+                    every: {
+                        Price: input.where.Services.Price,
+                    },
+                },
+                ServiceType: {
+                    equals: input.where.ServiceType,
+                },
+            };
+        }
 
-    //     companyuser = Ceo (10 şube de olabilir,  1 de)
+        // const filter = { ...input };
 
-    //     Ankara
+        const skip = input?.skip;
+        const take = input?.take;
 
-    //     Ankara
-
-    //     Dilan Polat Güzellik Salonu
-
-    //     Karizma Erkek Kuaföru (Ceo)
-
-    //     Departrmemt (Şube ) Konumu önemli
-
-    //     yakınımdaki şublere getir . (FE HARİTA  Geolocation)
-
-    //     WHERE :
-    //     where : Department.City == Ankara
-
-    //     const response = await this.serviceService.find({});
-    //     console.log('resss', response);
-    //     return null;
-    // }
+        console.log('take', input.take);
+        const response = await this.departmentsService.find({
+            // where: input.where,
+            skip: input.skip,
+            take: input.take,
+        });
+        console.log('resss', response);
+        return response;
+    }
 
     // async getservices(cred: UserParamsDto) {
     //     20 km uzağımdaki berber slaonları
@@ -767,29 +814,10 @@ export class UsersService {
     //     return null;
     // }
 
-    // async createRandevu(user: UserParamsDto, input: RandevuCreateDto) {
-    //     const data: Prisma.RandevuCreateInput = {
-    //         Worker: {
-    //             connect: {
-    //                 Id: input.Worker,
-    //             },
-    //         },
-    //         Service: {
-    //             connect: {
-    //                 Id: input.Service,
-    //             },
-    //         },
-    //         StartTime: input.StartTime,
-    //         EndTime: input.EndTime,
-    //     };
-    //     const response = await this.randevuService.create(data);
-    //     return response;
-    // }
-
-    // async cancelRandevu(user: UserParamsDto) {
-    //     return null;
-    // }
-    // async detailsRandevu(user: UserParamsDto) {
-    //     return null;
-    // }
+    async cancelRandevu(user: UserParamsDto) {
+        return null;
+    }
+    async detailsRandevu(user: UserParamsDto) {
+        return null;
+    }
 }

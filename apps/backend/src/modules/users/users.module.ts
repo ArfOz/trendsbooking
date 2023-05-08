@@ -11,6 +11,7 @@ import {
     ServicesService,
     CompanyUserService,
     UserTokenService,
+    DepartmentService,
 } from '@database';
 import { UsersService } from './users.service';
 import { KeypairModule } from '@shared';
@@ -39,6 +40,7 @@ import authConfig from '@auth/config/auth.config';
         ServicesService,
         CompanyUserService,
         UserTokenService,
+        DepartmentService,
     ],
     controllers: [UsersController],
     exports: [UsersService],

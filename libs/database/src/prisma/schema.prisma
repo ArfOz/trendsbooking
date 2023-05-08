@@ -174,15 +174,16 @@ model Worker {
 
 model Randevu {
   /// @HideField({match:'@Input'})
-  Id        Int      @id @default(autoincrement())
-  Worker    Worker   @relation(fields: [WorkerId], references: [Id])
+  Id        Int           @id @default(autoincrement())
+  Worker    Worker        @relation(fields: [WorkerId], references: [Id])
   WorkerId  Int
-  Service   Services @relation(fields: [ServiceId], references: [Id])
+  Service   Services      @relation(fields: [ServiceId], references: [Id])
   ServiceId Int
   StartTime DateTime
   EndTime   DateTime
-  User      User     @relation(fields: [UserId], references: [Id])
+  User      User          @relation(fields: [UserId], references: [Id])
   UserId    Int
+  Status    RandevuStatus
 }
 
 model UserToken {
@@ -293,6 +294,12 @@ enum OTPType {
 enum UserRole {
   Normal
   Provider
+}
+
+enum RandevuStatus {
+  Waiting
+  Aprroved
+  Canceled
 }
 
 enum ServiceType {

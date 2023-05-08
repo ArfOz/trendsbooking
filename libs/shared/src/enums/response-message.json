@@ -55,5 +55,6 @@
   "TR440": "Code, Token ve Yeni Şifre zorunludur",
   "TR441": "Yeni şifre zorunludur.",
   "TR442": "RefreshToken Zorunludur",
-  "TR443": "Yeni şifre ile eski şifre aynı olamaz"
+  "TR443": "Yeni şifre ile eski şifre aynı olamaz",
+  "TR444": "Randevu bilgileri eksik!!!"
 }
