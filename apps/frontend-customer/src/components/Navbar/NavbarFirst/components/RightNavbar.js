@@ -16,34 +16,34 @@ const RightNavbar = () => {
             {/* right navbar */}
             <Box sx={style.navbarbuttoncontainer}>
                 {Links.map((item, index) => (
-                    <Button
-                        variant="outlined"
-                        key={item.title}
-                        sx={{
-                            textTransform: 'capitalize',
-                            '&:hover': {
-                                backgroundColor: 'white',
-                                boxShadow: 'none',
-                                border: 'none',
-                            },
-                            ...(item.title === 'Giriş Yap' && {
-                                border: 'none',
-                            }),
-                            ...(item.title === 'İşletme Hesabı' && {
+                    <Link
+                        to={item.path}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                        <Button
+                            variant="outlined"
+                            key={item.title}
+                            sx={{
+                                textTransform: 'capitalize',
                                 '&:hover': {
                                     backgroundColor: 'white',
                                     boxShadow: 'none',
+                                    border: 'none',
                                 },
-                            }),
-                        }}
-                    >
-                        <Link
-                            to={item.path}
-                            style={{ textDecoration: 'none', color: 'inherit' }}
+                                ...(item.title === 'Giriş Yap' && {
+                                    border: 'none',
+                                }),
+                                ...(item.title === 'İşletme Hesabı' && {
+                                    '&:hover': {
+                                        backgroundColor: 'white',
+                                        boxShadow: 'none',
+                                    },
+                                }),
+                            }}
                         >
                             {item.title}
-                        </Link>
-                    </Button>
+                        </Button>
+                    </Link>
                 ))}
                 <Button
                     variant="contained"
