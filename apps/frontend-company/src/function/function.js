@@ -99,3 +99,31 @@ export const createServices = async (newService, token) => {
             console.log('error', error);
         });
 };
+
+export const deleteService = async (serviceId, token) => {
+    const options = {
+        method: 'DELETE',
+        url: `http://localhost:3300/api/services/${serviceId}`,
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    try {
+        const response = await axios(options);
+        console.log(response);
+    } catch (error) {
+        console.log('error', error);
+    }
+};
+
+export async function getServices() {
+    try {
+        const response = await axios.get('http://localhost:3300/api/services');
+        return response.data; // Assuming the API response is an array of services
+    } catch (error) {
+        console.log('Error fetching services:', error);
+        return []; // Return an empty array in case of an error
+    }
+}

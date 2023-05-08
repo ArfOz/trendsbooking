@@ -111,6 +111,7 @@ export class AuthGuard implements CanActivate {
                 417,
             );
         }
+
         // Burada role göre token var mı yok mu bakılacak
         let exist;
         switch (userPayload.Role) {

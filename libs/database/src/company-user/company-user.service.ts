@@ -205,8 +205,6 @@ export class CompanyUserService {
         data: Prisma.CompanyUserUpdateInput;
     }): Promise<CompanyUser> {
         const { where, data } = params;
-
-        console.log('update içerisi');
         let encryptedDataEmail;
         let encryptedDataPhone;
 

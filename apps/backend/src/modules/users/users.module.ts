@@ -10,6 +10,7 @@ import {
     RandevuService,
     ServicesService,
     CompanyUserService,
+    UserTokenService,
 } from '@database';
 import { UsersService } from './users.service';
 import { KeypairModule } from '@shared';
@@ -37,6 +38,7 @@ import authConfig from '@auth/config/auth.config';
         RandevuService,
         ServicesService,
         CompanyUserService,
+        UserTokenService,
     ],
     controllers: [UsersController],
     exports: [UsersService],

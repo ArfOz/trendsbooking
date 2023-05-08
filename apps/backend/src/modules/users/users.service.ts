@@ -13,7 +13,7 @@ import * as bcrypt from 'bcrypt';
 // Import modules
 import { MailUtilsService, SendEmailDto } from '@mail-utils';
 import { MailModeType, AuthService, UserType } from '@auth';
-import { ExpiredReasonType, OTPType, Prisma } from '@prisma/client';
+import { ExpiredReasonType, OTPType } from '@prisma/client';
 import authConfig from '@auth/config/auth.config';
 import generalConfig from '@shared/config/general.config';
 import {
@@ -32,9 +32,9 @@ import {
 } from '@shared';
 import {
     UserService,
-    PrismaService,
     UserOtpCodeService,
     ServicesService,
+    UserTokenService,
 } from '@database';
 import ResponseMessage from '@shared/enums/response-message.json';
 import {
@@ -58,7 +58,6 @@ export class UsersService {
         private readonly generalCfg: ConfigType<typeof generalConfig>,
         @Inject(authConfig.KEY)
         private readonly authCfg: ConfigType<typeof authConfig>,
-        private readonly prismaService: PrismaService,
         private readonly userService: UserService,
         private readonly keypairService: KeypairService,
         private readonly authService: AuthService,
@@ -66,6 +65,7 @@ export class UsersService {
         private readonly mailUtilsService: MailUtilsService,
         private readonly randevuService: RandevuService,
         private readonly serviceService: ServicesService,
+        private readonly userTokenService: UserTokenService,
     ) {}
 
     async register(
@@ -266,16 +266,14 @@ export class UsersService {
                 ExpiresRefreshToken,
             } = await this.authService.generateAccessAndRefreshToken(user);
 
-            await this.prismaService.userToken.create({
-                data: {
-                    AccessToken: AccessToken,
-                    RefreshToken: RefreshToken,
-                    User: {
-                        connect: { Id: user.Id },
-                    },
-                    ExpiresIn: ExpiresAccessToken,
-                    ExpiresInRefresh: ExpiresRefreshToken,
+            await this.userTokenService.create({
+                AccessToken: AccessToken,
+                RefreshToken: RefreshToken,
+                User: {
+                    connect: { Id: user.Id },
                 },
+                ExpiresIn: ExpiresAccessToken,
+                ExpiresInRefresh: ExpiresRefreshToken,
             });
             delete user.Password;
             delete user.Id;
@@ -315,13 +313,18 @@ export class UsersService {
             );
         }
 
-        console.log('user', user);
+        if (cred.NewPassword == cred.OldPassword) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR443),
+                443,
+            );
+        }
 
         const userData = await this.userService.findUnique({
             Id: user.Id,
         });
 
-        console.log('userrrrrrrr', userData);
         if (!userData) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -334,7 +337,6 @@ export class UsersService {
             userData &&
             (await bcrypt.compare(cred.OldPassword, userData.Password))
         ) {
-            console.log('geldi', cred.NewPassword);
             await this.userService.update({
                 where: {
                     Email: userData.Email,
@@ -359,7 +361,10 @@ export class UsersService {
     }
 
     async profile(user: UserParamsDto): Promise<ResponseUserProfileUserDTO> {
-        return await this.userService.findUnique({ Id: user.Id });
+        const response = await this.userService.findUnique({ Id: user.Id });
+
+        delete response.Password;
+        return response;
     }
 
     async updateProfile(user: UserParamsDto, data: UserProfileUpdateDto) {
@@ -379,22 +384,40 @@ export class UsersService {
                 431,
             );
         }
-        await this.userService.update({
+        const userData = await this.userService.findUnique({
+            Id: user.Id,
+        });
+
+        if (!userData) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR406),
+                406,
+            );
+        }
+        const response = await this.userService.update({
             where: {
-                Email: user.Email,
+                Email: userData.Email,
             },
             data,
         });
 
         return {
-            data: ResponseMessage.TR206,
+            Data: ResponseMessage.TR206,
+            UserData: response,
             Success: true,
             statusCode: 206,
         };
     }
 
     async refreshUserToken(data: UserRefreshTokenDTO) {
-        console.log('daaaa', data.RefreshToken);
+        if (!data.RefreshToken) {
+            throw new BadRequestException(
+                BadRequestExceptionType.MISSING_FILE,
+                new Error(ResponseMessage.TR442),
+                442,
+            );
+        }
         const { AccessToken, RefreshToken, User } =
             await this.authService.refreshToken(data.RefreshToken, false);
 
@@ -406,7 +429,7 @@ export class UsersService {
                 parseInt(this.authCfg.jwt_refresh_expired, 10) * 60 * 1000,
         );
 
-        const userToken = await this.prismaService.userToken.findFirst({
+        const userToken = await this.userTokenService.findFirst({
             where: {
                 UserId: User.Id,
                 RefreshToken: data.RefreshToken,
@@ -419,7 +442,7 @@ export class UsersService {
             throw new HttpException(ResponseMessage.TR405, 401);
         }
 
-        await this.prismaService.userToken.update({
+        await this.userTokenService.update({
             data: {
                 AccessToken: AccessToken,
                 RefreshToken: RefreshToken,
@@ -470,7 +493,7 @@ export class UsersService {
                 'email' in payload &&
                 data.Code
             ) {
-                let user = await this.userService.findUnique({
+                const user = await this.userService.findUnique({
                     Id: payload.Id,
                 });
 
@@ -513,8 +536,10 @@ export class UsersService {
                 //     );
                 // }
 
+                let updatedUser;
+
                 if (otpCode[0].Type === OTPType.ResetPassword) {
-                    user = await this.userService.update({
+                    updatedUser = await this.userService.update({
                         where: {
                             Email: payload.email,
                         },
@@ -523,7 +548,7 @@ export class UsersService {
                         },
                     });
                 } else if (otpCode[0].Type === OTPType.VerifyEmail) {
-                    user = await this.userService.update({
+                    updatedUser = await this.userService.update({
                         where: {
                             Email: payload.email,
                         },
@@ -554,7 +579,7 @@ export class UsersService {
                         : ResponseMessage.TR211;
 
                 return {
-                    Email: user.Email,
+                    Email: updatedUser.Email,
                     Data: responseMessage,
                     Success: true,
                 };
@@ -684,14 +709,14 @@ export class UsersService {
             );
         }
 
-        const userToken = await this.prismaService.userToken.findFirst({
+        const userToken = await this.userTokenService.findFirst({
             where: {
                 UserId: cred.Id,
             },
             orderBy: { CreatedAt: 'desc' },
         });
 
-        await this.prismaService.userToken.update({
+        await this.userTokenService.update({
             where: {
                 Id: userToken.Id,
             },

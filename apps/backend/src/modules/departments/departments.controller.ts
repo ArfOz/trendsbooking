@@ -12,7 +12,13 @@ import {
     UseInterceptors,
     ValidationError,
 } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBearerAuth,
+    ApiBody,
+    ApiConsumes,
+    ApiHeader,
+    ApiTags,
+} from '@nestjs/swagger';
 import { Express } from 'express';
 import { diskStorage, Multer } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -55,6 +61,7 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
     @Post('add')
     async add(
         @UserParam() user: UserParamsDto,
@@ -64,6 +71,7 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
     @Post('updatedepartment')
     async update(
         @UserParam() user: UserParamsDto,
@@ -73,6 +81,7 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
     @Post('addservice')
     async addService(
         @UserParam() user: UserParamsDto,
@@ -82,6 +91,7 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
     @Post('updateservice')
     async updateService(
         @UserParam() user: UserParamsDto,
@@ -91,6 +101,7 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
     @Post('deleteservice')
     async deleteService(
         @UserParam() user: UserParamsDto,
@@ -100,6 +111,7 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
     @Post('addworker')
     async addWorker(
         @UserParam() user: UserParamsDto,
@@ -109,6 +121,7 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
     @Post('updateworker')
     async updateWorker(
         @UserParam() user: UserParamsDto,
@@ -118,6 +131,7 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
     @Post('deleteworker')
     async deleteWorker(
         @UserParam() user: UserParamsDto,
@@ -127,6 +141,7 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
     @Post('getdetails')
     async getWorkers(
         @UserParam() user: UserParamsDto,
