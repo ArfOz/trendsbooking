@@ -11,6 +11,7 @@ import { ServicesModule } from './services/services.module';
 import { ServiceWorkerModule } from './service-worker/service-worker.module';
 import { RandevuModule } from './randevu/randevu.module';
 import { WorktimeModule } from './worktime/worktime.module';
+import { UserTokenModule } from './user-token/user-token.module';
 
 @Module({
     imports: [
@@ -26,6 +27,7 @@ import { WorktimeModule } from './worktime/worktime.module';
         ServiceWorkerModule,
         RandevuModule,
         WorktimeModule,
+        UserTokenModule,
     ],
     providers: [PrismaModule, UserModule, UserOtpCodeModule, DepartmentModule],
     exports: [PrismaModule, UserModule, UserOtpCodeModule, DepartmentModule],

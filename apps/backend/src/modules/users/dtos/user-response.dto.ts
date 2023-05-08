@@ -273,6 +273,12 @@ export class UserProfileUpdateDto {
     BirthDate?: string;
 }
 
+export class RefreshTokenCompanyUserDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    RefreshToken: string;
+}
 export class CreateServiceUserJsonDto {
     @ApiProperty()
     @IsNotEmpty()

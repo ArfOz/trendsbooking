@@ -6,6 +6,7 @@ import {
     IsOptional,
     IsBoolean,
     IsObject,
+    IsDateString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -68,6 +69,16 @@ export class WorkTime {
     @IsNotEmpty()
     @IsString()
     Days: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    Holiday?: boolean | null;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsDateString()
+    Date?: Date | string | null;
 }
 export class WorkerCreateJsonDto {
     @ApiProperty()

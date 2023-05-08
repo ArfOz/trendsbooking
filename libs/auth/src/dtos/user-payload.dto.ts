@@ -15,43 +15,43 @@ export class UserPayloadDto {
     @IsNotEmpty()
     Email: string;
 
-    @IsOptional()
-    @IsString()
-    Username: string;
-
-    @IsOptional()
-    @IsString()
-    Country: string;
-
-    @IsOptional()
-    @IsString()
-    BirthDate: Date;
-
-    @IsOptional()
-    @IsString()
-    FirstName: string;
-
-    @IsOptional()
-    @IsString()
-    Gender: string;
-
-    @IsOptional()
-    @IsString()
-    Password: string;
-
-    @IsOptional()
-    @IsBoolean()
-    IsEmailVerified: boolean;
-
-    @IsOptional()
-    @IsString()
-    LastName: string;
-
-    @IsOptional()
-    @IsString()
-    Phone: string;
-
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     Role: string;
 }
+
+// @IsOptional()
+// @IsString()
+// Username: string;
+
+// @IsOptional()
+// @IsString()
+// Country: string;
+
+// @IsOptional()
+// @IsString()
+// BirthDate: Date;
+
+// @IsOptional()
+// @IsString()
+// FirstName: string;
+
+// @IsOptional()
+// @IsString()
+// Gender: string;
+
+// @IsOptional()
+// @IsString()
+// Password: string;
+
+// @IsOptional()
+// @IsBoolean()
+// IsEmailVerified: boolean;
+
+// @IsOptional()
+// @IsString()
+// LastName: string;
+
+// @IsOptional()
+// @IsString()
+// Phone: string;
