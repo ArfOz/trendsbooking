@@ -94,6 +94,7 @@ export class UsersController {
         return this.usersService.createRandevu(user, data);
     }
 
+    @AllowUnauthorizedRequest()
     @Post('getdepartments')
     async getDepartments(
         @UserParam() user: UserParamsDto,

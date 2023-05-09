@@ -774,32 +774,78 @@ export class UsersService {
     }
 
     async getdepartments(user: UserParamsDto, input: GetDepartmentsParamsDTO) {
-        let where: Prisma.DepartmentWhereInput;
-        if (input?.where?.Services) {
-            where = {
-                Services: {
-                    every: {
-                        Price: input.where.Services.Price,
-                    },
-                },
-                ServiceType: {
-                    equals: input.where.ServiceType,
-                },
-            };
+        let where: Prisma.DepartmentWhereInput = {};
+        if (input?.where) {
+            input.where.City
+                ? (where = { ...where, City: input.where?.City })
+                : where;
+            input.where.Country
+                ? (where = { ...where, Country: input.where?.Country })
+                : where;
+
+            input.where.District
+                ? (where = { ...where, District: input.where?.District })
+                : where;
+
+            input.where.Neighborhood
+                ? (where = {
+                      ...where,
+                      Neighborhood: input.where?.Neighborhood,
+                  })
+                : where;
+
+            input.where.Salon
+                ? (where = { ...where, Salon: { contains: input.where.Salon } })
+                : where;
+
+            input.where.ServiceType
+                ? (where = {
+                      ...where,
+                      ServiceType: { hasEvery: input.where?.ServiceType },
+                  })
+                : where;
+
+            input.where.Sector
+                ? (where = {
+                      ...where,
+                      Sector: { hasEvery: input.where.Sector },
+                  })
+                : where;
+            // Service area
+            // Starts
+            input.where.Services.ServiceName
+                ? (where = {
+                      ...where,
+                      Services: {
+                          every: {
+                              ServiceName: input.where.Services.ServiceName,
+                          },
+                      },
+                  })
+                : where;
+
+            input.where.Services.ServiceGender
+                ? (where = {
+                      ...where,
+                      Services: {
+                          every: {
+                              ServiceGender: input.where.Services.ServiceGender,
+                          },
+                      },
+                  })
+                : where;
         }
 
-        // const filter = { ...input };
+        // Service area
+        // Ends
 
-        const skip = input?.skip;
-        const take = input?.take;
-
-        console.log('take', input.take);
+        console.log('take', input.take, where);
         const response = await this.departmentsService.find({
-            // where: input.where,
-            skip: input.skip,
-            take: input.take,
+            where: where,
+            skip: input?.skip,
+            take: input?.take,
         });
-        console.log('resss', response);
+        // console.log('resss', response);
         return response;
     }
 

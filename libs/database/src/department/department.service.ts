@@ -37,25 +37,31 @@ export class DepartmentService {
             where,
             orderBy,
             select: {
+                Id: true,
                 Salon: true,
                 ServiceType: true,
                 CompanyUserId: true,
-                Workers: {
-                    select: {
-                        FirstName: true,
-                        LastName: true,
+                // Workers: {
+                //     select: {
+                //         FirstName: true,
+                //         LastName: true,
 
-                        Id: true,
-                        WorkTime: true,
-                        DepartmentId: true,
-                        ServiceWorker: {
-                            select: {
-                                Services: true,
-                            },
-                        },
-                    },
-                },
-                Id: true,
+                //         Id: true,
+                //         WorkTime: true,
+                //         DepartmentId: true,
+                //         ServiceWorker: {
+                //             select: {
+                //                 Services: true,
+                //             },
+                //         },
+                //     },
+                // },
+                Country: true,
+                City: true,
+                District: true,
+                Neighborhood: true,
+                Services: true,
+                WorkTime: true,
             },
         });
 
