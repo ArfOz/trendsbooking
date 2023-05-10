@@ -478,10 +478,11 @@ export class UserForgottenPasswordDto {
 }
 
 export class ServicesListRelationFilter {
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    ServiceType?: ServiceType;
+    // Bu çalışanların servisleri ilerleyen zamanlarda eklenebilir.
+    // @ApiProperty()
+    // @IsOptional()
+    // @IsString()
+    // ServiceType?: ServiceType;
 
     @ApiProperty()
     @IsOptional()

@@ -813,27 +813,44 @@ export class UsersService {
                 : where;
             // Service area
             // Starts
-            input.where.Services.ServiceName
+            input.where.Services?.ServiceName
                 ? (where = {
                       ...where,
                       Services: {
-                          every: {
+                          some: {
                               ServiceName: input.where.Services.ServiceName,
                           },
                       },
+                      //   Services: {
+                      //       some: {
+                      //           ServiceName: input.where.Services.ServiceName,
+                      //       },
+                      //   },
                   })
                 : where;
 
-            input.where.Services.ServiceGender
+            console.log(
+                'where 2222222222',
+                where,
+                input.where.Services.ServiceGender,
+            );
+            input.where.Services?.ServiceGender
                 ? (where = {
                       ...where,
                       Services: {
+                          ...where.Services,
                           every: {
                               ServiceGender: input.where.Services.ServiceGender,
                           },
                       },
                   })
                 : where;
+
+            console.log(
+                'where 2222222222',
+                where,
+                input.where.Services.ServiceGender,
+            );
         }
 
         // Service area
