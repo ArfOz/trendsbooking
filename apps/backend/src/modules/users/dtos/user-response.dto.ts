@@ -442,12 +442,12 @@ export class RandevuCreateDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    Worker: number;
+    WorkerId: number;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    Service: number;
+    ServiceId: number;
 
     @ApiProperty()
     @IsNotEmpty()

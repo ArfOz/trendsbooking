@@ -57,5 +57,6 @@
   "TR442": "RefreshToken Zorunludur",
   "TR443": "Yeni şifre ile eski şifre aynı olamaz",
   "TR444": "Randevu bilgileri eksik!!!",
-  "TR445": "DepartmentId zorunludur."
+  "TR445": "DepartmentId zorunludur.",
+  "TR446": "Çalışana ait bçyle bir servis bulunmamaktadır."
 }
