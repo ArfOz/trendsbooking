@@ -37,6 +37,8 @@ import {
     ServicesService,
     UserTokenService,
     DepartmentService,
+    ServiceWorkerService,
+    RandevuService,
 } from '@database';
 import ResponseMessage from '@shared/enums/response-message.json';
 import {
@@ -58,7 +60,6 @@ import {
     UserPassChangeDto,
     UserRefreshTokenDTO,
 } from './dtos/user-response.dto';
-import { RandevuService } from '@database/randevu/randevu.service';
 
 @Injectable()
 export class UsersService {
@@ -76,6 +77,7 @@ export class UsersService {
         private readonly serviceService: ServicesService,
         private readonly userTokenService: UserTokenService,
         private readonly departmentsService: DepartmentService,
+        private readonly serviceWorkerService: ServiceWorkerService,
     ) {}
 
     async register(
@@ -854,7 +856,7 @@ export class UsersService {
     }
 
     async createRandevu(user: UserParamsDto, input: RandevuCreateDto) {
-        if (!input.Service || !input.Worker || !input.Service) {
+        if (!input.ServiceId || !input.WorkerId || !input.ServiceId) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR444),
@@ -863,15 +865,30 @@ export class UsersService {
         }
 
         console.log('date', new Date(input.StartTime * 1000));
+
+        const serviceExist = await this.serviceWorkerService.find({
+            where: {
+                ServiceId: input.ServiceId,
+                WorkerId: input.WorkerId,
+            },
+        });
+        console.log('servi', serviceExist);
+        if (!serviceExist || serviceExist.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR446),
+                446,
+            );
+        }
         const data: Prisma.RandevuCreateInput = {
             Worker: {
                 connect: {
-                    Id: input.Worker,
+                    Id: input.WorkerId,
                 },
             },
             Service: {
                 connect: {
-                    Id: input.Service,
+                    Id: input.ServiceId,
                 },
             },
             User: {
