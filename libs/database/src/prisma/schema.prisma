@@ -182,8 +182,8 @@ model Randevu {
   WorkerId  Int
   Service   Services      @relation(fields: [ServiceId], references: [Id])
   ServiceId Int
-  StartTime DateTime
-  EndTime   DateTime
+  StartTime DateTime      @db.Timestamptz(3)
+  EndTime   DateTime      @db.Timestamptz(3)
   User      User          @relation(fields: [UserId], references: [Id])
   UserId    Int
   Status    RandevuStatus

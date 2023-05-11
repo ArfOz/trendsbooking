@@ -87,14 +87,6 @@ export class UsersController {
         return this.usersService.sendEmailCode(sendCode);
     }
 
-    @Post('addrandevu')
-    async addrandevu(
-        @UserParam() user: UserParamsDto,
-        @Body() data: RandevuCreateDto,
-    ) {
-        return this.usersService.createRandevu(user, data);
-    }
-
     @AllowUnauthorizedRequest()
     @Post('getdepartments')
     async getDepartments(
@@ -111,6 +103,14 @@ export class UsersController {
         @Body() data: GetDepartmentDetailsDTO,
     ) {
         return this.usersService.getdepartmentDetails(user, data);
+    }
+
+    @Post('addrandevu')
+    async addrandevu(
+        @UserParam() user: UserParamsDto,
+        @Body() data: RandevuCreateDto,
+    ) {
+        return this.usersService.createRandevu(user, data);
     }
 
     @RolesRequired(['Normal'])

@@ -704,38 +704,6 @@ export class UsersService {
         };
     }
 
-    async createRandevu(user: UserParamsDto, input: RandevuCreateDto) {
-        if (!input.Service || !input.Worker || !input.Service) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR444),
-                444,
-            );
-        }
-        const data: Prisma.RandevuCreateInput = {
-            Worker: {
-                connect: {
-                    Id: input.Worker,
-                },
-            },
-            Service: {
-                connect: {
-                    Id: input.Service,
-                },
-            },
-            User: {
-                connect: {
-                    Id: user.Id,
-                },
-            },
-            StartTime: input.StartTime,
-            EndTime: input.EndTime,
-            Status: RandevuStatus.Waiting,
-        };
-        const response = await this.randevuService.create(data);
-        return response;
-    }
-
     async logout(cred: UserParamsDto) {
         const user = await this.userService.findFirst({
             where: {
@@ -856,6 +824,8 @@ export class UsersService {
             // Ends
         }
 
+        // Burada onaylanmış departmenler gönderilmeli
+
         const response = await this.departmentsService.find({
             where: where,
             skip: input?.skip,
@@ -880,6 +850,40 @@ export class UsersService {
             Id: input.DepartmentId,
         });
 
+        return response;
+    }
+
+    async createRandevu(user: UserParamsDto, input: RandevuCreateDto) {
+        if (!input.Service || !input.Worker || !input.Service) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR444),
+                444,
+            );
+        }
+
+        console.log('date', new Date(input.StartTime * 1000));
+        const data: Prisma.RandevuCreateInput = {
+            Worker: {
+                connect: {
+                    Id: input.Worker,
+                },
+            },
+            Service: {
+                connect: {
+                    Id: input.Service,
+                },
+            },
+            User: {
+                connect: {
+                    Id: user.Id,
+                },
+            },
+            StartTime: new Date(input.StartTime * 1000),
+            EndTime: new Date(input.EndTime * 1000),
+            Status: RandevuStatus.Waiting,
+        };
+        const response = await this.randevuService.create(data);
         return response;
     }
 

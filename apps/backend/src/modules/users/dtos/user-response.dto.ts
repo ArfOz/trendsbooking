@@ -451,13 +451,13 @@ export class RandevuCreateDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsString()
-    StartTime: Date | string;
+    @IsNumber()
+    StartTime: number;
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsString()
-    EndTime: Date | string;
+    @IsNumber()
+    EndTime: number;
 }
 
 export class UserForgottenPasswordDto {
