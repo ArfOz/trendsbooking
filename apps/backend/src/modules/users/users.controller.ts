@@ -10,6 +10,7 @@ import {
     RandevuCreateDto,
     GetDepartmentsFilterDTO,
     GetDepartmentsParamsDTO,
+    GetDepartmentDetailsDTO,
 } from './dtos';
 import { UserParam } from '@shared';
 
@@ -101,6 +102,15 @@ export class UsersController {
         @Body() data: GetDepartmentsParamsDTO,
     ) {
         return this.usersService.getdepartments(user, data);
+    }
+
+    @AllowUnauthorizedRequest()
+    @Post('getdepartmentdetails')
+    async getDepartmentDetails(
+        @UserParam() user: UserParamsDto,
+        @Body() data: GetDepartmentDetailsDTO,
+    ) {
+        return this.usersService.getdepartmentDetails(user, data);
     }
 
     @RolesRequired(['Normal'])

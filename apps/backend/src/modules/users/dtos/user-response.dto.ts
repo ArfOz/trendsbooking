@@ -489,20 +489,20 @@ export class ServicesListRelationFilter {
     @IsString()
     ServiceName?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    ServiceTimes?: string;
+    // @ApiProperty()
+    // @IsOptional()
+    // @IsString()
+    // ServiceTimes?: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
     ServiceGender?: ServiceGender;
 
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    Price?: string;
+    //     @ApiProperty()
+    //     @IsOptional()
+    //     @IsString()
+    //     Price?: string;
 }
 
 export class GetDepartmentsFilterDTO {
@@ -583,4 +583,10 @@ export class GetDepartmentsParamsDTO {
     @IsOptional()
     @IsNumber()
     take: number;
+}
+export class GetDepartmentDetailsDTO {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    DepartmentId: number;
 }

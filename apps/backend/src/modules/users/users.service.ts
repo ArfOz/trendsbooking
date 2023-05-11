@@ -52,6 +52,7 @@ import {
     RandevuCreateDto,
 } from './dtos';
 import {
+    GetDepartmentDetailsDTO,
     GetDepartmentsFilterDTO,
     GetDepartmentsParamsDTO,
     UserPassChangeDto,
@@ -776,11 +777,12 @@ export class UsersService {
     async getdepartments(user: UserParamsDto, input: GetDepartmentsParamsDTO) {
         let where: Prisma.DepartmentWhereInput = {};
         if (input?.where) {
-            input.where.City
-                ? (where = { ...where, City: input.where?.City })
-                : where;
             input.where.Country
                 ? (where = { ...where, Country: input.where?.Country })
+                : where;
+
+            input.where.City
+                ? (where = { ...where, City: input.where?.City })
                 : where;
 
             input.where.District
@@ -817,15 +819,11 @@ export class UsersService {
                 ? (where = {
                       ...where,
                       Services: {
+                          ...where.Services,
                           some: {
                               ServiceName: input.where.Services.ServiceName,
                           },
                       },
-                      //   Services: {
-                      //       some: {
-                      //           ServiceName: input.where.Services.ServiceName,
-                      //       },
-                      //   },
                   })
                 : where;
 
@@ -851,10 +849,22 @@ export class UsersService {
                 where,
                 input.where.Services.ServiceGender,
             );
-        }
+            // İlerleyen zamanalarda price ile filtreleme de yapılabilir. Onun için database de integer olarak tutulmalı.
+            // input.where.Services?.Price
+            //     ? (where = {
+            //           ...where,
+            //           Services: {
+            //               ...where.Services,
+            //               every: {
+            //                   ServiceGender: input.where.Services.ServiceGender,
+            //               },
+            //           },
+            //       })
+            //     : where;
 
-        // Service area
-        // Ends
+            // Service area
+            // Ends
+        }
 
         console.log('take', input.take, where);
         const response = await this.departmentsService.find({
@@ -864,6 +874,13 @@ export class UsersService {
         });
         // console.log('resss', response);
         return response;
+    }
+
+    async getdepartmentDetails(
+        user: UserParamsDto,
+        input: GetDepartmentDetailsDTO,
+    ) {
+        return null;
     }
 
     // async getservices(cred: UserParamsDto) {

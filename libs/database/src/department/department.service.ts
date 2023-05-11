@@ -56,7 +56,7 @@ export class DepartmentService {
                 //         },
                 //     },
                 // },
-
+                Sector: true,
                 Country: true,
                 City: true,
                 District: true,
