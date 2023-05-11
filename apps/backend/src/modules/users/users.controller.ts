@@ -105,7 +105,7 @@ export class UsersController {
     }
 
     @AllowUnauthorizedRequest()
-    @Post('getdepartmentdetails')
+    @Get('getdepartmentdetails')
     async getDepartmentDetails(
         @UserParam() user: UserParamsDto,
         @Body() data: GetDepartmentDetailsDTO,

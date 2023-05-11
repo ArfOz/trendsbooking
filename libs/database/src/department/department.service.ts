@@ -19,6 +19,33 @@ export class DepartmentService {
     async get(where: Prisma.DepartmentWhereUniqueInput) {
         return this.prisma.department.findUnique({
             where,
+            select: {
+                Id: true,
+                Country: true,
+                City: true,
+                District: true,
+                Neighborhood: true,
+                Salon: true,
+                Sector: true,
+                Services: true,
+                ServiceType: true,
+                WorkTime: true,
+                Workers: {
+                    select: {
+                        FirstName: true,
+                        LastName: true,
+                        ServiceWorker: {
+                            select: {
+                                Services: {
+                                    select: {
+                                        ServiceName: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         });
     }
 

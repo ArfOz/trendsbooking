@@ -880,7 +880,21 @@ export class UsersService {
         user: UserParamsDto,
         input: GetDepartmentDetailsDTO,
     ) {
-        return null;
+        if (!input.DepartmentId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR445),
+                404,
+            );
+        }
+
+        const response = await this.departmentsService.get({
+            Id: input.DepartmentId,
+        });
+
+        console.log(response);
+
+        return response;
     }
 
     // async getservices(cred: UserParamsDto) {
