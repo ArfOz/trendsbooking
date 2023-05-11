@@ -827,11 +827,6 @@ export class UsersService {
                   })
                 : where;
 
-            console.log(
-                'where 2222222222',
-                where,
-                input.where.Services.ServiceGender,
-            );
             input.where.Services?.ServiceGender
                 ? (where = {
                       ...where,
@@ -844,11 +839,6 @@ export class UsersService {
                   })
                 : where;
 
-            console.log(
-                'where 2222222222',
-                where,
-                input.where.Services.ServiceGender,
-            );
             // İlerleyen zamanalarda price ile filtreleme de yapılabilir. Onun için database de integer olarak tutulmalı.
             // input.where.Services?.Price
             //     ? (where = {
@@ -866,13 +856,11 @@ export class UsersService {
             // Ends
         }
 
-        console.log('take', input.take, where);
         const response = await this.departmentsService.find({
             where: where,
             skip: input?.skip,
             take: input?.take,
         });
-        // console.log('resss', response);
         return response;
     }
 
@@ -891,8 +879,6 @@ export class UsersService {
         const response = await this.departmentsService.get({
             Id: input.DepartmentId,
         });
-
-        console.log(response);
 
         return response;
     }
