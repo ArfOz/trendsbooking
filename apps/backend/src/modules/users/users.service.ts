@@ -864,15 +864,12 @@ export class UsersService {
             );
         }
 
-        console.log('date', new Date(input.StartTime * 1000));
-
         const serviceExist = await this.serviceWorkerService.find({
             where: {
                 ServiceId: input.ServiceId,
                 WorkerId: input.WorkerId,
             },
         });
-        console.log('servi', serviceExist);
         if (!serviceExist || serviceExist.length < 1) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -901,6 +898,15 @@ export class UsersService {
             Status: RandevuStatus.Waiting,
         };
         const response = await this.randevuService.create(data);
+        return response;
+    }
+
+    async getRandevu(user: UserParamsDto) {
+        const response = await this.randevuService.find({
+            where: {
+                UserId: user.Id,
+            },
+        });
         return response;
     }
 

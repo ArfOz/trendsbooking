@@ -187,6 +187,7 @@ model Randevu {
   User      User          @relation(fields: [UserId], references: [Id])
   UserId    Int
   Status    RandevuStatus
+  CreatedAt DateTime      @default(now())
 }
 
 model UserToken {

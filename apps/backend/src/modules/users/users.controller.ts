@@ -113,6 +113,11 @@ export class UsersController {
         return this.usersService.createRandevu(user, data);
     }
 
+    @Get('getrandevu')
+    async getrandevu(@UserParam() user: UserParamsDto) {
+        return this.usersService.getRandevu(user);
+    }
+
     @RolesRequired(['Normal'])
     @ApiBearerAuth('Authorization')
     @Get('logout')
