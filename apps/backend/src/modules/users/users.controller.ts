@@ -105,6 +105,7 @@ export class UsersController {
         return this.usersService.getdepartmentDetails(user, data);
     }
 
+    @ApiBearerAuth('Authorization')
     @Post('addrandevu')
     async addrandevu(
         @UserParam() user: UserParamsDto,
@@ -113,6 +114,7 @@ export class UsersController {
         return this.usersService.createRandevu(user, data);
     }
 
+    @ApiBearerAuth('Authorization')
     @Get('getrandevu')
     async getrandevu(@UserParam() user: UserParamsDto) {
         return this.usersService.getRandevu(user);
