@@ -80,6 +80,38 @@ export class WorkTime {
     @IsDateString()
     Date?: Date | string | null;
 }
+
+export class ServicesUpdate {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    ServiceType: ServiceTypeEnum;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    ServiceName: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    ServiceTimes: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    ServiceGender: ServiceGender;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Price: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Prim: string;
+}
 export class WorkerCreateJsonDto {
     @ApiProperty()
     @IsNotEmpty()
@@ -194,6 +226,11 @@ export class UpdateDepartmentsJsonDto {
     @IsNotEmpty()
     @IsNumber()
     Sector: ServiceGender;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsObject()
+    Services: ServicesUpdate;
 
     // Photos?: DepartmentPhotosUpdateManyWithoutDepartmentNestedInput
 }

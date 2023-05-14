@@ -157,11 +157,16 @@ export class DepartmentsService {
             Salon: input.Salon || companyDepartment.Salon,
             ServiceType: input.ServiceType || companyDepartment.ServiceType,
             Sector: { set: input.Sector || companyDepartment.Sector },
+            // Services: {
+            //     createMany: {
+            //         data: input.Services,
+            //     },
+            // },
             WorkTime: {
                 deleteMany: {
-                    DepartmentId: companyDepartment.Id,
+                    Date: input.WorkTime.Date,
                     Days: input.WorkTime.Days,
-                    Holiday: false,
+                    DepartmentId: companyDepartment.Id,
                 },
                 createMany: {
                     data: input.WorkTime,
