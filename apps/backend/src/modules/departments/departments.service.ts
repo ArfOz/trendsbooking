@@ -138,13 +138,11 @@ export class DepartmentsService {
             );
         }
 
-        const companyDepartment = await this.departmentService.find({
-            where: {
-                CompanyUserId: user.Id,
-                Id: input.DepartmentId,
-            },
+        const companyDepartment = await this.departmentService.findfirst({
+            CompanyUserId: user.Id,
+            Id: input.DepartmentId,
         });
-        if (!companyDepartment || companyDepartment.length < 1) {
+        if (!companyDepartment) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR429),
@@ -156,8 +154,19 @@ export class DepartmentsService {
             CompanyUser: {
                 connect: { Id: user.Id },
             },
-            Salon: input.Salon,
-            ServiceType: input.ServiceType,
+            Salon: input.Salon || companyDepartment.Salon,
+            ServiceType: input.ServiceType || companyDepartment.ServiceType,
+            Sector: { set: input.Sector || companyDepartment.Sector },
+            WorkTime: {
+                deleteMany: {
+                    DepartmentId: companyDepartment.Id,
+                    Days: input.WorkTime.Days,
+                    Holiday: false,
+                },
+                createMany: {
+                    data: input.WorkTime,
+                },
+            },
         };
 
         const where: Prisma.DepartmentWhereUniqueInput = {

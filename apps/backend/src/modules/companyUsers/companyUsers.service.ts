@@ -15,6 +15,7 @@ import {
     UserOtpCodeService,
     UserService,
     CompanyUserService,
+    RandevuService,
 } from '@database';
 import { MailUtilsService } from '@mail-utils';
 
@@ -67,6 +68,7 @@ export class CompanyUsersService {
         private readonly authService: AuthService,
         private readonly userOtpCodeService: UserOtpCodeService,
         private readonly mailUtilsService: MailUtilsService,
+        private readonly randevuService: RandevuService,
     ) {}
 
     async register(input: CreateCompanyUserJsonDto) {
@@ -742,6 +744,20 @@ export class CompanyUsersService {
             Data: `${data.Email} hesabı aktif edilmiştir.`,
             Success: true,
         };
+    }
+
+    async getrandevu(user: UserParamsDto) {
+        const response = await this.randevuService.find({
+            where: {
+                Worker: {
+                    Department: {
+                        CompanyUserId: user.Id,
+                    },
+                },
+            },
+        });
+
+        return response;
     }
 
     async logout(cred: UserParamsDto) {

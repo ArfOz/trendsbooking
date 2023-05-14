@@ -49,6 +49,10 @@ export class DepartmentService {
         });
     }
 
+    async findfirst(where: Prisma.DepartmentWhereInput) {
+        return this.prisma.department.findFirst({ where });
+    }
+
     async find(params: {
         skip?: number;
         take?: number;

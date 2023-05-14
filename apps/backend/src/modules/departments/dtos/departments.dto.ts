@@ -190,6 +190,11 @@ export class UpdateDepartmentsJsonDto {
     @IsNumber()
     DepartmentId: number;
 
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    Sector: ServiceGender;
+
     // Photos?: DepartmentPhotosUpdateManyWithoutDepartmentNestedInput
 }
 
