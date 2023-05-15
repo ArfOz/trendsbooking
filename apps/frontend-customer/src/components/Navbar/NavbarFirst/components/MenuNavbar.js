@@ -2,10 +2,17 @@ import React, { useState } from "react";
 import { Menu, Box, Button } from "@mui/material";
 import GTranslateIcon from "@mui/icons-material/GTranslate";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Link } from 'react-router-dom';
 import { style } from "./style";
 
 const MenuNavbar = () => {
   const [open, setopen] = useState(false);
+  const Links = [
+    { title: 'Giriş Yap', path: '/Auth/Login' },
+    { title: 'İşletme Hesabı', path: '/Auth/Register' },
+];
+ 
+                   
   return (
     <>
       <MenuIcon
@@ -30,23 +37,36 @@ const MenuNavbar = () => {
       >
         {/* right navbar */}
         <Box sx={style.menucountainer}>
-          <Button
-            sx={style.navbarbuttons}
-            onClick={() => {
-              alert("giriş yap sayfasına yönlenecek");
-            }}
-          >
-            Giriş Yap
-          </Button>
-          <Button
-            variant="outlined"
-            sx={style.navbarbuttons}
-            onClick={() => {
-              alert("işletme hesabı sayfasına yönlenecek");
-            }}
-          >
-            İşletme Hesabı
-          </Button>
+        {Links.map((item, index) => (
+                    <Link
+                        to={item.path}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                        <Button
+                            variant="outlined"
+                            key={item.title}
+                            sx={{
+                                textTransform: 'capitalize',
+                                '&:hover': {
+                                    backgroundColor: 'white',
+                                    boxShadow: 'none',
+                                    border: 'none',
+                                },
+                                ...(item.title === 'Giriş Yap' && {
+                                    border: 'none',
+                                }),
+                                ...(item.title === 'İşletme Hesabı' && {
+                                    '&:hover': {
+                                        backgroundColor: 'white',
+                                        boxShadow: 'none',
+                                    },
+                                }),
+                            }}
+                        >
+                            {item.title}
+                        </Button>
+                    </Link>
+                ))}
           <Button
             variant="contained"
             sx={style.buttons}

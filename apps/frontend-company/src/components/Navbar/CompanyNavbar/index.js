@@ -23,6 +23,8 @@ const CompanyNavbar = () => {
                             display: 'flex',
                             justifyContent: 'space-around',
                             alignItems: 'flex-end',
+                            mt:2,
+                    
                         }}
                     >
                         <Left />

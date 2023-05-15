@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-//import DatePicker from 'react-datepicker';
-//import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function StaffDays() {
     const [showCheckboxes, setShowCheckboxes] = useState(false);
@@ -36,6 +36,8 @@ function StaffDays() {
         console.log('İzin Bitiş Tarihi:', endDate);
     };
 
+
+
     return (
         <>
             <Box
@@ -47,9 +49,10 @@ function StaffDays() {
                     borderRadius: '8.19802px',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
+                    alignItems: 'flex-start',
                     justifyContent: 'center',
                     mt: 3,
+                
                 }}
             >
                 <Button
@@ -64,14 +67,17 @@ function StaffDays() {
                     }
                     sx={{
                         background: '#FFFFFF',
-                        border: 'primary',
+                        border: 'none',
                         boxShadow: 'none',
-                        width: '100%',
+                        width: '99.3%',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
+
                         '&:hover': {
                             backgroundColor: '#FFFF',
+                            border: 'none',
+                            boxShadow: 'none',
                         },
                         m: 0.99,
                     }}
@@ -93,35 +99,80 @@ function StaffDays() {
                 </Button>
 
                 {showCheckboxes && (
-                    <form
+                    <Box
+                        component="form"
                         onSubmit={handleFormSubmit}
-                        style={{
+                        sx={{
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'center',
-                            width: '95%',
-                            border: '1px solid red',
+                            width: '95%',                            
+                            m: 2,
+                            ml:4,
                         }}
                     >
+                        <DatePicker
+                            selected={startDate}
+                            onChange={handleStartDateChange}
+                            dateFormat="dd/MM/yyyy"
+                            placeholderText="İzin Başlangıç Tarihi"
+                            customInput={
+                                <TextField
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{
+                                        border: 'none',
+                                        width: '70%',
+                                    }}
+                                />
+                            }
+                        />
+                        <DatePicker
+                            selected={endDate}
+                            onChange={handleEndDateChange}
+                            dateFormat="dd/MM/yyyy"
+                            placeholderText="İzin Bitiş Tarihi"
+                            customInput={
+                                <TextField
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{
+                                        border: 'none',
+                                        width: '70%',
+                                    }}
+                                />
+                            }
+                        />
 
-                            {/* npm  */}
                         <Button
                             type="submit"
                             variant="contained"
                             color="primary"
                             sx={{
-                                mt: 2,
-                                background: '#EA4C89',
-                                color: '#FFFFFF',
-                                borderRadius: '4.0989px',
-                                '&:hover': {
-                                    backgroundColor: '#EA4C89',
-                                },
+                                borderRadius: '5px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '30%',
+                               
+                                backgroundColor: '#F75936',
+                                '&:hover': { backgroundColor: '#F74600' },
                             }}
                         >
-                            Kaydet
+                            <Typography
+                                variant="body2"
+                                fontFamily="'Roboto', sans-serif"
+                                fontWeight={500}
+                                fontStyle="normal"
+                                sx={{
+                                    color: '#FFFFFF',
+                                    textTransform: 'capitalize',
+                                }}
+                            >
+                                Kaydet
+                            </Typography>
                         </Button>
-                    </form>
+                    </Box>
                 )}
             </Box>
         </>

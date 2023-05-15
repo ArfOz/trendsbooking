@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
@@ -23,7 +23,8 @@ function Genders() {
                 mt: 3,
             }}
         >
-                      <Box  sx={{
+            <Box
+                sx={{
                     width: '48%',
                     background: '#FFFFFF',
                     border: '1.36634px solid #9A9A9A',
@@ -32,54 +33,54 @@ function Genders() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                }}>
-                     <Button
-                variant="contained"
-                onClick={handleButtonClick}
-                endIcon={
-                    showCheckboxes ? (
-                        <ArrowDropDownCircleIcon color="primary" />
-                    ) : (
-                        <PlayCircleIcon color="primary" />
-                    )
-                }
-                sx={{
-                    background: '#FFFFFF',
-                    border: 'none',
-                    boxShadow: '0none',
-                    width: '100%',
-                    
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                   
-                 
-                    '&:hover': {
-                        backgroundColor: '#FFFF',
-                    },
-                   m:0.99
-                  
                 }}
             >
-                <Typography
+                <Button
+                    variant="contained"
+                    onClick={handleButtonClick}
+                    endIcon={
+                        showCheckboxes ? (
+                            <ArrowDropDownCircleIcon color="primary" />
+                        ) : (
+                            <PlayCircleIcon color="primary" />
+                        )
+                    }
                     sx={{
-                        fontFamily: 'Roboto',
-                        fontStyle: 'normal',
-                        fontWeight: 500,
-                        fontSize: '14px',
-                        lineHeight: '20px',
-                        textAlign: 'center',
-                        textTransform: 'capitalize',
-                        color: '#9A9A9A',
+                        background: '#FFFFFF',
+                        border: 'none',
+                        boxShadow: 'none',
+                        width: '100%',
+
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+
+                        '&:hover': {
+                            backgroundColor: '#FFFF',
+                            border: 'none',
+                            boxShadow: 'none',
+                        },
+                        m: 0.99,
                     }}
                 >
-                   Hizmet Verdiği Cinsiyet
-                </Typography>
-            </Button>
-           
-
+                    <Typography
+                        sx={{
+                            fontFamily: 'Roboto',
+                            fontStyle: 'normal',
+                            fontWeight: 500,
+                            fontSize: '14px',
+                            lineHeight: '20px',
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                            color: '#9A9A9A',
+                        }}
+                    >
+                        Hizmet Verdiği Cinsiyet
+                    </Typography>
+                </Button>
             </Box>
-                      <Box  sx={{
+            <Box
+                sx={{
                     width: '49%',
                     background: '#FFFFFF',
                     border: '1.36634px solid #9A9A9A',
@@ -88,54 +89,51 @@ function Genders() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                }}>
-                     <Button
-                variant="contained"
-                onClick={handleOpenButtonClick}
-                endIcon={
-                    open ? (
-                        <ArrowDropDownCircleIcon color="primary" />
-                    ) : (
-                        <PlayCircleIcon color="primary" />
-                    )
-                }
-                sx={{
-                    background: '#FFFFFF',
-                    border: 'none',
-                    boxShadow: '0none',
-                    width: '100%',
-                  
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                   
-                 
-                    '&:hover': {
-                        backgroundColor: '#FFFF',
-                    },
-                   m:0.99
-                  
                 }}
             >
-                <Typography
+                <Button
+                    variant="contained"
+                    onClick={handleOpenButtonClick}
+                    endIcon={
+                        open ? (
+                            <ArrowDropDownCircleIcon color="primary" />
+                        ) : (
+                            <PlayCircleIcon color="primary" />
+                        )
+                    }
                     sx={{
-                        fontFamily: 'Roboto',
-                        fontStyle: 'normal',
-                        fontWeight: 500,
-                        fontSize: '14px',
-                        lineHeight: '20px',
-                        textAlign: 'center',
-                        textTransform: 'capitalize',
-                        color: '#9A9A9A',
+                        background: '#FFFFFF',
+                        border: 'none',
+                        boxShadow: 'none',
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+
+                        '&:hover': {
+                            backgroundColor: '#FFFF',
+                            border: 'none',
+                            boxShadow: 'none',
+                        },
+                        m: 0.99,
                     }}
                 >
-                   Çalışanın Cinsiyeti
-                </Typography>
-            </Button>
-           
-
+                    <Typography
+                        sx={{
+                            fontFamily: 'Roboto',
+                            fontStyle: 'normal',
+                            fontWeight: 500,
+                            fontSize: '14px',
+                            lineHeight: '20px',
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                            color: '#9A9A9A',
+                        }}
+                    >
+                        Çalışanın Cinsiyeti
+                    </Typography>
+                </Button>
             </Box>
-            
         </Box>
     );
 }
