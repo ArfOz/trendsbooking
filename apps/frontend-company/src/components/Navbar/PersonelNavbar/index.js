@@ -4,7 +4,7 @@ import NavbarRight from './components/NavbarRight';
 import { AppBar, Toolbar } from '@mui/material';
 import NavbarTop from './components/NavbarTop';
 
-function Navbar() {
+function PersonelNavbar() {
     return (
         <>
         
@@ -31,4 +31,4 @@ function Navbar() {
     );
 }
 
-export default Navbar;
+export default PersonelNavbar;

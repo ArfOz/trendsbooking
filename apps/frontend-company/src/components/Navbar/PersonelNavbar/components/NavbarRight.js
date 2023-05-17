@@ -13,7 +13,7 @@ function NavbarRight() {
         { title: 'Randevu Takvimi', path: '/randevu-takvimi' },
         { title: 'Adisyon', path: '/adisyon' },
         { title: 'Hizmet Yönetimi', path: '/hizmet-yonetimi' },
-        { title: 'Çalışanlar', path: '/calısanlar' },
+        { title: 'Personel Yönetimi', path: '/calısanlar' },
     ];
 
     return (
