@@ -10,9 +10,9 @@ function NavbarRight() {
         { title: 'Ürün Yönetimi', path: '/urun-yonetimi' },
         { title: 'Finans', path: '/finans' },
         { title: 'Raporlar', path: '/raporlar' },
-        { title: 'Randevu Takvimi', path: '/randevu-takvimi' },
+        { title: 'Randevu Takvimi', path: '/randevu' },
         { title: 'Adisyon', path: '/adisyon' },
-        { title: 'Hizmet Yönetimi', path: '/hizmet-yonetimi' },
+        { title: 'Hizmet Yönetimi', path: '/services' },
         { title: 'Personel Yönetimi', path: '/calısanlar' },
     ];
 

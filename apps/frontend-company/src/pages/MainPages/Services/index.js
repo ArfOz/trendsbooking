@@ -5,7 +5,7 @@ import { MainLayout } from '../../../layout';
 import MainTop from './components/MainTop';
 import Footer from '../../../components/Footer';
 
-import { Navbar } from './components';
+import PersonelNavbar from '../../../components/Navbar/PersonelNavbar';
 import BasicTable from './components/ServiceList';
 import CustomizedTabs from './components/GenderTabs/CustomizedTabs';
 
@@ -19,7 +19,7 @@ const Services = () => {
                     backgroundColor: '#F3F1F7',
                 }}
             >
-                <Navbar />
+                <PersonelNavbar />
                 <MainTop />
                 <CustomizedTabs />
                 <BasicTable />

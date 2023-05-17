@@ -3,7 +3,8 @@ import React from 'react';
 
 import { MainLayout } from '../../../layout';
 import Footer from '../../../components/Footer';
-import { Navbar } from '../Dashbord/components';
+// import { Navbar } from '../Dashbord/components';
+import PersonelNavbar from '../../../components/Navbar/PersonelNavbar';
 
 import AppointmentCalendar from './components/AppointmentCalendar';
 import Calendar from './components/RandevuLeft/components/Calendar';
@@ -26,7 +27,7 @@ const Randevu = () => {
                     
                 }}
             >
-                <Navbar />
+                <PersonelNavbar />
                 <AppointmentCalendar />
                 <Box
                     sx={{
