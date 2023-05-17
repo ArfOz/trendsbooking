@@ -344,7 +344,7 @@ export class UpdateWorkerJsonDto {
     @ApiProperty()
     @IsOptional()
     @IsNumber()
-    WorkerId?: number;
+    Id?: number;
 
     @ApiProperty()
     @IsOptional()
@@ -426,7 +426,7 @@ export class UpdateServiceJsonDto {
     @ApiProperty()
     @IsOptional()
     @IsNumber()
-    ServiceId: number;
+    Id: number;
 }
 
 export class DeleteServiceJsonDto {

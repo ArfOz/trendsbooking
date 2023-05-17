@@ -53,7 +53,7 @@ export class DepartmentService {
         return this.prisma.department.findFirst({ where });
     }
 
-    async find(params: {
+    async findMany(params: {
         skip?: number;
         take?: number;
         cursor?: Prisma.DepartmentWhereUniqueInput;
@@ -72,21 +72,20 @@ export class DepartmentService {
                 Salon: true,
                 ServiceType: true,
                 CompanyUserId: true,
-                // Workers: {
-                //     select: {
-                //         FirstName: true,
-                //         LastName: true,
-
-                //         Id: true,
-                //         WorkTime: true,
-                //         DepartmentId: true,
-                //         ServiceWorker: {
-                //             select: {
-                //                 Services: true,
-                //             },
-                //         },
-                //     },
-                // },
+                Workers: {
+                    select: {
+                        Id: true,
+                        FirstName: true,
+                        LastName: true,
+                        WorkTime: true,
+                        DepartmentId: true,
+                        ServiceWorker: {
+                            select: {
+                                Services: true,
+                            },
+                        },
+                    },
+                },
                 Sector: true,
                 Country: true,
                 City: true,

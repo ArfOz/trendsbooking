@@ -828,7 +828,7 @@ export class UsersService {
 
         // Burada onaylanmış departmenler gönderilmeli
 
-        const response = await this.departmentsService.find({
+        const response = await this.departmentsService.findMany({
             where: where,
             skip: input?.skip,
             take: input?.take,

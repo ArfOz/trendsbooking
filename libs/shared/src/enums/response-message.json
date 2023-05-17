@@ -58,5 +58,6 @@
   "TR443": "Yeni şifre ile eski şifre aynı olamaz",
   "TR444": "Randevu bilgileri eksik!!!",
   "TR445": "DepartmentId zorunludur.",
-  "TR446": "Çalışana ait bçyle bir servis bulunmamaktadır."
+  "TR446": "Çalışana ait böyle bir servis bulunmamaktadır.",
+  "TR447": "Şubenizde böyle bir servis bulunmamaktadır."
 }

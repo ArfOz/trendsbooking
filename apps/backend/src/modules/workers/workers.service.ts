@@ -212,7 +212,7 @@ export class WorkersService {
             );
         }
 
-        if (user.Role == Roles.WorkerBasic && user.Id !== input.WorkerId) {
+        if (user.Role === Roles.WorkerBasic && user.Id !== input.WorkerId) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR424),
