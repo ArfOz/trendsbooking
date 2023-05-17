@@ -59,5 +59,6 @@
   "TR444": "Randevu bilgileri eksik!!!",
   "TR445": "DepartmentId zorunludur.",
   "TR446": "Çalışana ait böyle bir servis bulunmamaktadır.",
-  "TR447": "Şubenizde böyle bir servis bulunmamaktadır."
+  "TR447": "Şubenizde böyle bir servis bulunmamaktadır.",
+  "TR448": "Bu hizmete atanmış bulunan kullanıcı bulunmaktadır. Lütfen önce kullanıcıyı siliniz."
 }

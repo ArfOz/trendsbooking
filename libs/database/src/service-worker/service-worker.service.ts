@@ -13,7 +13,7 @@ export class ServiceWorkerService {
         });
     }
 
-    async find(params: {
+    async findMany(params: {
         skip?: number;
         take?: number;
         cursor?: Prisma.ServiceWorkerWhereUniqueInput;
@@ -28,16 +28,21 @@ export class ServiceWorkerService {
             where,
             orderBy,
             select: {
-                // ServiceType: true,
-                // Workers: {
-                //     select: {
-                //         FirstName: true,
-                //         LastName: true,
-                //         Phone: true,
-                //         Id: true,
-                //         WorkTime: true,
-                //     },
-                // },
+                Services: {
+                    select: {
+                        Id: true,
+                        ServiceName: true,
+                    },
+                },
+                Worker: {
+                    select: {
+                        FirstName: true,
+                        LastName: true,
+                        Phone: true,
+                        Id: true,
+                        WorkTime: true,
+                    },
+                },
                 Id: true,
             },
         });

@@ -377,8 +377,21 @@ export class DepartmentsService {
             },
         };
 
-        await this.serviceService.deleteMany(where);
+        const data = await this.serviceWorkerService.findMany({
+            where: {
+                ServiceId: input.ServiceId,
+            },
+        });
 
+        if (data || data.length > 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR448),
+                448,
+            );
+        }
+
+        await this.serviceService.deleteMany(where);
         return {
             Data: ResponseMessage.TR210,
             Success: true,
@@ -513,7 +526,6 @@ export class DepartmentsService {
             Role: input.Roles,
         };
         if (input.Services) {
-            let dataArray;
             for (const o in input.Services) {
                 const auth = department[0].Services.find(
                     (item) => item.Id === input.Services[o].ServiceId,

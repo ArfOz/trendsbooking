@@ -864,7 +864,7 @@ export class UsersService {
             );
         }
 
-        const serviceExist = await this.serviceWorkerService.find({
+        const serviceExist = await this.serviceWorkerService.findMany({
             where: {
                 ServiceId: input.ServiceId,
                 WorkerId: input.WorkerId,
