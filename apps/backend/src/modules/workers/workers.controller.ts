@@ -3,6 +3,7 @@ import { AllowUnauthorizedRequest, RolesRequired, UserParam } from '@shared';
 import { UserParamsDto } from '../users/dtos';
 import { WorkersService } from './workers.service';
 import {
+    RandevuUpdateDTO,
     WorkerLoginDto,
     WorkerPassChangeDto,
     WorkersAddJsonDto,
@@ -69,5 +70,15 @@ export class WorkersController {
     @Get('getrandevu')
     async getrandevu(@UserParam() user: UserParamsDto) {
         return this.workersService.getrandevu(user);
+    }
+
+    @RolesRequired(['Provider', 'WorkerAdmin', 'WorkerBasic'])
+    @ApiBearerAuth('Authorization')
+    @Post('approverandevu')
+    async approverandevu(
+        @UserParam() user: UserParamsDto,
+        @Body() input: RandevuUpdateDTO,
+    ) {
+        return this.workersService.approverandevu(user, input);
     }
 }

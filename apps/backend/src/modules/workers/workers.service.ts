@@ -15,6 +15,7 @@ import { BadRequestException, BadRequestExceptionType } from '@shared';
 // DTOs area
 import { UserParamsDto } from '../users/dtos';
 import {
+    RandevuUpdateDTO,
     WorkerLoginDto,
     WorkerPassChangeDto,
     WorkersAddJsonDto,
@@ -335,7 +336,6 @@ export class WorkersService {
             user.Role === WorkerRole.WorkerAdmin ||
             user.Role === 'Provider'
         ) {
-            console.log('arif');
             response = await this.randevuService.find({
                 where: {
                     departmentId: user.DepartmentId,
@@ -347,5 +347,9 @@ export class WorkersService {
             Success: true,
             Data: response,
         };
+    }
+
+    async approverandevu(user: UserParamsDto, input: RandevuUpdateDTO) {
+        return null;
     }
 }
