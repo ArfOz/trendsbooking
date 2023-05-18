@@ -4,7 +4,12 @@ import * as bcrypt from 'bcrypt';
 
 // Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
-import { PrismaService, WorkerService, WorkTimeService } from '@database';
+import {
+    PrismaService,
+    RandevuService,
+    WorkerService,
+    WorkTimeService,
+} from '@database';
 import { BadRequestException, BadRequestExceptionType } from '@shared';
 
 // DTOs area
@@ -30,6 +35,7 @@ export class WorkersService {
         private readonly authService: AuthService,
         private readonly prismaService: PrismaService,
         private readonly workTimeService: WorkTimeService,
+        private readonly randevuService: RandevuService,
     ) {}
 
     async login(cred: WorkerLoginDto) {
@@ -314,6 +320,32 @@ export class WorkersService {
         return {
             Success: true,
             Data: ResponseMessage.TR209,
+        };
+    }
+
+    async getrandevu(user: UserParamsDto) {
+        let response;
+        if (user.Role === WorkerRole.WorkerBasic) {
+            response = await this.randevuService.find({
+                where: {
+                    WorkerId: user.Id,
+                },
+            });
+        } else if (
+            user.Role === WorkerRole.WorkerAdmin ||
+            user.Role === 'Provider'
+        ) {
+            console.log('arif');
+            response = await this.randevuService.find({
+                where: {
+                    departmentId: user.DepartmentId,
+                },
+            });
+        }
+
+        return {
+            Success: true,
+            Data: response,
         };
     }
 }

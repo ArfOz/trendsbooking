@@ -63,4 +63,11 @@ export class WorkersController {
     ) {
         return this.workersService.deleteWorker(user, input);
     }
+
+    @RolesRequired(['Provider', 'WorkerAdmin', 'WorkerBasic'])
+    @ApiBearerAuth('Authorization')
+    @Get('getrandevu')
+    async getrandevu(@UserParam() user: UserParamsDto) {
+        return this.workersService.getrandevu(user);
+    }
 }
