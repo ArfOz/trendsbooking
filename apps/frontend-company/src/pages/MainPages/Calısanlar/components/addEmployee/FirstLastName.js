@@ -1,17 +1,8 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 
-function FirstLastName() {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-
-    const handleFirstNameChange = (e) => {
-        setFirstName(e.target.value);
-    };
-
-    const handleLastNameChange = (e) => {
-        setLastName(e.target.value);
-    };
+function FirstLastName({ value1, value2, onChange1, onChange2 }) {
+  
 
     return (
         <Box
@@ -27,8 +18,8 @@ function FirstLastName() {
             <TextField
                 label="İsim"
                 variant="outlined"
-                value={firstName}
-                onChange={handleFirstNameChange}
+                value={value1}
+                onChange={onChange1}
                 sx={{
                     width: '48%',
                 }}
@@ -36,8 +27,8 @@ function FirstLastName() {
             <TextField
                 label="Soyisim"
                 variant="outlined"
-                value={lastName}
-                onChange={handleLastNameChange}
+                value={value2}
+                onChange={onChange2}
                 sx={{
                     width: '49%',
                 }}

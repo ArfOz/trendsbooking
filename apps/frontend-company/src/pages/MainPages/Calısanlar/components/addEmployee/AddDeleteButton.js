@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from '@mui/material';
 import React from 'react';
 
-function AddDeleteButton() {
+function AddDeleteButton({ onClick }) {
     return (
         <>
             <Box sx={{
@@ -46,6 +46,7 @@ function AddDeleteButton() {
                         backgroundColor: '#F75936',
                         '&:hover': { backgroundColor: '#F74600' },
                     }}
+                    onClick={onClick}
                 >
                     <Typography
                         variant="body2"
