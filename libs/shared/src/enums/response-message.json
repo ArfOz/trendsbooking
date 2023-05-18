@@ -60,5 +60,6 @@
   "TR445": "DepartmentId zorunludur.",
   "TR446": "Çalışana ait böyle bir servis bulunmamaktadır.",
   "TR447": "Şubenizde böyle bir servis bulunmamaktadır.",
-  "TR448": "Bu hizmete atanmış bulunan kullanıcı bulunmaktadır. Lütfen önce kullanıcıyı siliniz."
+  "TR448": "Bu hizmete atanmış bulunan kullanıcı bulunmaktadır. Lütfen önce kullanıcıyı siliniz.",
+  "TR449": "İptal edilmek istenen randevu id'si eksik!!!"
 }

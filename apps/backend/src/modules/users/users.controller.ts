@@ -11,6 +11,7 @@ import {
     GetDepartmentsFilterDTO,
     GetDepartmentsParamsDTO,
     GetDepartmentDetailsDTO,
+    RandevuDeleteDTO,
 } from './dtos';
 import { UserParam } from '@shared';
 
@@ -118,6 +119,15 @@ export class UsersController {
     @Get('getrandevu')
     async getrandevu(@UserParam() user: UserParamsDto) {
         return this.usersService.getRandevu(user);
+    }
+
+    @ApiBearerAuth('Authorization')
+    @Get('cancelrandevu')
+    async cancelrandevu(
+        @UserParam() user: UserParamsDto,
+        @Body() data: RandevuDeleteDTO,
+    ) {
+        return this.usersService.cancelRandevu(user, data);
     }
 
     @RolesRequired(['Normal'])

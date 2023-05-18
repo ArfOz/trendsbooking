@@ -57,6 +57,7 @@ import {
     GetDepartmentDetailsDTO,
     GetDepartmentsFilterDTO,
     GetDepartmentsParamsDTO,
+    RandevuDeleteDTO,
     UserPassChangeDto,
     UserRefreshTokenDTO,
 } from './dtos/user-response.dto';
@@ -921,8 +922,25 @@ export class UsersService {
     //     return null;
     // }
 
-    async cancelRandevu(user: UserParamsDto) {
-        return null;
+    async cancelRandevu(user: UserParamsDto, input: RandevuDeleteDTO) {
+        if (!input.RandevuId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR449),
+                404,
+            );
+        }
+
+        const response = await this.randevuService.update({
+            where: {
+                Id: input.RandevuId,
+            },
+            data: {
+                Deleted: true,
+            },
+        });
+
+        return response;
     }
     async detailsRandevu(user: UserParamsDto) {
         return null;

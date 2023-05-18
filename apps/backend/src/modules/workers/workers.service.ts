@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, UserRole, WorkerRole } from '@prisma/client';
+import { Prisma, User, UserRole, WorkerRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 // Libs area

@@ -460,6 +460,13 @@ export class RandevuCreateDto {
     EndTime: number;
 }
 
+export class RandevuDeleteDTO {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    RandevuId: number;
+}
+
 export class UserForgottenPasswordDto {
     @ApiProperty()
     @IsString()

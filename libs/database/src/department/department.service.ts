@@ -84,6 +84,7 @@ export class DepartmentService {
                                 Services: true,
                             },
                         },
+                        Randevu: true,
                     },
                 },
                 Sector: true,

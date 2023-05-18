@@ -15,9 +15,6 @@ export class ServicesService {
             where,
         });
     }
-    async arif(where: Prisma.ServicesWhereInput) {
-        return this.prisma.services.findFirst({ where });
-    }
 
     async findMany(params: {
         skip?: number;
