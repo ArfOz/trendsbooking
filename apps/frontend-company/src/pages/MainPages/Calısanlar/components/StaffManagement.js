@@ -27,52 +27,51 @@ function StaffManagement() {
         setOpen(false);
     };
 
-    const [input1Value1, setInput1Value1] = useState('');
-    const [input1Value2, setInput1Value2] = useState('');
-    const [input2Value1, setInput2Value1] = useState('');
-    const [input2Value2, setInput2Value2] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const handleInput1Change1 = (event) => {
-        setInput1Value1(event.target.value);
-      };
-    
-      const handleInput1Change2 = (event) => {
-        setInput1Value2(event.target.value);
-      };
-      const handleInput2Change1 = (event) => {
-        setInput2Value1(event.target.value);
-      };
-    
-      const handleInput2Change2 = (event) => {
-        setInput2Value2(event.target.value);
-      };
-    
+    const handleFirstNameChange = (event) => {
+        setFirstName(event.target.value);
+    };
 
-      const handleSubmit = () => {
+    const handleLastNameChange = (event) => {
+        setLastName(event.target.value);
+    };
+    const handlePhoneChange = (event) => {
+        setPhone(event.target.value);
+    };
+
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value);
+    };
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+    };
+
+    const handleSubmit = () => {
         const data = {
-          input1: {
-            firstname: input1Value1,
-            lastname: input1Value2,
-          }, 
-          input2: {
-            telefon: input2Value1,
-            email: input2Value2,
-          },         
+            FirstName: firstName,
+            LastName: lastName,
+            Phone: phone,
+            Email: email,
+            Password: password,
         };
 
-    // axios
-    //   .post('https://example.com/api', data)
-    //   .then((response) => {
-    //     // İstek başarılı oldu
-    //     console.log(response.data);
-    //   })
-    //   .catch((error) => {
-    //     // İstek başarısız oldu
-    //     console.error(error);
-    //   });
-    console.log(data)
-  };
-
+        // axios
+        //   .post('http://localhost:3300/api/departments/addworker', data)
+        //   .then((response) => {
+        //     // İstek başarılı oldu
+        //     console.log(response.data);
+        //   })
+        //   .catch((error) => {
+        //     // İstek başarısız oldu
+        //     console.error(error);
+        //   });
+        console.log(data);
+    };
 
     return (
         <>
@@ -187,10 +186,10 @@ function StaffManagement() {
                                 endIcon={<HighlightOffIcon color="grey" />}
                                 sx={{
                                     textTransform: 'capitalize',
-                                    boxShadow:"none",
+                                    boxShadow: 'none',
                                     '&:hover': {
                                         backgroundColor: 'white',
-                                        boxShadow:"none",
+                                        boxShadow: 'none',
                                     },
                                     color: '#9A9A9A',
                                 }}
@@ -199,24 +198,28 @@ function StaffManagement() {
                             </Button>
                         </Box>
 
-                        <FirstLastName 
-                         value1={input1Value1}
-                         value2={input1Value2}
-                         onChange1={handleInput1Change1}
-                         onChange2={handleInput1Change2}/>
+                        <FirstLastName
+                            value1={firstName}
+                            value2={lastName}
+                            onChange1={handleFirstNameChange}
+                            onChange2={handleLastNameChange}
+                        />
                         <PhoneEmail
-                        value1={input2Value1}
-                        value2={input2Value2}
-                        onChange1={handleInput2Change1}
-                        onChange2={handleInput2Change2}/>
-                        <Password/>
-                        <Genders/>
-                        <WorkingHours/>
-                        <VestingSettings/>
-                        <StaffDays/>
-                        <CalendarColor/>
-                        <AddDeleteButton onClick={handleSubmit}/>
-                    
+                            value1={phone}
+                            value2={email}
+                            onChange1={handlePhoneChange}
+                            onChange2={handleEmailChange}
+                        />
+                        <Password
+                            value1={password}
+                            onChange1={handlePasswordChange}
+                        />
+                        <Genders />
+                        <WorkingHours />
+                        <VestingSettings />
+                        <StaffDays />
+                        <CalendarColor />
+                        <AddDeleteButton onClick={handleSubmit} />
                     </Box>
                 </DialogContent>
             </Dialog>
