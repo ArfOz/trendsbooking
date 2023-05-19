@@ -1,15 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, UserRole, WorkerRole } from '@prisma/client';
+import { Prisma, User, UserRole, WorkerRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 // Libs area
 import ResponseMessage from '@shared/enums/response-message.json';
-import { PrismaService, WorkerService, WorkTimeService } from '@database';
+import {
+    PrismaService,
+    RandevuService,
+    WorkerService,
+    WorkTimeService,
+} from '@database';
 import { BadRequestException, BadRequestExceptionType } from '@shared';
 
 // DTOs area
 import { UserParamsDto } from '../users/dtos';
 import {
+    RandevuUpdateDTO,
     WorkerLoginDto,
     WorkerPassChangeDto,
     WorkersAddJsonDto,
@@ -30,6 +36,7 @@ export class WorkersService {
         private readonly authService: AuthService,
         private readonly prismaService: PrismaService,
         private readonly workTimeService: WorkTimeService,
+        private readonly randevuService: RandevuService,
     ) {}
 
     async login(cred: WorkerLoginDto) {
@@ -87,9 +94,9 @@ export class WorkersService {
             // Response varsa Success
             return {
                 AccessToken,
-                RefreshToken,
                 ExpireTime: ExpiresAccessToken,
                 ExpireTimeRefresh: ExpiresRefreshToken,
+                RefreshToken,
                 User: worker,
                 Success: true,
             };
@@ -198,8 +205,8 @@ export class WorkersService {
             );
         }
         return {
-            Success: true,
             Data: data,
+            Success: true,
         };
     }
 
@@ -212,7 +219,7 @@ export class WorkersService {
             );
         }
 
-        if (user.Role == Roles.WorkerBasic && user.Id !== input.WorkerId) {
+        if (user.Role === Roles.WorkerBasic && user.Id !== input.WorkerId) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR424),
@@ -271,8 +278,8 @@ export class WorkersService {
         });
 
         return {
-            Success: true,
             Data: response,
+            Success: true,
         };
     }
     async deleteWorker(user: UserParamsDto, input: WorkersGetJsonDto) {
@@ -315,5 +322,65 @@ export class WorkersService {
             Success: true,
             Data: ResponseMessage.TR209,
         };
+    }
+
+    async getrandevu(user: UserParamsDto) {
+        let response;
+        if (user.Role === WorkerRole.WorkerBasic) {
+            response = await this.randevuService.find({
+                where: {
+                    WorkerId: user.Id,
+                },
+            });
+        } else if (
+            user.Role === WorkerRole.WorkerAdmin ||
+            user.Role === 'Provider'
+        ) {
+            response = await this.randevuService.find({
+                where: {
+                    departmentId: user.DepartmentId,
+                },
+            });
+        }
+
+        return {
+            Data: response,
+            Success: true,
+        };
+    }
+
+    async approverandevu(user: UserParamsDto, input: RandevuUpdateDTO) {
+        if (!input.Status || !input.RandevuId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR450),
+                404,
+            );
+        }
+
+        const randevuAuth = await this.randevuService.find({
+            where: {
+                departmentId: user.DepartmentId,
+                Id: input.RandevuId,
+            },
+        });
+
+        if (!randevuAuth || randevuAuth.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR424),
+                404,
+            );
+        }
+        const response = await this.randevuService.update({
+            where: {
+                Id: input.RandevuId,
+            },
+            data: {
+                Status: input.Status,
+            },
+        });
+
+        return { Data: response, Success: true };
     }
 }

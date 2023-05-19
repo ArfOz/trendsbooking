@@ -5,7 +5,6 @@ import {
     IsNumber,
     IsObject,
     IsOptional,
-    IsArray,
     IsEmail,
     IsDateString,
 } from 'class-validator';
@@ -13,6 +12,12 @@ import {
 export enum WorkerRoles {
     WorkerBasic = 'WorkerBasic',
     WorkerAdmin = 'WorkerAdmin',
+}
+
+export enum RandevuStatusEnum {
+    Waiting = 'Waiting',
+    Aprroved = 'Aprroved',
+    Cancelled = 'Cancelled',
 }
 
 export class WorkTime {
@@ -179,4 +184,16 @@ export class WorkerPassChangeDto {
     @IsNotEmpty()
     @IsString()
     NewPassword: string;
+}
+
+export class RandevuUpdateDTO {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    RandevuId: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    Status: RandevuStatusEnum;
 }

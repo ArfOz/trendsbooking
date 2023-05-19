@@ -28,6 +28,7 @@ import {
     AddServiceJsonDto,
     AddWorkerJsonDto,
     DeleteServiceJsonDto,
+    DepartmentDetailsJsonDto,
     UpdateDepartmentsJsonDto,
     UpdateServiceJsonDto,
     UpdateWorkerJsonDto,
@@ -105,15 +106,23 @@ export class DepartmentsService {
         };
     }
 
-    async getdetails(user: UserParamsDto, DepartmentId?: number) {
-        const data = await this.departmentService.find({
-            where: {
-                CompanyUserId: user.Id,
-                Id: DepartmentId,
-            },
+    async getdetails(user: UserParamsDto, data: DepartmentDetailsJsonDto) {
+        const companyDepartment = await this.departmentService.findfirst({
+            CompanyUserId: user.Id,
+            Id: data.Id,
+        });
+        if (!companyDepartment) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
+        const response = await this.departmentService.findUnique({
+            Id: data.Id,
         });
 
-        if (!data || data.length < 1) {
+        if (!data) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR429),
@@ -122,7 +131,7 @@ export class DepartmentsService {
         }
         return {
             Success: true,
-            Data: data,
+            Data: response,
         };
     }
 
@@ -138,13 +147,11 @@ export class DepartmentsService {
             );
         }
 
-        const companyDepartment = await this.departmentService.find({
-            where: {
-                CompanyUserId: user.Id,
-                Id: input.DepartmentId,
-            },
+        const companyDepartment = await this.departmentService.findfirst({
+            CompanyUserId: user.Id,
+            Id: input.DepartmentId,
         });
-        if (!companyDepartment || companyDepartment.length < 1) {
+        if (!companyDepartment) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR429),
@@ -156,10 +163,20 @@ export class DepartmentsService {
             CompanyUser: {
                 connect: { Id: user.Id },
             },
-            Salon: input.Salon,
-            ServiceType: input.ServiceType,
+            Salon: input.Salon || companyDepartment.Salon,
+            ServiceType: input.ServiceType || companyDepartment.ServiceType,
+            Sector: { set: input.Sector || companyDepartment.Sector },
+            WorkTime: {
+                deleteMany: {
+                    Date: input.WorkTime.Date,
+                    Days: input.WorkTime.Days,
+                    DepartmentId: companyDepartment.Id,
+                },
+                createMany: {
+                    data: input.WorkTime,
+                },
+            },
         };
-
         const where: Prisma.DepartmentWhereUniqueInput = {
             Id: input.DepartmentId,
         };
@@ -177,7 +194,7 @@ export class DepartmentsService {
         departmentId: number,
         file: Express.Multer.File,
     ) {
-        const authorizator = await this.departmentService.find({
+        const authorizator = await this.departmentService.findMany({
             where: {
                 CompanyUserId: {},
                 AND: {
@@ -252,7 +269,7 @@ export class DepartmentsService {
             Id: input.DepartmentId,
         };
 
-        const company = await this.departmentService.find({
+        const company = await this.departmentService.findMany({
             where: companyDepartment,
         });
 
@@ -278,7 +295,7 @@ export class DepartmentsService {
         };
 
         const response = await this.serviceService.create(data);
-        return response;
+        return { Data: response, Success: true };
     }
 
     async updateService(user: UserParamsDto, input: UpdateServiceJsonDto) {
@@ -296,7 +313,7 @@ export class DepartmentsService {
                 equals: user.Id,
             },
         };
-        const companyDepartment = await this.departmentService.find({
+        const companyDepartment = await this.departmentService.findMany({
             where: whereUser,
         });
 
@@ -309,7 +326,7 @@ export class DepartmentsService {
         }
 
         const where: Prisma.ServicesWhereUniqueInput = {
-            Id: input.ServiceId,
+            Id: input.Id,
         };
         const data: Prisma.ServicesUpdateInput = {
             Department: {
@@ -322,7 +339,8 @@ export class DepartmentsService {
             ServiceGender: input?.ServiceGender,
             ServiceName: input?.ServiceName,
             ServiceTimes: input?.ServiceTimes,
-            ServiceType: input.ServiceType,
+            ServiceType: input?.ServiceType,
+            ServiceWorker: {},
         };
 
         const response = await this.serviceService.update({ data, where });
@@ -347,7 +365,7 @@ export class DepartmentsService {
                 equals: user.Id,
             },
         };
-        const companyDepartment = await this.departmentService.find({
+        const companyDepartment = await this.departmentService.findMany({
             where: whereUser,
         });
 
@@ -368,8 +386,21 @@ export class DepartmentsService {
             },
         };
 
-        await this.serviceService.deleteMany(where);
+        const data = await this.serviceWorkerService.findMany({
+            where: {
+                ServiceId: input.ServiceId,
+            },
+        });
 
+        if (data || data.length > 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR448),
+                448,
+            );
+        }
+
+        await this.serviceService.deleteMany(where);
         return {
             Data: ResponseMessage.TR210,
             Success: true,
@@ -381,7 +412,7 @@ export class DepartmentsService {
             Id: input.DepartmentId,
             CompanyUserId: user.Id,
         };
-        const department = await this.departmentService.find({
+        const department = await this.departmentService.findMany({
             where: departmentData,
         });
 
@@ -455,11 +486,12 @@ export class DepartmentsService {
                     data: input?.WorkTime,
                 },
             },
-            ServiceWorker: {
-                createMany: {
-                    data: input?.Services,
-                },
-            },
+            // Buralaer varsa eklenecek
+            // ServiceWorker: {
+            //     createMany: {
+            //         data: input?.Services,
+            //     },
+            // },
         };
 
         await this.workerService.create(data);
@@ -475,7 +507,7 @@ export class DepartmentsService {
             Id: input.DepartmentId,
             CompanyUserId: user.Id,
         };
-        const department = await this.departmentService.find({
+        const department = await this.departmentService.findMany({
             where: departmentData,
         });
 
@@ -486,11 +518,12 @@ export class DepartmentsService {
                 429,
             );
         }
+
         const where: Prisma.WorkerWhereUniqueInput = {
-            Id: input.WorkerId,
+            Id: input.Id,
         };
 
-        const data: Prisma.WorkerUpdateInput = {
+        let data: Prisma.WorkerUpdateInput = {
             FirstName: input?.FirstName,
             LastName: input?.LastName,
             Phone: input?.Phone,
@@ -501,28 +534,38 @@ export class DepartmentsService {
             },
             Role: input.Roles,
         };
-
-        let response = await this.workerService.update({ where, data });
-
         if (input.Services) {
+            for (const o in input.Services) {
+                const auth = department[0].Services.find(
+                    (item) => item.Id === input.Services[o].ServiceId,
+                );
+
+                if (!auth) {
+                    throw new BadRequestException(
+                        BadRequestExceptionType.BAD_REQUEST,
+                        new Error(ResponseMessage.TR447),
+                        447,
+                    );
+                }
+            }
+
             await this.serviceWorkerService.deleteMany({
                 where: {
-                    WorkerId: input.WorkerId,
+                    WorkerId: input.Id,
                 },
             });
-            response = await this.workerService.update({
-                where: {
-                    Id: input.WorkerId,
-                },
-                data: {
-                    ServiceWorker: {
-                        createMany: {
-                            data: input.Services,
-                        },
+
+            data = {
+                ...data,
+                ServiceWorker: {
+                    createMany: {
+                        data: input.Services,
                     },
                 },
-            });
+            };
         }
+
+        const response = await this.workerService.update({ where, data });
 
         return {
             Data: ResponseMessage.TR208,

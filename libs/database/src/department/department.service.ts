@@ -16,13 +16,56 @@ export class DepartmentService {
         private readonly keypairService: KeypairService,
     ) {}
 
-    async get(where: Prisma.DepartmentWhereUniqueInput) {
-        return this.prisma.department.findUnique({
+    async findUnique(where: Prisma.DepartmentWhereUniqueInput) {
+        const departmentdata = await this.prisma.department.findUnique({
             where,
+            select: {
+                Id: true,
+                Country: true,
+                City: true,
+                District: true,
+                Neighborhood: true,
+                Salon: true,
+                Sector: true,
+                Services: true,
+                ServiceType: true,
+                WorkTime: true,
+                Workers: {
+                    select: {
+                        Id: true,
+                        FirstName: true,
+                        LastName: true,
+                        Email: true,
+                        ServiceWorker: {
+                            select: {
+                                Services: {
+                                    select: {
+                                        ServiceName: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         });
+
+        if (departmentdata && departmentdata.Workers) {
+            for (let i = 0; i < departmentdata.Workers.length; i++) {
+                departmentdata.Workers[i].Email =
+                    this.keypairService.decryptWithAppKeys(
+                        departmentdata.Workers[i].Email,
+                    );
+            }
+        }
+        return departmentdata;
     }
 
-    async find(params: {
+    async findfirst(where: Prisma.DepartmentWhereInput) {
+        return this.prisma.department.findFirst({ where });
+    }
+
+    async findMany(params: {
         skip?: number;
         take?: number;
         cursor?: Prisma.DepartmentWhereUniqueInput;
@@ -37,14 +80,15 @@ export class DepartmentService {
             where,
             orderBy,
             select: {
+                Id: true,
                 Salon: true,
                 ServiceType: true,
+                CompanyUserId: true,
                 Workers: {
                     select: {
+                        Id: true,
                         FirstName: true,
                         LastName: true,
-
-                        Id: true,
                         WorkTime: true,
                         DepartmentId: true,
                         ServiceWorker: {
@@ -52,9 +96,16 @@ export class DepartmentService {
                                 Services: true,
                             },
                         },
+                        Randevu: true,
                     },
                 },
-                Id: true,
+                Sector: true,
+                Country: true,
+                City: true,
+                District: true,
+                Neighborhood: true,
+                Services: true,
+                WorkTime: true,
             },
         });
 
