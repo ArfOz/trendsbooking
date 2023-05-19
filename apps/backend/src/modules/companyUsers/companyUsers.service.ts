@@ -700,7 +700,7 @@ export class CompanyUsersService {
 
     async companies(data) {
         const companies = await this.companyUserService.find({ where: data });
-        return { companies, Success: true };
+        return { Data: companies, Success: true };
     }
 
     async activate(data: ActivateCompanyUserDto) {
@@ -757,7 +757,7 @@ export class CompanyUsersService {
             },
         });
 
-        return response;
+        return { Data: response, Success: true };
     }
 
     async logout(cred: UserParamsDto) {
@@ -793,7 +793,7 @@ export class CompanyUsersService {
         });
         return {
             Success: true,
-            Details: ResponseMessage.TR203,
+            Data: ResponseMessage.TR203,
         };
     }
 
@@ -805,6 +805,6 @@ export class CompanyUsersService {
         });
 
         delete response.Password;
-        return response;
+        return { Data: response, Success: true };
     }
 }

@@ -374,11 +374,11 @@ export class UsersService {
         );
     }
 
-    async profile(user: UserParamsDto): Promise<ResponseUserProfileUserDTO> {
+    async profile(user: UserParamsDto) {
         const response = await this.userService.findUnique({ Id: user.Id });
 
         delete response.Password;
-        return response;
+        return { Data: response, Success: true };
     }
 
     async updateProfile(user: UserParamsDto, data: UserProfileUpdateDto) {
@@ -742,7 +742,7 @@ export class UsersService {
         });
         return {
             Success: true,
-            Details: ResponseMessage.TR203,
+            Data: ResponseMessage.TR203,
         };
     }
 
@@ -835,7 +835,7 @@ export class UsersService {
             skip: input?.skip,
             take: input?.take,
         });
-        return response;
+        return { Data: response, Success: true };
     }
 
     async getdepartmentDetails(
@@ -854,7 +854,7 @@ export class UsersService {
             Id: input.DepartmentId,
         });
 
-        return response;
+        return { Data: response, Success: true };
     }
 
     async createRandevu(user: UserParamsDto, input: RandevuCreateDto) {
@@ -900,7 +900,7 @@ export class UsersService {
             Status: RandevuStatus.Waiting,
         };
         const response = await this.randevuService.create(data);
-        return response;
+        return { Data: response, Success: true };
     }
 
     async getRandevu(user: UserParamsDto) {
@@ -909,7 +909,7 @@ export class UsersService {
                 UserId: user.Id,
             },
         });
-        return response;
+        return { Data: response, Success: true };
     }
 
     // async getservices(cred: UserParamsDto) {
@@ -941,6 +941,6 @@ export class UsersService {
             },
         });
 
-        return response;
+        return { Data: response, Success: true };
     }
 }

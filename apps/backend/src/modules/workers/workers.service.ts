@@ -94,9 +94,9 @@ export class WorkersService {
             // Response varsa Success
             return {
                 AccessToken,
-                RefreshToken,
                 ExpireTime: ExpiresAccessToken,
                 ExpireTimeRefresh: ExpiresRefreshToken,
+                RefreshToken,
                 User: worker,
                 Success: true,
             };
@@ -205,8 +205,8 @@ export class WorkersService {
             );
         }
         return {
-            Success: true,
             Data: data,
+            Success: true,
         };
     }
 
@@ -278,8 +278,8 @@ export class WorkersService {
         });
 
         return {
-            Success: true,
             Data: response,
+            Success: true,
         };
     }
     async deleteWorker(user: UserParamsDto, input: WorkersGetJsonDto) {
@@ -344,8 +344,8 @@ export class WorkersService {
         }
 
         return {
-            Success: true,
             Data: response,
+            Success: true,
         };
     }
 
@@ -381,6 +381,6 @@ export class WorkersService {
             },
         });
 
-        return response;
+        return { Data: response, Success: true };
     }
 }
