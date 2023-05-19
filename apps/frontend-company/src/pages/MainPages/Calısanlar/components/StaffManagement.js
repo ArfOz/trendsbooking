@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import createWorker from '../../../../../src/function/function'
 
 import { Box, Button, Dialog, DialogContent, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -51,8 +53,8 @@ function StaffManagement() {
         setPassword(event.target.value);
     };
 
-    const handleSubmit = () => {
-        const data = {
+    const handleSubmit = (token) => {
+        const newWorker = {
             FirstName: firstName,
             LastName: lastName,
             Phone: phone,
@@ -60,18 +62,21 @@ function StaffManagement() {
             Password: password,
         };
 
-        // axios
-        //   .post('http://localhost:3300/api/departments/addworker', data)
-        //   .then((response) => {
-        //     // İstek başarılı oldu
-        //     console.log(response.data);
-        //   })
-        //   .catch((error) => {
-        //     // İstek başarısız oldu
-        //     console.error(error);
-        //   });
-        console.log(data);
-    };
+        axios
+        .post('http://localhost:3300/api/departments/addworker', newWorker, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => {
+            // İstek başarılı oldu
+            console.log(response);
+        })
+        .catch((error) => {
+            // İstek başarısız oldu
+            console.error(error);
+        });
+};
 
     return (
         <>

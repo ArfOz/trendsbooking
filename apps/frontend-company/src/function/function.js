@@ -126,4 +126,25 @@ export async function getServices() {
         console.log('Error fetching services:', error);
         return []; // Return an empty array in case of an error
     }
-}
+};
+
+export const createWorker = async (newWorker, token) => {
+    const options = {
+        method: 'POST',
+        url: 'http://localhost:3300/api/departments/addworker',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        data: newWorker,
+    };
+
+    axios
+        .request(options)
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log('error', error);
+        });
+};
