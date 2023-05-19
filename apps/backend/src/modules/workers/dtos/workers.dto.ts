@@ -17,7 +17,7 @@ export enum WorkerRoles {
 export enum RandevuStatusEnum {
     Waiting = 'Waiting',
     Aprroved = 'Aprroved',
-    Canceled = 'Canceled',
+    Cancelled = 'Cancelled',
 }
 
 export class WorkTime {

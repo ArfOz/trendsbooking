@@ -309,7 +309,7 @@ enum UserRole {
 enum RandevuStatus {
   Waiting
   Aprroved
-  Canceled
+  Cancelled
 }
 
 enum ServiceType {

@@ -350,6 +350,37 @@ export class WorkersService {
     }
 
     async approverandevu(user: UserParamsDto, input: RandevuUpdateDTO) {
-        return null;
+        if (!input.Status || !input.RandevuId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR450),
+                404,
+            );
+        }
+
+        const randevuAuth = await this.randevuService.find({
+            where: {
+                departmentId: user.DepartmentId,
+                Id: input.RandevuId,
+            },
+        });
+
+        if (!randevuAuth || randevuAuth.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR424),
+                404,
+            );
+        }
+        const response = await this.randevuService.update({
+            where: {
+                Id: input.RandevuId,
+            },
+            data: {
+                Status: input.Status,
+            },
+        });
+
+        return response;
     }
 }
