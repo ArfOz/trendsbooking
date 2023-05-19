@@ -850,7 +850,7 @@ export class UsersService {
             );
         }
 
-        const response = await this.departmentsService.get({
+        const response = await this.departmentsService.findUnique({
             Id: input.DepartmentId,
         });
 

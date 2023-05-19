@@ -16,8 +16,8 @@ export class DepartmentService {
         private readonly keypairService: KeypairService,
     ) {}
 
-    async get(where: Prisma.DepartmentWhereUniqueInput) {
-        return this.prisma.department.findUnique({
+    async findUnique(where: Prisma.DepartmentWhereUniqueInput) {
+        const departmentdata = await this.prisma.department.findUnique({
             where,
             select: {
                 Id: true,
@@ -32,8 +32,10 @@ export class DepartmentService {
                 WorkTime: true,
                 Workers: {
                     select: {
+                        Id: true,
                         FirstName: true,
                         LastName: true,
+                        Email: true,
                         ServiceWorker: {
                             select: {
                                 Services: {
@@ -47,6 +49,16 @@ export class DepartmentService {
                 },
             },
         });
+
+        if (departmentdata && departmentdata.Workers) {
+            for (let i = 0; i < departmentdata.Workers.length; i++) {
+                departmentdata.Workers[i].Email =
+                    this.keypairService.decryptWithAppKeys(
+                        departmentdata.Workers[i].Email,
+                    );
+            }
+        }
+        return departmentdata;
     }
 
     async findfirst(where: Prisma.DepartmentWhereInput) {

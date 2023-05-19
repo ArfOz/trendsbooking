@@ -28,6 +28,7 @@ import {
     AddServiceJsonDto,
     AddWorkerJsonDto,
     DeleteServiceJsonDto,
+    DepartmentDetailsJsonDto,
     UpdateDepartmentsJsonDto,
     UpdateServiceJsonDto,
     UpdateWorkerJsonDto,
@@ -105,15 +106,23 @@ export class DepartmentsService {
         };
     }
 
-    async getdetails(user: UserParamsDto, DepartmentId?: number) {
-        const data = await this.departmentService.findMany({
-            where: {
-                CompanyUserId: user.Id,
-                Id: DepartmentId,
-            },
+    async getdetails(user: UserParamsDto, data: DepartmentDetailsJsonDto) {
+        const companyDepartment = await this.departmentService.findfirst({
+            CompanyUserId: user.Id,
+            Id: data.Id,
+        });
+        if (!companyDepartment) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
+        const response = await this.departmentService.findUnique({
+            Id: data.Id,
         });
 
-        if (!data || data.length < 1) {
+        if (!data) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
                 new Error(ResponseMessage.TR429),
@@ -122,7 +131,7 @@ export class DepartmentsService {
         }
         return {
             Success: true,
-            Data: data,
+            Data: response,
         };
     }
 
