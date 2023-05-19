@@ -61,6 +61,7 @@ import {
     UserPassChangeDto,
     UserRefreshTokenDTO,
 } from './dtos/user-response.dto';
+import { RandevuStatusEnum } from '../workers/dtos/workers.dto';
 
 @Injectable()
 export class UsersService {
@@ -936,13 +937,10 @@ export class UsersService {
                 Id: input.RandevuId,
             },
             data: {
-                Deleted: true,
+                Status: RandevuStatusEnum.Cancelled,
             },
         });
 
         return response;
-    }
-    async detailsRandevu(user: UserParamsDto) {
-        return null;
     }
 }
