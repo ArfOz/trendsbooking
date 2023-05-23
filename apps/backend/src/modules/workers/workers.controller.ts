@@ -6,7 +6,6 @@ import {
     RandevuUpdateDTO,
     WorkerLoginDto,
     WorkerPassChangeDto,
-    WorkersAddJsonDto,
     WorkersGetJsonDto,
     WorkersUpdateJsonDto,
 } from './dtos/workers.dto';

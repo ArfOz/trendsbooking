@@ -150,47 +150,46 @@ export class DepartmentController {
         return this.departmentsService.getdetails(user, input);
     }
 
-    // // Resim kalitesi düşürülecek.
-    // // @AllowUnauthorizedRequest()
-    // @RolesRequired(['Provider'])
-    // @Post('addphotos')
-    // @UseInterceptors(FileInterceptor('file'))
-    // @ApiBody({
-    //     required: true,
-    //     type: 'multipart/form-data',
-    //     schema: {
-    //         type: 'object',
-    //         properties: {
-    //             file: {
-    //                 type: 'string',
-    //                 format: 'binary',
-    //             },
-    //         },
-    //     },
-    // })
-    // @ApiConsumes('multipart/form-data')
-    // async addPhotos(
-    //     @UserParam() user: UserParamsDto,
-    //     @Body() data: DepartmentIdParamsDto,
-    //     @UploadedFile() file: Express.Multer.File,
-    // ) {
-    //     const response = await this.departmentsService.addphotos(
-    //         user,
-    //         parseInt(data.DepartmentId),
-    //         file,
-    //     );
+    // Resim kalitesi düşürülecek.
+    // @AllowUnauthorizedRequest()
+    @RolesRequired(['Provider'])
+    @Post('addphotos')
+    @UseInterceptors(FileInterceptor('file'))
+    @ApiBody({
+        required: true,
+        type: 'multipart/form-data',
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @ApiConsumes('multipart/form-data')
+    async addPhotos(
+        @UserParam() user: UserParamsDto,
+        @Body() data: DepartmentIdParamsDto,
+        @UploadedFile() file: Express.Multer.File,
+    ) {
+        const response = await this.departmentsService.addphotos(
+            user,
+            parseInt(data.DepartmentId),
+            file,
+        );
 
-    //     // return `<html><body><img src="data:${response.data.MimeType};base64,${response.data.ImageBuffer}" /></body></html>`;
+        // return `<html><body><img src="data:${response.data.MimeType};base64,${response.data.ImageBuffer}" /></body></html>`;
 
-    //     return response;
-    // }
+        return response;
+    }
 
-    // @RolesRequired(['Provider'])
-    // @Get('getphotos')
-    // async getPhotos(){
+    @RolesRequired(['Provider'])
+    @Get('getphotos')
+    async getPhotos(@UserParam() user: UserParamsDto) {
+        const response = await this.departmentsService.getphoto(user);
 
-    //     const response = await this.departmentsService.getphoto(
-    //     );
-
-    // }
+        return response;
+    }
 }

@@ -22,7 +22,7 @@ import {
 } from '@database';
 
 // DTO area
-import { UserParamsDto } from '../users/dtos';
+import { imgResponseDTO, UserParamsDto } from '../users/dtos';
 import {
     AddDepartmentsJsonDto,
     AddServiceJsonDto,
@@ -248,12 +248,32 @@ export class DepartmentsService {
         };
     }
 
-    // async getphoto(){
+    async getphoto(user: UserParamsDto) {
+        const data = await this.departmentPhotosService.find({
+            where: {
+                DepartmentId: user.DepartmentId,
+            },
+        });
 
-    //     const responseServer = await this.imageServer.getPhoto();
+        const imgArray = [];
+        for (let i = 0; i < data.length; i++) {
+            const img = data[i];
+            console.log('arif', img.ImageName);
+            const imageData: imgResponseDTO = {
+                ImageName: img.ImageName,
+                ImageUrl: `https://photo.trendsbooking.com/photos/${img.ImageServerName}`,
+                CreatedAt: img.CreatedAt,
+                DepartmentId: img.Department.DepartmentID,
+                SalonName: img.Department.Salon,
+            };
+            imgArray.push(imageData);
+            console.log('arif', img);
+        }
 
-    //     return responseServer
-    // }
+        console.log('data', imgArray);
+
+        return { Data: imgArray, Succes: true };
+    }
 
     async addService(user: UserParamsDto, input: AddServiceJsonDto) {
         if (!input.DepartmentId) {

@@ -36,6 +36,17 @@ export class DepartmentPhotosService {
             cursor,
             where,
             orderBy,
+            select: {
+                CreatedAt: true,
+                ImageName: true,
+                ImageServerName: true,
+                Department: {
+                    select: {
+                        DepartmentID: true,
+                        Salon: true,
+                    },
+                },
+            },
         });
     }
 

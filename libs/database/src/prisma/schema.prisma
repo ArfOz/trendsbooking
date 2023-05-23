@@ -274,6 +274,7 @@ model DepartmentPhotos {
   ImageServerName String
   Department      Department? @relation(fields: [DepartmentId], references: [Id])
   DepartmentId    Int?
+  CreatedAt       DateTime    @default(now())
 }
 
 enum ExpiredReasonType {

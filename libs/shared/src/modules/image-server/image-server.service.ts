@@ -22,18 +22,22 @@ export class ImageServerService {
             password: this.generalCfg.sftpPassword,
         };
 
-        const fileName: string = uuidv4();
+        console.log('addphoto iç 1');
 
         const fileType: string = file.originalname.substring(
             file.originalname.lastIndexOf('.') + 1,
             file.originalname.length,
         );
+        const fileName: string = uuidv4() + '.' + fileType;
 
-        const filePath = `/root/photos/departments/${fileName}.${fileType}`;
+        const filePath = `/var/www/vhosts/trendsbooking.com/photo.trendsbooking.com/photos/${fileName}`;
         await sftp.connect(config);
+        console.log('addphoto iç 2');
 
         await sftp
-            .list('/root/photos/departments/')
+            .list(
+                '/var/www/vhosts/trendsbooking.com/photo.trendsbooking.com/photos',
+            )
             .then((res) => console.log('asdasda', res));
 
         await sftp.put(data, filePath);
@@ -54,7 +58,7 @@ export class ImageServerService {
             password: this.generalCfg.sftpPassword,
         };
 
-        const filePath = `/root/photos/departments/ff12ceb2-c7e0-472d-8913-80df1a47f292.jpg`;
+        const filePath = `/var/www/vhosts/trendsbooking.com/photo.trendsbooking.com/photos/`;
         await sftp.connect(config);
 
         await sftp.get(filePath).then((res) => console.log('asdasda', res));
