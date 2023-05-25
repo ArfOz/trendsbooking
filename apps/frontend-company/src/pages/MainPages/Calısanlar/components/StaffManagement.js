@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import createWorker from '../../../../../src/function/function'
+import createWorker from '../../../../../src/function/function';
 
 import { Box, Button, Dialog, DialogContent, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -53,30 +53,54 @@ function StaffManagement() {
         setPassword(event.target.value);
     };
 
-    const handleSubmit = (token) => {
+    const handleSubmit = async () => {
         const newWorker = {
             FirstName: firstName,
             LastName: lastName,
             Phone: phone,
             Email: email,
             Password: password,
+            DepartmentId: 8,
+            WorkTime: {
+                MorningStartAt: 'string',
+                MorningEndAt: 'string',
+                ShiftStart: 'string',
+                ShiftEnd: 'string',
+                NightStartAt: 'string',
+                NightEndAt: 'string',
+                Days: 0,
+                Holiday: true,
+                Date: {},
+            },
+            Services: {},
+            Roles: 'WorkerBasic',
         };
+        const token = localStorage.getItem('loginUserCompany')
+            ? JSON.parse(localStorage.getItem('loginUserCompany')).AccessToken
+            : '';
+        console.log('newWorker :>> ', newWorker);
+        console.log('token :>> ', token);
+        // await createWorker(newWorker,token)
 
         axios
-        .post('http://localhost:3300/api/departments/addworker', newWorker, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
-        .then((response) => {
-            // İstek başarılı oldu
-            console.log(response);
-        })
-        .catch((error) => {
-            // İstek başarısız oldu
-            console.error(error);
-        });
-};
+            .post(
+                'http://localhost:3300/api/departments/addworker',
+                newWorker,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            )
+            .then((response) => {
+                // İstek başarılı oldu
+                console.log(response);
+            })
+            .catch((error) => {
+                // İstek başarısız oldu
+                console.error(error);
+            });
+    };
 
     return (
         <>
