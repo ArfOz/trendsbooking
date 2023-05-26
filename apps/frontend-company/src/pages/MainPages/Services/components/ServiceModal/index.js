@@ -14,7 +14,7 @@ import React, { useState } from 'react';
 import { createServices } from './../../../../../function/function';
 
 const initialState = {
-    DepartmentId: 8,
+    DepartmentId: 7,
     ServiceType: '',
     ServiceTimes: '',
     ServiceName: '',
@@ -27,6 +27,7 @@ const initialState = {
 const ServiceModal = ({ open, onClose }) => {
     const [error, setError] = useState('');
     const [newService, setNewService] = React.useState(initialState);
+    const [success, setSuccess] = useState(false);
 
     const handleChange = (event) => {
         //const { name, value } = event.target;
@@ -38,7 +39,6 @@ const ServiceModal = ({ open, onClose }) => {
             [event.target.name]: event.target.value,
         });
     };
-    
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -52,11 +52,16 @@ const ServiceModal = ({ open, onClose }) => {
         console.log('newService :>> ', newService);
 
         try {
-            const result = await createServices(newService, JSON.parse(localStorage.getItem('loginUserCompany'))?.AccessToken);
+            const result = await createServices(
+                newService,
+                JSON.parse(localStorage.getItem('loginUserCompany'))
+                    ?.AccessToken,
+            );
             console.log('Service created successfully: ' + result);
 
             setNewService(initialState);
             //const newService = { ...initialState };
+            setSuccess(true);
         } catch (error) {
             console.error('Error creating service:', error);
 
@@ -64,7 +69,7 @@ const ServiceModal = ({ open, onClose }) => {
         }
     };
 
-    return (
+    return !success ? (
         <Modal open={open} onClose={onClose} sx={style.modal}>
             <Box component="form" onSubmit={handleSubmit} sx={style.form}>
                 <Box
@@ -204,7 +209,7 @@ const ServiceModal = ({ open, onClose }) => {
                 </Box>
             </Box>
         </Modal>
-    );
+    ) : null;
 };
 
 export default ServiceModal;

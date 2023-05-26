@@ -15,34 +15,67 @@ import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import { useEffect, useState } from 'react';
 import './styles.css';
-import { makeStyles } from '@mui/styles';
-import {getServices} from '../../../../../function/function';
 
-function createData(ServiceName, ServiceTimes, Price, Worker, Prim) {
-    return { ServiceName, ServiceTimes, Price, Worker, Prim };
-}
+// function createData(ServiceName, ServiceTimes, Price, Worker, Prim) {
+//     return { ServiceName, ServiceTimes, Price, Worker, Prim };
+// }
 
-const rows = [
-    createData('Saç Boya', 30, 100, 'TREDNSWORKER', 20),
-    createData('Saç Kesimi', 60, 80, 'TREDNSWORKER', 10),
-    createData('Saç Yıkama', 60, 80, 'TREDNSWORKER', 30),
-    createData('Saç Fön', 60, 100, 'TREDNSWORKER', 50),
-    createData('Saç Şekil', 60, 80, 'TREDNSWORKER', 40),
-];
-
-
+// const rows = [
+//     createData('Saç Boya', 30, 100, 'TREDNSWORKER', 20),
+//     createData('Saç Kesimi', 60, 80, 'TREDNSWORKER', 10),
+//     createData('Saç Yıkama', 60, 80, 'TREDNSWORKER', 30),
+//     createData('Saç Fön', 60, 100, 'TREDNSWORKER', 50),
+//     createData('Saç Şekil', 60, 80, 'TREDNSWORKER', 40),
+// ];
 
 export default function BasicTable() {
     const [services, setServices] = useState([]);
     const [open, setOpen] = React.useState(false);
+    const [error, setError] = useState('');
 
     useEffect(() => {
-        async function getServicesData() {
-            const data = await getServices();
-            setServices(data);
-        }
-        getServicesData();
+        getServices(); //  Veriyi çağır
     }, []);
+
+    const axios = require('axios');
+
+    const getServices = async (services, token) => {
+        try {
+            const headers = {
+                Authorization: `Bearer ${token}`,
+            };
+
+            const response = await axios.post(
+                'http://localhost:3300/api/departments/getdetails',
+                null,
+                { headers },
+            );
+            const data = response.data;
+            //console.log(data);
+            setServices(data);
+        } catch (error) {
+            console.error('Error fetching services data:', error);
+        }
+    };
+
+    try {
+        const result = getServices(
+            services,
+            JSON.parse(localStorage.getItem('loginUserCompany'))?.AccessToken,
+        );
+        //Object.keys(services).map((x) => console.log(x));
+        //const dataKeys = Object.keys(result);
+        // const newResult = dataKeys.map((key) => {
+        //     let item = result[key];
+        //     return item;
+        // });
+        console.log(result);
+      
+    } catch (error) {
+        console.error('Error fetching service:', error);
+
+        setError('Error creating service');
+    }
 
     return (
         <Box>
@@ -114,8 +147,8 @@ export default function BasicTable() {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {rows.map((row, index) => (
-                                                <TableRow key={index}>
+                                            {/* {services.map((service, index) => (
+                                                <Table key={index}>
                                                     <TableCell align="left">
                                                         <FormControlLabel
                                                             control={
@@ -129,16 +162,16 @@ export default function BasicTable() {
                                                     </TableCell>
 
                                                     <TableCell align="right">
-                                                        {row.ServiceName}
+                                                        {service.ServiceName}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        {row.ServiceTimes}
+                                                        {service.ServiceTimes}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        {row.Price}
+                                                        {service.Price}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        {row.Worker}
+                                                        {service.Worker}
                                                     </TableCell>
                                                     <TableCell align="right">
                                                         <Button
@@ -180,14 +213,14 @@ export default function BasicTable() {
                                                             Sil
                                                         </Button>
                                                     </TableCell>
-                                                </TableRow>
-                                            ))}
+                                                </Table>
+                                            ))} */}
                                         </TableBody>
                                     </Table>
                                 </Collapse>
                             </TableCell>
                         </TableRow>
-                        <TableRow hover>
+                        {/* <TableRow hover>
                             <TableCell>
                                 <IconButton
                                     aria-label="expand row"
@@ -244,7 +277,7 @@ export default function BasicTable() {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {rows.map((row, index) => (
+                                            {services.map((row, index) => (
                                                 <TableRow key={index}>
                                                     <TableCell align="right">
                                                         <FormGroup>
@@ -299,7 +332,7 @@ export default function BasicTable() {
                                 </Collapse>
                             </TableCell>
                         </TableRow>
-                        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                        <TableRow>
                             <TableCell>
                                 <IconButton
                                     aria-label="expand row"
@@ -356,7 +389,7 @@ export default function BasicTable() {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {rows.map((row, index) => (
+                                            {services.map((row, index) => (
                                                 <TableRow key={index}>
                                                     <TableCell align="right">
                                                         <FormGroup>
@@ -407,7 +440,7 @@ export default function BasicTable() {
                                     </Table>
                                 </Collapse>
                             </TableCell>
-                        </TableRow>
+                        </TableRow> */}
                     </TableBody>
                 </Table>
             </TableContainer>

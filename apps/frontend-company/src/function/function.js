@@ -118,12 +118,7 @@ export const deleteService = async (serviceId, token) => {
     }
 };
 
-export async function getServices() {
-    try {
-        const response = await axios.get('http://localhost:3300/api/services');
-        return response.data; // Assuming the API response is an array of services
-    } catch (error) {
-        console.log('Error fetching services:', error);
-        return []; // Return an empty array in case of an error
-    }
-}
+
+
+
+

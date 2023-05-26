@@ -10,7 +10,7 @@ function Row2Tabs() {
     setValue(newValue);
   };
     return (
-        
+
         <Box sx={{ margin: "20px 150px 20px 150px" ,
         display: {
           xs: "none",
@@ -20,24 +20,23 @@ function Row2Tabs() {
           xl: "block",
         },
         color:"white",
-        
-        
+
+
         }}>
           <Tabs
             value={value}
             onChange={handleChange}
-            textColor=""
             indicatorColor="secondary"
             variant="fullWidth"
             aria-label="secondary tabs example"
-            
+
           >
             <Tab
               value="Kuaför"
               label="Kuaför"
               sx={{
                 textTransform: "capitalize",
-                
+
                 display: {
                   xs: "block",
                   sm: "block",
@@ -81,7 +80,7 @@ function Row2Tabs() {
                   xl: "block",
                 },
               }}
-             
+
             />
             <Tab
               value="Cilt Bakımı"
@@ -125,7 +124,7 @@ function Row2Tabs() {
                 },
               }}
             />
-            
+
             <Tab
               value="Daha Fazla"
               label="Daha Fazla"

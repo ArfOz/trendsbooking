@@ -16,6 +16,7 @@ import {
     Services,
     NotFound404,
 } from '../pages';
+import Departments from '../pages/MainPages/Departments';
 
 const AppRouter = () => {
     const [user, setUser] = useState(false);
@@ -29,6 +30,7 @@ const AppRouter = () => {
                 <Route path="/randevu" element={<Randevu />} />
                 <Route path="/calısanlar" element={<Calısanlar />} />
                 <Route path="/services" element={<Services />} />
+                <Route path="/departments" element={<Departments />} />
 
                 <Route
                     path="/profile"
