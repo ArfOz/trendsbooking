@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab';
 import { Box } from '@mui/material';
 
 export default function CustomizedTabs() {
-    const [value, setValue] = useState(0);
+    const [value, setValue] = useState('Hepsi');
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -24,7 +24,7 @@ export default function CustomizedTabs() {
             <Tabs
                 value={value}
                 onChange={handleChange}
-                textColor="info"
+                textColor="primary"
                 indicatorColor="primary"
                 variant="fullWidth"
             >

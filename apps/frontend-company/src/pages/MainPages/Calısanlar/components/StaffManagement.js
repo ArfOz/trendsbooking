@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import createWorker from '../../../../../src/function/function';
 
 import { Box, Button, Dialog, DialogContent, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -27,7 +29,78 @@ function StaffManagement() {
         setOpen(false);
     };
 
-  
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleFirstNameChange = (event) => {
+        setFirstName(event.target.value);
+    };
+
+    const handleLastNameChange = (event) => {
+        setLastName(event.target.value);
+    };
+    const handlePhoneChange = (event) => {
+        setPhone(event.target.value);
+    };
+
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value);
+    };
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+    };
+
+    const handleSubmit = async () => {
+        const newWorker = {
+            FirstName: firstName,
+            LastName: lastName,
+            Phone: phone,
+            Email: email,
+            Password: password,
+            DepartmentId: 8,
+            WorkTime: {
+                MorningStartAt: 'string',
+                MorningEndAt: 'string',
+                ShiftStart: 'string',
+                ShiftEnd: 'string',
+                NightStartAt: 'string',
+                NightEndAt: 'string',
+                Days: 0,
+                Holiday: true,
+                Date: {},
+            },
+            Services: {},
+            Roles: 'WorkerBasic',
+        };
+        const token = localStorage.getItem('loginUserCompany')
+            ? JSON.parse(localStorage.getItem('loginUserCompany')).AccessToken
+            : '';
+        console.log('newWorker :>> ', newWorker);
+        console.log('token :>> ', token);
+        // await createWorker(newWorker,token)
+
+        axios
+            .post(
+                'http://localhost:3300/api/departments/addworker',
+                newWorker,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            )
+            .then((response) => {
+                // İstek başarılı oldu
+                console.log(response);
+            })
+            .catch((error) => {
+                // İstek başarısız oldu
+                console.error(error);
+            });
+    };
 
     return (
         <>
@@ -142,10 +215,10 @@ function StaffManagement() {
                                 endIcon={<HighlightOffIcon color="grey" />}
                                 sx={{
                                     textTransform: 'capitalize',
-                                    boxShadow:"none",
+                                    boxShadow: 'none',
                                     '&:hover': {
                                         backgroundColor: 'white',
-                                        boxShadow:"none",
+                                        boxShadow: 'none',
                                     },
                                     color: '#9A9A9A',
                                 }}
@@ -154,16 +227,28 @@ function StaffManagement() {
                             </Button>
                         </Box>
 
-                        <FirstLastName />
-                        <PhoneEmail/>
-                        <Password/>
-                        <Genders/>
-                        <WorkingHours/>
-                        <VestingSettings/>
-                        <StaffDays/>
-                        <CalendarColor/>
-                        <AddDeleteButton/>
-                    
+                        <FirstLastName
+                            value1={firstName}
+                            value2={lastName}
+                            onChange1={handleFirstNameChange}
+                            onChange2={handleLastNameChange}
+                        />
+                        <PhoneEmail
+                            value1={phone}
+                            value2={email}
+                            onChange1={handlePhoneChange}
+                            onChange2={handleEmailChange}
+                        />
+                        <Password
+                            value1={password}
+                            onChange1={handlePasswordChange}
+                        />
+                        <Genders />
+                        <WorkingHours />
+                        <VestingSettings />
+                        <StaffDays />
+                        <CalendarColor />
+                        <AddDeleteButton onClick={handleSubmit} />
                     </Box>
                 </DialogContent>
             </Dialog>

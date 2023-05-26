@@ -1,14 +1,15 @@
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { Box, Button } from '@mui/material';
-import { style } from './style';
+import { Button, IconButton } from '@mui/material';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 
 function NavbarTop() {
     const navItems = [
+        { title: 'Destek', path: '/Destek' },
         { title: 'Yorumlar', path: '/Yorumlar' },
-        { title: 'Profile', path: '/profile' },
+        { title: 'Çıkış Yap', path: '/Çıkış Yap' },
+        { title: 'Profile', path: '/profile', hasIcon: true },
     ];
     return (
         <>
@@ -22,6 +23,11 @@ function NavbarTop() {
                 >
                     {navItems.map((item) => (
                         <Button
+                            startIcon={
+                                item.hasIcon ? (
+                                    <PermIdentityIcon sx={{ color: 'white' }} />
+                                ) : null
+                            }
                             key={item.title}
                             sx={{
                                 fontFamily: 'Roboto',
@@ -31,6 +37,7 @@ function NavbarTop() {
                                 lineHeight: '16px',
                                 color: '#FAFCFF',
                                 textTransform: 'capitalize',
+                                mx: 3,
                             }}
                         >
                             {item.title}

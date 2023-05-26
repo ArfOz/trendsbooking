@@ -3,6 +3,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 
 import { Navbar } from '../Dashbord/components';
+import PersonelNavbar from '../../../components/Navbar/PersonelNavbar';
 
 import { MainLayout } from '../../../layout';
 import Footer from '../../../components/Footer';
@@ -23,7 +24,7 @@ const Calısanlar = () => {
 
                 }}
             >
-               <Navbar/>
+               <PersonelNavbar/>
                <StaffManagement/>
                <CustomizedTabs/>
                <TableStaff/>

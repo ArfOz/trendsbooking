@@ -10,7 +10,6 @@ import {
     TextField,
     FormControlLabel,
     Box,
-    Checkbox,
     Button,
     FormControl,
     FormGroup,
@@ -22,6 +21,7 @@ import {
     FormHelperText,
     CircularProgress,
 } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
 import LogoWord from './components/LogoWord';
 import { useAuth } from '../../../context/authContext';
 import Verification from './components/Verification';
@@ -240,7 +240,7 @@ export default function Register() {
                     Sector: 'Cinsiyet',
                     TCKN: 'TC Kimlik Numarası',
                     TaxNo: 'Vergi Numarası',
-                    TaxAdmin: 'Vergi Dairesi'
+                    TaxAdmin: 'Vergi Dairesi',
                 };
                 let emptyValues = [];
                 for (const key in registerForm) {
@@ -832,7 +832,11 @@ export default function Register() {
                                                         <FormGroup>
                                                             <FormControlLabel
                                                                 control={
-                                                                    <Checkbox />
+                                                                    <Checkbox
+                                                                        style={{
+                                                                            opacity: 2,
+                                                                        }}
+                                                                    />
                                                                 }
                                                                 id="CbFirst"
                                                                 name="CbFirst"

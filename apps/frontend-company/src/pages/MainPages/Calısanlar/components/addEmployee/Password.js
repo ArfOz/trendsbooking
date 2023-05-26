@@ -3,7 +3,7 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
-function Password() {
+function Password({ value1, value2, onChange1, onChange2 }) {
     const [showCheckboxes, setShowCheckboxes] = useState(false);
     const handleButtonClick = () => {
         setShowCheckboxes(!showCheckboxes);
@@ -83,6 +83,8 @@ function Password() {
             <TextField
                 label="Şifre"
                 variant="outlined"
+                value={value1}
+                onChange={onChange1}
                 sx={{
                     width: '49%',
                 }}
