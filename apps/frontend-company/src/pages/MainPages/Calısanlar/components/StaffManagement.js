@@ -17,6 +17,7 @@ import VestingSettings from './addEmployee/VestingSettings';
 import StaffDays from './addEmployee/StaffDays';
 import CalendarColor from './addEmployee/CalendarColor';
 import AddDeleteButton from './addEmployee/AddDeleteButton';
+import MyFormComponent from './MyFormComponent';
 
 function StaffManagement() {
     const [open, setOpen] = useState(false);
@@ -254,6 +255,8 @@ function StaffManagement() {
                     </Box>
                 </DialogContent>
             </Dialog>
+
+            <MyFormComponent/>
         </>
     );
 }
