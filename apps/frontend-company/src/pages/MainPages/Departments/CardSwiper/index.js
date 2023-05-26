@@ -7,7 +7,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-
+import { styled } from '@mui/system';
 import {
     Card,
     CardContent,
@@ -78,6 +78,23 @@ const SwipperList = [
     },
 ];
 
+const CardMediaContainer = styled('div')({
+    position: 'relative',
+});
+
+const CardPoints = styled('div')({
+    position: 'absolute',
+    top: '12px',
+    right: '12px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+});
+
+const StarIcon = styled('span')({
+    color: 'yellow',
+});
+
 const DepartmentsCards = () => {
     return (
         <div>
@@ -110,31 +127,42 @@ const DepartmentsCards = () => {
                     },
                 }}
             >
-                 {SwipperList.map((item, index) => (
-          <SwiperSlide key={index}>
-            <Card>
-              <CardMedia
-                component="img"
-                height="140"
-                image={item.imageUrl}
-                alt={item.name}
-              />
-              <CardContent>
-                <Typography variant="h6" component="div">
-                  {item.name}
-                </Typography>
-                <Typography variant="subtitle1" color="text.secondary">
-                  {item.city}, {item.district}
-                </Typography>
-                <div className="card-points">
-                  <span className="points">{item.rate}</span>
-                  <span className="star">&#9733;</span>
-                  <span className="number">{item.rate * 100}</span>
-                </div>
-              </CardContent>
-            </Card>
-          </SwiperSlide>
-        ))}
+                {SwipperList.map((item, index) => (
+                    <SwiperSlide key={index}>
+                        <Card>
+                            <CardMediaContainer>
+                                <CardMedia
+                                    component="img"
+                                    height="140"
+                                    image={item.imageUrl}
+                                    alt={item.name}
+                                />
+                                <CardPoints>
+                                    <span className="points">{item.rate}</span>
+                                    <StarIcon className="star">
+                                        &#9733;
+                                    </StarIcon>
+                                    <span className="number">
+                                        {item.rate * 30}
+                                    </span>
+                                    F
+                                </CardPoints>
+                            </CardMediaContainer>
+                            <CardContent>
+                                <Typography variant="h6" component="div">
+                                    {item.name}
+                                </Typography>
+                                <Typography
+                                    variant="subtitle1"
+                                    color="text.secondary"
+                                >
+                                    {item.city}, {item.district}
+                                </Typography>
+                                <div className="card-points"></div>
+                            </CardContent>
+                        </Card>
+                    </SwiperSlide>
+                ))}
             </Swiper>
         </div>
     );
