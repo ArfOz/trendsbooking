@@ -40,12 +40,8 @@ export class DepartmentPhotosService {
                 CreatedAt: true,
                 ImageName: true,
                 ImageServerName: true,
-                Department: {
-                    select: {
-                        DepartmentID: true,
-                        Salon: true,
-                    },
-                },
+                ImageUrl: true,
+                DepartmentId: true,
             },
         });
     }
