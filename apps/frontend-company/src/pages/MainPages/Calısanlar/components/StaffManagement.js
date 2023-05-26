@@ -61,18 +61,20 @@ function StaffManagement() {
             Email: email,
             Password: password,
             DepartmentId: 8,
-            WorkTime: {
-                MorningStartAt: 'string',
-                MorningEndAt: 'string',
-                ShiftStart: 'string',
-                ShiftEnd: 'string',
-                NightStartAt: 'string',
-                NightEndAt: 'string',
-                Days: 0,
-                Holiday: true,
-                Date: {},
-            },
-            Services: {},
+            WorkTime: [
+                {
+                    MorningStartAt: 'string',
+                    MorningEndAt: 'string',
+                    ShiftStart: 'string',
+                    ShiftEnd: 'string',
+                    NightStartAt: 'string',
+                    NightEndAt: 'string',
+                    Days: 0,
+                    Holiday: true,
+                    // Date: [{}],
+                },
+            ],
+            // Services: [{}],
             Roles: 'WorkerBasic',
         };
         const token = localStorage.getItem('loginUserCompany')
