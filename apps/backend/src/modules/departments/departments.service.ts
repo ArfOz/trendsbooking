@@ -229,10 +229,15 @@ export class DepartmentsService {
             );
         }
 
+        console.log('responseserver', responseServer);
+
+        const url = `https://photo.trendsbooking.com/photos/${responseServer.fileName}`;
+
         const data: Prisma.DepartmentPhotosCreateInput = {
             ImageName: file.originalname,
             ImageType: responseServer.fileType,
             ImageServerName: responseServer.fileName,
+            ImageUrl: url,
             Department: {
                 connect: {
                     Id: departmentId,
@@ -255,24 +260,9 @@ export class DepartmentsService {
             },
         });
 
-        const imgArray = [];
-        for (let i = 0; i < data.length; i++) {
-            const img = data[i];
-            console.log('arif', img.ImageName);
-            const imageData: imgResponseDTO = {
-                ImageName: img.ImageName,
-                ImageUrl: `https://photo.trendsbooking.com/photos/${img.ImageServerName}`,
-                CreatedAt: img.CreatedAt,
-                DepartmentId: img.Department.DepartmentID,
-                SalonName: img.Department.Salon,
-            };
-            imgArray.push(imageData);
-            console.log('arif', img);
-        }
+        console.log('data', data);
 
-        console.log('data', imgArray);
-
-        return { Data: imgArray, Succes: true };
+        return { Data: data, Succes: true };
     }
 
     async addService(user: UserParamsDto, input: AddServiceJsonDto) {

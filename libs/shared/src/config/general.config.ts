@@ -11,4 +11,5 @@ export default registerAs('general', () => ({
     sftpHost: process.env.SFTPHOST,
     sftpUsername: process.env.SFTPUSERNAME,
     sftpPassword: process.env.SFTPPASSWORD,
+    filePath: process.env.FILEPATH,
 }));

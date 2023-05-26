@@ -20,6 +20,7 @@ export class ImageServerService {
             port: this.generalCfg.sftpPort,
             username: this.generalCfg.sftpUsername,
             password: this.generalCfg.sftpPassword,
+            filePath: this.generalCfg.filePath,
         };
 
         console.log('addphoto iç 1');
@@ -30,17 +31,15 @@ export class ImageServerService {
         );
         const fileName: string = uuidv4() + '.' + fileType;
 
-        const filePath = `/var/www/vhosts/trendsbooking.com/photo.trendsbooking.com/photos/${fileName}`;
+        const photoPath = `${config.filePath}/${fileName}`;
         await sftp.connect(config);
         console.log('addphoto iç 2');
 
         await sftp
-            .list(
-                '/var/www/vhosts/trendsbooking.com/photo.trendsbooking.com/photos',
-            )
+            .list(`${config.filePath}`)
             .then((res) => console.log('asdasda', res));
 
-        await sftp.put(data, filePath);
+        await sftp.put(data, photoPath);
 
         await sftp.end();
 
@@ -56,12 +55,14 @@ export class ImageServerService {
             port: this.generalCfg.sftpPort,
             username: this.generalCfg.sftpUsername,
             password: this.generalCfg.sftpPassword,
+            filePath: this.generalCfg.filePath,
         };
 
-        const filePath = `/var/www/vhosts/trendsbooking.com/photo.trendsbooking.com/photos/`;
         await sftp.connect(config);
 
-        await sftp.get(filePath).then((res) => console.log('asdasda', res));
+        await sftp
+            .get(config.filePath)
+            .then((res) => console.log('asdasda', res));
         return true;
     }
 }
