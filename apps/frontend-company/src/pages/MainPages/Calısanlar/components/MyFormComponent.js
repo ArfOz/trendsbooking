@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 
-const MyFormComponent = () => {
-  const [formData, setFormData] = useState({
-    DepartmentId: 0,
-    FirstName: '',
-    LastName: '',
-    Phone: '',
-    WorkTime: [{
+const initialFormData = {
+  DepartmentId: 0,
+  FirstName: '',
+  LastName: '',
+  Phone: '',
+  WorkTime: [
+    {
       MorningStartAt: '',
       MorningEndAt: '',
       ShiftStart: '',
@@ -16,11 +16,15 @@ const MyFormComponent = () => {
       NightEndAt: '',
       Days: 0,
       Holiday: true,
-    }],
-    Roles: 'WorkerBasic',
-    Email: '',
-    Password: '',
-  });
+    }
+  ],
+  Roles: 'WorkerBasic',
+  Email: '',
+  Password: ''
+};
+
+const MyFormComponent = () => {
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
@@ -173,9 +177,9 @@ const MyFormComponent = () => {
           <br />
         </div>
       ))}
-      <Button variant="contained" onClick={handleAddWorkTime}>
+      {/* <Button variant="contained" onClick={handleAddWorkTime}>
         Alta Ekle
-      </Button>
+      </Button> */}
       <br />
       <TextField
         label="Roles"
