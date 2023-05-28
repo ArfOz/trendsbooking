@@ -13,7 +13,7 @@ export class ImageServerService {
         @Inject(generalConfig.KEY)
         private readonly generalCfg: ConfigType<typeof generalConfig>,
     ) {}
-    async addPhoto(file: Express.Multer.File) {
+    async addPhoto(file: Express.Multer.File, departmentId: string) {
         const data = Buffer.from(file.buffer);
         const config = {
             host: this.generalCfg.sftpHost,
@@ -31,13 +31,33 @@ export class ImageServerService {
         );
         const fileName: string = uuidv4() + '.' + fileType;
 
-        const photoPath = `${config.filePath}/${fileName}`;
+        const departmentPath = `${config.filePath}/${departmentId}`;
         await sftp.connect(config);
-        console.log('addphoto iç 2');
 
         await sftp
-            .list(`${config.filePath}`)
-            .then((res) => console.log('asdasda', res));
+            .list(config.filePath)
+            .then(async (res) => {
+                const folderRes = res.filter(
+                    (folder) =>
+                        folder.type === 'd' && folder.name === departmentId,
+                );
+
+                if (folderRes.length == 0) {
+                    console.log('folderres0', departmentPath);
+                    await sftp.mkdir(departmentPath);
+                }
+                console.log(folderRes);
+            })
+            .catch((err) => {
+                console.log('hata içerisi');
+                console.log(
+                    'arifffffffffffffffffff',
+                    err.message,
+                    'catch error',
+                );
+            });
+
+        const photoPath = `${config.filePath}/${departmentId}/${fileName}`;
 
         await sftp.put(data, photoPath);
 
@@ -49,7 +69,7 @@ export class ImageServerService {
         };
     }
 
-    async getPhoto() {
+    async getPhoto(departmentId: string) {
         const config = {
             host: this.generalCfg.sftpHost,
             port: this.generalCfg.sftpPort,

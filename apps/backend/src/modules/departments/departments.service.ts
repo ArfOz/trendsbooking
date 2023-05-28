@@ -196,7 +196,7 @@ export class DepartmentsService {
     ) {
         const authorizator = await this.departmentService.findMany({
             where: {
-                CompanyUserId: {},
+                CompanyUserId: user.Id,
                 AND: {
                     Id: {
                         equals: departmentId,
@@ -205,7 +205,14 @@ export class DepartmentsService {
             },
         });
 
-        // const arif = Buffer.from(file.buffer).toString('base64')
+        if (!authorizator || authorizator.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
+
         console.log('fileeeeeeeeeeeeeeee', file);
 
         // İmage resize
@@ -217,21 +224,20 @@ export class DepartmentsService {
             .toBuffer();
         file['buffer'] = reImage;
         console.log('reimage', reImage);
-        const responseServer = await this.imageServer.addPhoto(file);
+        const responseServer = await this.imageServer.addPhoto(
+            file,
+            authorizator[0].DepartmentID,
+        );
 
         // console.log("asdasds", file)
 
-        if (!authorizator || authorizator.length < 1) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR429),
-                429,
-            );
-        }
+        console.log(
+            'responseserver',
+            responseServer,
+            `${authorizator[0].DepartmentID}`,
+        );
 
-        console.log('responseserver', responseServer);
-
-        const url = `https://photo.trendsbooking.com/photos/${responseServer.fileName}`;
+        const url = `https://photo.trendsbooking.com/photos/${authorizator[0].DepartmentID}/${responseServer.fileName}`;
 
         const data: Prisma.DepartmentPhotosCreateInput = {
             ImageName: file.originalname,
@@ -259,8 +265,6 @@ export class DepartmentsService {
                 DepartmentId: user.DepartmentId,
             },
         });
-
-        console.log('data', data);
 
         return { Data: data, Succes: true };
     }
