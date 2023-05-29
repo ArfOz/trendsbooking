@@ -13,17 +13,19 @@ import {
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import AddIcon from "@mui/icons-material/Add";
-import EventNoteIcon from "@mui/icons-material/EventNote";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 
 function Monday() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
 
-  const [workingHours, setWorkingHours] = useState([{ startTime: "", endTime: "" }]);
+  const [workingHours, setWorkingHours] = useState([
+    { startTime: "", endTime: "" },
+  ]);
 
   const handleAddWorkingHour = () => {
     const newWorkingHours = [...workingHours, { startTime: "", endTime: "" }];
@@ -84,7 +86,7 @@ function Monday() {
           )}
         </Box>
         <Collapse in={isOpen}>
-          <Box sx={{ border: "2px solid red", padding: "1rem" }}>
+          <Box sx={{ padding: "1rem" }}>
             {workingHours.map((hour, index) => (
               <Box
                 key={index}
@@ -93,7 +95,6 @@ function Monday() {
                   justifyContent: "space-between",
                   alignItems: "center",
                   marginBottom: "0.5rem",
-                  border: "2px solid blue",
                 }}
               >
                 <TextField
@@ -131,7 +132,10 @@ function Monday() {
                   }}
                 />
                 {index === 0 && (
-                  <IconButton variant="contained" onClick={handleAddWorkingHour}>
+                  <IconButton
+                    variant="contained"
+                    onClick={handleAddWorkingHour}
+                  >
                     <AddIcon color="info" />
                   </IconButton>
                 )}
