@@ -3,6 +3,7 @@ import {
     Controller,
     FileTypeValidator,
     Get,
+    HttpException,
     HttpStatus,
     MaxFileSizeValidator,
     ParseFilePipe,
@@ -21,7 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { Express } from 'express';
 import { diskStorage, Multer } from 'multer';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
 import { DepartmentsService } from './departments.service';
 
@@ -32,6 +33,7 @@ import {
     RolesRequired,
     BadRequestException,
     BadRequestExceptionType,
+    imageFileFilter,
 } from '@shared';
 
 // DTO area
@@ -48,6 +50,7 @@ import {
     UpdateWorkerJsonDto,
 } from './dtos/departments.dto';
 import { WorkersGetJsonDto } from '../workers/dtos/workers.dto';
+import { extname } from 'path';
 
 @ApiTags('Departments')
 @Controller('departments')
@@ -154,7 +157,27 @@ export class DepartmentController {
     // @AllowUnauthorizedRequest()
     @RolesRequired(['Provider'])
     @Post('addphotos')
-    @UseInterceptors(FileInterceptor('file'))
+    @UseInterceptors(
+        FileInterceptor('file', {
+            fileFilter: (req: any, file: any, cb: any) => {
+                if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
+                    // Allow storage of file
+                    cb(null, true);
+                } else {
+                    // Reject file
+                    cb(
+                        new HttpException(
+                            `Unsupported file type ${extname(
+                                file.originalname,
+                            )}`,
+                            HttpStatus.BAD_REQUEST,
+                        ),
+                        false,
+                    );
+                }
+            },
+        }),
+    )
     @ApiBody({
         required: true,
         type: 'multipart/form-data',

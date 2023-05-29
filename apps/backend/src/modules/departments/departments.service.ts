@@ -194,6 +194,11 @@ export class DepartmentsService {
         departmentId: number,
         file: Express.Multer.File,
     ) {
+        const config = {
+            filePath: this.generalCfg.filePath,
+        };
+
+        console.log('burada');
         const authorizator = await this.departmentService.findMany({
             where: {
                 CompanyUserId: user.Id,
@@ -213,8 +218,6 @@ export class DepartmentsService {
             );
         }
 
-        console.log('fileeeeeeeeeeeeeeee', file);
-
         // İmage resize
         const reImage = await sharp(file.buffer)
             .resize(1200, 630, {
@@ -223,21 +226,12 @@ export class DepartmentsService {
             })
             .toBuffer();
         file['buffer'] = reImage;
-        console.log('reimage', reImage);
         const responseServer = await this.imageServer.addPhoto(
             file,
             authorizator[0].DepartmentID,
         );
 
-        // console.log("asdasds", file)
-
-        console.log(
-            'responseserver',
-            responseServer,
-            `${authorizator[0].DepartmentID}`,
-        );
-
-        const url = `https://photo.trendsbooking.com/photos/${authorizator[0].DepartmentID}/${responseServer.fileName}`;
+        const url = `${config.filePath}/${authorizator[0].DepartmentID}/${responseServer.fileName}`;
 
         const data: Prisma.DepartmentPhotosCreateInput = {
             ImageName: file.originalname,

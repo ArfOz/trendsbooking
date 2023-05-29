@@ -6,6 +6,7 @@ import { Express } from 'express';
 import { Multer } from 'multer';
 
 import Client from 'ssh2-sftp-client';
+import { TrendsException } from '@shared';
 const sftp = new Client();
 @Injectable()
 export class ImageServerService {
@@ -22,8 +23,6 @@ export class ImageServerService {
             password: this.generalCfg.sftpPassword,
             filePath: this.generalCfg.filePath,
         };
-
-        console.log('addphoto iç 1');
 
         const fileType: string = file.originalname.substring(
             file.originalname.lastIndexOf('.') + 1,
@@ -43,18 +42,12 @@ export class ImageServerService {
                 );
 
                 if (folderRes.length == 0) {
-                    console.log('folderres0', departmentPath);
                     await sftp.mkdir(departmentPath);
                 }
-                console.log(folderRes);
             })
             .catch((err) => {
-                console.log('hata içerisi');
-                console.log(
-                    'arifffffffffffffffffff',
-                    err.message,
-                    'catch error',
-                );
+                console.log(err);
+                throw new TrendsException(err, new Error(err), 500);
             });
 
         const photoPath = `${config.filePath}/${departmentId}/${fileName}`;
