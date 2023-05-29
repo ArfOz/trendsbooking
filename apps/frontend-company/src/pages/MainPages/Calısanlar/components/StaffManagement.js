@@ -17,16 +17,13 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
 import EditEmployee from './addEmployee/EditEmployee';
 
-import FirstLastName from './addEmployee/FirstLastName';
-import PhoneEmail from './addEmployee/PhoneEmail';
-import Password from './addEmployee/Password';
+
 import Genders from './addEmployee/Genders';
 import WorkingHours from './addEmployee/WorkingHours';
 import VestingSettings from './addEmployee/VestingSettings';
 import StaffDays from './addEmployee/StaffDays';
 import CalendarColor from './addEmployee/CalendarColor';
-import AddDeleteButton from './addEmployee/AddDeleteButton';
-import MyFormComponent from './MyFormComponent';
+
 
 function StaffManagement() {
     const [open, setOpen] = useState(false);
@@ -102,8 +99,8 @@ function StaffManagement() {
         const token = localStorage.getItem('loginUserCompany')
             ? JSON.parse(localStorage.getItem('loginUserCompany')).AccessToken
             : '';
-        // console.log('newWorker :>> ', formData);
-        // console.log('token :>> ', token);
+        console.log('newWorker :>> ', formData);
+        console.log('token :>> ', token);
 
         axios
             .post('http://localhost:3300/api/departments/addworker', formData, {
@@ -390,7 +387,7 @@ function StaffManagement() {
                         <VestingSettings />
                         <StaffDays />
                         <CalendarColor />
-                        {/* <AddDeleteButton onClick={handleSubmit} /> */}
+                        
                     </Box>
                     <Button
                     type="submit"
