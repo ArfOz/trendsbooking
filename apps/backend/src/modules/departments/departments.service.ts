@@ -198,7 +198,6 @@ export class DepartmentsService {
             filePath: this.generalCfg.filePath,
         };
 
-        console.log('burada');
         const authorizator = await this.departmentService.findMany({
             where: {
                 CompanyUserId: user.Id,

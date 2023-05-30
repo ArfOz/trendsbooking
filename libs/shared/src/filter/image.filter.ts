@@ -1,5 +1,5 @@
-import { extname } from 'path';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import ResponseMessage from '@shared/enums/response-message.json';
+import { BadRequestException, BadRequestExceptionType } from '@shared';
 
 export const imageFileFilter = (req: any, file: any, cb: any) => {
     if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
@@ -8,11 +8,20 @@ export const imageFileFilter = (req: any, file: any, cb: any) => {
     } else {
         // Reject file
         cb(
-            new HttpException(
-                `Unsupported file type ${extname(file.originalname)}`,
-                HttpStatus.BAD_REQUEST,
+            new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR451),
+                451,
             ),
             false,
         );
     }
 };
+
+// cb(
+//     new HttpException(
+//         `Unsupported file type ${extname(file.originalname)}`,
+//         HttpStatus.BAD_REQUEST,
+//     ),
+//     false,
+// );

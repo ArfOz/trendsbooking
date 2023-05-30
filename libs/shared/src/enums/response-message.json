@@ -62,5 +62,6 @@
   "TR447": "Şubenizde böyle bir servis bulunmamaktadır.",
   "TR448": "Bu hizmete atanmış bulunan kullanıcı bulunmaktadır. Lütfen önce kullanıcıyı siliniz.",
   "TR449": "İptal edilmek istenen randevu id'si eksik!!!",
-  "TR450": "Randevu Id'si ve status bilgisi eksik!!!"
+  "TR450": "Randevu Id'si ve status bilgisi eksik!!!",
+  "TR451": "jpg|jpeg|png|gif formatında veri gönderiniz."
 }
