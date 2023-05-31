@@ -160,6 +160,9 @@ export class DepartmentController {
     @UseInterceptors(
         FileInterceptor('file', {
             fileFilter: imageFileFilter,
+            limits: {
+                fileSize: 1 * 1024 * 1024, //1024 kb
+            },
         }),
     )
     @ApiBody({
