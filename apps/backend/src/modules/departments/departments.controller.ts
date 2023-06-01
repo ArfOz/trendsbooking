@@ -205,11 +205,11 @@ export class DepartmentController {
     }
 
     @RolesRequired(['Provider'])
-    @Get('deletephotos')
+    @Post('deletephoto')
     async deletephotos(
         @UserParam() user: UserParamsDto,
         @Body() input: PhotosDeleteJsonDto,
     ) {
-        return null;
+        return await this.departmentsService.deletePhoto(user, input);
     }
 }
