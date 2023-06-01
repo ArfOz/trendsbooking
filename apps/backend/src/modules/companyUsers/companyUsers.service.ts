@@ -47,7 +47,6 @@ import {
 
 import {
     ActivateCompanyUserDto,
-    CompanyUserForgottenPasswordDto,
     CompanyUserParamsDto,
     CompanyUserPassChangeDto,
     CreateCompanyUserJsonDto,

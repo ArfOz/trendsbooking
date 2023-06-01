@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "DepartmentPhotos" ADD COLUMN     "CreatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

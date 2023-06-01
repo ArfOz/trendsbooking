@@ -106,6 +106,7 @@ export class DepartmentService {
                 Neighborhood: true,
                 Services: true,
                 WorkTime: true,
+                DepartmentID: true,
             },
         });
 

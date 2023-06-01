@@ -22,13 +22,14 @@ import {
 } from '@database';
 
 // DTO area
-import { UserParamsDto } from '../users/dtos';
+import { imgResponseDTO, UserParamsDto } from '../users/dtos';
 import {
     AddDepartmentsJsonDto,
     AddServiceJsonDto,
     AddWorkerJsonDto,
     DeleteServiceJsonDto,
     DepartmentDetailsJsonDto,
+    PhotosDeleteJsonDto,
     UpdateDepartmentsJsonDto,
     UpdateServiceJsonDto,
     UpdateWorkerJsonDto,
@@ -194,9 +195,13 @@ export class DepartmentsService {
         departmentId: number,
         file: Express.Multer.File,
     ) {
+        const config = {
+            filePath: this.generalCfg.filePath,
+        };
+
         const authorizator = await this.departmentService.findMany({
             where: {
-                CompanyUserId: {},
+                CompanyUserId: user.Id,
                 AND: {
                     Id: {
                         equals: departmentId,
@@ -204,22 +209,6 @@ export class DepartmentsService {
                 },
             },
         });
-
-        // const arif = Buffer.from(file.buffer).toString('base64')
-        console.log('fileeeeeeeeeeeeeeee', file);
-
-        // İmage resize
-        const reImage = await sharp(file.buffer)
-            .resize(1200, 630, {
-                fit: sharp.fit.inside,
-                withoutEnlargement: true,
-            })
-            .toBuffer();
-        file['buffer'] = reImage;
-        console.log('reimage', reImage);
-        const responseServer = await this.imageServer.addPhoto(file);
-
-        // console.log("asdasds", file)
 
         if (!authorizator || authorizator.length < 1) {
             throw new BadRequestException(
@@ -229,10 +218,26 @@ export class DepartmentsService {
             );
         }
 
+        // İmage resize
+        const reImage = await sharp(file.buffer)
+            .resize(1200, 630, {
+                fit: sharp.fit.inside,
+                withoutEnlargement: true,
+            })
+            .toBuffer();
+        file['buffer'] = reImage;
+        const responseServer = await this.imageServer.addPhoto(
+            file,
+            authorizator[0].DepartmentID,
+        );
+
+        const url = `${config.filePath}/${authorizator[0].DepartmentID}/${responseServer.fileName}`;
+
         const data: Prisma.DepartmentPhotosCreateInput = {
             ImageName: file.originalname,
             ImageType: responseServer.fileType,
             ImageServerName: responseServer.fileName,
+            ImageUrl: url,
             Department: {
                 connect: {
                     Id: departmentId,
@@ -243,17 +248,49 @@ export class DepartmentsService {
         const response: DepartmentPhotos =
             await this.departmentPhotosService.create(data);
         return {
-            data: response.ImageName,
+            Data: response.ImageName,
             Success: true,
         };
     }
 
-    // async getphoto(){
+    async getphoto(user: UserParamsDto) {
+        const data = await this.departmentPhotosService.find({
+            where: {
+                DepartmentId: user.DepartmentId,
+                IsDeleted: false,
+            },
+        });
 
-    //     const responseServer = await this.imageServer.getPhoto();
+        return { Data: data, Succes: true };
+    }
 
-    //     return responseServer
-    // }
+    async deletePhoto(user: UserParamsDto, input: PhotosDeleteJsonDto) {
+        const auth = await this.departmentPhotosService.find({
+            where: {
+                Id: input.Id,
+                Department: {
+                    CompanyUserId: user.Id,
+                },
+                IsDeleted: false,
+            },
+        });
+
+        if (!auth || auth.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR453),
+                453,
+            );
+        }
+
+        await this.departmentPhotosService.update({
+            where: { Id: input.Id },
+            data: {
+                IsDeleted: true,
+            },
+        });
+        return { Data: ResponseMessage.TR452, Succes: true };
+    }
 
     async addService(user: UserParamsDto, input: AddServiceJsonDto) {
         if (!input.DepartmentId) {
