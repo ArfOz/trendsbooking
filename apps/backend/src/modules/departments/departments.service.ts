@@ -444,7 +444,17 @@ export class DepartmentsService {
         };
     }
 
-    async addworker(user: UserParamsDto, input: AddWorkerJsonDto) {
+    async addworker(
+        file: Express.Multer.File,
+        user: UserParamsDto,
+        input: AddWorkerJsonDto,
+    ) {
+        console.log('input', input);
+        console.log('dataaaaaaaaaaa', input);
+
+        const config = {
+            filePath: this.generalCfg.filePath,
+        };
         const departmentData: Prisma.DepartmentWhereInput = {
             Id: input.DepartmentId,
             CompanyUserId: user.Id,

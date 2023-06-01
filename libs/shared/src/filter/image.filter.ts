@@ -17,11 +17,3 @@ export const imageFileFilter = (req: any, file: any, cb: any) => {
         );
     }
 };
-
-// cb(
-//     new HttpException(
-//         `Unsupported file type ${extname(file.originalname)}`,
-//         HttpStatus.BAD_REQUEST,
-//     ),
-//     false,
-// );
