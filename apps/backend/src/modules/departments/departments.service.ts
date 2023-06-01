@@ -29,6 +29,7 @@ import {
     AddWorkerJsonDto,
     DeleteServiceJsonDto,
     DepartmentDetailsJsonDto,
+    PhotosDeleteJsonDto,
     UpdateDepartmentsJsonDto,
     UpdateServiceJsonDto,
     UpdateWorkerJsonDto,
@@ -256,10 +257,38 @@ export class DepartmentsService {
         const data = await this.departmentPhotosService.find({
             where: {
                 DepartmentId: user.DepartmentId,
+                IsDeleted: false,
             },
         });
 
         return { Data: data, Succes: true };
+    }
+
+    async deletePhoto(user: UserParamsDto, input: PhotosDeleteJsonDto) {
+        const auth = await this.departmentPhotosService.find({
+            where: {
+                Id: input.Id,
+                Department: {
+                    CompanyUserId: user.Id,
+                },
+            },
+        });
+
+        if (!auth || auth.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR424),
+                424,
+            );
+        }
+
+        await this.departmentPhotosService.update({
+            where: { Id: input.Id },
+            data: {
+                IsDeleted: true,
+            },
+        });
+        return { Data: ResponseMessage.TR452, Succes: true };
     }
 
     async addService(user: UserParamsDto, input: AddServiceJsonDto) {

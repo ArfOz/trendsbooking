@@ -45,6 +45,7 @@ import {
     DeleteServiceJsonDto,
     DepartmentDetailsJsonDto,
     DepartmentIdParamsDto,
+    PhotosDeleteJsonDto,
     UpdateDepartmentsJsonDto,
     UpdateServiceJsonDto,
     UpdateWorkerJsonDto,
@@ -161,7 +162,7 @@ export class DepartmentController {
         FileInterceptor('file', {
             fileFilter: imageFileFilter,
             limits: {
-                fileSize: 1 * 1024 * 1024, //1024 kb
+                fileSize: 10 * 1024 * 1024, //10 mb
             },
         }),
     )
@@ -201,5 +202,14 @@ export class DepartmentController {
         const response = await this.departmentsService.getphoto(user);
 
         return response;
+    }
+
+    @RolesRequired(['Provider'])
+    @Get('deletephotos')
+    async deletephotos(
+        @UserParam() user: UserParamsDto,
+        @Body() input: PhotosDeleteJsonDto,
+    ) {
+        return null;
     }
 }

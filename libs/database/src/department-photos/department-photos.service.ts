@@ -37,6 +37,7 @@ export class DepartmentPhotosService {
             where,
             orderBy,
             select: {
+                Id: true,
                 CreatedAt: true,
                 ImageName: true,
                 ImageServerName: true,

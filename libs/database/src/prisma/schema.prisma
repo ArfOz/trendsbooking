@@ -276,6 +276,7 @@ model DepartmentPhotos {
   Department      Department? @relation(fields: [DepartmentId], references: [Id])
   DepartmentId    Int?
   CreatedAt       DateTime    @default(now())
+  IsDeleted       Boolean     @default(false)
 }
 
 enum ExpiredReasonType {

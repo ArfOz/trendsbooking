@@ -440,3 +440,10 @@ export class DeleteServiceJsonDto {
     @IsNumber()
     ServiceId: number;
 }
+
+export class PhotosDeleteJsonDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    Id?: number;
+}
