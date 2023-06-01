@@ -41,6 +41,7 @@ import { UserParamsDto } from './../users/dtos/user-response.dto';
 import {
     AddDepartmentsJsonDto,
     AddServiceJsonDto,
+    AddWorkerFormData,
     AddWorkerJsonDto,
     DeleteServiceJsonDto,
     DepartmentDetailsJsonDto,
@@ -207,10 +208,9 @@ export class DepartmentController {
     async addWorker(
         @UploadedFile() file: Express.Multer.File,
         @UserParam() user: UserParamsDto,
-        @Body() input: object,
+        @Body() input: AddWorkerFormData,
     ) {
         const data = JSON.parse(input.input);
-        console.log('data', data);
         return this.departmentsService.addworker(file, user, data);
     }
 
