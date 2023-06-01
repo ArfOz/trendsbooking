@@ -64,5 +64,6 @@
   "TR449": "İptal edilmek istenen randevu id'si eksik!!!",
   "TR450": "Randevu Id'si ve status bilgisi eksik!!!",
   "TR451": "jpg|jpeg|png|gif formatında veri gönderiniz.",
-  "TR452": "Şubenize ait resim dosyası başarı ile silinmiştir."
+  "TR452": "Şubenize ait resim dosyası başarı ile silinmiştir.",
+  "TR453": "Yanlış resim Idsi veya daha önce silinmiş bir resim!!!"
 }

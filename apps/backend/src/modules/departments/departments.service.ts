@@ -248,7 +248,7 @@ export class DepartmentsService {
         const response: DepartmentPhotos =
             await this.departmentPhotosService.create(data);
         return {
-            data: response.ImageName,
+            Data: response.ImageName,
             Success: true,
         };
     }
@@ -271,14 +271,15 @@ export class DepartmentsService {
                 Department: {
                     CompanyUserId: user.Id,
                 },
+                IsDeleted: false,
             },
         });
 
         if (!auth || auth.length < 1) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR424),
-                424,
+                new Error(ResponseMessage.TR453),
+                453,
             );
         }
 
