@@ -191,7 +191,7 @@ export class DepartmentController {
         }),
     )
     @ApiBody({
-        required: true,
+        required: false,
         type: 'multipart/form-data',
         schema: {
             type: 'object',
@@ -211,7 +211,7 @@ export class DepartmentController {
         @Body() input: AddWorkerFormData,
     ) {
         const data = JSON.parse(input.input);
-        return this.departmentsService.addworker(file, user, data);
+        return this.departmentsService.addworker(user, data, file);
     }
 
     @Post('updateworker')

@@ -445,9 +445,9 @@ export class DepartmentsService {
     }
 
     async addworker(
-        file: Express.Multer.File,
         user: UserParamsDto,
         input: AddWorkerJsonDto,
+        file?: Express.Multer.File,
     ) {
         const config = {
             filePath: this.generalCfg.filePath,
@@ -499,6 +499,25 @@ export class DepartmentsService {
             );
         }
 
+        // İmage resize
+        let url, responseServer;
+        if (file) {
+            const reImage = await sharp(file.buffer)
+                .resize(1200, 630, {
+                    fit: sharp.fit.inside,
+                    withoutEnlargement: true,
+                })
+                .toBuffer();
+            file['buffer'] = reImage;
+            responseServer = await this.imageServer.addPhoto(
+                file,
+                input.DepartmentId.toString(),
+            );
+            url = `${config.filePath}/${input.DepartmentId.toString()}/${
+                responseServer.fileName
+            }`;
+        }
+
         // Generate a public/private key pair
         const keys = this.keypairService.generateKey();
 
@@ -530,6 +549,11 @@ export class DepartmentsService {
                     data: input?.WorkTime,
                 },
             },
+            ImageUrl: url || '',
+            ImageType: responseServer?.fileType || '',
+            ImageServerName: responseServer?.fileName || '',
+            ImageName: file?.originalname || '',
+
             // Buralaer varsa eklenecek
             // ServiceWorker: {
             //     createMany: {
