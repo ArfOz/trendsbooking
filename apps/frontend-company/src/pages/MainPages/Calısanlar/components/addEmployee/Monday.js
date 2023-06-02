@@ -78,6 +78,7 @@ function Monday() {
           <FormControlLabel
             control={<Switch checked={isOpen} onChange={handleToggle} />}
             label="Pazartesi"
+            labelPlacement= 'start'
           />
           {isOpen ? (
             <KeyboardArrowUpIcon color="info" />

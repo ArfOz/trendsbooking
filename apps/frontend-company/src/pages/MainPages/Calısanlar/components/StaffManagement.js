@@ -26,20 +26,23 @@ import CalendarColor from './addEmployee/CalendarColor';
 
 
 function StaffManagement() {
+   
+        // toggle new employee button    
+
     const [open, setOpen] = useState(false);
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const [showCheckboxes, setShowCheckboxes] = useState(false);
     const handleCheckboxesClick = () => {
         setShowCheckboxes(!showCheckboxes);
     };
 
-    const handleButtonClick = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    
 
     const initialNewWorker = {
         DepartmentId: 8,
@@ -186,7 +189,7 @@ function StaffManagement() {
                         İndir
                     </Button>
                     <Button
-                        onClick={handleButtonClick}
+                        onClick={handleOpen}
                         variant="contained"
                         color="primary"
                         sx={{
