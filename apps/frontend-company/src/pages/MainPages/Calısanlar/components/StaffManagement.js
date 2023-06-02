@@ -2,24 +2,36 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import createWorker from '../../../../../src/function/function';
 
-import { Box, Button, Dialog, DialogContent, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogContent,
+    TextField,
+    Typography,
+} from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
 import EditEmployee from './addEmployee/EditEmployee';
 
-import FirstLastName from './addEmployee/FirstLastName';
-import PhoneEmail from './addEmployee/PhoneEmail';
-import Password from './addEmployee/Password';
+
 import Genders from './addEmployee/Genders';
 import WorkingHours from './addEmployee/WorkingHours';
 import VestingSettings from './addEmployee/VestingSettings';
 import StaffDays from './addEmployee/StaffDays';
 import CalendarColor from './addEmployee/CalendarColor';
-import AddDeleteButton from './addEmployee/AddDeleteButton';
+
 
 function StaffManagement() {
     const [open, setOpen] = useState(false);
+
+    const [showCheckboxes, setShowCheckboxes] = useState(false);
+    const handleCheckboxesClick = () => {
+        setShowCheckboxes(!showCheckboxes);
+    };
 
     const handleButtonClick = () => {
         setOpen(true);
@@ -29,81 +41,88 @@ function StaffManagement() {
         setOpen(false);
     };
 
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [phone, setPhone] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const handleFirstNameChange = (event) => {
-        setFirstName(event.target.value);
-    };
-
-    const handleLastNameChange = (event) => {
-        setLastName(event.target.value);
-    };
-    const handlePhoneChange = (event) => {
-        setPhone(event.target.value);
-    };
-
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-    };
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value);
-    };
-
-    const handleSubmit = async () => {
-        const newWorker = {
-            FirstName: firstName,
-            LastName: lastName,
-            Phone: phone,
-            Email: email,
-            Password: password,
-            DepartmentId: 8,
-            WorkTime: {
-                MorningStartAt: 'string',
-                MorningEndAt: 'string',
-                ShiftStart: 'string',
-                ShiftEnd: 'string',
-                NightStartAt: 'string',
-                NightEndAt: 'string',
+    const initialNewWorker = {
+        DepartmentId: 8,
+        FirstName: '',
+        LastName: '',
+        Phone: '',
+        WorkTime: [
+            {
+                MorningStartAt: '',
+                MorningEndAt: '',
+                ShiftStart: '',
+                ShiftEnd: '',
+                NightStartAt: '',
+                NightEndAt: '',
                 Days: 0,
                 Holiday: true,
-                Date: {},
             },
-            Services: {},
-            Roles: 'WorkerBasic',
-        };
+        ],
+        Roles: 'WorkerBasic',
+        Email: '',
+        Password: '',
+    };
+
+    const [formData, setFormData] = useState(initialNewWorker);
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+    
+
+    const handleAddWorkTime = () => {
+        setFormData((prevData) => ({
+            ...prevData,
+            WorkTime: [
+                ...prevData.WorkTime,
+                {
+                    MorningStartAt: '',
+                    MorningEndAt: '',
+                    ShiftStart: '',
+                    ShiftEnd: '',
+                    NightStartAt: '',
+                    NightEndAt: '',
+                    Days: 0,
+                    Holiday: true,
+                },
+            ],
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Backend'e formData'yı gönder.
         const token = localStorage.getItem('loginUserCompany')
             ? JSON.parse(localStorage.getItem('loginUserCompany')).AccessToken
             : '';
-        console.log('newWorker :>> ', newWorker);
+        console.log('newWorker :>> ', formData);
         console.log('token :>> ', token);
-        // await createWorker(newWorker,token)
 
         axios
-            .post(
-                'http://localhost:3300/api/departments/addworker',
-                newWorker,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+            .post('http://localhost:3300/api/departments/addworker', formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
                 },
-            )
+            })
             .then((response) => {
                 // İstek başarılı oldu
                 console.log(response);
+                setFormData(initialNewWorker); // Form verisini sıfırla
             })
             .catch((error) => {
                 // İstek başarısız oldu
                 console.error(error);
             });
     };
+    console.log(formData);
 
     return (
         <>
+       
             <Box
                 sx={{
                     display: 'flex',
@@ -189,6 +208,7 @@ function StaffManagement() {
                 sx={{ height: '100vh' }}
             >
                 <DialogContent>
+                <form onSubmit={handleSubmit}>
                     <Box
                         sx={{
                             display: 'flex',
@@ -227,31 +247,180 @@ function StaffManagement() {
                             </Button>
                         </Box>
 
-                        <FirstLastName
-                            value1={firstName}
-                            value2={lastName}
-                            onChange1={handleFirstNameChange}
-                            onChange2={handleLastNameChange}
-                        />
-                        <PhoneEmail
-                            value1={phone}
-                            value2={email}
-                            onChange1={handlePhoneChange}
-                            onChange2={handleEmailChange}
-                        />
-                        <Password
-                            value1={password}
-                            onChange1={handlePasswordChange}
-                        />
+                        <Box
+                            sx={{
+                                width: '95%',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                m: 'auto',
+                                mt: 3,
+                            }}
+                        >
+                            <TextField
+                                label="İsim"
+                                name="FirstName"
+                                value={formData.FirstName}
+                                onChange={handleInputChange}
+                                sx={{
+                                    width: '49%',
+                                }}
+                            />
+                            <TextField
+                                label="Soyisim"
+                                name="LastName"
+                                value={formData.LastName}
+                                onChange={handleInputChange}
+                                sx={{
+                                    width: '49%',
+                                }}
+                            />
+                        </Box>
+                        <Box
+                            sx={{
+                                width: '95%',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                m: 'auto',
+                                mt: 3,
+                            }}
+                        >
+                            <TextField
+                                label="Telefon"
+                                name="Phone"
+                                value={formData.Phone}
+                                onChange={handleInputChange}
+                                sx={{
+                                    width: '49%',
+                                }}
+                            />
+                            <TextField
+                                label="E-mail"
+                                name="Email"
+                                value={formData.Email}
+                                onChange={handleInputChange}
+                                sx={{
+                                    width: '49%',
+                                }}
+                            />
+                        </Box>
+
+                        <Box
+                            sx={{
+                                width: '95%',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                m: 'auto',
+                                mt: 3,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: '49%',
+                                    background: '#FFFFFF',
+                                    border: '1.36634px solid #9A9A9A',
+                                    boxShadow:
+                                        '0px 0px 21.8614px rgba(234, 76, 137, 0.06)',
+                                    borderRadius: '8.19802px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Button
+                                    variant="contained"
+                                    onClick={handleCheckboxesClick}
+                                    endIcon={
+                                        showCheckboxes ? (
+                                            <ArrowDropDownCircleIcon color="primary" />
+                                        ) : (
+                                            <PlayCircleIcon color="primary" />
+                                        )
+                                    }
+                                    sx={{
+                                        background: '#FFFFFF',
+                                        border: 'none',
+                                        boxShadow: 'none',
+                                        width: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+
+                                        '&:hover': {
+                                            backgroundColor: '#FFFF',
+                                            border: 'none',
+                                            boxShadow: 'none',
+                                        },
+                                        m: 0.99,
+                                    }}
+                                >
+                                    <Typography
+                                        sx={{
+                                            fontFamily: 'Roboto',
+                                            fontStyle: 'normal',
+                                            fontWeight: 500,
+                                            fontSize: '14px',
+                                            lineHeight: '20px',
+                                            textAlign: 'center',
+                                            textTransform: 'capitalize',
+                                            color: '#9A9A9A',
+                                        }}
+                                    >
+                                        Rol Ata
+                                    </Typography>
+                                </Button>
+                            </Box>
+                            <TextField
+                                label="Şifre"
+                                name="Password"
+                                value={formData.Password}
+                                onChange={handleInputChange}
+                                sx={{
+                                    width: '49%',
+                                }}
+                            />
+                        </Box>
                         <Genders />
                         <WorkingHours />
                         <VestingSettings />
                         <StaffDays />
                         <CalendarColor />
-                        <AddDeleteButton onClick={handleSubmit} />
+                        
                     </Box>
+                    <Button
+                    type="submit"
+                    sx={{
+                        borderRadius: '5px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '48%',
+                        m: 'auto',
+                        mt: 3,
+                        backgroundColor: '#F75936',
+                        '&:hover': { backgroundColor: '#F74600' },
+                    }}
+                    
+                >
+                    <Typography
+                        variant="body2"
+                        fontFamily="'Roboto', sans-serif"
+                        fontWeight={500}
+                        fontStyle="normal"
+                        sx={{ color: '#FFFFFF', textTransform: 'capitalize' }}
+                    >
+                        Ekle
+                    </Typography>
+                </Button>
+                    </form>
                 </DialogContent>
             </Dialog>
+
+            {/* <MyFormComponent/> */}
+            
+            
         </>
     );
 }

@@ -15,6 +15,7 @@ import {
     UserOtpCodeService,
     UserService,
     CompanyUserService,
+    RandevuService,
 } from '@database';
 import { MailUtilsService } from '@mail-utils';
 
@@ -67,6 +68,7 @@ export class CompanyUsersService {
         private readonly authService: AuthService,
         private readonly userOtpCodeService: UserOtpCodeService,
         private readonly mailUtilsService: MailUtilsService,
+        private readonly randevuService: RandevuService,
     ) {}
 
     async register(input: CreateCompanyUserJsonDto) {
@@ -698,7 +700,7 @@ export class CompanyUsersService {
 
     async companies(data) {
         const companies = await this.companyUserService.find({ where: data });
-        return { companies, Success: true };
+        return { Data: companies, Success: true };
     }
 
     async activate(data: ActivateCompanyUserDto) {
@@ -744,6 +746,20 @@ export class CompanyUsersService {
         };
     }
 
+    async getrandevu(user: UserParamsDto) {
+        const response = await this.randevuService.find({
+            where: {
+                Worker: {
+                    Department: {
+                        CompanyUserId: user.Id,
+                    },
+                },
+            },
+        });
+
+        return { Data: response, Success: true };
+    }
+
     async logout(cred: UserParamsDto) {
         const user = await this.companyUserService.findFirst({
             where: {
@@ -777,7 +793,7 @@ export class CompanyUsersService {
         });
         return {
             Success: true,
-            Details: ResponseMessage.TR203,
+            Data: ResponseMessage.TR203,
         };
     }
 
@@ -789,6 +805,6 @@ export class CompanyUsersService {
         });
 
         delete response.Password;
-        return response;
+        return { Data: response, Success: true };
     }
 }

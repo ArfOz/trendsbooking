@@ -7,6 +7,11 @@ import {
     UserProfileUpdateDto,
     UserRefreshTokenDTO,
     UserPassChangeDto,
+    RandevuCreateDto,
+    GetDepartmentsFilterDTO,
+    GetDepartmentsParamsDTO,
+    GetDepartmentDetailsDTO,
+    RandevuDeleteDTO,
 } from './dtos';
 import { UserParam } from '@shared';
 
@@ -81,6 +86,48 @@ export class UsersController {
     @Post('sendcode')
     async sendEmailCode(@Body() sendCode: SendCodeDTO) {
         return this.usersService.sendEmailCode(sendCode);
+    }
+
+    @AllowUnauthorizedRequest()
+    @Post('getdepartments')
+    async getDepartments(
+        @UserParam() user: UserParamsDto,
+        @Body() data: GetDepartmentsParamsDTO,
+    ) {
+        return this.usersService.getdepartments(user, data);
+    }
+
+    @AllowUnauthorizedRequest()
+    @Get('getdepartmentdetails')
+    async getDepartmentDetails(
+        @UserParam() user: UserParamsDto,
+        @Body() data: GetDepartmentDetailsDTO,
+    ) {
+        return this.usersService.getdepartmentDetails(user, data);
+    }
+
+    @ApiBearerAuth('Authorization')
+    @Post('addrandevu')
+    async addrandevu(
+        @UserParam() user: UserParamsDto,
+        @Body() data: RandevuCreateDto,
+    ) {
+        return this.usersService.createRandevu(user, data);
+    }
+
+    @ApiBearerAuth('Authorization')
+    @Get('getrandevu')
+    async getrandevu(@UserParam() user: UserParamsDto) {
+        return this.usersService.getRandevu(user);
+    }
+
+    @ApiBearerAuth('Authorization')
+    @Get('cancelrandevu')
+    async cancelrandevu(
+        @UserParam() user: UserParamsDto,
+        @Body() data: RandevuDeleteDTO,
+    ) {
+        return this.usersService.cancelRandevu(user, data);
     }
 
     @RolesRequired(['Normal'])

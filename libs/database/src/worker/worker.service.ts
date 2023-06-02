@@ -250,19 +250,17 @@ export class WorkerService {
                 ...where,
             },
             select: {
+                Id: true,
                 FirstName: true,
                 LastName: true,
-                Id: true,
                 Phone: true,
                 Email: true,
-                Password: true,
                 Role: true,
-                PrivateKey: true,
-                PublicKey: true,
                 ServiceWorker: {
                     select: {
                         Services: {
                             select: {
+                                Id: true,
                                 ServiceType: true,
                                 ServiceName: true,
                                 ServiceTimes: true,

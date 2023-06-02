@@ -147,7 +147,7 @@ export class DepartmentController {
         @UserParam() user: UserParamsDto,
         @Body() input?: DepartmentDetailsJsonDto,
     ) {
-        return this.departmentsService.getdetails(user, input.Id);
+        return this.departmentsService.getdetails(user, input);
     }
 
     // // Resim kalitesi düşürülecek.

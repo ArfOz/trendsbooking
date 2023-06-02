@@ -96,6 +96,13 @@ export class CompanyUsersController {
 
     @RolesRequired(['Provider'])
     @ApiBearerAuth('Authorization')
+    @Get('getrandevu')
+    async getrandevu(@UserParam() user: UserParamsDto) {
+        return this.companyUsersService.getrandevu(user);
+    }
+
+    @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
     @Get('logout')
     async logout(@UserParam() user: UserParamsDto) {
         return this.companyUsersService.logout(user);

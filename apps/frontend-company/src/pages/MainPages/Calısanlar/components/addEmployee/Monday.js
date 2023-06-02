@@ -1,232 +1,161 @@
-import React, { useState } from 'react';
-import { Box, Button, Typography, Switch } from '@mui/material';
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Typography,
+  Switch,
+  FormControlLabel,
+  Collapse,
+  TextField,
+  IconButton,
+} from "@mui/material";
 
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import AddIcon from '@mui/icons-material/Add';
-import EventNoteIcon from '@mui/icons-material/EventNote';
-import DeleteIcon from '@mui/icons-material/Delete';
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import AddIcon from "@mui/icons-material/Add";
+
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function Monday() {
-    const [checked, setChecked] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-    const handleSliderOnOff = () => {
-        setChecked(!checked);
-    };
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
 
-    return (
-        <>
-            <Box
+  const [workingHours, setWorkingHours] = useState([
+    { startTime: "", endTime: "" },
+  ]);
+
+  const handleAddWorkingHour = () => {
+    const newWorkingHours = [...workingHours, { startTime: "", endTime: "" }];
+    setWorkingHours(newWorkingHours);
+  };
+
+  const handleStartTimeChange = (index, value) => {
+    const newWorkingHours = [...workingHours];
+    newWorkingHours[index].startTime = value;
+    setWorkingHours(newWorkingHours);
+  };
+
+  const handleEndTimeChange = (index, value) => {
+    const newWorkingHours = [...workingHours];
+    newWorkingHours[index].endTime = value;
+    setWorkingHours(newWorkingHours);
+  };
+
+  const handleDeleteClick = (index) => {
+    if (workingHours.length === 1) return;
+    const newWorkingHours = [...workingHours];
+    newWorkingHours.splice(index, 1);
+    setWorkingHours(newWorkingHours);
+  };
+
+  const handleSave = () => {
+    console.log("Çalışma Saatleri:", workingHours);
+  };
+
+  return (
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          border: "1.36634px solid #9A9A9A",
+          borderRadius: "10px",
+          width: "100%",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+            pr: 3,
+          }}
+        >
+          <FormControlLabel
+            control={<Switch checked={isOpen} onChange={handleToggle} />}
+            label="Pazartesi"
+          />
+          {isOpen ? (
+            <KeyboardArrowUpIcon color="info" />
+          ) : (
+            <KeyboardArrowDownIcon color="info" />
+          )}
+        </Box>
+        <Collapse in={isOpen}>
+          <Box sx={{ padding: "1rem" }}>
+            {workingHours.map((hour, index) => (
+              <Box
+                key={index}
                 sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    border: '1.36634px solid #9A9A9A',
-                    borderRadius: '10px',
-                    width: '100%',
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "0.5rem",
                 }}
-            >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        width: '100%',
-                        pr: 3,
-                    }}
-                >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Switch
-                            color="blue"
-                            value=""
-                            checked={checked}
-                            onChange={handleSliderOnOff}
-                        />
-                        <Typography variant="body1" color="#07232C">
-                            Pazartesi
-                        </Typography>
-                    </Box>
-                    {checked ? (
-                        <KeyboardArrowDownIcon color="info" />
-                    ) : (
-                        <KeyboardArrowUpIcon color="info" />
-                    )}
-                </Box>
-                {checked ? (
-                    <Box>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                width: '100%',
-                                mt: 3,
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    width: '70%',
-                                    ml: 3,
-                                }}
-                            >
-                                <Button
-                                    variant="text"
-                                    color="info"
-                                    endIcon={
-                                        <KeyboardArrowDownIcon color="info" />
-                                    }
-                                    sx={{
-                                        background: '#FFFFFF',
-                                        border: '1.36634px solid #9A9A9A',
-                                        borderRadius: '10px',
-                                        width: '45%',
+              >
+                <TextField
+                  label="Başlangıç Saati"
+                  type="time"
+                  value={hour.startTime}
+                  onChange={(e) => handleStartTimeChange(index, e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    step: 300,
+                  }}
+                  sx={{
+                    width: "40%",
+                  }}
+                />
+                <Typography variant="body1" color="initial">
+                  {" "}
+                  den
+                </Typography>
+                <TextField
+                  label="Bitiş Saati"
+                  type="time"
+                  value={hour.endTime}
+                  onChange={(e) => handleEndTimeChange(index, e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    step: 300,
+                  }}
+                  sx={{
+                    width: "40%",
+                  }}
+                />
+                {index === 0 && (
+                  <IconButton
+                    variant="contained"
+                    onClick={handleAddWorkingHour}
+                  >
+                    <AddIcon color="info" />
+                  </IconButton>
+                )}
 
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
+                {index > 0 && (
+                  <IconButton onClick={() => handleDeleteClick(index)}>
+                    <DeleteIcon color="info" />
+                  </IconButton>
+                )}
+              </Box>
+            ))}
 
-                                        '&:hover': {
-                                            backgroundColor: '#FFFF',
-                                        },
-                                    }}
-                                >
-                                    9:00
-                                </Button>
-                                <Typography variant="body1" color="initial">
-                                    dan
-                                </Typography>
-                                <Button
-                                    variant="text"
-                                    color="info"
-                                    endIcon={
-                                        <KeyboardArrowDownIcon color="info" />
-                                    }
-                                    sx={{
-                                        background: '#FFFFFF',
-                                        border: '1.36634px solid #9A9A9A',
-                                        borderRadius: '10px',
-                                        width: '45%',
-
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-
-                                        '&:hover': {
-                                            backgroundColor: '#FFFF',
-                                        },
-                                    }}
-                                >
-                                    13:00
-                                </Button>
-                            </Box>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    width: '8%',
-                                    pr: 3,
-                                }}
-                            >
-                                <AddIcon color="info" />
-                                <EventNoteIcon color="info" />
-                            </Box>
-                        </Box>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                width: '100%',
-                                mt: 3,
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    width: '70%',
-                                    mb: 3,
-                                    ml: 3,
-                                }}
-                            >
-                                <Button
-                                    variant="text"
-                                    color="info"
-                                    endIcon={
-                                        <KeyboardArrowDownIcon color="info" />
-                                    }
-                                    sx={{
-                                        background: '#FFFFFF',
-                                        border: '1.36634px solid #9A9A9A',
-                                        borderRadius: '10px',
-                                        width: '45%',
-
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-
-                                        '&:hover': {
-                                            backgroundColor: '#FFFF',
-                                        },
-                                    }}
-                                >
-                                    14:00
-                                </Button>
-                                <Typography variant="body1" color="initial">
-                                    dan
-                                </Typography>
-                                <Button
-                                    variant="text"
-                                    color="info"
-                                    endIcon={
-                                        <KeyboardArrowDownIcon color="info" />
-                                    }
-                                    sx={{
-                                        background: '#FFFFFF',
-                                        border: '1.36634px solid #9A9A9A',
-                                        borderRadius: '10px',
-                                        width: '45%',
-
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-
-                                        '&:hover': {
-                                            backgroundColor: '#FFFF',
-                                        },
-                                    }}
-                                >
-                                    17:00
-                                </Button>
-                            </Box>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    width: '8%',
-                                    pr: 3,
-                                }}
-                            >
-                                <DeleteIcon color="error" />
-                                <EventNoteIcon color="info" />
-                            </Box>
-                        </Box>
-                    </Box>
-                ) : null}
-            </Box>
-        </>
-    );
+            <Button variant="contained" color="primary" onClick={handleSave}>
+              Kaydet
+            </Button>
+          </Box>
+        </Collapse>
+      </Box>
+    </>
+  );
 }
 
 export default Monday;

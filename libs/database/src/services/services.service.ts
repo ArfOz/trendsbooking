@@ -16,7 +16,7 @@ export class ServicesService {
         });
     }
 
-    async find(params: {
+    async findMany(params: {
         skip?: number;
         take?: number;
         cursor?: Prisma.ServicesWhereUniqueInput;
@@ -46,6 +46,8 @@ export class ServicesService {
         });
     }
 
+    fin;
+
     async create(data: Prisma.ServicesCreateInput): Promise<Services> {
         return this.prisma.services.create({ data });
     }
@@ -56,6 +58,17 @@ export class ServicesService {
     }): Promise<Services> {
         const { where, data } = params;
         return this.prisma.services.update({
+            data,
+            where,
+        });
+    }
+
+    async updateMany(params: {
+        where: Prisma.ServicesWhereInput;
+        data: Prisma.ServicesUpdateManyMutationInput;
+    }) {
+        const { where, data } = params;
+        return this.prisma.services.updateMany({
             data,
             where,
         });

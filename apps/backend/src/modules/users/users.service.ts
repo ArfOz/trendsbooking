@@ -1,7 +1,3 @@
-import {
-    UserPassChangeDto,
-    UserRefreshTokenDTO,
-} from './dtos/user-response.dto';
 // Npm packages
 
 import { Injectable, Inject, HttpException } from '@nestjs/common';
@@ -12,8 +8,13 @@ import * as bcrypt from 'bcrypt';
 
 // Import modules
 import { MailUtilsService, SendEmailDto } from '@mail-utils';
-import { MailModeType, AuthService, UserType } from '@auth';
-import { ExpiredReasonType, OTPType } from '@prisma/client';
+import { MailModeType, AuthService } from '@auth';
+import {
+    ExpiredReasonType,
+    OTPType,
+    Prisma,
+    RandevuStatus,
+} from '@prisma/client';
 import authConfig from '@auth/config/auth.config';
 import generalConfig from '@shared/config/general.config';
 import {
@@ -35,6 +36,9 @@ import {
     UserOtpCodeService,
     ServicesService,
     UserTokenService,
+    DepartmentService,
+    ServiceWorkerService,
+    RandevuService,
 } from '@database';
 import ResponseMessage from '@shared/enums/response-message.json';
 import {
@@ -49,7 +53,15 @@ import {
     UserProfileUpdateDto,
     RandevuCreateDto,
 } from './dtos';
-import { RandevuService } from '@database/randevu/randevu.service';
+import {
+    GetDepartmentDetailsDTO,
+    GetDepartmentsFilterDTO,
+    GetDepartmentsParamsDTO,
+    RandevuDeleteDTO,
+    UserPassChangeDto,
+    UserRefreshTokenDTO,
+} from './dtos/user-response.dto';
+import { RandevuStatusEnum } from '../workers/dtos/workers.dto';
 
 @Injectable()
 export class UsersService {
@@ -66,6 +78,8 @@ export class UsersService {
         private readonly randevuService: RandevuService,
         private readonly serviceService: ServicesService,
         private readonly userTokenService: UserTokenService,
+        private readonly departmentsService: DepartmentService,
+        private readonly serviceWorkerService: ServiceWorkerService,
     ) {}
 
     async register(
@@ -360,11 +374,11 @@ export class UsersService {
         );
     }
 
-    async profile(user: UserParamsDto): Promise<ResponseUserProfileUserDTO> {
+    async profile(user: UserParamsDto) {
         const response = await this.userService.findUnique({ Id: user.Id });
 
         delete response.Password;
-        return response;
+        return { Data: response, Success: true };
     }
 
     async updateProfile(user: UserParamsDto, data: UserProfileUpdateDto) {
@@ -728,33 +742,175 @@ export class UsersService {
         });
         return {
             Success: true,
-            Details: ResponseMessage.TR203,
+            Data: ResponseMessage.TR203,
         };
     }
 
-    // async getdepartment(cred: UserParamsDto) {
+    async getdepartments(user: UserParamsDto, input: GetDepartmentsParamsDTO) {
+        let where: Prisma.DepartmentWhereInput = {};
+        if (input?.where) {
+            input.where.Country
+                ? (where = { ...where, Country: input.where?.Country })
+                : where;
 
-    //     companyuser = Ceo (10 şube de olabilir,  1 de)
+            input.where.City
+                ? (where = { ...where, City: input.where?.City })
+                : where;
 
-    //     Ankara
+            input.where.District
+                ? (where = { ...where, District: input.where?.District })
+                : where;
 
-    //     Ankara
+            input.where.Neighborhood
+                ? (where = {
+                      ...where,
+                      Neighborhood: input.where?.Neighborhood,
+                  })
+                : where;
 
-    //     Dilan Polat Güzellik Salonu
+            input.where.Salon
+                ? (where = { ...where, Salon: { contains: input.where.Salon } })
+                : where;
 
-    //     Karizma Erkek Kuaföru (Ceo)
+            input.where.ServiceType
+                ? (where = {
+                      ...where,
+                      ServiceType: { hasEvery: input.where?.ServiceType },
+                  })
+                : where;
 
-    //     Departrmemt (Şube ) Konumu önemli
+            input.where.Sector
+                ? (where = {
+                      ...where,
+                      Sector: { hasEvery: input.where.Sector },
+                  })
+                : where;
+            // Service area
+            // Starts
+            input.where.Services?.ServiceName
+                ? (where = {
+                      ...where,
+                      Services: {
+                          ...where.Services,
+                          some: {
+                              ServiceName: input.where.Services.ServiceName,
+                          },
+                      },
+                  })
+                : where;
 
-    //     yakınımdaki şublere getir . (FE HARİTA  Geolocation)
+            input.where.Services?.ServiceGender
+                ? (where = {
+                      ...where,
+                      Services: {
+                          ...where.Services,
+                          every: {
+                              ServiceGender: input.where.Services.ServiceGender,
+                          },
+                      },
+                  })
+                : where;
 
-    //     WHERE :
-    //     where : Department.City == Ankara
+            // İlerleyen zamanalarda price ile filtreleme de yapılabilir. Onun için database de integer olarak tutulmalı.
+            // input.where.Services?.Price
+            //     ? (where = {
+            //           ...where,
+            //           Services: {
+            //               ...where.Services,
+            //               every: {
+            //                   ServiceGender: input.where.Services.ServiceGender,
+            //               },
+            //           },
+            //       })
+            //     : where;
 
-    //     const response = await this.serviceService.find({});
-    //     console.log('resss', response);
-    //     return null;
-    // }
+            // Service area
+            // Ends
+        }
+
+        // Burada onaylanmış departmenler gönderilmeli
+
+        const response = await this.departmentsService.findMany({
+            where: where,
+            skip: input?.skip,
+            take: input?.take,
+        });
+        return { Data: response, Success: true };
+    }
+
+    async getdepartmentDetails(
+        user: UserParamsDto,
+        input: GetDepartmentDetailsDTO,
+    ) {
+        if (!input.DepartmentId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR445),
+                404,
+            );
+        }
+
+        const response = await this.departmentsService.findUnique({
+            Id: input.DepartmentId,
+        });
+
+        return { Data: response, Success: true };
+    }
+
+    async createRandevu(user: UserParamsDto, input: RandevuCreateDto) {
+        if (!input.ServiceId || !input.WorkerId || !input.ServiceId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR444),
+                444,
+            );
+        }
+
+        const serviceExist = await this.serviceWorkerService.findMany({
+            where: {
+                ServiceId: input.ServiceId,
+                WorkerId: input.WorkerId,
+            },
+        });
+        if (!serviceExist || serviceExist.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR446),
+                446,
+            );
+        }
+        const data: Prisma.RandevuCreateInput = {
+            Worker: {
+                connect: {
+                    Id: input.WorkerId,
+                },
+            },
+            Service: {
+                connect: {
+                    Id: input.ServiceId,
+                },
+            },
+            User: {
+                connect: {
+                    Id: user.Id,
+                },
+            },
+            StartTime: new Date(input.StartTime * 1000),
+            EndTime: new Date(input.EndTime * 1000),
+            Status: RandevuStatus.Waiting,
+        };
+        const response = await this.randevuService.create(data);
+        return { Data: response, Success: true };
+    }
+
+    async getRandevu(user: UserParamsDto) {
+        const response = await this.randevuService.find({
+            where: {
+                UserId: user.Id,
+            },
+        });
+        return { Data: response, Success: true };
+    }
 
     // async getservices(cred: UserParamsDto) {
     //     20 km uzağımdaki berber slaonları
@@ -767,29 +923,24 @@ export class UsersService {
     //     return null;
     // }
 
-    // async createRandevu(user: UserParamsDto, input: RandevuCreateDto) {
-    //     const data: Prisma.RandevuCreateInput = {
-    //         Worker: {
-    //             connect: {
-    //                 Id: input.Worker,
-    //             },
-    //         },
-    //         Service: {
-    //             connect: {
-    //                 Id: input.Service,
-    //             },
-    //         },
-    //         StartTime: input.StartTime,
-    //         EndTime: input.EndTime,
-    //     };
-    //     const response = await this.randevuService.create(data);
-    //     return response;
-    // }
+    async cancelRandevu(user: UserParamsDto, input: RandevuDeleteDTO) {
+        if (!input.RandevuId) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR449),
+                404,
+            );
+        }
 
-    // async cancelRandevu(user: UserParamsDto) {
-    //     return null;
-    // }
-    // async detailsRandevu(user: UserParamsDto) {
-    //     return null;
-    // }
+        const response = await this.randevuService.update({
+            where: {
+                Id: input.RandevuId,
+            },
+            data: {
+                Status: RandevuStatusEnum.Cancelled,
+            },
+        });
+
+        return { Data: response, Success: true };
+    }
 }
