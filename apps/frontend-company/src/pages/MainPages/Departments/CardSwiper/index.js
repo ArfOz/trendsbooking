@@ -78,6 +78,11 @@ const SwipperList = [
     },
 ];
 
+// const StyledCard = styled(Card)({
+//     width: '502px',
+//     height: '300px',
+// });
+
 const CardMediaContainer = styled('div')({
     position: 'relative',
 });
@@ -113,7 +118,7 @@ const DepartmentsCards = () => {
                     // when window width is >= 1200px
                     1200: {
                         width: 1200,
-                        slidesPerView: 4,
+                        slidesPerView: 3,
                     },
                     // when window width is >= 900px
                     900: {
@@ -133,7 +138,7 @@ const DepartmentsCards = () => {
                             <CardMediaContainer>
                                 <CardMedia
                                     component="img"
-                                    height="140"
+                                    height="240"
                                     image={item.imageUrl}
                                     alt={item.name}
                                 />
