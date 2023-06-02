@@ -449,9 +449,6 @@ export class DepartmentsService {
         user: UserParamsDto,
         input: AddWorkerJsonDto,
     ) {
-        console.log('input', input);
-        console.log('dataaaaaaaaaaa', input);
-
         const config = {
             filePath: this.generalCfg.filePath,
         };
