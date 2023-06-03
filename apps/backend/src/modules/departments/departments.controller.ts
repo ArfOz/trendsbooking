@@ -216,12 +216,36 @@ export class DepartmentController {
 
     @Post('updateworker')
     @RolesRequired(['Provider'])
+    @UseInterceptors(
+        FileInterceptor('file', {
+            fileFilter: imageFileFilter,
+            limits: {
+                fileSize: 1 * 1024 * 1024, //1 mb
+            },
+        }),
+    )
+    @ApiBody({
+        required: false,
+        type: 'multipart/form-data',
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @ApiConsumes('multipart/form-data')
     @ApiBearerAuth('Authorization')
     async updateWorker(
+        @UploadedFile() file: Express.Multer.File,
         @UserParam() user: UserParamsDto,
-        @Body() input: UpdateWorkerJsonDto,
+        @Body() input: AddWorkerFormData,
     ) {
-        return this.departmentsService.updateworker(user, input);
+        const data = JSON.parse(input.input);
+        return this.departmentsService.updateworker(user, data, file);
     }
 
     @Post('deleteworker')

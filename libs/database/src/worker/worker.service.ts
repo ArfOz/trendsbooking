@@ -274,6 +274,8 @@ export class WorkerService {
                 WorkTime: true,
                 Department: true,
                 DepartmentId: true,
+                ImageName: true,
+                ImageUrl: true,
             },
         });
 

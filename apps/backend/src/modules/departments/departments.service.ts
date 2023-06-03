@@ -588,7 +588,14 @@ export class DepartmentsService {
         };
     }
 
-    async updateworker(user: UserParamsDto, input: UpdateWorkerJsonDto) {
+    async updateworker(
+        user: UserParamsDto,
+        input: UpdateWorkerJsonDto,
+        file?: Express.Multer.File,
+    ) {
+        const config = {
+            filePath: this.generalCfg.filePath,
+        };
         const departmentData: Prisma.DepartmentWhereInput = {
             Id: input.DepartmentId,
             CompanyUserId: user.Id,
@@ -609,6 +616,25 @@ export class DepartmentsService {
             Id: input.Id,
         };
 
+        // İmage resize
+        let url, responseServer;
+        if (file) {
+            const reImage = await sharp(file.buffer)
+                .resize(1200, 630, {
+                    fit: sharp.fit.inside,
+                    withoutEnlargement: true,
+                })
+                .toBuffer();
+            file['buffer'] = reImage;
+            responseServer = await this.imageServer.addPhoto(
+                file,
+                input.DepartmentId.toString(),
+            );
+            url = `${config.filePath}/${input.DepartmentId.toString()}/${
+                responseServer.fileName
+            }`;
+        }
+
         let data: Prisma.WorkerUpdateInput = {
             FirstName: input?.FirstName,
             LastName: input?.LastName,
@@ -619,7 +645,12 @@ export class DepartmentsService {
                 },
             },
             Role: input.Roles,
+            ImageUrl: url,
+            ImageType: responseServer?.fileType,
+            ImageServerName: responseServer?.fileName,
+            ImageName: file?.originalname,
         };
+
         if (input.Services) {
             for (const o in input.Services) {
                 const auth = department[0].Services.find(
