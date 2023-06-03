@@ -533,7 +533,7 @@ export class DepartmentsService {
             keys.secretKey,
         );
 
-        const data: Prisma.WorkerCreateInput = {
+        let data: Prisma.WorkerCreateInput = {
             FirstName: input.FirstName,
             LastName: input.LastName,
             Phone: input.Phone,
@@ -553,14 +553,32 @@ export class DepartmentsService {
             ImageType: responseServer?.fileType || '',
             ImageServerName: responseServer?.fileName || '',
             ImageName: file?.originalname || '',
-
-            // Buralaer varsa eklenecek
-            // ServiceWorker: {
-            //     createMany: {
-            //         data: input?.Services,
-            //     },
-            // },
         };
+
+        if (input.Services) {
+            for (const o in input.Services) {
+                const auth = department[0].Services.find(
+                    (item) => item.Id === input.Services[o].ServiceId,
+                );
+
+                if (!auth) {
+                    throw new BadRequestException(
+                        BadRequestExceptionType.BAD_REQUEST,
+                        new Error(ResponseMessage.TR447),
+                        447,
+                    );
+                }
+            }
+
+            data = {
+                ...data,
+                ServiceWorker: {
+                    createMany: {
+                        data: input.Services,
+                    },
+                },
+            };
+        }
 
         await this.workerService.create(data);
 

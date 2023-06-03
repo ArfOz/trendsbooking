@@ -36,6 +36,8 @@ export class DepartmentService {
                         FirstName: true,
                         LastName: true,
                         Email: true,
+                        ImageUrl: true,
+                        ImageName: true,
                         ServiceWorker: {
                             select: {
                                 Services: {
