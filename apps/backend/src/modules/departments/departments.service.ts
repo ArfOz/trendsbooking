@@ -722,4 +722,67 @@ export class DepartmentsService {
             Success: true,
         };
     }
+
+    async addlogo(
+        user: UserParamsDto,
+        departmentId: number,
+        file: Express.Multer.File,
+    ) {
+        const config = {
+            filePath: this.generalCfg.filePath,
+        };
+
+        const authorizator = await this.departmentService.findMany({
+            where: {
+                CompanyUserId: user.Id,
+                AND: {
+                    Id: {
+                        equals: departmentId,
+                    },
+                },
+            },
+        });
+
+        if (!authorizator || authorizator.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
+
+        // İmage resize
+        const reImage = await sharp(file.buffer)
+            .resize(1200, 630, {
+                fit: sharp.fit.inside,
+                withoutEnlargement: true,
+            })
+            .toBuffer();
+        file['buffer'] = reImage;
+        const responseServer = await this.imageServer.addPhoto(
+            file,
+            authorizator[0].DepartmentID,
+        );
+
+        const url = `${config.filePath}/${authorizator[0].DepartmentID}/${responseServer.fileName}`;
+
+        const data: Prisma.DepartmentPhotosCreateInput = {
+            ImageName: 'Logo',
+            ImageType: responseServer.fileType,
+            ImageServerName: responseServer.fileName,
+            ImageUrl: url,
+            Department: {
+                connect: {
+                    Id: departmentId,
+                },
+            },
+        };
+
+        const response: DepartmentPhotos =
+            await this.departmentPhotosService.create(data);
+        return {
+            Data: response.ImageName,
+            Success: true,
+        };
+    }
 }

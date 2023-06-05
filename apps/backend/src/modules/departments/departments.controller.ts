@@ -257,4 +257,41 @@ export class DepartmentController {
     ) {
         return this.departmentsService.deleteworker(user, input);
     }
+
+    @Post('addlogo')
+    @RolesRequired(['Provider'])
+    @UseInterceptors(
+        FileInterceptor('file', {
+            fileFilter: imageFileFilter,
+            limits: {
+                fileSize: 0.5 * 1024 * 1024, //0.5 mb
+            },
+        }),
+    )
+    @ApiBody({
+        required: false,
+        type: 'multipart/form-data',
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @ApiConsumes('multipart/form-data')
+    @ApiBearerAuth('Authorization')
+    async addLogo(
+        @UserParam() user: UserParamsDto,
+        @Body() data: DepartmentIdParamsDto,
+        @UploadedFile() file: Express.Multer.File,
+    ) {
+        return this.departmentsService.addlogo(
+            user,
+            parseInt(data.DepartmentId),
+            file,
+        );
+    }
 }
