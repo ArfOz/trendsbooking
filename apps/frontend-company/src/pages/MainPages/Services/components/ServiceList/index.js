@@ -16,12 +16,12 @@ import FormGroup from '@mui/material/FormGroup';
 import { useEffect, useState } from 'react';
 import './styles.css';
 
+const axios = require('axios');
+
 export default function BasicTable() {
     const [services, setServices] = useState([]);
     const [open, setOpen] = React.useState(false);
     const [error, setError] = useState('');
-
-    const axios = require('axios');
 
     const getServices = async (token) => {
         try {
@@ -31,23 +31,22 @@ export default function BasicTable() {
 
             const response = await axios.post(
                 'http://localhost:3300/api/departments/getdetails',
-                1,
+                7,
                 { headers },
             );
             const data = response.data;
             console.log(data);
             setServices(data);
         } catch (error) {
-            console.error('Error fetching services data:', error);
+            console.log('Error fetching services data:', error);
         }
     };
-
     const token = JSON.parse(
         localStorage.getItem('loginUserCompany'),
     )?.AccessToken;
 
     useEffect(() => {
-        getServices(token); //  Veriyi çağır
+        getServices(token);
     }, []);
 
     return (
