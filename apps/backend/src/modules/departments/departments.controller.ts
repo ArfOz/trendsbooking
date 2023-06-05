@@ -3,6 +3,7 @@ import {
     Controller,
     FileTypeValidator,
     Get,
+    HttpException,
     HttpStatus,
     MaxFileSizeValidator,
     ParseFilePipe,
@@ -21,7 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { Express } from 'express';
 import { diskStorage, Multer } from 'multer';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
 import { DepartmentsService } from './departments.service';
 
@@ -32,6 +33,7 @@ import {
     RolesRequired,
     BadRequestException,
     BadRequestExceptionType,
+    imageFileFilter,
 } from '@shared';
 
 // DTO area
@@ -43,11 +45,13 @@ import {
     DeleteServiceJsonDto,
     DepartmentDetailsJsonDto,
     DepartmentIdParamsDto,
+    PhotosDeleteJsonDto,
     UpdateDepartmentsJsonDto,
     UpdateServiceJsonDto,
     UpdateWorkerJsonDto,
 } from './dtos/departments.dto';
 import { WorkersGetJsonDto } from '../workers/dtos/workers.dto';
+import { extname } from 'path';
 
 @ApiTags('Departments')
 @Controller('departments')
@@ -150,47 +154,62 @@ export class DepartmentController {
         return this.departmentsService.getdetails(user, input);
     }
 
-    // // Resim kalitesi düşürülecek.
-    // // @AllowUnauthorizedRequest()
-    // @RolesRequired(['Provider'])
-    // @Post('addphotos')
-    // @UseInterceptors(FileInterceptor('file'))
-    // @ApiBody({
-    //     required: true,
-    //     type: 'multipart/form-data',
-    //     schema: {
-    //         type: 'object',
-    //         properties: {
-    //             file: {
-    //                 type: 'string',
-    //                 format: 'binary',
-    //             },
-    //         },
-    //     },
-    // })
-    // @ApiConsumes('multipart/form-data')
-    // async addPhotos(
-    //     @UserParam() user: UserParamsDto,
-    //     @Body() data: DepartmentIdParamsDto,
-    //     @UploadedFile() file: Express.Multer.File,
-    // ) {
-    //     const response = await this.departmentsService.addphotos(
-    //         user,
-    //         parseInt(data.DepartmentId),
-    //         file,
-    //     );
+    // Resim kalitesi düşürülecek.
+    // @AllowUnauthorizedRequest()
+    @RolesRequired(['Provider'])
+    @Post('addphotos')
+    @UseInterceptors(
+        FileInterceptor('file', {
+            fileFilter: imageFileFilter,
+            limits: {
+                fileSize: 10 * 1024 * 1024, //10 mb
+            },
+        }),
+    )
+    @ApiBody({
+        required: true,
+        type: 'multipart/form-data',
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @ApiConsumes('multipart/form-data')
+    async addPhotos(
+        @UserParam() user: UserParamsDto,
+        @Body() data: DepartmentIdParamsDto,
+        @UploadedFile() file: Express.Multer.File,
+    ) {
+        const response = await this.departmentsService.addphotos(
+            user,
+            parseInt(data.DepartmentId),
+            file,
+        );
 
-    //     // return `<html><body><img src="data:${response.data.MimeType};base64,${response.data.ImageBuffer}" /></body></html>`;
+        // return `<html><body><img src="data:${response.data.MimeType};base64,${response.data.ImageBuffer}" /></body></html>`;
 
-    //     return response;
-    // }
+        return response;
+    }
 
-    // @RolesRequired(['Provider'])
-    // @Get('getphotos')
-    // async getPhotos(){
+    @RolesRequired(['Provider'])
+    @Get('getphotos')
+    async getPhotos(@UserParam() user: UserParamsDto) {
+        const response = await this.departmentsService.getphoto(user);
 
-    //     const response = await this.departmentsService.getphoto(
-    //     );
+        return response;
+    }
 
-    // }
+    @RolesRequired(['Provider'])
+    @Post('deletephoto')
+    async deletephotos(
+        @UserParam() user: UserParamsDto,
+        @Body() input: PhotosDeleteJsonDto,
+    ) {
+        return await this.departmentsService.deletePhoto(user, input);
+    }
 }

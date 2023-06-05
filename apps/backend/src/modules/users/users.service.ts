@@ -48,14 +48,12 @@ import {
     SendCodeDTO,
     ResponseRegisterUserDTO,
     ResponseLoginUserDTO,
-    ResponseUserProfileUserDTO,
     UserParamsDto,
     UserProfileUpdateDto,
     RandevuCreateDto,
 } from './dtos';
 import {
     GetDepartmentDetailsDTO,
-    GetDepartmentsFilterDTO,
     GetDepartmentsParamsDTO,
     RandevuDeleteDTO,
     UserPassChangeDto,

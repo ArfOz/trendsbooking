@@ -6,6 +6,7 @@ import { Express } from 'express';
 import { Multer } from 'multer';
 
 import Client from 'ssh2-sftp-client';
+import { TrendsException } from '@shared';
 const sftp = new Client();
 @Injectable()
 export class ImageServerService {
@@ -13,30 +14,45 @@ export class ImageServerService {
         @Inject(generalConfig.KEY)
         private readonly generalCfg: ConfigType<typeof generalConfig>,
     ) {}
-    async addPhoto(file: Express.Multer.File) {
+    async addPhoto(file: Express.Multer.File, departmentId: string) {
         const data = Buffer.from(file.buffer);
         const config = {
             host: this.generalCfg.sftpHost,
             port: this.generalCfg.sftpPort,
             username: this.generalCfg.sftpUsername,
             password: this.generalCfg.sftpPassword,
+            filePath: this.generalCfg.filePath,
         };
-
-        const fileName: string = uuidv4();
 
         const fileType: string = file.originalname.substring(
             file.originalname.lastIndexOf('.') + 1,
             file.originalname.length,
         );
+        const fileName: string = uuidv4() + '.' + fileType;
 
-        const filePath = `/root/photos/departments/${fileName}.${fileType}`;
+        const departmentPath = `${config.filePath}/${departmentId}`;
         await sftp.connect(config);
 
         await sftp
-            .list('/root/photos/departments/')
-            .then((res) => console.log('asdasda', res));
+            .list(config.filePath)
+            .then(async (res) => {
+                const folderRes = res.filter(
+                    (folder) =>
+                        folder.type === 'd' && folder.name === departmentId,
+                );
 
-        await sftp.put(data, filePath);
+                if (folderRes.length == 0) {
+                    await sftp.mkdir(departmentPath);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw new TrendsException(err, new Error(err), 500);
+            });
+
+        const photoPath = `${config.filePath}/${departmentId}/${fileName}`;
+
+        await sftp.put(data, photoPath);
 
         await sftp.end();
 
@@ -46,18 +62,20 @@ export class ImageServerService {
         };
     }
 
-    async getPhoto() {
+    async getPhoto(departmentId: string) {
         const config = {
             host: this.generalCfg.sftpHost,
             port: this.generalCfg.sftpPort,
             username: this.generalCfg.sftpUsername,
             password: this.generalCfg.sftpPassword,
+            filePath: this.generalCfg.filePath,
         };
 
-        const filePath = `/root/photos/departments/ff12ceb2-c7e0-472d-8913-80df1a47f292.jpg`;
         await sftp.connect(config);
 
-        await sftp.get(filePath).then((res) => console.log('asdasda', res));
+        await sftp
+            .get(config.filePath)
+            .then((res) => console.log('asdasda', res));
         return true;
     }
 }

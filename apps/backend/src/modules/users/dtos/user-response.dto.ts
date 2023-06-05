@@ -8,7 +8,7 @@ import {
     IsNumber,
     IsBoolean,
 } from 'class-validator';
-// import { UserRole } from '@prisma/client';
+// import { UserRole, Department } from '@prisma/client';
 
 export enum Genders {
     Female = 'Female',
@@ -597,3 +597,11 @@ export class GetDepartmentDetailsDTO {
     @IsNumber()
     DepartmentId: number;
 }
+
+export type imgResponseDTO = {
+    ImageName: string;
+    ImageUrl: string;
+    CreatedAt: Date;
+    DepartmentId: string;
+    SalonName: string;
+};
