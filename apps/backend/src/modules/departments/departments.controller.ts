@@ -78,7 +78,7 @@ export class DepartmentController {
     @Post('getdetails')
     @RolesRequired(['Provider'])
     @ApiBearerAuth('Authorization')
-    async getWorkers(
+    async getDetails(
         @UserParam() user: UserParamsDto,
         @Body() input?: DepartmentDetailsJsonDto,
     ) {

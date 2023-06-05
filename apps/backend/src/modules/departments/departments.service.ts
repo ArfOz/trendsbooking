@@ -108,10 +108,13 @@ export class DepartmentsService {
     }
 
     async getdetails(user: UserParamsDto, data: DepartmentDetailsJsonDto) {
-        const companyDepartment = await this.departmentService.findfirst({
+        const where: Prisma.DepartmentWhereInput = {
             CompanyUserId: user.Id,
-            Id: data.Id,
-        });
+        };
+        if (data.Id) {
+            where.Id = data.Id;
+        }
+        const companyDepartment = await this.departmentService.findfirst(where);
         if (!companyDepartment) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -119,8 +122,10 @@ export class DepartmentsService {
                 429,
             );
         }
-        const response = await this.departmentService.findUnique({
-            Id: data.Id,
+        const response = await this.departmentService.findMany({
+            where: {
+                CompanyUserId: user.Id,
+            },
         });
 
         if (!data) {
