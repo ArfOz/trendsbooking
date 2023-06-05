@@ -785,4 +785,73 @@ export class DepartmentsService {
             Success: true,
         };
     }
+
+    async updatelogo(
+        user: UserParamsDto,
+        departmentId: number,
+        file: Express.Multer.File,
+    ) {
+        const config = {
+            filePath: this.generalCfg.filePath,
+        };
+
+        const authorizator = await this.departmentService.findMany({
+            where: {
+                CompanyUserId: user.Id,
+                AND: {
+                    Id: {
+                        equals: departmentId,
+                    },
+                },
+            },
+        });
+
+        if (!authorizator || authorizator.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
+
+        // İmage resize
+        const reImage = await sharp(file.buffer)
+            .resize(1200, 630, {
+                fit: sharp.fit.inside,
+                withoutEnlargement: true,
+            })
+            .toBuffer();
+        file['buffer'] = reImage;
+        const responseServer = await this.imageServer.addPhoto(
+            file,
+            authorizator[0].DepartmentID,
+        );
+
+        const url = `${config.filePath}/${authorizator[0].DepartmentID}/${responseServer.fileName}`;
+
+        const logo = await this.departmentPhotosService.find({
+            where: {
+                ImageName: 'Logo',
+                DepartmentId: departmentId,
+            },
+        });
+
+        const where: Prisma.DepartmentPhotosWhereUniqueInput = {
+            Id: logo[0].Id,
+        };
+        const data: Prisma.DepartmentPhotosUpdateInput = {
+            ImageType: responseServer.fileType,
+            ImageServerName: responseServer.fileName,
+            ImageUrl: url,
+        };
+        const response = await this.departmentPhotosService.update({
+            where,
+            data,
+        });
+
+        return {
+            Data: response.ImageName,
+            Success: true,
+        };
+    }
 }

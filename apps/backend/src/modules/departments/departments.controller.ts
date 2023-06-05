@@ -294,4 +294,41 @@ export class DepartmentController {
             file,
         );
     }
+
+    @Post('addlogo')
+    @RolesRequired(['Provider'])
+    @UseInterceptors(
+        FileInterceptor('file', {
+            fileFilter: imageFileFilter,
+            limits: {
+                fileSize: 0.5 * 1024 * 1024, //0.5 mb
+            },
+        }),
+    )
+    @ApiBody({
+        required: false,
+        type: 'multipart/form-data',
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @ApiConsumes('multipart/form-data')
+    @ApiBearerAuth('Authorization')
+    async updateLogo(
+        @UserParam() user: UserParamsDto,
+        @Body() data: DepartmentIdParamsDto,
+        @UploadedFile() file: Express.Multer.File,
+    ) {
+        return this.departmentsService.updatelogo(
+            user,
+            parseInt(data.DepartmentId),
+            file,
+        );
+    }
 }
