@@ -31,23 +31,26 @@ export default function BasicTable() {
 
             const response = await axios.post(
                 'http://localhost:3300/api/departments/getdetails',
-                7,
+                {
+                    Id: 7,
+                },
                 { headers },
             );
-            const data = response.data;
-            console.log(data);
-            setServices(data);
+            const { Services } = response.data.Data;
+            console.log(Services);
+            setServices(Services);
         } catch (error) {
             console.log('Error fetching services data:', error);
         }
     };
+
     const token = JSON.parse(
         localStorage.getItem('loginUserCompany'),
     )?.AccessToken;
 
     useEffect(() => {
         getServices(token);
-    }, []);
+    }, [token]);
 
     return (
         <Box>
@@ -118,9 +121,9 @@ export default function BasicTable() {
                                                 </TableCell>
                                             </TableRow>
                                         </TableHead>
-                                        {/* <TableBody>
-                                            {services.map((service, index) => (
-                                                <Table key={index}>
+                                        <TableBody>
+                                            {services.map((service) => (
+                                                <Table key={service.Id}>
                                                     <TableCell align="left">
                                                         <FormControlLabel
                                                             control={
@@ -187,7 +190,7 @@ export default function BasicTable() {
                                                     </TableCell>
                                                 </Table>
                                             ))}
-                                        </TableBody> */}
+                                        </TableBody>
                                     </Table>
                                 </Collapse>
                             </TableCell>
