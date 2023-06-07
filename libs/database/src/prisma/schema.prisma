@@ -281,6 +281,7 @@ model DepartmentPhotos {
   DepartmentId    Int?
   CreatedAt       DateTime    @default(now())
   IsDeleted       Boolean     @default(false)
+  IsLogo          Boolean?    @default(false)
 }
 
 enum ExpiredReasonType {
