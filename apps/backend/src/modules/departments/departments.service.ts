@@ -108,6 +108,13 @@ export class DepartmentsService {
     }
 
     async getdetails(user: UserParamsDto, data: DepartmentDetailsJsonDto) {
+        if (!data.Id) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
         const where: Prisma.DepartmentWhereInput = {
             CompanyUserId: user.Id,
         };
@@ -128,13 +135,6 @@ export class DepartmentsService {
             },
         });
 
-        if (!data) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR429),
-                429,
-            );
-        }
         return {
             Success: true,
             Data: response,
@@ -263,6 +263,7 @@ export class DepartmentsService {
             where: {
                 DepartmentId: user.DepartmentId,
                 IsDeleted: false,
+                IsLogo: false,
             },
         });
 
@@ -751,6 +752,14 @@ export class DepartmentsService {
             );
         }
 
+        if (!file) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR454),
+                454,
+            );
+        }
+
         // İmage resize
         const reImage = await sharp(file.buffer)
             .resize(1200, 630, {
@@ -767,8 +776,9 @@ export class DepartmentsService {
         const url = `${config.filePath}/${authorizator[0].DepartmentID}/${responseServer.fileName}`;
 
         const data: Prisma.DepartmentPhotosCreateInput = {
-            ImageName: 'Logo',
+            ImageName: file.originalname,
             ImageType: responseServer.fileType,
+            IsLogo: true,
             ImageServerName: responseServer.fileName,
             ImageUrl: url,
             Department: {
@@ -814,6 +824,14 @@ export class DepartmentsService {
             );
         }
 
+        if (!file) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR454),
+                454,
+            );
+        }
+
         // İmage resize
         const reImage = await sharp(file.buffer)
             .resize(1200, 630, {
@@ -833,6 +851,8 @@ export class DepartmentsService {
             where: {
                 ImageName: 'Logo',
                 DepartmentId: departmentId,
+                IsLogo: true,
+                IsDeleted: false,
             },
         });
 
@@ -853,5 +873,44 @@ export class DepartmentsService {
             Data: response.ImageName,
             Success: true,
         };
+    }
+
+    async deleteLogo(user: UserParamsDto) {
+        const auth = await this.departmentPhotosService.find({
+            where: {
+                Department: {
+                    CompanyUserId: user.Id,
+                },
+                IsDeleted: false,
+                IsLogo: true,
+            },
+        });
+
+        if (!auth || auth.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR453),
+                453,
+            );
+        }
+
+        const logo = await this.departmentPhotosService.find({
+            where: {
+                ImageName: 'Logo',
+                Department: {
+                    CompanyUserId: user.Id,
+                },
+                IsLogo: true,
+                IsDeleted: false,
+            },
+        });
+
+        await this.departmentPhotosService.update({
+            where: { Id: logo[0].Id },
+            data: {
+                IsDeleted: true,
+            },
+        });
+        return { Data: ResponseMessage.TR452, Succes: true };
     }
 }

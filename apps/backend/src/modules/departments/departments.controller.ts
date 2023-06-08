@@ -295,7 +295,7 @@ export class DepartmentController {
         );
     }
 
-    @Post('addlogo')
+    @Post('updatelogo')
     @RolesRequired(['Provider'])
     @UseInterceptors(
         FileInterceptor('file', {
@@ -330,5 +330,11 @@ export class DepartmentController {
             parseInt(data.DepartmentId),
             file,
         );
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('deletelogo')
+    async deletelogo(@UserParam() user: UserParamsDto) {
+        return await this.departmentsService.deleteLogo(user);
     }
 }

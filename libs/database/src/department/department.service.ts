@@ -134,9 +134,8 @@ export class DepartmentService {
                 DepartmentID: true,
                 Photos: {
                     where: {
-                        ImageName: {
-                            equals: 'Logo',
-                        },
+                        IsLogo: true,
+                        IsDeleted: false,
                     },
                 },
             },
