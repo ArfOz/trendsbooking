@@ -132,12 +132,6 @@ export class DepartmentService {
                 },
                 WorkTime: true,
                 DepartmentID: true,
-                Photos: {
-                    where: {
-                        IsLogo: true,
-                        IsDeleted: false,
-                    },
-                },
             },
         });
 

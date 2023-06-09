@@ -211,7 +211,7 @@ export class DepartmentController {
         @Body() input: AddWorkerFormData,
     ) {
         const data = JSON.parse(input.input);
-        return this.departmentsService.addworker(user, data, file);
+        return await this.departmentsService.addworker(user, data, file);
     }
 
     @Post('updateworker')
@@ -335,6 +335,6 @@ export class DepartmentController {
     @RolesRequired(['Provider'])
     @Post('deletelogo')
     async deletelogo(@UserParam() user: UserParamsDto) {
-        return await this.departmentsService.deleteLogo(user);
+        return this.departmentsService.deleteLogo(user);
     }
 }
