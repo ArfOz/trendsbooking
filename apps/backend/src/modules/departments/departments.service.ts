@@ -108,10 +108,20 @@ export class DepartmentsService {
     }
 
     async getdetails(user: UserParamsDto, data: DepartmentDetailsJsonDto) {
-        const companyDepartment = await this.departmentService.findfirst({
+        if (!data.Id) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
+        const where: Prisma.DepartmentWhereInput = {
             CompanyUserId: user.Id,
-            Id: data.Id,
-        });
+        };
+        if (data.Id) {
+            where.Id = data.Id;
+        }
+        const companyDepartment = await this.departmentService.findfirst(where);
         if (!companyDepartment) {
             throw new BadRequestException(
                 BadRequestExceptionType.BAD_REQUEST,
@@ -119,17 +129,12 @@ export class DepartmentsService {
                 429,
             );
         }
-        const response = await this.departmentService.findUnique({
-            Id: data.Id,
+        const response = await this.departmentService.findMany({
+            where: {
+                CompanyUserId: user.Id,
+            },
         });
 
-        if (!data) {
-            throw new BadRequestException(
-                BadRequestExceptionType.BAD_REQUEST,
-                new Error(ResponseMessage.TR429),
-                429,
-            );
-        }
         return {
             Success: true,
             Data: response,
@@ -258,6 +263,7 @@ export class DepartmentsService {
             where: {
                 DepartmentId: user.DepartmentId,
                 IsDeleted: false,
+                IsLogo: false,
             },
         });
 
@@ -444,7 +450,14 @@ export class DepartmentsService {
         };
     }
 
-    async addworker(user: UserParamsDto, input: AddWorkerJsonDto) {
+    async addworker(
+        user: UserParamsDto,
+        input: AddWorkerJsonDto,
+        file?: Express.Multer.File,
+    ) {
+        const config = {
+            filePath: this.generalCfg.filePath,
+        };
         const departmentData: Prisma.DepartmentWhereInput = {
             Id: input.DepartmentId,
             CompanyUserId: user.Id,
@@ -492,6 +505,25 @@ export class DepartmentsService {
             );
         }
 
+        // İmage resize
+        let url, responseServer;
+        if (file) {
+            const reImage = await sharp(file.buffer)
+                .resize(1200, 630, {
+                    fit: sharp.fit.inside,
+                    withoutEnlargement: true,
+                })
+                .toBuffer();
+            file['buffer'] = reImage;
+            responseServer = await this.imageServer.addPhoto(
+                file,
+                input.DepartmentId.toString(),
+            );
+            url = `${config.filePath}/${input.DepartmentId.toString()}/${
+                responseServer.fileName
+            }`;
+        }
+
         // Generate a public/private key pair
         const keys = this.keypairService.generateKey();
 
@@ -507,7 +539,7 @@ export class DepartmentsService {
             keys.secretKey,
         );
 
-        const data: Prisma.WorkerCreateInput = {
+        let data: Prisma.WorkerCreateInput = {
             FirstName: input.FirstName,
             LastName: input.LastName,
             Phone: input.Phone,
@@ -523,13 +555,36 @@ export class DepartmentsService {
                     data: input?.WorkTime,
                 },
             },
-            // Buralaer varsa eklenecek
-            // ServiceWorker: {
-            //     createMany: {
-            //         data: input?.Services,
-            //     },
-            // },
+            ImageUrl: url || '',
+            ImageType: responseServer?.fileType || '',
+            ImageServerName: responseServer?.fileName || '',
+            ImageName: file?.originalname || '',
         };
+
+        if (input.Services) {
+            for (const o in input.Services) {
+                const auth = department[0].Services.find(
+                    (item) => item.Id === input.Services[o].ServiceId,
+                );
+
+                if (!auth) {
+                    throw new BadRequestException(
+                        BadRequestExceptionType.BAD_REQUEST,
+                        new Error(ResponseMessage.TR447),
+                        447,
+                    );
+                }
+            }
+
+            data = {
+                ...data,
+                ServiceWorker: {
+                    createMany: {
+                        data: input.Services,
+                    },
+                },
+            };
+        }
 
         await this.workerService.create(data);
 
@@ -539,7 +594,14 @@ export class DepartmentsService {
         };
     }
 
-    async updateworker(user: UserParamsDto, input: UpdateWorkerJsonDto) {
+    async updateworker(
+        user: UserParamsDto,
+        input: UpdateWorkerJsonDto,
+        file?: Express.Multer.File,
+    ) {
+        const config = {
+            filePath: this.generalCfg.filePath,
+        };
         const departmentData: Prisma.DepartmentWhereInput = {
             Id: input.DepartmentId,
             CompanyUserId: user.Id,
@@ -560,6 +622,25 @@ export class DepartmentsService {
             Id: input.Id,
         };
 
+        // İmage resize
+        let url, responseServer;
+        if (file) {
+            const reImage = await sharp(file.buffer)
+                .resize(1200, 630, {
+                    fit: sharp.fit.inside,
+                    withoutEnlargement: true,
+                })
+                .toBuffer();
+            file['buffer'] = reImage;
+            responseServer = await this.imageServer.addPhoto(
+                file,
+                input.DepartmentId.toString(),
+            );
+            url = `${config.filePath}/${input.DepartmentId.toString()}/${
+                responseServer.fileName
+            }`;
+        }
+
         let data: Prisma.WorkerUpdateInput = {
             FirstName: input?.FirstName,
             LastName: input?.LastName,
@@ -570,7 +651,12 @@ export class DepartmentsService {
                 },
             },
             Role: input.Roles,
+            ImageUrl: url,
+            ImageType: responseServer?.fileType,
+            ImageServerName: responseServer?.fileName,
+            ImageName: file?.originalname,
         };
+
         if (input.Services) {
             for (const o in input.Services) {
                 const auth = department[0].Services.find(
@@ -636,5 +722,195 @@ export class DepartmentsService {
             Data: ResponseMessage.TR209,
             Success: true,
         };
+    }
+
+    async addlogo(
+        user: UserParamsDto,
+        departmentId: number,
+        file: Express.Multer.File,
+    ) {
+        const config = {
+            filePath: this.generalCfg.filePath,
+        };
+
+        const authorizator = await this.departmentService.findMany({
+            where: {
+                CompanyUserId: user.Id,
+                AND: {
+                    Id: {
+                        equals: departmentId,
+                    },
+                },
+            },
+        });
+
+        if (!authorizator || authorizator.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
+
+        if (!file) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR454),
+                454,
+            );
+        }
+
+        // İmage resize
+        const reImage = await sharp(file.buffer)
+            .resize(1200, 630, {
+                fit: sharp.fit.inside,
+                withoutEnlargement: true,
+            })
+            .toBuffer();
+        file['buffer'] = reImage;
+        const responseServer = await this.imageServer.addPhoto(
+            file,
+            authorizator[0].DepartmentID,
+        );
+
+        const url = `${config.filePath}/${authorizator[0].DepartmentID}/${responseServer.fileName}`;
+
+        const data: Prisma.DepartmentPhotosCreateInput = {
+            ImageName: file.originalname,
+            ImageType: responseServer.fileType,
+            IsLogo: true,
+            ImageServerName: responseServer.fileName,
+            ImageUrl: url,
+            Department: {
+                connect: {
+                    Id: departmentId,
+                },
+            },
+        };
+
+        const response: DepartmentPhotos =
+            await this.departmentPhotosService.create(data);
+        return {
+            Data: response.ImageName,
+            Success: true,
+        };
+    }
+
+    async updatelogo(
+        user: UserParamsDto,
+        departmentId: number,
+        file: Express.Multer.File,
+    ) {
+        const config = {
+            filePath: this.generalCfg.filePath,
+        };
+
+        const authorizator = await this.departmentService.findMany({
+            where: {
+                CompanyUserId: user.Id,
+                AND: {
+                    Id: {
+                        equals: departmentId,
+                    },
+                },
+            },
+        });
+
+        if (!authorizator || authorizator.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR429),
+                429,
+            );
+        }
+
+        if (!file) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR454),
+                454,
+            );
+        }
+
+        // İmage resize
+        const reImage = await sharp(file.buffer)
+            .resize(1200, 630, {
+                fit: sharp.fit.inside,
+                withoutEnlargement: true,
+            })
+            .toBuffer();
+        file['buffer'] = reImage;
+        const responseServer = await this.imageServer.addPhoto(
+            file,
+            authorizator[0].DepartmentID,
+        );
+
+        const url = `${config.filePath}/${authorizator[0].DepartmentID}/${responseServer.fileName}`;
+
+        const logo = await this.departmentPhotosService.find({
+            where: {
+                ImageName: 'Logo',
+                DepartmentId: departmentId,
+                IsLogo: true,
+                IsDeleted: false,
+            },
+        });
+
+        const where: Prisma.DepartmentPhotosWhereUniqueInput = {
+            Id: logo[0].Id,
+        };
+        const data: Prisma.DepartmentPhotosUpdateInput = {
+            ImageType: responseServer.fileType,
+            ImageServerName: responseServer.fileName,
+            ImageUrl: url,
+        };
+        const response = await this.departmentPhotosService.update({
+            where,
+            data,
+        });
+
+        return {
+            Data: response.ImageName,
+            Success: true,
+        };
+    }
+
+    async deleteLogo(user: UserParamsDto) {
+        const auth = await this.departmentPhotosService.find({
+            where: {
+                Department: {
+                    CompanyUserId: user.Id,
+                },
+                IsDeleted: false,
+                IsLogo: true,
+            },
+        });
+
+        if (!auth || auth.length < 1) {
+            throw new BadRequestException(
+                BadRequestExceptionType.BAD_REQUEST,
+                new Error(ResponseMessage.TR453),
+                453,
+            );
+        }
+
+        const logo = await this.departmentPhotosService.find({
+            where: {
+                ImageName: 'Logo',
+                Department: {
+                    CompanyUserId: user.Id,
+                },
+                IsLogo: true,
+                IsDeleted: false,
+            },
+        });
+
+        await this.departmentPhotosService.update({
+            where: { Id: logo[0].Id },
+            data: {
+                IsDeleted: true,
+            },
+        });
+        return { Data: ResponseMessage.TR452, Succes: true };
     }
 }
