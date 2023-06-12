@@ -41,6 +41,7 @@ import { UserParamsDto } from './../users/dtos/user-response.dto';
 import {
     AddDepartmentsJsonDto,
     AddServiceJsonDto,
+    AddWorkerFormData,
     AddWorkerJsonDto,
     DeleteServiceJsonDto,
     DepartmentDetailsJsonDto,
@@ -58,15 +59,15 @@ import { extname } from 'path';
 export class DepartmentController {
     constructor(private readonly departmentsService: DepartmentsService) {}
 
-    @AllowUnauthorizedRequest()
     @Get('test')
+    @AllowUnauthorizedRequest()
     getLoggedCompanyUser() {
         return 'test departments page';
     }
 
+    @Post('add')
     @RolesRequired(['Provider'])
     @ApiBearerAuth('Authorization')
-    @Post('add')
     async add(
         @UserParam() user: UserParamsDto,
         @Body() input: AddDepartmentsJsonDto,
@@ -74,9 +75,19 @@ export class DepartmentController {
         return this.departmentsService.add(user, input);
     }
 
+    @Post('getdetails')
     @RolesRequired(['Provider'])
     @ApiBearerAuth('Authorization')
+    async getDetails(
+        @UserParam() user: UserParamsDto,
+        @Body() input?: DepartmentDetailsJsonDto,
+    ) {
+        return this.departmentsService.getdetails(user, input);
+    }
+
     @Post('updatedepartment')
+    @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
     async update(
         @UserParam() user: UserParamsDto,
         @Body() input: UpdateDepartmentsJsonDto,
@@ -84,80 +95,8 @@ export class DepartmentController {
         return this.departmentsService.updateDepartments(user, input);
     }
 
-    @RolesRequired(['Provider'])
-    @ApiBearerAuth('Authorization')
-    @Post('addservice')
-    async addService(
-        @UserParam() user: UserParamsDto,
-        @Body() input: AddServiceJsonDto,
-    ) {
-        return this.departmentsService.addService(user, input);
-    }
-
-    @RolesRequired(['Provider'])
-    @ApiBearerAuth('Authorization')
-    @Post('updateservice')
-    async updateService(
-        @UserParam() user: UserParamsDto,
-        @Body() input: UpdateServiceJsonDto,
-    ) {
-        return this.departmentsService.updateService(user, input);
-    }
-
-    @RolesRequired(['Provider'])
-    @ApiBearerAuth('Authorization')
-    @Post('deleteservice')
-    async deleteService(
-        @UserParam() user: UserParamsDto,
-        @Body() input: DeleteServiceJsonDto,
-    ) {
-        return this.departmentsService.deleteService(user, input);
-    }
-
-    @RolesRequired(['Provider'])
-    @ApiBearerAuth('Authorization')
-    @Post('addworker')
-    async addWorker(
-        @UserParam() user: UserParamsDto,
-        @Body() input: AddWorkerJsonDto,
-    ) {
-        return this.departmentsService.addworker(user, input);
-    }
-
-    @RolesRequired(['Provider'])
-    @ApiBearerAuth('Authorization')
-    @Post('updateworker')
-    async updateWorker(
-        @UserParam() user: UserParamsDto,
-        @Body() input: UpdateWorkerJsonDto,
-    ) {
-        return this.departmentsService.updateworker(user, input);
-    }
-
-    @RolesRequired(['Provider'])
-    @ApiBearerAuth('Authorization')
-    @Post('deleteworker')
-    async deleteWorker(
-        @UserParam() user: UserParamsDto,
-        @Body() input: WorkersGetJsonDto,
-    ) {
-        return this.departmentsService.deleteworker(user, input);
-    }
-
-    @RolesRequired(['Provider'])
-    @ApiBearerAuth('Authorization')
-    @Post('getdetails')
-    async getWorkers(
-        @UserParam() user: UserParamsDto,
-        @Body() input?: DepartmentDetailsJsonDto,
-    ) {
-        return this.departmentsService.getdetails(user, input);
-    }
-
-    // Resim kalitesi düşürülecek.
-    // @AllowUnauthorizedRequest()
-    @RolesRequired(['Provider'])
     @Post('addphotos')
+    @RolesRequired(['Provider'])
     @UseInterceptors(
         FileInterceptor('file', {
             fileFilter: imageFileFilter,
@@ -191,8 +130,6 @@ export class DepartmentController {
             file,
         );
 
-        // return `<html><body><img src="data:${response.data.MimeType};base64,${response.data.ImageBuffer}" /></body></html>`;
-
         return response;
     }
 
@@ -211,5 +148,193 @@ export class DepartmentController {
         @Body() input: PhotosDeleteJsonDto,
     ) {
         return await this.departmentsService.deletePhoto(user, input);
+    }
+
+    @Post('addservice')
+    @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
+    async addService(
+        @UserParam() user: UserParamsDto,
+        @Body() input: AddServiceJsonDto,
+    ) {
+        return this.departmentsService.addService(user, input);
+    }
+
+    @Post('updateservice')
+    @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
+    async updateService(
+        @UserParam() user: UserParamsDto,
+        @Body() input: UpdateServiceJsonDto,
+    ) {
+        return this.departmentsService.updateService(user, input);
+    }
+
+    @Post('deleteservice')
+    @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
+    async deleteService(
+        @UserParam() user: UserParamsDto,
+        @Body() input: DeleteServiceJsonDto,
+    ) {
+        return this.departmentsService.deleteService(user, input);
+    }
+
+    @Post('addworker')
+    @RolesRequired(['Provider'])
+    @UseInterceptors(
+        FileInterceptor('file', {
+            fileFilter: imageFileFilter,
+            limits: {
+                fileSize: 1 * 1024 * 1024, //1 mb
+            },
+        }),
+    )
+    @ApiBody({
+        required: false,
+        type: 'multipart/form-data',
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @ApiConsumes('multipart/form-data')
+    @ApiBearerAuth('Authorization')
+    async addWorker(
+        @UploadedFile() file: Express.Multer.File,
+        @UserParam() user: UserParamsDto,
+        @Body() input: AddWorkerFormData,
+    ) {
+        const data = JSON.parse(input.input);
+        return await this.departmentsService.addworker(user, data, file);
+    }
+
+    @Post('updateworker')
+    @RolesRequired(['Provider'])
+    @UseInterceptors(
+        FileInterceptor('file', {
+            fileFilter: imageFileFilter,
+            limits: {
+                fileSize: 1 * 1024 * 1024, //1 mb
+            },
+        }),
+    )
+    @ApiBody({
+        required: false,
+        type: 'multipart/form-data',
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @ApiConsumes('multipart/form-data')
+    @ApiBearerAuth('Authorization')
+    async updateWorker(
+        @UploadedFile() file: Express.Multer.File,
+        @UserParam() user: UserParamsDto,
+        @Body() input: AddWorkerFormData,
+    ) {
+        const data = JSON.parse(input.input);
+        return this.departmentsService.updateworker(user, data, file);
+    }
+
+    @Post('deleteworker')
+    @RolesRequired(['Provider'])
+    @ApiBearerAuth('Authorization')
+    async deleteWorker(
+        @UserParam() user: UserParamsDto,
+        @Body() input: WorkersGetJsonDto,
+    ) {
+        return this.departmentsService.deleteworker(user, input);
+    }
+
+    @Post('addlogo')
+    @RolesRequired(['Provider'])
+    @UseInterceptors(
+        FileInterceptor('file', {
+            fileFilter: imageFileFilter,
+            limits: {
+                fileSize: 0.5 * 1024 * 1024, //0.5 mb
+            },
+        }),
+    )
+    @ApiBody({
+        required: false,
+        type: 'multipart/form-data',
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @ApiConsumes('multipart/form-data')
+    @ApiBearerAuth('Authorization')
+    async addLogo(
+        @UserParam() user: UserParamsDto,
+        @Body() data: DepartmentIdParamsDto,
+        @UploadedFile() file: Express.Multer.File,
+    ) {
+        return this.departmentsService.addlogo(
+            user,
+            parseInt(data.DepartmentId),
+            file,
+        );
+    }
+
+    @Post('updatelogo')
+    @RolesRequired(['Provider'])
+    @UseInterceptors(
+        FileInterceptor('file', {
+            fileFilter: imageFileFilter,
+            limits: {
+                fileSize: 0.5 * 1024 * 1024, //0.5 mb
+            },
+        }),
+    )
+    @ApiBody({
+        required: false,
+        type: 'multipart/form-data',
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @ApiConsumes('multipart/form-data')
+    @ApiBearerAuth('Authorization')
+    async updateLogo(
+        @UserParam() user: UserParamsDto,
+        @Body() data: DepartmentIdParamsDto,
+        @UploadedFile() file: Express.Multer.File,
+    ) {
+        return this.departmentsService.updatelogo(
+            user,
+            parseInt(data.DepartmentId),
+            file,
+        );
+    }
+
+    @RolesRequired(['Provider'])
+    @Post('deletelogo')
+    async deletelogo(@UserParam() user: UserParamsDto) {
+        return this.departmentsService.deleteLogo(user);
     }
 }

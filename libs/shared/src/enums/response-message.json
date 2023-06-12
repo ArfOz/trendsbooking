@@ -65,5 +65,6 @@
   "TR450": "Randevu Id'si ve status bilgisi eksik!!!",
   "TR451": "jpg|jpeg|png|gif formatında veri gönderiniz.",
   "TR452": "Şubenize ait resim dosyası başarı ile silinmiştir.",
-  "TR453": "Yanlış resim Idsi veya daha önce silinmiş bir resim!!!"
+  "TR453": "Yanlış resim Idsi veya daha önce silinmiş bir resim!!!",
+  "TR454": "Resim dosyası zorunludur."
 }

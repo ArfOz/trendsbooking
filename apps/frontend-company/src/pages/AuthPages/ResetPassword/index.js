@@ -8,49 +8,51 @@ function ResetPassword() {
     return (
         <AuthLayout>
             <Box>
-                <Grid container component="">
-                    <Box sx={boxStyle.leftside}>
-                        <Grid item xs={12} sm={6} md={6} l={12}>
-                            <Grid item>
-                                <Box sx={boxStyle.logoWord}>
-                                    <LogoWord />
-                                </Box>
-                            </Grid>
-                            <Grid item>
-                                <Box>
-                                    <Typography sx={boxStyle.headtext}>
-                                        Şifremi Unuttum
-                                    </Typography>
-                                    <Typography sx={boxStyle.secondtext}>
-                                        Şifreni mi unuttun hiç sorun
-                                        değil.Lütfen hesabınıza bağlı olan
-                                        e-mail hesabını girin!
-                                    </Typography>
-                                </Box>
-                            </Grid>
-                            <Grid item>
-                                <TextField
-                                    label="E-Posta Giriniz"
-                                    variant="standard"
-                                    size="large"
-                                />
-                            </Grid>
-                            <Grid item>
-                                <Button size="large" variant="outlined">
-                                    Geri
-                                </Button>
-                                <Button size="large" variant="outlined">
-                                    Gönder
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Box>
-
+                <Grid container spacing>
                     <Grid item xs={12} sm={6} md={6} l={12}>
+                        <Box sx={boxStyle.logoWord}>
+                            <LogoWord />
+                        </Box>
+
+                        <Box>
+                            <Typography sx={boxStyle.headtext}>
+                                Şifremi Unuttum
+                            </Typography>
+                            <Typography sx={boxStyle.secondtext}>
+                                Şifreni mi unuttun hiç sorun değil.Lütfen
+                                hesabınıza bağlı olan e-mail hesabını girin!
+                            </Typography>
+                        </Box>
+
+                        <TextField
+                            label="E-Posta Giriniz"
+                            variant="standard"
+                            size="large"
+                            sx={boxStyle.input}
+                        />
+                        <Box>
+
+                            <Button
+                                size="large"
+                                variant="outlined"
+                                sx={boxStyle.backBtn}
+                            >
+                                Geri
+                            </Button>
+                            <Button
+                                size="large"
+                                variant="outlined"
+                                sx={boxStyle.sendBtn}
+                            >
+                                Gönder
+                            </Button>
+                        </Box>
+                    </Grid>
+
+                    <Grid item xs={6} sm={6} md={6} l={12}>
                         <Box
                             sx={{
-                                backgroundImage:
-                                    'url(https://www.pexels.com/photo/little-kitten-16450166/)',
+                                border: '1px solid red',
                                 backgroundRepeat: 'no-repeat',
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',

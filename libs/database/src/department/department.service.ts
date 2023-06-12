@@ -36,6 +36,8 @@ export class DepartmentService {
                         FirstName: true,
                         LastName: true,
                         Email: true,
+                        ImageUrl: true,
+                        ImageName: true,
                         ServiceWorker: {
                             select: {
                                 Services: {
@@ -91,6 +93,8 @@ export class DepartmentService {
                         LastName: true,
                         WorkTime: true,
                         DepartmentId: true,
+                        ImageUrl: true,
+                        ImageName: true,
                         ServiceWorker: {
                             select: {
                                 Services: true,
@@ -104,7 +108,28 @@ export class DepartmentService {
                 City: true,
                 District: true,
                 Neighborhood: true,
-                Services: true,
+                Services: {
+                    select: {
+                        Id: true,
+                        ServiceName: true,
+                        Price: true,
+                        Prim: true,
+                        ServiceGender: true,
+                        ServiceTimes: true,
+                        ServiceType: true,
+                        ServiceWorker: {
+                            select: {
+                                Worker: {
+                                    select: {
+                                        Id: true,
+                                        FirstName: true,
+                                        LastName: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
                 WorkTime: true,
                 DepartmentID: true,
             },

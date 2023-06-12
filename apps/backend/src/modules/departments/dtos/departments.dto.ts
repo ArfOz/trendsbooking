@@ -296,6 +296,13 @@ export class AddWorkerJsonDto {
     Password?: string | null;
 }
 
+export class AddWorkerFormData {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    input: string;
+}
+
 export class AddServiceJsonDto {
     @ApiProperty({ enum: ServiceTypeEnum })
     @IsOptional()

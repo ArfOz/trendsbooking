@@ -13,6 +13,7 @@ export const boxStyle = {
         fontSize: '32px',
         lineHeight: '38px',
         textAlign: 'center',
+        mt: 8,
     },
     secondtext: {
         fontFamily: 'Roboto',
@@ -21,12 +22,15 @@ export const boxStyle = {
         fontSize: '14px',
         lineHeight: '160%',
         textAlign: 'center',
+        mt: 4,
     },
     input: {
         width: '343px',
         height: '80px',
-        borderBottom: '1px solid',
-        borderColor: 'rgba(0, 0, 0, 0.42)',
+        //borderBottom: '1px solid',
+        //borderColor: 'rgba(0, 0, 0, 0.42)',
+        mt: 20,
+        ml: 28,
     },
 
     headerBox: {},
@@ -34,8 +38,11 @@ export const boxStyle = {
         position: 'relative',
         width: '100%',
         height: '8%',
-        mt: 2,
-        ml: 2,
+        mt: 3,
+        ml: 3,
+    },
+    buttons: {
+      
     },
 
     rightside: {
