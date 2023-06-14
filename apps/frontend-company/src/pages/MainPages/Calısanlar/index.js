@@ -10,7 +10,7 @@ import Footer from '../../../components/Footer';
 import StaffManagement from './components/StaffManagement';
 import CustomizedTabs from './components/CustomizedTabs';
 import TableStaff from './components/TableStaff';
-import AddNewEmployeeForm from './components/AddNewEmployeeForm';
+
 
 
 const Calısanlar = () => {
@@ -26,8 +26,7 @@ const Calısanlar = () => {
                 }}
             >
                <PersonelNavbar/>
-               {/* <StaffManagement/> */}
-               <AddNewEmployeeForm/>
+               <StaffManagement/>            
                <CustomizedTabs/>
                <TableStaff/>
                <Footer/>
