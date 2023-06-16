@@ -10,13 +10,22 @@ import DownloadIcon from "@mui/icons-material/Download";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { Button, Typography, Collapse, Box } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Collapse,
+  Box,
+  Avatar,
+  Snackbar,
+  SnackbarContent,
+} from "@mui/material";
 
 function StaffManagement() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -25,6 +34,14 @@ function StaffManagement() {
 
   const handleButtonClick = () => {
     setIsOpen(!isOpen);
+  };
+  const [snackOpen, setSnackOpen] = useState(false);
+
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const handleCloseSnackbar = () => {
+    setSnackOpen(false);
   };
 
   const getDayLabel = (day) => {
@@ -41,7 +58,7 @@ function StaffManagement() {
   };
 
   const initialNewWorker = {
-    DepartmentId: 17,
+    DepartmentId: "",
     FirstName: "",
     LastName: "",
     Phone: "",
@@ -120,15 +137,15 @@ function StaffManagement() {
         Holiday: true,
       },
     ],
+    Image: null, // Eklenen resim
   };
 
   const [formData, setFormData] = useState(initialNewWorker);
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
+  const handleInputChange = (e) => {
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -141,8 +158,23 @@ function StaffManagement() {
     }));
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setFormData((prevData) => ({
+        ...prevData,
+        Image: reader.result,
+      }));
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = (e) => {
-    e.preventDefault();
+    console.log(formData); // Form verilerini konsola yazdırır.
+
     // Backend'e formData'yı gönder.
     const token = localStorage.getItem("loginUserCompany")
       ? JSON.parse(localStorage.getItem("loginUserCompany")).AccessToken
@@ -154,19 +186,27 @@ function StaffManagement() {
       .post("http://localhost:3300/api/departments/addworker", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
       })
       .then((response) => {
         // İstek başarılı oldu
-        console.log(response);
-        setFormData(initialNewWorker); // Form verisini sıfırla
+        console.log(response.data);
+        setSnackbarMessage("Çalışan başarıyla eklendi.");
+        setSnackbarSeverity("success");
+        setSnackOpen(true);
+        setFormData(initialNewWorker);
       })
       .catch((error) => {
         // İstek başarısız oldu
-        console.error(error);
+        console.error("istek başarısz oldu", error);
+        setSnackbarMessage("Çalışan eklenirken bir hata oluştu.");
+        setSnackbarSeverity("error");
+        setSnackOpen(true);
+        setFormData(initialNewWorker);
       });
+    e.preventDefault();
   };
-  console.log(formData);
 
   return (
     <Box>
@@ -264,7 +304,7 @@ function StaffManagement() {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "flex-start",
-                  width: "100%",
+                  width: "95%",
                   height: "100%",
                   m: "auto",
                 }}
@@ -274,7 +314,7 @@ function StaffManagement() {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
-                    alignItems: "flex-start",
+                    alignItems: "center",
                   }}
                 >
                   <Typography
@@ -284,47 +324,56 @@ function StaffManagement() {
                       fontWeight: 700,
                       fontSize: "28px",
                       lineHeight: "24px",
+                      mt: 2,
                     }}
                   >
                     Çalışan Düzenle
                   </Typography>
+
                   <Box
                     sx={{
+                      mt: 2,
                       display: "flex",
-                      justifyContent: "center",
+                      flexDirection: "column",
                       alignItems: "center",
-                      width: "125px",
-                      height: "125px",
-                      background: "#D9D9D9",
-                      borderRadius: "12px",
-
-                      mt: 3,
                     }}
                   >
-                    <Box
+                    <Avatar
+                      src={formData.Image}
                       sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: "107px",
-                        height: "107px",
-                        border: "1px dashed #07232C",
-                        borderRadius: "12px",
+                        width: "4.5cm",
+                        height: "5cm",
+                        borderRadius: "0.25rem",
+                        objectFit: "cover",
+                        objectPosition: "50% 20%",
                       }}
-                    >
-                      <Typography
+                    />
+
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="upload-image"
+                      style={{ display: "none" }}
+                      onChange={handleImageUpload}
+                    />
+                    <label htmlFor="upload-image">
+                      <Button
+                        component="span"
+                        variant="contained"
+                        color="secondary"
                         sx={{
-                          fontFamily: "Roboto",
-                          fontStyle: "normal",
-                          fontWeight: 500,
-                          fontSize: "14px",
-                          lineHeight: "16px",
-                          color: "#07232C",
+                          textTransform: "capitalize",
+                          boxShadow: "none",
+
+                          "&:hover": {
+                            boxShadow: "none",
+                            backgroundColor: "transparent",
+                          },
                         }}
                       >
                         Resim Ekle
-                      </Typography>
-                    </Box>
+                      </Button>
+                    </label>
                   </Box>
                 </Box>
                 <Button
@@ -692,6 +741,20 @@ function StaffManagement() {
           </form>
         </DialogContent>
       </Dialog>
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <SnackbarContent
+          sx={{
+            backgroundColor:
+              snackbarSeverity === "success" ? "#43A047" : "#D32F2F",
+          }}
+          message={snackbarMessage}
+        />
+      </Snackbar>
     </Box>
   );
 }
