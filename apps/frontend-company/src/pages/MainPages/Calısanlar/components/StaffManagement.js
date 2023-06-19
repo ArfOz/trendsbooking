@@ -137,7 +137,7 @@ function StaffManagement() {
         Holiday: true,
       },
     ],
-    Image: null, // Eklenen resim
+    // Image: null, // Eklenen resim
   };
 
   const [formData, setFormData] = useState(initialNewWorker);
@@ -157,22 +157,27 @@ function StaffManagement() {
       ),
     }));
   };
-
+ const [profilPicture, setProfilPicture] = useState(null)
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
+   
 
     reader.onloadend = () => {
-      setFormData((prevData) => ({
-        ...prevData,
-        Image: reader.result,
-      }));
+      setProfilPicture(file);
+      // setFormData((prevData) => ({
+      //   ...prevData,
+      //   Image: reader.result,
+      // }));
     };
 
     reader.readAsDataURL(file);
   };
 
+  const data = new FormData();
+
   const handleSubmit = (e) => {
+    e.preventDefault();
     console.log(formData); // Form verilerini konsola yazdırır.
 
     // Backend'e formData'yı gönder.
@@ -181,12 +186,21 @@ function StaffManagement() {
       : "";
     console.log("newWorker :>> ", formData);
     console.log("token :>> ", token);
+    console.log(profilPicture)
+
+    // const FormData = require('form-data');
+// const fs = require('fs');
+
+data.append('input', formData);
+data.append('file', profilPicture);
+console.log(data)
+
 
     axios
-      .post("http://localhost:3300/api/departments/addworker", formData, {
+      .post("http://localhost:3300/api/departments/addworker", data, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          // "Content-Type": "multipart/form-data",
         },
       })
       .then((response) => {
@@ -205,7 +219,7 @@ function StaffManagement() {
         setSnackOpen(true);
         setFormData(initialNewWorker);
       });
-    e.preventDefault();
+   
   };
 
   return (
