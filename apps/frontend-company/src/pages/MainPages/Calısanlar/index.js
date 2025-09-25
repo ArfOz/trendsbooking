@@ -12,6 +12,7 @@ import CustomizedTabs from './components/CustomizedTabs';
 import TableStaff from './components/TableStaff';
 
 
+
 const Calısanlar = () => {
     return (
         <MainLayout>
@@ -25,7 +26,7 @@ const Calısanlar = () => {
                 }}
             >
                <PersonelNavbar/>
-               <StaffManagement/>
+               <StaffManagement/>            
                <CustomizedTabs/>
                <TableStaff/>
                <Footer/>

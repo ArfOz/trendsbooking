@@ -8,7 +8,7 @@ import { ProvideAuth } from './context/authContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <StrictMode>
+    <>
         {/* <App /> */}
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -16,5 +16,5 @@ root.render(
                 <App />
             </ProvideAuth>
         </ThemeProvider>
-    </StrictMode>,
+    </>,
 );

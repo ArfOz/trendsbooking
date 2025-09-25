@@ -25,7 +25,7 @@ function Genders() {
         >
             <Box
                 sx={{
-                    width: '48%',
+                    width: '49%',
                     background: '#FFFFFF',
                     border: '1.36634px solid #9A9A9A',
                     boxShadow: '0px 0px 21.8614px rgba(234, 76, 137, 0.06)',
